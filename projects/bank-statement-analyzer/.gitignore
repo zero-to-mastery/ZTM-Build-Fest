@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+# never commit real bank data
+real_*.csv
+report.html

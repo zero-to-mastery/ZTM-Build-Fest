@@ -1,0 +1,12 @@
+{
+  "Groceries": ["σκλαβενιτης", "masoutis", "μασουτης", "lidl", "ab vassilopoulos", "αβ βασιλοπουλος", "my market", "supermarket", "σουπερ μαρκετ", "carrefour", "market in", "γαλαξιας"],
+  "Eating out & delivery": ["efood", "wolt", "restaurant", "εστιατοριο", "cafe", "καφε", "starbucks", "coffee island", "mcdonalds", "goody", "burger", "pizza", "souvlaki", "σουβλακι", "taverna", "ταβερνα", "φουρνος", "bakery"],
+  "Transport": ["bolt", "uber", "beat", "taxi", "ταξι", "ktel", "κτελ", "oasa", "οασα", "aegean", "ryanair", "sky express", "fuel", "καυσιμα", "shell", "bp", "eko", "avin", "parking", "αττικη οδος", "olympia odos"],
+  "Bills & utilities": ["δεη", "dei", "ppc", "cosmote", "vodafone", "nova", "wind", "δεψα", "eydap", "ευδαπ", "ενοικιο", "rent", "φυσικο αεριο", "electricity", "internet", "κοινοχρηστα"],
+  "Subscriptions": ["netflix", "spotify", "youtube", "disney", "apple.com/bill", "icloud", "google one", "amazon prime", "chatgpt", "openai", "anthropic", "github", "adobe", "hbo", "max.com"],
+  "Shopping": ["amazon", "skroutz", "public", "plaisio", "πλαισιο", "zara", "h&m", "ikea", "jumbo", "eshop", "aliexpress", "temu", "κωτσοβολος", "kotsovolos"],
+  "Health": ["pharmacy", "φαρμακειο", "γιατρος", "doctor", "hospital", "νοσοκομειο", "dentist", "οδοντιατρος", "diagnostic", "διαγνωστικο"],
+  "Entertainment & fitness": ["cinema", "σινεμα", "steam", "playstation", "xbox", "nintendo", "ticket", "viva.gr", "concert", "gym", "γυμναστηριο", "fitness"],
+  "Cash & ATM": ["atm", "αναληψη", "withdrawal", "cash"],
+  "Transfers": ["transfer", "μεταφορα", "iris", "μεταφορα ποσου", "εμβασμα"]
+}
