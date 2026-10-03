@@ -1,0 +1,19 @@
+{
+  "name": "kin-server",
+  "private": true,
+  "version": "0.11.7",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node --watch server/server.mjs",
+    "start": "node server/server.mjs",
+    "backup": "node server/admin.mjs backup",
+    "restore": "node server/admin.mjs restore",
+    "test:server": "node --test server/*.test.mjs"
+  },
+  "dependencies": {
+    "better-sqlite3": "12.4.1"
+  }
+}

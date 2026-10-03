@@ -1,0 +1,35 @@
+name: Feature proposal
+description: Propose a small, privacy-conscious household coordination improvement
+title: "[Proposal] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Describe the household problem, not only a requested feature. Keep examples synthetic and avoid personal household information.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What household problem needs solving?
+      placeholder: What gets missed, repeated, or handed off poorly?
+    validations:
+      required: true
+  - type: textarea
+    id: audience
+    attributes:
+      label: Who experiences it, and when?
+    validations:
+      required: true
+  - type: textarea
+    id: smallest-flow
+    attributes:
+      label: Smallest useful interaction
+      description: Consider the tap, type a few words, tap principle.
+    validations:
+      required: true
+  - type: textarea
+    id: tradeoffs
+    attributes:
+      label: Alternatives, privacy, accessibility, and release scope
+      description: Explain what data is needed, risks, accessible behavior, and which planned release it fits.
+    validations:
+      required: true

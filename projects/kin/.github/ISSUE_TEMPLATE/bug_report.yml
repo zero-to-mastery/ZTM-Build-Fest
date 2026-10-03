@@ -1,0 +1,44 @@
+name: Bug report
+description: Report a reproducible problem in an implemented Kin version
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Kin is a local-first v0.9.x prototype. Report runtime bugs only for behavior that exists in the version under test.
+        Use synthetic data. Do not include household messages, personal details, credentials, tokens, or storage dumps.
+  - type: input
+    id: version
+    attributes:
+      label: Kin version or commit
+      description: Identify the exact release/tag or commit tested.
+      placeholder: kin-v0.10.3
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Operating system and browser
+      placeholder: Windows 11, Firefox version
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: Use the smallest synthetic example that reproduces the issue.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and redacted diagnostics
+      description: Remove household text, IDs that identify real people, secrets, and personal data.
+    validations:
+      required: true

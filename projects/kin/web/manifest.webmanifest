@@ -1,0 +1,12 @@
+{
+  "id": "/",
+  "name": "Kin",
+  "short_name": "Kin",
+  "description": "Private household coordination with encrypted local storage.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f2e9",
+  "theme_color": "#214937",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
