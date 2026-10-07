@@ -2,7 +2,9 @@
 
 pub mod app;
 pub mod configuration;
+pub mod database;
 pub mod domain;
+pub mod healer;
 pub mod metadata;
 pub mod middleware;
 pub mod routes;

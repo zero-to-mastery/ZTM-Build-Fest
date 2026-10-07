@@ -136,7 +136,7 @@ pub fn album_missing() -> Mock {
 /// genuinely exercised.
 pub fn cover_found(mb_id: &str) -> Mock {
     Mock::given(method("GET"))
-        .and(path_regex(&format!(r"^/release/{mb_id}/?$")))
+        .and(path_regex(format!(r"^/release/{mb_id}/?$")))
         .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
             "images": [
                 {
@@ -161,7 +161,7 @@ pub fn cover_found(mb_id: &str) -> Mock {
 /// The archive has no art for this release — common for bootlegs.
 pub fn cover_missing(mb_id: &str) -> Mock {
     Mock::given(method("GET"))
-        .and(path_regex(&format!(r"^/release/{mb_id}/?$")))
+        .and(path_regex(format!(r"^/release/{mb_id}/?$")))
         .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
             "images": []
         })))

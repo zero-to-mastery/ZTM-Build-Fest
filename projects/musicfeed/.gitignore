@@ -13,3 +13,6 @@ AGENTS.md
 
 # Build artifacts
 /target
+
+# Local planning documents
+.plans/

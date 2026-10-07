@@ -22,7 +22,7 @@ async fn post_rotation_entry_returns_append_patch_and_clears_signals() {
     // Act
     let response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -56,7 +56,7 @@ async fn cleared_signals_must_be_deserializable() {
     // straight back into the next submission, exactly as the browser would.
     let first = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -81,7 +81,7 @@ async fn cleared_signals_must_be_deserializable() {
 
     let response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&second)
         .send()
         .await
@@ -112,7 +112,7 @@ async fn posted_entry_appears_in_index_list() {
     // Act
     let _response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -149,7 +149,7 @@ async fn an_empty_note_is_omitted_rather_than_rendered_empty() {
     // Act
     let response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&body)
         .send()
         .await
@@ -174,7 +174,7 @@ async fn cover_and_year_cannot_be_supplied_by_the_client() {
     // Act
     let response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&body)
         .send()
         .await
@@ -212,7 +212,7 @@ async fn a_successful_lookup_fills_in_the_cover_and_year() {
     // Act
     let response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -254,7 +254,7 @@ async fn a_cover_is_absent_when_the_release_has_no_art() {
     // Act
     let response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -295,7 +295,7 @@ async fn a_failing_service_saves_the_entry_and_reports_it() {
     // Act
     let response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -341,7 +341,7 @@ async fn a_miss_is_silent_because_it_is_not_a_failure() {
     // Act
     let response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -366,7 +366,7 @@ async fn a_lookup_that_finds_nothing_still_saves_the_entry_bare() {
     // Act
     let response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&serde_json::json!({
             "artist": "Zzz Nonexistent Artist Zzz",
             "album": "Zzz Nonexistent Album Zzz",
@@ -427,7 +427,7 @@ async fn empty_state_is_shown_only_when_there_are_no_entries() {
 
     // Act — add an entry, then look again
     app.api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -456,7 +456,7 @@ async fn sse_removes_the_empty_state_message() {
     // Act
     let body = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -493,7 +493,7 @@ async fn sse_patch_is_a_single_data_elements_field() {
     // Act
     let body = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -528,7 +528,7 @@ async fn every_posted_entry_appears_in_the_index_list() {
         ("Alice Cooper", "Special Forces"),
     ] {
         app.api_client
-            .post(format!("{}/rotation", &app.address))
+            .post(format!("{}/rotation", app.address))
             .json(&serde_json::json!({
                 "artist": artist, "album": album, "note": ""
             }))
@@ -569,7 +569,7 @@ async fn entry_text_is_escaped_in_the_sse_patch() {
     // Act
     let response = app
         .api_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&body)
         .send()
         .await
@@ -616,7 +616,7 @@ async fn random_entry_with_no_entries_returns_404() {
     // client sees a transport error rather than any status at all.
     let response = app
         .unauthenticated_client
-        .get(format!("{}/rotation", &app.address))
+        .get(format!("{}/rotation", app.address))
         .send()
         .await
         .expect("Failed to execute request.");
@@ -631,7 +631,7 @@ async fn random_entry_with_no_entries_returns_404() {
     // leave the app unable to serve the next request.
     let health = app
         .api_client
-        .get(format!("{}/health_check", &app.address))
+        .get(format!("{}/health_check", app.address))
         .send()
         .await
         .expect("app did not survive the empty-rotation request");
@@ -644,7 +644,7 @@ async fn random_entry_is_one_of_the_entered_entries() {
     let app = spawn_app().await;
     for artist in ["Sabaton", "Alestorm", "Alice Cooper"] {
         app.api_client
-            .post(format!("{}/rotation", &app.address))
+            .post(format!("{}/rotation", app.address))
             .json(&serde_json::json!({
                 "artist": artist, "album": "X", "note": ""
             }))
@@ -656,7 +656,7 @@ async fn random_entry_is_one_of_the_entered_entries() {
     // Act — ask for one, sending no credentials: the island needs this open.
     let response = app
         .unauthenticated_client
-        .get(format!("{}/rotation", &app.address))
+        .get(format!("{}/rotation", app.address))
         .send()
         .await
         .unwrap();
@@ -680,7 +680,7 @@ async fn posting_without_credentials_is_rejected() {
 
     let response = app
         .unauthenticated_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .json(&payload())
         .send()
         .await
@@ -713,7 +713,7 @@ async fn posting_with_wrong_credentials_is_rejected() {
     let encoded = base64::engine::general_purpose::STANDARD.encode("test:wrongpass");
     let response = app
         .unauthenticated_client
-        .post(format!("{}/rotation", &app.address))
+        .post(format!("{}/rotation", app.address))
         .header("Authorization", format!("Basic {encoded}"))
         .json(&payload())
         .send()

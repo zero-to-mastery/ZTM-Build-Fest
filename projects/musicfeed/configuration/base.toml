@@ -13,3 +13,17 @@ cover_art_base_url = "https://coverartarchive.org"
 [basicauth]
 username = "test"
 password = "test"
+
+[database]
+# Created on first run; survives between runs by design (v0.5.0).
+path = "musicfeed.db"
+max_connections = 5
+
+[healing]
+# The background pass that re-runs failed metadata lookups. politeness budget:
+# at most `per_pass` lookups per pass, one pass per interval — far under the
+# MusicBrainz ~1 req/s guidance.
+enabled = true
+interval_secs = 900
+max_attempts = 3
+per_pass = 3

@@ -15,7 +15,12 @@ async fn main() -> anyhow::Result<()> {
     let settings = get_configuration()?;
 
     // construct the application state
-    let app_state = AppState::new(&settings.metadata, &settings.basicauth);
+    let app_state =
+        AppState::new(&settings.metadata, &settings.basicauth, &settings.database).await?;
+
+    // The healer is the process's second employee: it starts when the process
+    // starts (pass one on wake), then keeps its own timer.
+    musicfeed::healer::spawn_healer(app_state.clone(), settings.healing);
 
     let app_address = format!(
         "{}:{}",

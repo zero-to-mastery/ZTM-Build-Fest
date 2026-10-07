@@ -1,6 +1,6 @@
 [package]
 name = "musicfeed"
-version = "0.4.0"
+version = "0.6.0"
 edition = "2024"
 
 [[bin]]
@@ -9,13 +9,15 @@ path = "src/bin/main.rs"
 
 [dependencies]
 anyhow = "1"
+async-trait = "0.1"
 axum = "0.8"
 axum-macros = "0.5"
+base64 = "0.23.1"
 chrono = { version = "0.4", features = ["serde"] }
 config = { version = "0.15", default-features = false, features = ["toml"] }
 datastar = { version = "0.4", features = ["axum" ] }
-rand = "0.10.3"
 serde = { version = "1", features = ["derive"] }
+sqlx = { version = "0.8", features = [ "runtime-tokio", "sqlite", "chrono" ] }
 tera = { version = "2", features = ["fast", "glob_fs"] }
 thiserror = "2"
 tokio = { version = "1", features = ["full"] }
@@ -28,9 +30,9 @@ tracing-log = "0.2"
 reqwest = { version = "0.13", features = [ "json" ] }
 tracing-subscriber = { version = "0.3", features = [ "registry", "env-filter" ] }
 uuid = { version = "1", features = ["v4", "serde"] }
-base64 = "0.23.1"
 
 [dev-dependencies]
 
+tempfile = "3"
 serde_json = "1"
 wiremock = "0.6.5"

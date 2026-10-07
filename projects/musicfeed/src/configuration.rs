@@ -7,6 +7,8 @@ pub struct Settings {
     pub application: ApplicationSettings,
     pub metadata: MetadataSettings,
     pub basicauth: BasicAuthSettings,
+    pub database: DatabaseSettings,
+    pub healing: HealingSettings,
 }
 
 #[derive(Deserialize)]
@@ -26,6 +28,25 @@ pub struct MetadataSettings {
 pub struct BasicAuthSettings {
     pub username: String,
     pub password: String,
+}
+
+/// Borrowed from the metallian-photos database layer: a file path plus an
+/// optional pool cap. `max_connections` stays optional so tests can use the
+/// sqlx default while production pins a small pool.
+#[derive(Clone, Debug, Deserialize)]
+pub struct DatabaseSettings {
+    pub path: String,
+    pub max_connections: Option<u32>,
+}
+
+/// The background healer's tuning. `enabled` can be flipped from the Railway
+/// environment (`APP_HEALING__ENABLED=false`) without a redeploy.
+#[derive(Clone, Debug, Deserialize)]
+pub struct HealingSettings {
+    pub enabled: bool,
+    pub interval_secs: u64,
+    pub max_attempts: u32,
+    pub per_pass: u32,
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {
