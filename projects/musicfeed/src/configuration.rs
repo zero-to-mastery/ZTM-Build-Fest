@@ -9,6 +9,7 @@ pub struct Settings {
     pub basicauth: BasicAuthSettings,
     pub database: DatabaseSettings,
     pub healing: HealingSettings,
+    pub cors: CorsSettings,
 }
 
 #[derive(Deserialize)]
@@ -47,6 +48,15 @@ pub struct HealingSettings {
     pub interval_secs: u64,
     pub max_attempts: u32,
     pub per_pass: u32,
+}
+
+/// Origins allowed to read the API cross-origin (the blog island). TOML only —
+/// deliberately not list-parsed from the environment, because `try_parsing`
+/// would apply to every `APP_*` variable. An array in an environment file
+/// *replaces* the one in `base.toml`; it does not merge with it.
+#[derive(Clone, Debug, Deserialize)]
+pub struct CorsSettings {
+    pub allowed_origins: Vec<String>,
 }
 
 pub fn get_configuration() -> Result<Settings, config::ConfigError> {

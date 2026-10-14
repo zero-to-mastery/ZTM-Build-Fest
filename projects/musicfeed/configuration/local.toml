@@ -7,3 +7,12 @@
 #   port = 8080
 #
 # Environment variables (APP_APPLICATION__PORT=8080) override both.
+
+[cors]
+# Replaces (does not extend) the base list, so the production origins are
+# repeated here alongside the locally served blog.
+allowed_origins = [
+    "https://crusty-metallian.net",
+    "https://www.crusty-metallian.net",
+    "http://localhost:8080",
+]

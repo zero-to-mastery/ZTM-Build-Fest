@@ -27,3 +27,11 @@ enabled = true
 interval_secs = 900
 max_attempts = 3
 per_pass = 3
+
+[cors]
+# Origins whose browsers may read the rotation. Must match exactly — scheme,
+# host, and port, no trailing slash. Writes are never allowed cross-origin.
+allowed_origins = [
+    "https://crusty-metallian.net",
+    "https://www.crusty-metallian.net",
+]

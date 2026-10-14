@@ -80,6 +80,7 @@ pub async fn spawn_app_against(metadata_stub: crate::metadata_stub::MetadataStub
         // below matches what the app under test expects.
         &configuration.basicauth,
         &database_settings,
+        &configuration.cors,
     )
     .await
     .expect("Failed to construct the application state");
@@ -118,6 +119,7 @@ pub async fn spawn_app_at(db_path: impl AsRef<std::path::Path>) -> TestApp {
         },
         &configuration.basicauth,
         &database_settings,
+        &configuration.cors,
     )
     .await
     .expect("Failed to construct the application state");

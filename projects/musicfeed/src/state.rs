@@ -1,8 +1,10 @@
 // src/state.rs
 
-use crate::configuration::{BasicAuthSettings, DatabaseSettings, MetadataSettings};
+use crate::configuration::{BasicAuthSettings, CorsSettings, DatabaseSettings, MetadataSettings};
 use crate::database::{DatabaseBackend, SqliteRepository};
 use crate::metadata::MetadataClient;
+use anyhow::Context;
+use axum::http::HeaderValue;
 use std::sync::Arc;
 use tera::Tera;
 
@@ -18,6 +20,9 @@ pub struct AppState {
     /// connection pool is reused. Cheap to clone, no global state.
     pub metadata: MetadataClient,
     pub basicauth: BasicAuthSettings,
+    /// Parsed at construction, so a malformed origin fails startup rather
+    /// than quietly locking the blog out.
+    pub cors_origins: Vec<HeaderValue>,
 }
 
 impl AppState {
@@ -28,7 +33,17 @@ impl AppState {
         metadata_settings: &MetadataSettings,
         basicauth_settings: &BasicAuthSettings,
         database_settings: &DatabaseSettings,
+        cors_settings: &CorsSettings,
     ) -> anyhow::Result<Self> {
+        let cors_origins = cors_settings
+            .allowed_origins
+            .iter()
+            .map(|origin| {
+                HeaderValue::from_str(origin)
+                    .with_context(|| format!("invalid CORS origin in configuration: {origin:?}"))
+            })
+            .collect::<anyhow::Result<Vec<_>>>()?;
+
         let mut tera = Tera::default();
         tera.load_from_glob("templates/**/*.html")
             .expect("Unable to load the Tera templates.");
@@ -44,6 +59,7 @@ impl AppState {
                 metadata_settings.cover_art_base_url.clone(),
             ),
             basicauth: basicauth_settings.to_owned(),
+            cors_origins,
         })
     }
 }

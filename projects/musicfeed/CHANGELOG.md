@@ -7,6 +7,38 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-10-14
+
+The rotation is readable cross-origin by the blog only. `allow_origin(Any)` is gone.
+
+### Changed
+
+- CORS now echoes `Access-Control-Allow-Origin` only for origins on an allow-list; any
+  other site's script is refused the response. Methods (`GET`/`HEAD`) and allowed headers
+  are unchanged.
+- `AppState::new` takes a `CorsSettings` and parses each origin up front, so a malformed
+  entry fails startup instead of silently locking the blog island out.
+- Refreshed the comment in `build_router` that still said `POST /rotation` needed an API
+  key; Basic auth has covered it since 0.4.0.
+
+### Added
+
+- `[cors] allowed_origins` configuration. `base.toml` (and therefore production) allows
+  `https://crusty-metallian.net` and `https://www.crusty-metallian.net`; `local.toml`
+  repeats both and adds `http://localhost:8080` for a locally served blog.
+- `tests/api/cors.rs`: both blog origins are echoed back, an unlisted origin gets no
+  allow-origin header, and a preflight from the blog succeeds.
+
+### Notes
+
+- Configured via TOML only. List-parsing the environment would need `try_parsing(true)`,
+  which applies to every `APP_*` variable and could coerce values such as an all-digit
+  password. Changing an origin is a config edit and a redeploy.
+- An array in an environment file replaces the base array rather than merging, which is
+  why `local.toml` restates the production origins.
+- CORS restrains browsers only. Non-browser clients can still read `GET /rotation`, which
+  is public by design.
+
 ## [0.6.0] - 2026-10-07
 
 Missing metadata is no longer permanent. A background healer wakes with the process,
@@ -273,7 +305,10 @@ Initial scaffold, renamed from the `axum-tera-datastar` starter.
   tracing, and graceful shutdown.
 - `GET /health_check` and a starter to-do demo.
 
-[Unreleased]: https://github.com/crustyrustacean/ZTM-Build-Fest/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/crustyrustacean/ZTM-Build-Fest/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/crustyrustacean/ZTM-Build-Fest/compare/v0.6.0...v0.6.1
+[0.6.0]: https://github.com/crustyrustacean/ZTM-Build-Fest/compare/v0.5.0...v0.6.0
+[0.5.0]: https://github.com/crustyrustacean/ZTM-Build-Fest/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/crustyrustacean/ZTM-Build-Fest/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/crustyrustacean/ZTM-Build-Fest/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/crustyrustacean/ZTM-Build-Fest/compare/v0.2.0...v0.3.0

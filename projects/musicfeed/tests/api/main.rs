@@ -1,5 +1,6 @@
 // tests/api/main.rs
 
+mod cors;
 mod database;
 mod healer;
 mod health_check;
