@@ -8,8 +8,7 @@ and WebAssembly on native HTML and web components, with a focus on owning your c
 
 - **Live blog example:** [openblog.journeytocode.io](https://openblog.journeytocode.io)
 - **Source repository:** [github.com/journey-to-code-org/open.blog](https://github.com/journey-to-code-org/open.blog)
-- **In real use:** [mnixblog.netlify.app](https://mnixblog.netlify.app), which will move to
-  journeytocode.io soon
+- **In real use:** [journeytocode.io](https://journeytocode.io)
 
 ## The problem it solves
 
@@ -22,12 +21,10 @@ There is no database, and the repository is the backup.
 
 ## How I use it
 
-open.blog powers my own blog at [mnixblog.netlify.app](https://mnixblog.netlify.app), which
-will move to [journeytocode.io](https://journeytocode.io) soon. The blog is built from Markdown posts with the
-`openblog` command and deployed to Netlify, so it is a real site and not only a demo. The
-public example at [openblog.journeytocode.io](https://openblog.journeytocode.io) shows
-what a fresh install looks like. The project's own code lives at
-[journey-to-code-org/open.blog](https://github.com/journey-to-code-org/open.blog).
+open.blog powers my own blog at [journeytocode.io](https://journeytocode.io).
+The blog is built from Markdown posts with the `openblog` command and deployed to Netlify,
+so it is a real site and not only a demo. The public example at [openblog.journeytocode.io](https://openblog.journeytocode.io)
+shows what a fresh install looks like. The project's own code lives at [journey-to-code-org/open.blog](https://github.com/journey-to-code-org/open.blog).
 
 ## How AI is used
 
