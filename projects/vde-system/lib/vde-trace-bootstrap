@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+# @forge (Function Trace Bootstrap)
+# Source this AFTER loading all libraries to enable function tracing.
+# Usage: source "${VDE_ROOT_DIR}/lib/vde-trace-bootstrap"
+#
+# This enables VDE's function-trace feature to work across script boundaries.
+
+# Only activate if we're in trace mode and haven't already installed in this process
+if [[ -n "${VDE_TRACE_MODE}" && -z "${_VDE_TRACE_BOOTSTRAPPED:-}" ]]; then
+    export _VDE_TRACE_BOOTSTRAPPED=1
+    
+    # Source the trace library
+    if [[ -f "${VDE_ROOT_DIR}/lib/vde-function-trace" ]]; then
+        source "${VDE_ROOT_DIR}/lib/vde-function-trace"
+        vde_trace_install
+        # NOTE: Do NOT install EXIT trap here - only the root tracer displays
+    fi
+fi

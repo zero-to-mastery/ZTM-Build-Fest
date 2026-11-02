@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "kind": "constellation-semantic-graph",
+  "subject": { "kind": "developer", "id": "octo" },
+  "nodes": [
+    { "id": "developer:octo", "kind": "developer", "label": "octo", "properties": {}, "provenance": [{ "category": "source", "source": "github-profile" }], "evidenceIds": [] },
+    { "id": "octo/compiler", "kind": "project", "label": "compiler", "properties": { "description": "A small compiler", "url": "https://github.com/octo/compiler", "language": "Rust", "topics": ["cli", "wasm"] }, "provenance": [{ "category": "source", "source": "github" }], "evidenceIds": [] },
+    { "id": "octo/runtime", "kind": "project", "label": "runtime", "properties": { "description": "Runtime for compiled programs", "url": "https://github.com/octo/runtime", "language": "Rust", "topics": ["wasm"] }, "provenance": [{ "category": "source", "source": "github" }], "evidenceIds": [] },
+    { "id": "octo/site", "kind": "project", "label": "site", "properties": { "description": "Project website", "url": "https://github.com/octo/site", "language": "TypeScript", "topics": ["web"] }, "provenance": [{ "category": "source", "source": "github" }], "evidenceIds": [] },
+    { "id": "octo/docs", "kind": "project", "label": "docs", "properties": { "description": "Documentation", "url": "https://github.com/octo/docs", "language": "TypeScript", "topics": ["web"] }, "provenance": [{ "category": "source", "source": "github" }], "evidenceIds": [] },
+    { "id": "octo/loner", "kind": "project", "label": "loner", "properties": { "url": "https://github.com/octo/loner", "language": "Go" }, "provenance": [{ "category": "source", "source": "github" }], "evidenceIds": [] },
+    { "id": "language:rust", "kind": "language", "label": "Rust", "properties": {}, "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidenceIds": [] },
+    { "id": "language:typescript", "kind": "language", "label": "TypeScript", "properties": {}, "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidenceIds": [] },
+    { "id": "language:go", "kind": "language", "label": "Go", "properties": {}, "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidenceIds": [] },
+    { "id": "topic:wasm", "kind": "topic", "label": "wasm", "properties": {}, "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidenceIds": [] },
+    { "id": "topic:cli", "kind": "topic", "label": "cli", "properties": {}, "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidenceIds": [] },
+    { "id": "topic:web", "kind": "topic", "label": "web", "properties": {}, "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidenceIds": [] },
+    { "id": "group:user:toolchain", "kind": "semantic-group", "label": "Toolchain", "properties": { "groupKind": "project-family", "members": ["octo/compiler", "octo/runtime"], "basis": [] }, "provenance": [{ "category": "user", "source": "user-project-family" }], "evidenceIds": [] },
+    { "id": "group:owner:octo", "kind": "semantic-group", "label": "octo", "properties": { "groupKind": "repository-owner", "members": ["octo/compiler", "octo/docs", "octo/loner", "octo/runtime", "octo/site"], "basis": ["repository-owner:octo"] }, "provenance": [{ "category": "derived", "source": "derived-repository-owner" }], "evidenceIds": [] }
+  ],
+  "edges": [
+    { "id": "uses-language:compiler", "kind": "uses-language", "from": "octo/compiler", "to": "language:rust", "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidence": [] },
+    { "id": "uses-language:runtime", "kind": "uses-language", "from": "octo/runtime", "to": "language:rust", "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidence": [] },
+    { "id": "uses-language:site", "kind": "uses-language", "from": "octo/site", "to": "language:typescript", "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidence": [] },
+    { "id": "uses-language:docs", "kind": "uses-language", "from": "octo/docs", "to": "language:typescript", "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidence": [] },
+    { "id": "uses-language:loner", "kind": "uses-language", "from": "octo/loner", "to": "language:go", "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidence": [] },
+    { "id": "has-topic:compiler-wasm", "kind": "has-topic", "from": "octo/compiler", "to": "topic:wasm", "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidence": [] },
+    { "id": "has-topic:compiler-cli", "kind": "has-topic", "from": "octo/compiler", "to": "topic:cli", "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidence": [] },
+    { "id": "has-topic:runtime-wasm", "kind": "has-topic", "from": "octo/runtime", "to": "topic:wasm", "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidence": [] },
+    { "id": "has-topic:site-web", "kind": "has-topic", "from": "octo/site", "to": "topic:web", "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidence": [] },
+    { "id": "has-topic:docs-web", "kind": "has-topic", "from": "octo/docs", "to": "topic:web", "provenance": [{ "category": "source", "source": "github-repository-metadata" }], "evidence": [] },
+    { "id": "member:compiler-toolchain", "kind": "member-of", "from": "octo/compiler", "to": "group:user:toolchain", "provenance": [{ "category": "user", "source": "user-project-family" }], "evidence": [] },
+    { "id": "member:runtime-toolchain", "kind": "member-of", "from": "octo/runtime", "to": "group:user:toolchain", "provenance": [{ "category": "user", "source": "user-project-family" }], "evidence": [] },
+    { "id": "member:compiler-owner", "kind": "member-of", "from": "octo/compiler", "to": "group:owner:octo", "provenance": [{ "category": "derived", "source": "derived-repository-owner" }], "evidence": [] },
+    { "id": "member:runtime-owner", "kind": "member-of", "from": "octo/runtime", "to": "group:owner:octo", "provenance": [{ "category": "derived", "source": "derived-repository-owner" }], "evidence": [] },
+    { "id": "member:site-owner", "kind": "member-of", "from": "octo/site", "to": "group:owner:octo", "provenance": [{ "category": "derived", "source": "derived-repository-owner" }], "evidence": [] },
+    { "id": "member:docs-owner", "kind": "member-of", "from": "octo/docs", "to": "group:owner:octo", "provenance": [{ "category": "derived", "source": "derived-repository-owner" }], "evidence": [] },
+    { "id": "member:loner-owner", "kind": "member-of", "from": "octo/loner", "to": "group:owner:octo", "provenance": [{ "category": "derived", "source": "derived-repository-owner" }], "evidence": [] },
+    { "id": "owner:compiler", "kind": "repository-owner", "from": "octo/compiler", "to": "developer:octo", "provenance": [{ "category": "derived", "source": "repository-owner" }], "evidence": [] },
+    { "id": "project-relationship:site-compiler", "kind": "project-relationship", "from": "octo/compiler", "to": "octo/site", "provenance": [{ "category": "user", "source": "user-project-relationship" }], "evidence": { "source": "user-project-relationship", "projects": ["octo/compiler", "octo/site"] } }
+  ],
+  "groups": [
+    { "id": "group:owner:octo", "kind": "repository-owner", "label": "octo", "provenance": "derived", "basis": ["repository-owner:octo"], "members": ["octo/compiler", "octo/docs", "octo/loner", "octo/runtime", "octo/site"] },
+    { "id": "group:user:toolchain", "kind": "project-family", "label": "Toolchain", "provenance": "user", "basis": [], "members": ["octo/compiler", "octo/runtime"] }
+  ],
+  "statistics": { "nodeCount": 14, "edgeCount": 19, "truncated": false, "limitations": [] }
+}

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#0b0e1a" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f6f7fb" media="(prefers-color-scheme: light)" />
+  <meta name="description" content="How Constellation turns your public GitHub projects into a sky full of stars, what the map means, and what happens to your data." />
+  <title>How it works · Constellation</title>
+  <!-- Link previews. The image is built by scripts/build-og-image.mjs. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Constellation" />
+  <meta property="og:title" content="How Constellation works" />
+  <meta property="og:description" content="How Constellation turns your public GitHub projects into a sky full of stars, what the map means, and what happens to your data." />
+  <meta property="og:url" content="https://mnichols08.github.io/constellation/how-it-works.html" />
+  <meta property="og:image" content="https://mnichols08.github.io/constellation/assets/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Constellation: Your code, written in the stars. A sky of GitHub projects drawn as glowing stars joined by lines." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image:alt" content="Constellation: Your code, written in the stars. A sky of GitHub projects drawn as glowing stars joined by lines." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%236d5efc' d='M12 1.5 14.6 9.4 22.5 12l-7.9 2.6L12 22.5l-2.6-7.9L1.5 12l7.9-2.6z'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./src/app/app.css" />
+</head>
+<body class="guide">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="home-head guide-head">
+    <a class="brand" href="./">
+      <svg class="brand-mark" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.5 14.6 9.4 22.5 12l-7.9 2.6L12 22.5l-2.6-7.9L1.5 12l7.9-2.6z" /></svg>
+      <span class="brand-text">constellation</span>
+    </a>
+    <a class="btn btn-primary" href="./" data-primary>Make my sky</a>
+  </header>
+
+  <main id="main" class="guide-main" tabindex="-1">
+    <section class="guide-hero" aria-labelledby="title">
+      <h1 id="title" class="guide-title">How it <em>works</em></h1>
+      <p class="home-lede">Constellation reads an account’s public GitHub projects and draws each one as a star. There’s nothing to install and you don’t need an account.</p>
+    </section>
+
+    <figure class="guide-demo" aria-labelledby="demo-title">
+      <div class="guide-demo-head">
+        <h2 id="demo-title" class="guide-h3">Try it on an example sky</h2>
+        <p class="guide-muted">Sixteen made-up projects, drawn live by the same engine as the Studio. Nothing is sent to GitHub.</p>
+      </div>
+      <div class="guide-demo-controls" id="demo-controls" hidden>
+        <fieldset class="guide-choices">
+          <legend>Layout</legend>
+          <label><input type="radio" name="layout" value="galaxy" checked /> Galaxy</label>
+          <label><input type="radio" name="layout" value="rings" /> Rings</label>
+          <label><input type="radio" name="layout" value="solar-system" /> Solar system</label>
+          <label><input type="radio" name="layout" value="temporal-stack" /> Through time</label>
+        </fieldset>
+        <fieldset class="guide-choices">
+          <legend>Theme</legend>
+          <label><input type="radio" name="theme" value="deep-space" checked /> Deep space</label>
+          <label><input type="radio" name="theme" value="synthwave" /> Synthwave</label>
+          <label><input type="radio" name="theme" value="solarized" /> Solarized</label>
+        </fieldset>
+      </div>
+      <div class="guide-stage" id="demo-stage">
+        <p class="guide-muted" id="demo-fallback">The example sky appears here once the map engine loads. If it doesn’t, <a href="./">open the Studio</a> and press <strong>Try an example</strong>.</p>
+      </div>
+      <p class="visually-hidden" id="demo-status" role="status" aria-live="polite"></p>
+    </figure>
+
+    <section class="guide-section" aria-labelledby="steps">
+      <h2 id="steps" class="guide-h2">Three steps</h2>
+      <ol class="guide-steps">
+        <li>
+          <span class="guide-step-n" aria-hidden="true">1</span>
+          <h3 class="guide-h3">Type a GitHub username</h3>
+          <p>Your browser asks GitHub for that account’s public projects: names, descriptions, main language, topics, stars and dates. A person or an organization both work. Want to look first? <strong>Try an example</strong> opens the sky above.</p>
+        </li>
+        <li>
+          <span class="guide-step-n" aria-hidden="true">2</span>
+          <h3 class="guide-h3">Make it yours</h3>
+          <p>The map fills the screen and one panel holds four tabs: <strong>Look</strong>, <strong>Layout</strong>, <strong>Projects</strong> and <strong>Details</strong>. Every choice is a live preview of your own sky. Drag stars, feature your favourites, hide the rest, or press <strong>Shuffle</strong> for a surprise. <strong>Undo</strong> takes back anything.</p>
+        </li>
+        <li>
+          <span class="guide-step-n" aria-hidden="true">3</span>
+          <h3 class="guide-h3">Get it</h3>
+          <p>Press <strong>Get it</strong> and choose where it goes:</p>
+          <ul>
+            <li><strong>Your GitHub profile</strong>, redrawn every day by a small GitHub Action.</li>
+            <li><strong>An image</strong> as SVG or PNG.</li>
+            <li><strong>A website</strong>, as one interactive page visitors can explore.</li>
+            <li><strong>A link</strong> anyone can open.</li>
+            <li><strong>A settings file</strong> to keep or move your design.</li>
+          </ul>
+        </li>
+      </ol>
+    </section>
+
+    <section class="guide-section" aria-labelledby="reading">
+      <h2 id="reading" class="guide-h2">Reading the map</h2>
+      <dl class="guide-grid">
+        <div><dt>Where a star sits</dt><dd>Depends on the layout. In <strong>Galaxy</strong> projects cluster by language. In <strong>Through time</strong> each year gets its own layer.</dd></div>
+        <div><dt>How big it is</dt><dd>Shows what you pick under <strong>Star size shows</strong>, such as stars on GitHub.</dd></div>
+        <div><dt>Its colour</dt><dd>Shows what you pick under <strong>Star colour shows</strong>, such as the main language.</dd></div>
+        <div><dt>Why it’s there</dt><dd>Click any star. Its card explains each fact and says where it came from: <em>From GitHub</em>, <em>Worked out by Constellation</em> or <em>Your choice</em>.</dd></div>
+      </dl>
+      <p class="guide-callout">A sky describes public data and your settings. It is not a score, and a bigger star is not a better project.</p>
+    </section>
+
+    <section class="guide-section" aria-labelledby="signin">
+      <h2 id="signin" class="guide-h2">Signing in is optional</h2>
+      <p>Any public account can be mapped without signing in. Signing in with GitHub adds your pinned projects, every language in each project, and your recent activity.</p>
+      <ul class="guide-list">
+        <li>Constellation asks GitHub for read-only access and can’t change anything on your account.</li>
+        <li>A tiny sign-in service completes the GitHub handshake. It hands your browser a token and keeps nothing.</li>
+        <li>The token lives only in this tab’s memory. Reloading the page or pressing <strong>Sign out</strong> forgets it.</li>
+        <li>It never goes into links, images, downloads or settings files.</li>
+        <li>You can remove Constellation’s access at any time in your GitHub settings under <strong>Applications</strong>.</li>
+      </ul>
+    </section>
+
+    <section class="guide-section" aria-labelledby="engine">
+      <h2 id="engine" class="guide-h2">Under the hood</h2>
+      <p>The layout engine is written in Rust and runs in your browser as WebAssembly. The same projects with the same settings always draw the same sky, so your profile picture doesn’t jump around from one day to the next. The picture itself is plain SVG, which stays sharp at any size and works in any README.</p>
+      <p>Constellation is free and open source. Developers can embed a sky with the <code>&lt;constellation-view&gt;</code> web component or use the command-line tool; the <a href="https://github.com/mnichols08/constellation#readme">README</a> explains both.</p>
+    </section>
+
+    <section class="guide-cta" aria-labelledby="cta">
+      <h2 id="cta" class="guide-h2">Ready to see yours?</h2>
+      <div class="guide-cta-actions">
+        <a class="btn btn-primary btn-lg" href="./">Make my sky</a>
+        <a class="btn btn-lg" href="https://github.com/mnichols08/constellation" target="_blank" rel="noopener">
+          <svg class="star-icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" /></svg>
+          Star on GitHub<span class="visually-hidden"> (opens in a new tab)</span>
+        </a>
+      </div>
+      <p class="guide-muted">Free and open source. A star helps other people find it.</p>
+    </section>
+  </main>
+
+  <footer class="home-foot">
+    <span class="made-by">Made with <span class="heart" aria-hidden="true">♥</span><span class="visually-hidden">love</span> by <a href="https://github.com/mnichols08">mnichols08</a></span>
+    <a class="star-link" href="https://github.com/mnichols08/constellation" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" /></svg>
+      Star on GitHub<span class="visually-hidden"> (opens in a new tab)</span>
+    </a>
+  </footer>
+
+  <script type="module" src="./src/app/how-it-works.mjs"></script>
+</body>
+</html>

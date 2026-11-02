@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "theme": "terminal",
+  "seedMode": "account",
+  "arrangement": "rings",
+  "nodeSize": "uniform",
+  "nodeShape": "square",
+  "effect": "scanlines",
+  "exportProfile": "compact",
+  "animate": false
+}

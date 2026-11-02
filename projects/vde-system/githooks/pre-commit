@@ -1,0 +1,64 @@
+#!/usr/bin/env zsh
+# @forge (Governance Sentinel)
+# pre-commit - VDE Sentinel Hook
+#
+# Enforces Rule C (Zsh Purity) and Rule 12 (Security Law)
+# and performs a silent spine check.
+set -e
+
+# Zsh-native parameter expansion (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+# Determine VDE root directory
+VDE_ROOT_DIR=$(git rev-parse --show-toplevel)
+export VDE_ROOT_DIR
+
+# 1. Zsh Purity Check (Rule C)
+# Scans staged .zsh and .sh files for #!/bin/bash or #!/bin/sh shebangs.
+# Exception: scripts/bootstrap.sh MUST use bash because it runs before
+# Zsh is installed — it is the pre-VDE entry point.
+# We append '|| true' to grep to prevent 'set -e' from exiting on no matches.
+typeset staged_files=($(git diff --cached --name-only --diff-filter=ACM | grep -E "\.(zsh|sh)$" | grep -v "scripts/bootstrap.sh" || true))
+
+for file in "${staged_files[@]}"; do
+    typeset shebang=$(git show :"$file" | head -n 1)
+    if [[ "$shebang" == \#\!/*/(bash|sh|ash|dash|env\ (bash|sh|ash|dash)) ]]; then
+        echo -e "\033[0;31m[ERROR] Rule C Violation (Zsh Purity):\033[0m"
+        echo -e "  File '$file' contains an unauthorized shebang: $shebang"
+        echo -e "  VDE requires all shell scripts to be ZSH-compliant (#!/usr/bin/env zsh)."
+        exit 1
+    fi
+done
+
+# 2. Secret Sentinel (Rule 12)
+# Regex-based search for hardcoded credentials (API_KEY, SECRET, PASSWORD) in staged changes.
+# Ignore files matching env.template, the env-files/ primer directory, and ghost files (*.bak).
+typeset staged_all=($(git diff --cached --name-only --diff-filter=ACM | grep -v "env.template" | grep -v "env-files/" | grep -v "\.bak$" || true))
+
+for file in "${staged_all[@]}"; do
+    if git diff --cached "$file" | grep -Ei "^[+].*(API_KEY|SECRET|PASSWORD)\s*=" > /dev/null 2>&1; then
+        echo -e "\033[0;31m[ERROR] Rule 12 Violation (Security Law):\033[0m"
+        echo -e "  File '$file' contains potential hardcoded credentials."
+        echo -e "  Please use .env files or the project's secret management system."
+        exit 1
+    fi
+done
+
+# 3. Universal Script Parity (USP) Validation (Rule F)
+if [[ -f "${VDE_ROOT_DIR}/githooks/usp-validator.zsh" ]]; then
+    if ! zsh -e "${VDE_ROOT_DIR}/githooks/usp-validator.zsh"; then
+        exit 1
+    fi
+fi
+
+# 4. Silent Spine Check
+# Executes ./bin/vde-spine-check.zsh and blocks commit if it fails.
+if [[ -f "./bin/vde-spine-check.zsh" ]]; then
+    if ! ./bin/vde-spine-check.zsh > /dev/null 2>&1; then
+        echo -e "\033[0;31m[ERROR] VDE Spine Check Failed:\033[0m"
+        echo -e "  System spine verification failed. Run './bin/vde-health' for diagnostics."
+        exit 1
+    fi
+fi
+
+exit 0

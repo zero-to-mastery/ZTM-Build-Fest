@@ -1,0 +1,24 @@
+[
+  {
+    "id": "vale-lanterns-1801",
+    "type": "book",
+    "title": "A Treatise of Lanterns",
+    "author": [{ "family": "Vale", "given": "Ida" }],
+    "issued": { "date-parts": [[1801]] },
+    "publisher": "Orrin and Sons",
+    "abstract": "Synthetic private abstract that must never be imported.",
+    "note": "Synthetic private annotation that must never be imported."
+  },
+  {
+    "id": "notes-on-lamps",
+    "title": "Notes on Lamps"
+  },
+  {
+    "id": "quill-lanterns-1902",
+    "type": "book",
+    "title": "The Lantern Treatise",
+    "translator": [{ "literal": "Mara Quill" }],
+    "language": "en",
+    "custom": { "openblog-kind": "translation", "openblog-of": "vale-lanterns-1801" }
+  }
+]

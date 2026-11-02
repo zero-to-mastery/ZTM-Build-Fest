@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Rust toolchain from rust-toolchain.toml
+        run: rustup toolchain install
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - name: ripgrep
+        run: |
+          command -v rg && exit 0
+          if [ "$RUNNER_OS" = Linux ]; then
+            sudo apt-get update && sudo apt-get install -y ripgrep
+          else
+            brew install ripgrep
+          fi
+      - run: just lint
+      - run: just test
+      - name: install.sh
+        run: sh scripts/test-install.sh
+      - name: shellcheck
+        if: runner.os == 'Linux'
+        run: shellcheck install.sh scripts/test-install.sh

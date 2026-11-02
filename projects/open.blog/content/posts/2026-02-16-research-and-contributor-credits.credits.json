@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "credits": [
+    {
+      "contributor": "example-author",
+      "roles": [
+        { "vocabulary": "crossref", "role": "author" },
+        { "vocabulary": "credit", "role": "conceptualization" },
+        { "vocabulary": "credit", "role": "writing-original-draft" }
+      ]
+    },
+    {
+      "contributor": "example-editor",
+      "roles": [
+        { "vocabulary": "crossref", "role": "editor" },
+        { "vocabulary": "credit", "role": "writing-review-editing" }
+      ]
+    }
+  ]
+}

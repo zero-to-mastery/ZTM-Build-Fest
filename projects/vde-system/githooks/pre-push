@@ -1,0 +1,36 @@
+#!/usr/bin/env zsh
+# @forge (Governance Sentinel)
+# pre-push - VDE Gatekeeper Hook
+#
+# Enforces Mandate L (Proof of Life) before code leaves the local Forge.
+set -e
+
+# Zsh-native parameter expansion (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+# Determine VDE root directory
+typeset VDE_ROOT_DIR=$(git rev-parse --show-toplevel)
+export VDE_ROOT_DIR
+
+# 1. Proof of Life (Mandate L)
+# Executes the Proof of Life contract and blocks push if it fails.
+if [[ -f "${VDE_ROOT_DIR}/githooks/proof-of-life-hook.zsh" ]]; then
+    if ! zsh -e "${VDE_ROOT_DIR}/githooks/proof-of-life-hook.zsh"; then
+        echo -e "\033[0;31m[ERROR] Pre-Push Blockade (Heartbeat):\033[0m"
+        echo -e "  Proof of Life validation failed. Code is not permitted to leave the Forge."
+        exit 1
+    fi
+fi
+
+# 2. Gospel Audit (Phase 32 Intelligence)
+# Verifies Sovereign Artifact Set integrity and script documentation.
+if [[ -f "${VDE_ROOT_DIR}/bin/vde-gospel-audit.zsh" ]]; then
+    if ! zsh -e "${VDE_ROOT_DIR}/bin/vde-gospel-audit.zsh" --quiet; then
+        echo -e "\033[0;31m[ERROR] Pre-Push Blockade (Gospel Drift):\033[0m"
+        echo -e "  The Gospel has drifted from the physical implementation."
+        echo -e "  Run 'bin/vde-heal-docs.zsh' to restore synchronization."
+        exit 1
+    fi
+fi
+
+exit 0

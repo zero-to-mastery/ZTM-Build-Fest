@@ -1,0 +1,76 @@
+name: GitHub Constellation
+description: Generate constellation SVGs with config v7 and the Rust/WASM engine. Accepts v6 and legacy configs; see the v3 migration guide.
+branding:
+  icon: star
+  color: purple
+inputs:
+  username:
+    description: GitHub username or profile URL
+    default: ${{ github.repository_owner }}
+  token:
+    description: GitHub token for API requests and pinned repositories; defaults to the automatic workflow token
+    default: ${{ github.token }}
+  output:
+    description: SVG output path relative to the caller workspace
+    default: constellation.svg
+  publish:
+    description: Publish the generated image to the root of output-branch in the caller repository
+    default: 'false'
+  output-branch:
+    description: Destination branch when publish is true; existing files are preserved
+    default: output
+  config:
+    description: Optional v7, v6 or legacy JSON configuration path in the caller workspace
+    default: ''
+  config-json:
+    description: Inline JSON settings including CSS, as exported by the controller; use instead of config
+    default: ''
+  story:
+    description: Optional bounded Profile Story (auto, projects, technical-shape, journey)
+    default: ''
+  target-width:
+    description: Profile Story SVG width (480 or 900); requires story
+    default: ''
+outputs:
+  svg:
+    description: Generated SVG path
+    value: ${{ steps.generate.outputs.svg }}
+  publication-status:
+    description: Whether a validated artifact was published or skipped as unchanged
+    value: ${{ steps.publish.outputs.publication-status }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v6
+      with:
+        node-version: '22'
+        package-manager-cache: false
+    - id: generate
+      shell: bash
+      env:
+        CONSTELLATION_ACTION_PATH: ${{ github.action_path }}
+        CONSTELLATION_USERNAME: ${{ inputs.username }}
+        CONSTELLATION_OUTPUT: ${{ inputs.output }}
+        CONSTELLATION_CONFIG: ${{ inputs.config }}
+        CONSTELLATION_CONFIG_JSON: ${{ inputs.config-json }}
+        CONSTELLATION_STORY: ${{ inputs.story }}
+        CONSTELLATION_TARGET_WIDTH: ${{ inputs.target-width }}
+        GITHUB_TOKEN: ${{ inputs.token }}
+      run: node "$CONSTELLATION_ACTION_PATH/src/cli.mjs"
+    - id: publish
+      name: Publish image to output branch
+      if: ${{ inputs.publish == 'true' }}
+      shell: bash
+      env:
+        CONSTELLATION_ACTION_PATH: ${{ github.action_path }}
+        CONSTELLATION_OUTPUT: ${{ inputs.output }}
+        CONSTELLATION_OUTPUT_BRANCH: ${{ inputs.output-branch }}
+        CONSTELLATION_USERNAME: ${{ inputs.username }}
+        CONSTELLATION_CONFIG: ${{ inputs.config }}
+        CONSTELLATION_CONFIG_JSON: ${{ inputs.config-json }}
+        CONSTELLATION_EVIDENCE_DIGEST: ${{ steps.generate.outputs.evidence-digest }}
+      run: node "$CONSTELLATION_ACTION_PATH/scripts/publish-output.mjs"
+    - name: Report failed refresh
+      if: ${{ failure() && steps.publish.outcome != 'failure' }}
+      shell: bash
+      run: printf '%s\n' 'Refresh failed. The last known-good output branch artifact was preserved.' >> "$GITHUB_STEP_SUMMARY"

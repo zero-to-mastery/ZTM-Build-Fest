@@ -1,0 +1,61 @@
+{
+  "format": "openblog-reading-path",
+  "version": 1,
+  "title": "From the cave to the classroom",
+  "summary": "A short route through Plato and what later readers made of him.",
+  "status": "published",
+  "steps": [
+    {
+      "id": "cave",
+      "target": {
+        "kind": "post",
+        "slug": "the-cave"
+      },
+      "rationale": "Start with the image itself.",
+      "difficulty": "introductory"
+    },
+    {
+      "id": "plato",
+      "target": {
+        "kind": "atlas",
+        "id": "plato"
+      },
+      "prerequisites": "No background needed.",
+      "transition": {
+        "relationship": "background",
+        "why": "The first step assumes some knowledge of the man who wrote the image."
+      }
+    },
+    {
+      "id": "stoics",
+      "target": {
+        "kind": "atlas",
+        "id": "stoics"
+      },
+      "difficulty": "advanced",
+      "transition": {
+        "relationship": "influenced",
+        "why": "The atlas records this influence with its evidence.",
+        "basis": "r-influence"
+      }
+    },
+    {
+      "id": "aside",
+      "target": {
+        "kind": "post",
+        "slug": "other"
+      },
+      "optional": true,
+      "transition": {
+        "relationship": "applies",
+        "why": "A worked example for readers who want one."
+      }
+    }
+  ],
+  "x-future": {
+    "kept": [
+      1,
+      2
+    ]
+  }
+}

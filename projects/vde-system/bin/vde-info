@@ -1,0 +1,120 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-info - Show VDE system and VM information
+set -e
+# Usage: vde-info [vm_name]
+#===============================================================================
+
+# Determine VDE root directory
+if [[ -z "${VDE_ROOT_DIR}" ]]; then
+    export VDE_ROOT_DIR="${0:h:h}"
+fi
+
+# Source core libraries
+source "${VDE_ROOT_DIR}/lib/vm-common"
+[[ -f "${VDE_ROOT_DIR}/lib/vde-docker-state" ]] && source "${VDE_ROOT_DIR}/lib/vde-docker-state"
+[[ -f "${VDE_ROOT_DIR}/lib/vde-naming" ]] && source "${VDE_ROOT_DIR}/lib/vde-naming"
+
+# Default to docker info if no VM name provided
+if [[ ${#} -eq 0 ]]; then
+    docker info
+    exit ${?}
+fi
+
+VM_NAME="${1}"
+RESOLVED_NAME=$(resolve_vm_name "${VM_NAME}" 2>/dev/null) || RESOLVED_NAME="${VM_NAME}"
+
+if ! is_known_vm "${RESOLVED_NAME}"; then
+    echo "Error: Unknown VM '${VM_NAME}'"
+    exit ${VDE_ERR_NOT_FOUND}
+fi
+
+# Gather metadata
+VM_STATE=$(load_docker_state "${RESOLVED_NAME}" 2>/dev/null) || VM_STATE=""
+
+_VM_TYPE=""
+_VM_DISPLAY=""
+_SSH_PORT=""
+
+if [[ -n "${VM_STATE}" ]]; then
+    _VM_TYPE=$(echo "${VM_STATE}" | vde_query_json -r '.vm_type' 2>/dev/null)
+    _VM_DISPLAY=$(echo "${VM_STATE}" | vde_query_json -r '.display' 2>/dev/null)
+    _SSH_PORT=$(echo "${VM_STATE}" | vde_query_json -r '.ssh_port' 2>/dev/null)
+fi
+
+# Fallback or refresh if missing
+[[ -z "${_VM_TYPE}" || "${_VM_TYPE}" == "null" ]] && _VM_TYPE=$(get_vm_type "${RESOLVED_NAME}")
+[[ -z "${_VM_DISPLAY}" || "${_VM_DISPLAY}" == "null" ]] && _VM_DISPLAY=$(get_vm_display "${RESOLVED_NAME}")
+VM_STATUS=$(vm_container_status "${RESOLVED_NAME}" 2>/dev/null || echo "not created")
+CONTAINER=$(vde_get_container_name "${RESOLVED_NAME}")
+HOSTNAME=$(vde_get_hostname "${RESOLVED_NAME}")
+
+# Safe Port Discovery (Hardened against set -e and template errors)
+if [[ "${VM_STATUS}" == "running" ]]; then
+    # 1. Try to find the host port mapped to the container's designated SSH port
+    local internal_port=$(get_vm_ssh_port "${RESOLVED_NAME}" 2>/dev/null || echo "22")
+    # If it is a service Spoke like postgres, it might be listening on its own port
+    # but VDE usually maps host_port:22 or host_port:internal_ssh_port
+    
+    # Attempt extraction without tripping set -e
+    local docker_port_json
+    docker_port_json=$(docker inspect --format='{{json .NetworkSettings.Ports}}' "${CONTAINER}" 2>/dev/null) || docker_port_json="{}"
+    
+    # Try 22/tcp first (VDE Standard)
+    _SSH_PORT=$(echo "${docker_port_json}" | vde_query_json -r '.["22/tcp"][0].HostPort' 2>/dev/null)
+    
+    # If empty, try the internal port from registry
+    if [[ -z "${_SSH_PORT}" || "${_SSH_PORT}" == "null" ]]; then
+        _SSH_PORT=$(echo "${docker_port_json}" | vde_query_json -r ".[\"${internal_port}/tcp\"][0].HostPort" 2>/dev/null)
+    fi
+fi
+
+# 2. Try to get SSH port from registry if still empty or container not running
+if [[ -z "${_SSH_PORT}" || "${_SSH_PORT}" == "null" || "${_SSH_PORT}" == "0" ]]; then
+    _SSH_PORT=$(get_vm_ssh_port "${RESOLVED_NAME}" 2>/dev/null || echo "")
+fi
+
+# Final Fallback
+[[ -z "${_SSH_PORT}" || "${_SSH_PORT}" == "null" ]] && _SSH_PORT="not assigned"
+
+# Update state if it was missing or stale
+if [[ -z "${VM_STATE}" ]] || [[ "${VM_STATUS}" == "running" ]]; then
+    # Ensure _SSH_PORT is numeric for JSON or "null"
+    local json_port="${_SSH_PORT}"
+    [[ "${json_port}" =~ ^[0-9]+$ ]] || json_port="null"
+
+    NEW_STATE=$(cat <<EOF
+{
+  "vm_name": "${RESOLVED_NAME}",
+  "vm_type": "${_VM_TYPE}",
+  "display": "${_VM_DISPLAY}",
+  "ssh_port": ${json_port},
+  "status": "${VM_STATUS}",
+  "updated_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+}
+EOF
+)
+    save_docker_state "${RESOLVED_NAME}" "${NEW_STATE}"
+fi
+
+# Show VDE Info
+echo "VDE VM Information: ${RESOLVED_NAME}"
+echo "----------------------------------------"
+echo "Display Name:   ${_VM_DISPLAY}"
+echo "Category:       ${_VM_TYPE}"
+echo "Status:         [${(U)VM_STATUS}]"
+echo "Container Name: ${CONTAINER}"
+echo "SSH Hostname:   ${HOSTNAME}"
+echo "SSH Port:       ${_SSH_PORT}"
+echo "Username:       devuser"
+
+# Show Docker details if running
+if [[ "${VM_STATUS}" == "running" ]]; then
+    echo "----------------------------------------"
+    echo "Docker Details:"
+    docker inspect --format 'IP Address:    {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}
+Exposed Ports: {{range $p, $conf := .NetworkSettings.Ports}}{{$p}} -> {{(index $conf 0).HostPort}}{{end}}' "${CONTAINER}"
+fi
+
+exit ${VDE_SUCCESS}

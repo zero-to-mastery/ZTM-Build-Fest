@@ -1,0 +1,92 @@
+{
+  "about": "Announcement rules for optional social publishing (ADR 0308). crates/openblog-core/src/social_schedule.rs and netlify/lib/social-schedule.mjs must accept and refuse exactly these.",
+  "now": "2026-11-01T12:00:00Z",
+  "captionLimit": 3000,
+  "providers": { "accepted": ["linkedin", "facebook"], "refused": ["", "LinkedIn", "twitter", "x", "threads", "instagram", "linkedin ", "facebook\n"] },
+  "captions": {
+    "accepted": [
+      ["New post: why lanterns glow", "New post: why lanterns glow"],
+      ["  padded  ", "padded"],
+      ["two\r\nlines\rmore", "two\nlines\nmore"],
+      ["Emoji and accents: café ✨", "Emoji and accents: café ✨"]
+    ],
+    "refused": [
+      ["", "caption-empty"],
+      ["   \n\t ", "caption-empty"],
+      ["bell\u0007", "caption-characters"],
+      ["null\u0000byte", "caption-characters"],
+      ["bidi \u202e override", "caption-characters"],
+      ["separator \u2028 here", "caption-characters"],
+      ["tab\tinside", "caption-characters"]
+    ]
+  },
+  "times": {
+    "accepted": [
+      ["2026-11-01T12:01:00Z", "2026-11-01T12:01:00Z"],
+      ["2026-11-02T09:30:00+02:00", "2026-11-02T07:30:00Z"],
+      ["2026-11-02T09:30-05:00", "2026-11-02T14:30:00Z"],
+      ["2026-12-25T00:00:00.123Z", "2026-12-25T00:00:00Z"],
+      ["2027-11-02T11:59:59Z", "2027-11-02T11:59:59Z"]
+    ],
+    "refused": [
+      ["", "time-invalid"],
+      ["tomorrow", "time-invalid"],
+      ["2026-11-02", "time-needs-zone"],
+      ["2026-11-02T09:30", "time-needs-zone"],
+      ["2026-11-02T09:30:00", "time-needs-zone"],
+      ["2026-11-02T09:30:00+0200", "time-needs-zone"],
+      ["2026-11-02T09:30:00+24:00", "time-needs-zone"],
+      ["2026-02-30T09:30:00Z", "time-invalid"],
+      ["2026-11-02T25:30:00Z", "time-invalid"],
+      ["2026-11-02T09:60:00Z", "time-invalid"],
+      ["2026-12-31T23:59:60Z", "time-invalid"],
+      ["2026-11-02T09:30:00.Z", "time-invalid"],
+      ["2026-11-02 09:30:00Z", "time-invalid"],
+      ["2026-11-01T12:00:30Z", "time-too-soon"],
+      ["2026-10-31T12:00:00Z", "time-too-soon"],
+      ["2027-11-03T12:00:01Z", "time-too-far"],
+      ["2099-01-01T00:00:00Z", "time-too-far"]
+    ]
+  },
+  "timeZones": {
+    "accepted": ["UTC", "Europe/London", "America/Argentina/Buenos_Aires", "Etc/GMT+5", "Asia/Kolkata"],
+    "refused": ["", "Europe/London/Extra/Deep", "../etc", "Europe/Lon don", "1Europe", "Europe//London", "Europe/London\n", "λ/Athens", "UTC;drop"]
+  },
+  "keys": {
+    "accepted": ["abcdefghijklmnop", "ABCDEFGH_ijkl-mn0123", "0123456789abcdef0123456789abcdef"],
+    "refused": ["", "short", "abcdefghijklmno", "has space in the middle", "semi;colon;semi;colon", "slash/slash/slash/slash"]
+  },
+  "urls": {
+    "accepted": [
+      ["https://blog.example.org/posts/hello/", "/posts/hello/"],
+      ["https://www.example.org/2026/hello/", "/2026/hello/"],
+      ["https://user.github.io/blog/posts/hello/", "/posts/hello/"]
+    ],
+    "refused": [
+      ["http://blog.example.org/posts/hello/", "/posts/hello/"],
+      ["https://blog.example.org/posts/hello/?utm=1", "/posts/hello/"],
+      ["https://blog.example.org/posts/hello/#top", "/posts/hello/"],
+      ["https://user:pw@blog.example.org/posts/hello/", "/posts/hello/"],
+      ["https://localhost/posts/hello/", "/posts/hello/"],
+      ["https://127.0.0.1/posts/hello/", "/posts/hello/"],
+      ["https://intranet/posts/hello/", "/posts/hello/"],
+      ["https://blog.local/posts/hello/", "/posts/hello/"],
+      ["https://blog.example.org/posts/other/", "/posts/hello/"],
+      ["https://blog.example.org/posts/hello/", "posts/hello/"],
+      ["https://blog.example.org/posts/hello/", "//evil.example/"],
+      ["https://user.github.io//posts/hello/", "/posts/hello/"],
+      ["https://user.github.io/blog/posts/hello", "/posts/hello/"],
+      ["https://blog.example.org/posts/hello/", "/"],
+      ["", "/posts/hello/"],
+      ["javascript:alert(1)", "/posts/hello/"]
+    ]
+  },
+  "statuses": ["scheduled", "claimed", "published", "failed", "canceled", "unknown"],
+  "editable": ["scheduled"],
+  "transitions": [
+    ["scheduled", "claimed"], ["scheduled", "canceled"],
+    ["claimed", "published"], ["claimed", "failed"], ["claimed", "unknown"], ["claimed", "scheduled"],
+    ["failed", "scheduled"],
+    ["unknown", "published"], ["unknown", "failed"]
+  ]
+}

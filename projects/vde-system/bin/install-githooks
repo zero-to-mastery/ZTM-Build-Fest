@@ -1,0 +1,75 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# install-githooks - Install VDE git hooks
+#
+# Installs project git hooks from githooks/ to .git/hooks/
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+# We do NOT set -e here because arithmetic increments can return 1 (which is NOT an error in this context)
+# Instead we will handle errors explicitly.
+
+VDE_SCRIPTS_DIR="$(cd "$(dirname "${0}")" && pwd)"
+PROJECT_ROOT="$(cd "${VDE_SCRIPTS_DIR}/.." && pwd)"
+HOOKS_DIR="${PROJECT_ROOT}/.git/hooks"
+SOURCE_DIR="${PROJECT_ROOT}/githooks"
+
+# Colors
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+RED='\033[0;31m'
+RESET='\033[0m'
+
+echo "Installing VDE git hooks..."
+
+# Check if we're in a git repository
+if [[ ! -d "${PROJECT_ROOT}/.git" ]]; then
+    echo -e "${RED}Error: Not in a git repository${RESET}"
+    exit ${VDE_ERR_GENERAL}
+fi
+
+# Ensure hooks directory exists
+if [[ ! -d "${HOOKS_DIR}" ]]; then
+    mkdir -p "${HOOKS_DIR}"
+fi
+
+# Check if source hooks exist
+if [[ ! -d "${SOURCE_DIR}" ]]; then
+    echo -e "${YELLOW}Warning: No hooks to install in ${SOURCE_DIR}${RESET}"
+    exit ${VDE_SUCCESS}
+fi
+
+# Install each hook
+INSTALLED=0
+for hook in "${SOURCE_DIR}"/*(N); do
+    if [[ -f "${hook}" ]]; then
+        hook_name=$(basename "${hook}")
+        target="${HOOKS_DIR}/${hook_name}"
+
+        # Remove existing hook
+        if [[ -e "${target}" ]]; then
+            rm -f "${target}"
+        fi
+
+        # Create symlink
+        ln -sf "../../githooks/${hook_name}" "${target}"
+        chmod +x "${target}"
+
+        echo -e "  ${GREEN}✓${RESET} Installed: ${hook_name}"
+        INSTALLED=$((INSTALLED + 1))
+    fi
+done
+
+if [[ ${INSTALLED} -eq 0 ]]; then
+    echo -e "${YELLOW}No hooks found to install${RESET}"
+else
+    echo ""
+    echo -e "${GREEN}Successfully installed ${INSTALLED} git hook(s)${RESET}"
+    echo ""
+    echo "Installed hooks:"
+    echo "  - pre-commit: VDE Sentinel (Rule C, Rule 12, USP)"
+    echo "  - pre-push:   VDE Gatekeeper (Mandate L - Proof of Life)"
+fi
+
+exit ${VDE_SUCCESS}

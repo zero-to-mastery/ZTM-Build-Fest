@@ -1,0 +1,27 @@
+# Rebuilds the site on Netlify once a day (06:23 UTC) so posts with a future `date`
+# go live. Each build compiles the engine and counts against Netlify's build minutes
+# (300 a month on the free tier), so keep this rare; for same-hour publishing use
+# `0 * * * *` on a paid plan, or schedule posts for the daily time. Does nothing until a repository secret named NETLIFY_BUILD_HOOK holds
+# the URL of a build hook (Netlify: Site configuration > Build & deploy > Build hooks).
+
+name: Rebuild on Netlify
+
+on:
+  schedule:
+    - cron: "23 6 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the Netlify build hook
+        env:
+          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "No NETLIFY_BUILD_HOOK secret; nothing to do."; exit 0
+          fi
+          curl --silent --show-error --fail -X POST -d '{}' "$HOOK"

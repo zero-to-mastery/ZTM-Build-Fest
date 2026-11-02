@@ -1,0 +1,40 @@
+From e326632002d999cc921bd10d5125889437b1ebae Mon Sep 17 00:00:00 2001
+From: s <s@e.invalid>
+Date: Wed, 30 Sep 2026 17:38:02 -0400
+Subject: [PATCH] fix(vde): bare 'vde' prints usage (exit 2) instead of dying
+ on 'shift'
+
+---
+ bin/vde | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/bin/vde b/bin/vde
+index 2989516..632de89 100755
+--- a/bin/vde
++++ b/bin/vde
+@@ -50,4 +50,6 @@ trap 'vde_error_map 130; exit 130' SIGINT SIGTERM
+ # Main command router
+-ACTION=$1
+-shift # past command
++ACTION=${1:-}
++# A bare `shift` with no arguments fails ("shift count must be <= $#") and, under
++# `set -e`, killed the script before any usage was shown.
++if [[ $# -gt 0 ]]; then shift; fi # past command
+ 
+@@ -63,4 +65,11 @@ if [[ "${ACTION}" == "function-trace" ]]; then
+     _VDE_FT_PENDING=1
+-    ACTION="$1"
+-    shift
++    ACTION="${1:-}"
++    if [[ $# -gt 0 ]]; then shift; fi
++fi
++
++# No command given (also `vde function-trace` alone): show usage, report invalid input.
++# The help handler ends with its own `exit 0`, so run it in a subshell to keep our status.
++if [[ -z "${ACTION}" ]]; then
++    ( vde_action_help )
++    exit ${VDE_ERR_INVALID_INPUT}
+ fi
+-- 
+2.43.0
+

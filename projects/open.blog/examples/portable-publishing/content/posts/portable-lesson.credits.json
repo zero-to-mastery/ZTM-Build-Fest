@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "credits": [
+    {
+      "contributor": "alex",
+      "roles": [{ "vocabulary": "crossref", "role": "author" }]
+    }
+  ]
+}

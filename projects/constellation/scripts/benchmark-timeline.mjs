@@ -1,0 +1,11 @@
+import { performance } from 'node:perf_hooks';
+import { createTimelineHost, htmlBundleStatistics } from '../src/core-api.mjs';
+const records = Array.from({ length: 256 }, (_, i) => ({ name: `project-${i}`, full_name: `benchmark/project-${i}`, language: i % 2 ? 'Rust' : 'JavaScript', created_at: `${2010 + i % 16}-01-01` }));
+const options = { referenceDate: '2026-09-01T00:00:00Z', animate: false, nodeCap: 256, maxRepos: 256 };
+const definition = { dates: ['2010-01-01', '2015-01-01', '2020-01-01', '2025-01-01'] };
+const host = createTimelineHost();
+const start = performance.now(); const scene = host.create('benchmark', records, options, definition); const coldMs = performance.now() - start;
+const cached = performance.now(); host.create('benchmark', records, options, definition); const cachedMs = performance.now() - cached;
+const sizes = htmlBundleStatistics(scene);
+if (sizes.htmlBytes > 12 * 1024 * 1024) throw new Error('Timeline example exceeds 12 MiB budget.');
+console.log(JSON.stringify({ frames: scene.timeline.frames.length, coldMs, cachedMs, cache: host.cacheStatistics, ...sizes }, null, 2));

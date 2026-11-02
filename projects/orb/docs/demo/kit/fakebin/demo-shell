@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /bin/bash --noprofile --rcfile "$HOME/.demorc" -i

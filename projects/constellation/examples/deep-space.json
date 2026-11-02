@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "theme": "deep-space",
+  "seedMode": "custom",
+  "seed": "deep-space-v1",
+  "arrangement": "galaxy",
+  "nodeSize": "stars",
+  "nodeGlowMode": "activity",
+  "nodeColorMode": "seeded",
+  "connectionWeight": "overlap",
+  "exportProfile": "profile",
+  "legend": true
+}

@@ -1,0 +1,6680 @@
+/* Admin editor styles. Uses the same --ob-* tokens as the blog, so it follows
+   the base theme's light and dark colours. Class prefix: oba- */
+
+:root {
+  --oba-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.06), 0 4px 14px rgb(0 0 0 / 0.05);
+  --oba-shadow-lg: 0 18px 50px rgb(0 0 0 / 0.16);
+  --oba-panel-border: color-mix(in srgb, var(--ob-color-border) 82%, transparent);
+  --oba-danger: var(--ob-color-callout-caution, #c0392b);
+  --oba-success: var(--ob-color-callout-tip, #2e8b57);
+}
+
+body {
+  /* A floor for very narrow windows that never forces sideways scrolling when text is enlarged. */
+  min-width: min(20rem, 100vw);
+  background: var(--ob-color-outer);
+}
+
+ob-admin {
+  display: block;
+  min-height: 100vh;
+}
+
+.oba-shell {
+  width: min(112rem, 100%);
+  margin: 0 auto;
+  min-height: 100vh;
+  border-inline: var(--ob-border-width) solid var(--oba-panel-border);
+  background: var(--ob-color-page);
+}
+
+.oba-app-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 4.75rem;
+  padding: 0.75rem clamp(1rem, 2vw, 2rem);
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+  background: var(--ob-color-surface);
+}
+
+.oba-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+  color: var(--ob-color-text);
+  text-decoration: none;
+}
+
+.oba-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 2.65rem;
+  height: 2.65rem;
+  border-radius: calc(var(--ob-radius-sm) + 3px);
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-contrast);
+  font-family: var(--ob-font-heading);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: -0.08em;
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--ob-color-accent) 22%, transparent);
+}
+
+.oba-brand-copy {
+  display: grid;
+  gap: 0.05rem;
+  min-width: 0;
+}
+
+.oba-brand-copy strong {
+  overflow: hidden;
+  font-family: var(--ob-font-heading);
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oba-brand-copy small {
+  color: var(--ob-color-subtle);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.oba-command-trigger {
+  gap: 0.65rem;
+  color: var(--ob-color-muted);
+}
+
+kbd {
+  padding: 0.12rem 0.38rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: 0.3rem;
+  background: var(--ob-color-surface-raised);
+  color: var(--ob-color-subtle);
+  font-family: var(--ob-font-mono);
+  font-size: 0.68rem;
+  line-height: 1.3;
+  box-shadow: 0 1px 0 var(--ob-color-border);
+}
+
+.oba-spacer {
+  flex: 1;
+}
+
+.oba-toolbelt {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: clamp(1rem, 3vw, 4rem);
+  padding: 0.9rem clamp(1rem, 2vw, 2rem);
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+  background: var(--ob-color-surface);
+}
+
+.oba-tool-group {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+}
+
+.oba-tool-label,
+.oba-pane-eyebrow {
+  color: var(--ob-color-accent);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.oba-tool-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.oba-tabs {
+  display: flex;
+  gap: 0.25rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 1rem;
+  padding: 0.3rem;
+  overflow-x: auto;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: calc(var(--ob-radius-sm) + 4px);
+  background: var(--ob-color-surface);
+  box-shadow: var(--oba-shadow-sm);
+}
+
+.oba-tab,
+.oba-btn {
+  min-height: 44px;
+  padding: 0.45rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color var(--ob-motion), background var(--ob-motion), color var(--ob-motion), transform var(--ob-motion), box-shadow var(--ob-motion);
+}
+
+.oba-tab {
+  min-height: 34px;
+  padding: 0.35rem 0.7rem;
+  background: var(--ob-color-surface);
+  font-size: 0.84rem;
+}
+
+.oba-tab[aria-current="page"],
+.oba-tab[aria-current="true"],
+.oba-tab[aria-selected="true"],
+.oba-tab[aria-pressed="true"] {
+  border-color: var(--ob-color-accent-border);
+  background: var(--ob-color-glow);
+  color: var(--ob-color-accent);
+  font-weight: 600;
+}
+
+.oba-context-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 4.25rem;
+  padding: 0.7rem clamp(1rem, 2vw, 2rem);
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+  background: color-mix(in srgb, var(--ob-color-surface-raised) 72%, var(--ob-color-surface));
+}
+
+.oba-context-copy {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: baseline;
+  gap: 0.15rem 0.75rem;
+}
+
+.oba-context-copy .oba-eyebrow {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.oba-context-copy h1,
+.oba-context-copy p {
+  margin: 0;
+}
+
+.oba-context-copy h1 {
+  font-size: 1rem;
+}
+
+.oba-context-copy p {
+  color: var(--ob-color-subtle);
+  font-size: 0.78rem;
+}
+
+.oba-workspace-content {
+  padding: 1.25rem clamp(1rem, 2vw, 2rem) 4rem;
+}
+
+.oba-btn:hover {
+  border-color: var(--ob-color-accent-border);
+  background: var(--ob-color-surface-raised);
+  transform: translateY(-1px);
+}
+
+/* The landing page builder (ADR 0251) turns the button lift and every transition off under reduced
+   motion. It sits here, beside the rule it overrides, rather than with the builder's other styles. */
+@media (prefers-reduced-motion: reduce) {
+  .oba-landing .oba-btn,
+  .oba-landing-bar .oba-btn,
+  .oba-landing-sheet .oba-btn,
+  .oba-landing-type,
+  .oba-landing-form :is(input, select, textarea) {
+    transition: none;
+    transform: none;
+    animation: none;
+  }
+
+  .oba-landing .oba-btn:hover,
+  .oba-landing-bar .oba-btn:hover,
+  .oba-landing-sheet .oba-btn:hover {
+    transform: none;
+  }
+}
+
+.oba-btn:focus-visible,
+.oba-tab:focus-visible,
+.oba-field input:focus-visible,
+.oba-field select:focus-visible,
+.oba-field textarea:focus-visible,
+.oba-search:focus-visible,
+.oba-body:focus-visible {
+  outline: var(--ob-focus-ring);
+  outline-offset: 2px;
+}
+
+.oba-btn-primary {
+  border-color: var(--ob-color-accent);
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-contrast);
+  font-weight: 600;
+}
+
+.oba-btn-primary:hover {
+  border-color: var(--ob-color-accent-soft);
+  background: var(--ob-color-accent-soft);
+  box-shadow: 0 7px 18px color-mix(in srgb, var(--ob-color-accent) 25%, transparent);
+}
+
+.oba-btn-danger {
+  color: var(--oba-danger);
+  border-color: color-mix(in srgb, var(--oba-danger) 45%, transparent);
+}
+
+.oba-btn-feature {
+  border-color: var(--ob-color-accent-border);
+  background: var(--ob-color-glow);
+  color: var(--ob-color-accent);
+  font-weight: 650;
+}
+
+.oba-btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.oba-card {
+  width: min(30rem, calc(100% - 2rem));
+  margin: clamp(3rem, 12vh, 8rem) auto 0;
+  padding: clamp(1.4rem, 5vw, 2.25rem);
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: calc(var(--ob-radius) + 6px);
+  background: var(--ob-color-surface);
+  box-shadow: var(--oba-shadow-lg);
+}
+
+.oba-card h1 {
+  margin: 0;
+  font-size: 1.65rem;
+  letter-spacing: -0.025em;
+}
+
+.oba-login-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.oba-eyebrow {
+  margin: 0 0 0.2rem;
+  color: var(--ob-color-accent);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.oba-login-copy {
+  margin: 0.55rem 0 1.5rem;
+  color: var(--ob-color-muted);
+}
+
+.oba-theme-toggle {
+  gap: 0.4rem;
+  min-width: 5.2rem;
+  justify-content: center;
+}
+
+.oba-theme-icon {
+  width: 1rem;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.oba-field {
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.oba-field > label,
+.oba-legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ob-color-muted);
+}
+
+.oba-field input[type="text"],
+.oba-field input[type="password"],
+.oba-field input[type="number"],
+.oba-field input[type="datetime-local"],
+.oba-field input[type="search"],
+.oba-field select,
+.oba-field textarea,
+.oba-search {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.95rem;
+  transition: border-color var(--ob-motion), box-shadow var(--ob-motion), background var(--ob-motion);
+}
+
+.oba-field textarea {
+  resize: vertical;
+}
+
+.oba-dialog {
+  width: min(42rem, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  padding: 1.25rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: calc(var(--ob-radius) + 4px);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  box-shadow: var(--oba-shadow-lg);
+  overflow: auto;
+}
+
+.oba-dialog::backdrop {
+  background: rgb(0 0 0 / 0.55);
+}
+
+.oba-dialog h2 {
+  margin-top: 0;
+}
+
+.oba-dialog-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.oba-advanced-grid,
+.oba-module-list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-advanced-group {
+  margin-top: 1rem;
+}
+
+.oba-advanced-group h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.oba-advanced-tool {
+  display: grid;
+  gap: 0.2rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.oba-advanced-tool:hover,
+.oba-advanced-tool:focus-visible {
+  border-color: var(--ob-color-accent);
+}
+
+.oba-advanced-tool span {
+  color: var(--ob-color-subtle);
+  font-size: 0.85rem;
+}
+
+.oba-preferences-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.oba-essential-note,
+.oba-module-fieldset {
+  margin-top: 1rem;
+  padding: 0.85rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+}
+
+.oba-essential-note p {
+  margin-bottom: 0;
+}
+
+.oba-module-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 0.35rem 0.5rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+}
+
+.oba-module-row label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.oba-module-row > span {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.oba-module-row .oba-btn {
+  min-width: 44px;
+  padding-inline: 0.6rem;
+}
+
+.oba-preferences-warning {
+  margin: 0.75rem 1rem 0;
+  padding: 0.75rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-accent);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-progressive-tools[hidden],
+[data-admin-module][hidden],
+[data-admin-module-group][hidden],
+.oba-editor-advanced[hidden] {
+  display: none;
+}
+
+html[data-admin-preset="simple"] .oba-toolbelt {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+html[data-admin-density="compact"] .oba-workspace-content,
+html[data-admin-density="compact"] .oba-context-bar,
+html[data-admin-density="compact"] .oba-pane {
+  padding-block: 0.55rem;
+}
+
+.oba-command-dialog {
+  width: min(36rem, calc(100vw - 2rem));
+  padding: 0;
+  overflow: hidden;
+}
+
+.oba-command-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1rem 0.5rem;
+}
+
+.oba-command-heading h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.oba-command-heading .oba-eyebrow {
+  margin-bottom: 0.15rem;
+}
+
+.oba-command-dialog > .oba-field {
+  margin: 0;
+  padding: 0.5rem 1rem 0;
+}
+
+.oba-command-dialog input[type="search"] {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+}
+
+.oba-command-dialog > .oba-small {
+  display: block;
+  margin: 0;
+  padding: 0.5rem 1rem;
+}
+
+.oba-command-results {
+  display: grid;
+  max-height: min(24rem, 55vh);
+  padding: 0 0.5rem 0.5rem;
+  overflow-y: auto;
+}
+
+.oba-command-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.7rem 0.75rem;
+  border: 0;
+  border-radius: var(--ob-radius-sm);
+  background: transparent;
+  color: var(--ob-color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.oba-command-result:hover,
+.oba-command-result:focus-visible {
+  outline: 0;
+  background: var(--ob-color-glow);
+  color: var(--ob-color-accent);
+}
+
+.oba-command-result small {
+  color: var(--ob-color-subtle);
+  font-size: 0.72rem;
+}
+
+.oba-quiz-editors {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.oba-generation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-generation select {
+  padding: 0.5rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: inherit;
+  font: inherit;
+}
+
+.oba-quiz-editor {
+  padding: 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-page);
+}
+
+.oba-quiz-editor legend {
+  padding: 0 0.35rem;
+  font-weight: 700;
+}
+
+.oba-quiz-choice-edit {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 0.55rem;
+}
+
+.oba-quiz-choice-edit input[type="text"] {
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  font: inherit;
+}
+
+.oba-help {
+  margin: 0;
+  color: var(--ob-color-subtle);
+  font-size: 0.8rem;
+}
+
+.oba-seo-checks {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-seo-checks li {
+  display: grid;
+  gap: 0.1rem;
+  padding-left: 1rem;
+  position: relative;
+  font-size: 0.82rem;
+}
+
+.oba-seo-checks li::before {
+  position: absolute;
+  left: 0;
+  content: "•";
+}
+
+.oba-seo-checks .is-ready::before {
+  color: var(--ob-color-success, #27864a);
+}
+
+.oba-seo-checks .needs-work::before {
+  color: var(--ob-color-accent);
+}
+
+.oba-seo-checks span {
+  color: var(--ob-color-subtle);
+}
+
+.oba-notice,
+.oba-error,
+.oba-ok {
+  margin: 0.75rem 0;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--ob-radius-sm);
+  border-left: 3px solid var(--ob-color-accent-border);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-error {
+  border-left-color: var(--oba-danger);
+}
+
+.oba-ok {
+  border-left-color: var(--oba-success);
+}
+
+.oba-error ul {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.oba-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.oba-overview-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.oba-overview-metric {
+  display: grid;
+  gap: 0.15rem;
+  padding: 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  text-decoration: none;
+  box-shadow: var(--oba-shadow-sm);
+  transition: border-color var(--ob-motion), transform var(--ob-motion), box-shadow var(--ob-motion);
+}
+
+.oba-overview-metric:hover {
+  border-color: var(--ob-color-accent-border);
+  transform: translateY(-1px);
+  box-shadow: var(--oba-shadow-lg);
+}
+
+.oba-overview-metric strong {
+  font-family: var(--ob-font-heading);
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.oba-overview-metric span {
+  font-weight: 700;
+}
+
+.oba-overview-metric small,
+.oba-quick-create small {
+  color: var(--ob-color-subtle);
+}
+
+.oba-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.oba-overview-panel {
+  padding: 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  box-shadow: var(--oba-shadow-sm);
+}
+
+.oba-overview-panel > header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.oba-overview-panel > header .oba-eyebrow {
+  width: 100%;
+}
+
+.oba-overview-panel > header h2,
+.oba-overview-panel > header p {
+  margin: 0;
+}
+
+.oba-overview-panel > header h2 {
+  font-size: 1.05rem;
+  white-space: nowrap;
+}
+
+.oba-overview-panel > header a {
+  margin-left: auto;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.oba-quick-grid {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.oba-quick-create {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.7rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  color: var(--ob-color-text);
+  text-decoration: none;
+}
+
+.oba-quick-create:hover {
+  border-color: var(--ob-color-accent-border);
+  background: var(--ob-color-glow);
+}
+
+.oba-quick-create > span:last-child {
+  display: grid;
+}
+
+.oba-quick-icon {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-glow);
+  color: var(--ob-color-accent);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.oba-inventory {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0;
+}
+
+.oba-inventory div {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.85rem;
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-inventory dt {
+  color: var(--ob-color-subtle);
+  font-size: 0.75rem;
+}
+
+.oba-inventory dd {
+  margin: 0;
+  font-family: var(--ob-font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.oba-overview-recent {
+  grid-row: span 2;
+}
+
+.oba-recent-list {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-recent-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.25rem 0.75rem;
+  align-items: center;
+  padding: 0.65rem 0;
+  border-bottom: var(--ob-border-width) solid var(--ob-color-border);
+}
+
+.oba-recent-list li:last-child {
+  border-bottom: 0;
+}
+
+.oba-recent-list a {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ob-color-text);
+  font-weight: 650;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.oba-recent-list time {
+  grid-column: 1 / -1;
+  color: var(--ob-color-subtle);
+  font-size: 0.75rem;
+}
+
+.oba-issue-list {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-issue-list li {
+  display: grid;
+  gap: 0.15rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--oba-danger);
+}
+
+.oba-table {
+  width: 100%;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-spacing: 0;
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  box-shadow: var(--oba-shadow-sm);
+  overflow: hidden;
+}
+
+.oba-table th,
+.oba-table td {
+  padding: 0.6rem 0.5rem;
+  border-bottom: var(--ob-border-width) solid var(--ob-color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.oba-table th {
+  color: var(--ob-color-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.oba-table a {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.oba-table tr:hover td {
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.oba-badge {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.oba-badge-published {
+  border-color: var(--oba-success);
+  color: var(--oba-success);
+}
+
+.oba-badge-scheduled {
+  border-color: #b9770e;
+  color: #b9770e;
+}
+
+.oba-badge-draft {
+  color: var(--ob-color-muted);
+}
+
+.oba-badge-error {
+  border-color: var(--oba-danger);
+  color: var(--oba-danger);
+}
+
+.oba-editor {
+  margin: -1.25rem clamp(-2rem, -2vw, -1rem) -4rem;
+  min-height: calc(100vh - 13rem);
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-side-fields {
+  padding: 1rem;
+}
+
+.oba-settings-pane .oba-side-fields {
+  width: min(100%, 48rem);
+  margin-inline: auto;
+}
+
+.oba-credit-editor {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.4rem;
+  padding-top: 1.25rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-credit-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.oba-credit-heading h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.oba-credit-explicit,
+.oba-credit-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.oba-credit-card {
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+  overflow: hidden;
+}
+
+.oba-credit-card > header {
+  display: grid;
+  grid-template-columns: auto minmax(10rem, 1fr) auto;
+  gap: 0.75rem;
+  align-items: end;
+  padding: 0.75rem;
+}
+
+.oba-credit-card .oba-field {
+  margin: 0;
+}
+
+.oba-credit-order {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  place-items: center;
+  align-self: center;
+  border-radius: 50%;
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-contrast);
+  font-weight: 750;
+}
+
+.oba-credit-actions,
+.oba-credit-add {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.oba-credit-actions .oba-btn {
+  padding: 0.42rem 0.58rem;
+}
+
+.oba-credit-role-picker {
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-credit-role-picker summary {
+  padding: 0.65rem 0.75rem;
+  color: var(--ob-color-muted);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.oba-credit-roles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0.8rem;
+  margin: 0;
+  padding: 0.75rem;
+  border: 0;
+  border-top: var(--ob-border-width) solid var(--ob-color-border);
+}
+
+.oba-credit-roles legend {
+  padding: 0 0.35rem;
+  font-weight: 700;
+}
+
+.oba-credit-roles label {
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+  min-width: 0;
+  font-size: 0.86rem;
+}
+
+.oba-credit-roles input {
+  margin-top: 0.18rem;
+}
+
+.oba-credit-roles.is-unknown {
+  border-left: 0.2rem solid var(--oba-danger);
+}
+
+.oba-credit-mode-badge {
+  margin-right: 0.45rem;
+}
+
+.oba-credit-mode-badge.is-explicit {
+  border-color: var(--ob-color-accent);
+  color: var(--ob-color-accent);
+}
+
+.oba-pane {
+  min-width: 0;
+}
+
+.oba-pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-height: 3.45rem;
+  padding: 0.65rem 1rem;
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+  background: var(--ob-color-surface);
+}
+
+.oba-pane-header > div {
+  display: grid;
+  gap: 0.05rem;
+}
+
+.oba-pane-header h2 {
+  margin: 0;
+  font-size: 0.9rem;
+  letter-spacing: -0.01em;
+}
+
+.oba-live-dot {
+  color: var(--oba-success);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.oba-live-dot::before {
+  content: "";
+  display: inline-block;
+  width: 0.42rem;
+  height: 0.42rem;
+  margin-right: 0.35rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.oba-preview-tools {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.oba-preview-width {
+  padding: 0.25rem 1.6rem 0.25rem 0.45rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.72rem;
+}
+
+.oba-portable-markdown {
+  box-sizing: border-box;
+  width: 100%;
+  max-height: 75vh;
+  margin: 0;
+  padding: 1rem;
+  overflow: auto;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  font: 0.82rem/1.55 ui-monospace, SFMono-Regular, Consolas, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.oba-fieldset {
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+}
+
+.oba-radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.oba-main {
+  min-width: 0;
+  padding: 1rem clamp(0.75rem, 2vw, 2rem);
+  background: var(--ob-color-page);
+}
+
+.oba-editor-actions {
+  margin-top: 0;
+}
+
+.oba-title-input {
+  width: 100%;
+  margin-bottom: 0.75rem;
+  padding: 0.75rem 0.9rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  font-family: var(--ob-font-heading);
+  font-size: 1.6rem;
+  font-weight: var(--ob-heading-weight);
+}
+
+.oba-subtitle-input {
+  width: 100%;
+  margin: -0.25rem 0 0.75rem;
+  padding: 0.5rem 0.9rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-muted);
+  font-family: var(--ob-font-heading);
+  font-size: 1.1rem;
+}
+
+.oba-panes {
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  box-shadow: var(--oba-shadow-sm);
+  overflow: hidden;
+}
+
+.oba-panes > .oba-pane {
+  display: none;
+}
+
+.oba-editor[data-editor-view="write"] .oba-markdown-pane,
+.oba-editor[data-editor-view="preview"] .oba-preview-pane,
+.oba-editor[data-editor-view="social"] .oba-social-pane,
+.oba-editor[data-editor-view="release"] .oba-release-pane,
+.oba-editor[data-editor-view="field"] .oba-field-pane,
+.oba-editor[data-editor-view="optimize"] .oba-optimize-pane,
+.oba-editor[data-editor-view="settings"] .oba-settings-pane,
+.oba-editor[data-editor-view="accessibility"] .oba-accessibility-pane,
+.oba-editor[data-editor-view="evidence"] .oba-evidence-pane,
+.oba-editor[data-editor-view="assistant"] .oba-assistant-pane {
+  display: block;
+}
+
+.oba-assistant-workspace {
+  display: grid;
+  grid-template-columns: minmax(15rem, 20rem) minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: start;
+  padding: clamp(1rem, 3vw, 2.5rem);
+}
+
+.oba-assistant-provider,
+.oba-assistant-empty {
+  padding: 1rem 1.1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-assistant-provider h3,
+.oba-assistant-empty h3,
+.oba-assistant-empty p {
+  margin-top: 0;
+}
+
+.oba-assistant-provider-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.oba-assistant-provider-heading h3 {
+  margin-bottom: 0;
+}
+
+.oba-assistant-status-badge {
+  padding: 0.25rem 0.55rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: 999px;
+  color: var(--ob-color-subtle);
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.oba-assistant-status-badge[data-tone="ready"] {
+  border-color: color-mix(in srgb, var(--oba-success) 45%, transparent);
+  color: var(--oba-success);
+  background: color-mix(in srgb, var(--oba-success) 9%, transparent);
+}
+
+.oba-assistant-status-badge[data-tone="invalid"] {
+  border-color: color-mix(in srgb, var(--oba-danger) 45%, transparent);
+  color: var(--oba-danger);
+}
+
+.oba-assistant-status-copy {
+  margin: 0.7rem 0 1rem;
+  color: var(--ob-color-subtle);
+  line-height: 1.5;
+}
+
+.oba-assistant-provider details {
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-assistant-provider details > summary {
+  padding: 0.8rem 0;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.oba-assistant-provider-details .oba-social-meta {
+  margin: 0 0 0.9rem;
+}
+
+.oba-assistant-provider-settings-body {
+  padding: 0.15rem 0 0.25rem;
+}
+
+.oba-assistant-provider-settings-body > .oba-small:first-child {
+  margin-top: 0;
+}
+
+.oba-assistant-settings-note {
+  margin: 0.8rem 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--ob-radius-sm);
+  color: var(--ob-color-subtle);
+  background: var(--ob-color-surface);
+  font-size: 0.85rem;
+  line-height: 1.45;
+}
+
+.oba-assistant-settings-actions {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.oba-assistant-settings-actions .oba-btn {
+  width: 100%;
+}
+
+.oba-btn-link {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.oba-assistant-main {
+  min-width: 0;
+}
+
+.oba-assistant-nav {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+.oba-skill-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.oba-skill-card,
+.oba-skill-catalog-card {
+  display: flex;
+  gap: 0.75rem;
+  align-items: start;
+  padding: 0.85rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.oba-skill-card > span,
+.oba-skill-card > span > span {
+  display: block;
+}
+
+.oba-skill-catalog-card {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.oba-skill-catalog-card h4,
+.oba-skill-catalog-card p {
+  margin: 0 0 0.35rem;
+}
+
+.oba-skill-card.is-invalid,
+.oba-skill-catalog-card.is-invalid {
+  border-style: dashed;
+  opacity: 0.82;
+}
+
+.oba-skill-errors {
+  flex-basis: 100%;
+  color: var(--oba-danger);
+}
+
+.oba-skill-errors ul {
+  margin-bottom: 0;
+}
+
+.oba-skill-editor {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-skill-editor textarea {
+  width: 100%;
+  resize: vertical;
+  font-family: var(--ob-font-mono);
+}
+
+.oba-review-group {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.oba-review-finding {
+  padding: 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.oba-review-finding h5,
+.oba-review-finding p {
+  margin-top: 0;
+}
+
+.oba-review-finding blockquote,
+.oba-review-finding pre {
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.oba-assistant-context-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 1rem;
+}
+
+.oba-assistant-context-card,
+.oba-assistant-disclosure-panel {
+  padding: 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-assistant-context-card[data-visibility="private"] {
+  border-color: color-mix(in srgb, var(--oba-danger) 55%, var(--oba-panel-border));
+  background: color-mix(in srgb, var(--oba-danger) 6%, var(--ob-color-surface-raised));
+}
+
+.oba-assistant-context-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.oba-assistant-context-heading h4,
+.oba-assistant-disclosure-panel h4 {
+  margin: 0;
+}
+
+.oba-assistant-disclosure-panel {
+  margin-top: 1rem;
+}
+
+.oba-assistant-context-tools {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-assistant-source-preview {
+  max-height: 15rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.82rem;
+}
+
+.oba-url-context-preview {
+  margin-top: 1rem;
+}
+
+.oba-url-context-preview:empty {
+  display: none;
+}
+
+.oba-url-context-preview textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.oba-field-charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: 1rem;
+}
+
+.oba-field-chart {
+  margin: 0;
+  padding: 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+}
+
+.oba-field-chart svg {
+  display: block;
+  width: 100%;
+}
+
+.oba-field-chart polyline {
+  fill: none;
+  stroke: var(--ob-color-accent);
+  stroke-width: 4;
+  vector-effect: non-scaling-stroke;
+}
+
+.oba-release-workspace {
+  display: grid;
+  gap: 1rem;
+  width: min(100%, 52rem);
+  margin-inline: auto;
+  padding: 1rem;
+}
+
+.oba-release-workspace > p,
+.oba-release-issues {
+  margin: 0;
+}
+
+.oba-release-output {
+  width: 100%;
+  min-height: 18rem;
+  resize: vertical;
+  font-family: var(--ob-font-mono);
+}
+
+.oba-body,
+.oba-rich-body,
+.oba-preview {
+  display: block;
+  width: 100%;
+  min-height: 60vh;
+  border: 0;
+  border-radius: 0;
+  background: var(--ob-color-page);
+}
+
+.oba-body {
+  padding: 0.8rem;
+  color: var(--ob-color-text);
+  font-family: var(--ob-font-mono);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  resize: vertical;
+  tab-size: 4;
+}
+
+.oba-body[hidden],
+.oba-rich-body[hidden] {
+  display: none;
+}
+
+.oba-autocomplete-controls {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+  background: var(--ob-color-surface);
+}
+
+.oba-autocomplete-toggle {
+  width: fit-content;
+  font-weight: 700;
+}
+
+.oba-autocomplete-controls p {
+  margin: 0;
+}
+
+.oba-autocomplete-suggestion {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.8rem;
+  border: var(--ob-border-width) solid var(--ob-color-accent-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+}
+
+.oba-autocomplete-suggestion[hidden] {
+  display: none;
+}
+
+.oba-autocomplete-text {
+  white-space: pre-wrap;
+}
+
+.oba-rich-body {
+  min-height: 60vh;
+  padding: clamp(1rem, 3vw, 2.5rem);
+  overflow-wrap: anywhere;
+  color: var(--ob-color-text);
+  font-family: var(--ob-font-body);
+  font-size: var(--ob-body-size);
+  line-height: var(--ob-body-leading);
+  outline: none;
+}
+
+.oba-rich-body:focus-visible {
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--ob-color-accent) 35%, transparent);
+}
+
+.oba-rich-body > :first-child {
+  margin-top: 0;
+}
+
+.oba-rich-body > :last-child {
+  margin-bottom: 0;
+}
+
+.oba-rich-body h1,
+.oba-rich-body h2,
+.oba-rich-body h3,
+.oba-rich-body h4,
+.oba-rich-body h5,
+.oba-rich-body h6 {
+  font-family: var(--ob-font-heading);
+  line-height: var(--ob-heading-leading);
+}
+
+.oba-rich-body pre {
+  padding: 1rem;
+  overflow: auto;
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-code-bg);
+  color: var(--ob-color-code-text);
+  font-family: var(--ob-font-mono);
+  white-space: pre-wrap;
+}
+
+.oba-rich-body blockquote {
+  margin-inline: 0;
+  padding-inline-start: 1rem;
+  border-inline-start: 0.25rem solid var(--ob-color-accent-border);
+  color: var(--ob-color-muted);
+}
+
+.oba-rich-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-block: 1rem;
+  border-radius: var(--ob-radius);
+}
+
+.oba-protected-block {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-block: 1rem;
+  padding: 0.85rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-accent-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-protected-block > div:first-child {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.oba-protected-block span {
+  color: var(--ob-color-muted);
+  font-size: 0.82rem;
+}
+
+.oba-protected-actions,
+.oba-mode-switch {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.oba-protected-actions button,
+.oba-mode-button {
+  padding: 0.35rem 0.55rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.oba-mode-button[aria-pressed="true"] {
+  border-color: var(--ob-color-accent);
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-contrast);
+}
+
+/* Forms inside a protected block's card, and the Add something dialog (ADR 0254). */
+.oba-protected-block[data-editing] {
+  display: block;
+}
+
+.oba-block-form {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.oba-bf-body {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.oba-bf-field {
+  margin-bottom: 0.25rem;
+}
+
+.oba-bf-hint {
+  margin: 0;
+  color: var(--ob-color-muted);
+}
+
+/* A file picker under a picture's address: it wraps on a phone and never pushes the dialog wider. */
+.oba-bf-picture {
+  min-width: 0;
+}
+
+.oba-bf-picture input[type="file"] {
+  display: block;
+  max-width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.oba-bf-button,
+.oba-block-form .oba-btn,
+.oba-piece-dialog .oba-btn {
+  min-height: 44px;
+}
+
+.oba-bf-rows,
+.oba-bf-items,
+.oba-piece-choices {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-bf-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.oba-bf-row input[type="checkbox"] {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.oba-bf-row input[type="text"],
+.oba-bf-table input[type="text"] {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0.45rem 0.6rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+}
+
+.oba-bf-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.oba-bf-table {
+  border-collapse: separate;
+  border-spacing: 0.25rem;
+}
+
+.oba-bf-table input[type="text"] {
+  min-width: 8rem;
+}
+
+.oba-bf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.oba-bf-item {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius);
+}
+
+.oba-piece-dialog {
+  width: min(36rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+}
+
+.oba-piece-dialog .oba-field input[type="text"],
+.oba-piece-dialog .oba-field select,
+.oba-piece-dialog .oba-field textarea {
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.oba-piece-choice {
+  display: grid;
+  gap: 0.15rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 0.75rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.oba-piece-choice:hover {
+  border-color: var(--ob-color-accent);
+}
+
+.oba-piece-choice:focus-visible {
+  outline: 2px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+.oba-editor-mode {
+  display: flex;
+  align-items: center;
+}
+
+.oba-format-toolbar {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0.45rem 0.55rem;
+  overflow-x: auto;
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-block-style {
+  min-width: 7.5rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.82rem;
+}
+
+.oba-format-button {
+  min-width: 2.25rem;
+  padding: 0.35rem 0.55rem;
+  border: var(--ob-border-width) solid transparent;
+  border-radius: var(--ob-radius-sm);
+  background: transparent;
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.oba-format-button:hover,
+.oba-format-button:focus-visible {
+  border-color: var(--ob-color-border);
+  background: var(--ob-color-page);
+}
+
+.oba-format-button.is-italic {
+  font-style: italic;
+}
+
+.oba-preview {
+  background: #fff;
+}
+
+.oba-preview-canvas {
+  display: flex;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 0;
+  overflow: auto;
+  background: color-mix(in srgb, var(--ob-color-outer) 55%, var(--ob-color-page));
+}
+
+.oba-social-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 42rem) minmax(15rem, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: start;
+  padding: clamp(1rem, 3vw, 2.5rem);
+}
+
+.oba-social-card {
+  overflow: hidden;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: calc(var(--ob-radius) + 0.2rem);
+  background: var(--ob-color-surface);
+  box-shadow: var(--oba-shadow-sm);
+}
+
+.oba-social-image {
+  display: grid;
+  aspect-ratio: 1.91 / 1;
+  place-items: center;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--ob-color-outer) 70%, var(--ob-color-page));
+  color: var(--ob-color-subtle);
+}
+
+.oba-social-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.oba-social-copy {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1rem 1.15rem 1.15rem;
+}
+
+.oba-social-site,
+.oba-social-url {
+  overflow: hidden;
+  color: var(--ob-color-subtle);
+  font-size: 0.78rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oba-social-title {
+  font-family: var(--ob-font-heading);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  line-height: 1.25;
+}
+
+.oba-social-description {
+  display: -webkit-box;
+  margin: 0;
+  overflow: hidden;
+  color: var(--ob-color-muted);
+  font-size: 0.9rem;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.oba-social-meta {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.oba-social-meta > div {
+  min-width: 0;
+  padding-bottom: 0.75rem;
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-social-meta dt {
+  color: var(--ob-color-subtle);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.oba-social-meta dd {
+  margin: 0.2rem 0 0;
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+}
+
+.oba-optimize-workspace {
+  display: grid;
+  grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: start;
+  padding: clamp(1rem, 3vw, 2.5rem);
+}
+
+.oba-optimize-overview {
+  position: sticky;
+  top: 1rem;
+  padding: 1.2rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-optimize-overview > div {
+  display: flex;
+  align-items: baseline;
+  margin-block: 0.25rem;
+  color: var(--ob-color-accent);
+}
+
+.oba-optimize-score {
+  font-family: var(--ob-font-heading);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1;
+}
+
+.oba-optimize-groups {
+  display: grid;
+  gap: 1rem;
+}
+
+.oba-optimize-group {
+  padding: 1rem 1.1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.oba-optimize-group header {
+  margin-bottom: 0.8rem;
+}
+
+.oba-optimize-group h3,
+.oba-optimize-group p {
+  margin: 0;
+}
+
+.oba-optimize-group h3 {
+  font-size: 1rem;
+}
+
+.oba-optimize-group p {
+  color: var(--ob-color-subtle);
+  font-size: 0.8rem;
+}
+
+.oba-accessibility-workspace {
+  display: grid;
+  grid-template-columns: minmax(15rem, 20rem) minmax(0, 1fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: start;
+  padding: clamp(1rem, 3vw, 2.5rem);
+}
+
+.oba-accessibility-guide {
+  position: sticky;
+  top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-accessibility-guide h3,
+.oba-accessibility-guide p,
+.oba-accessibility-manual {
+  margin: 0;
+}
+
+.oba-accessibility-guide h3 {
+  font-size: 0.9rem;
+}
+
+.oba-accessibility-guide p,
+.oba-accessibility-manual {
+  color: var(--ob-color-muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.oba-accessibility-manual {
+  display: grid;
+  gap: 0.3rem;
+  padding-left: 1.1rem;
+}
+
+.oba-accessibility-counts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+  margin: 0.25rem 0;
+}
+
+.oba-accessibility-counts > div {
+  min-width: 0;
+  padding: 0.6rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+}
+
+.oba-accessibility-counts dt {
+  overflow: hidden;
+  color: var(--ob-color-subtle);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.oba-accessibility-counts dd {
+  margin: 0.15rem 0 0;
+  font-family: var(--ob-font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.oba-accessibility-findings {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.oba-accessibility-group {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.oba-accessibility-group > h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.oba-accessibility-finding {
+  display: grid;
+  gap: 0.55rem;
+  padding: 1rem 1.1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-left: 0.25rem solid var(--ob-color-accent);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.oba-accessibility-group.is-detected .oba-accessibility-finding {
+  border-left-color: var(--oba-danger);
+}
+
+.oba-accessibility-group.is-potential .oba-accessibility-finding {
+  border-left-color: #b9770e;
+}
+
+.oba-accessibility-finding p {
+  margin: 0;
+}
+
+.oba-accessibility-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  color: var(--ob-color-subtle);
+  font-size: 0.75rem;
+}
+
+.oba-accessibility-meta code {
+  color: var(--ob-color-text);
+  font-weight: 700;
+}
+
+.oba-accessibility-repair {
+  color: var(--ob-color-muted);
+}
+
+.oba-editor[data-preview-width="tablet"] .oba-preview {
+  max-width: 48rem;
+}
+
+.oba-editor[data-preview-width="tablet"] .oba-portable-markdown {
+  max-width: 48rem;
+}
+
+.oba-editor[data-preview-width="mobile"] .oba-preview {
+  max-width: 24.375rem;
+}
+
+.oba-editor[data-preview-width="mobile"] .oba-portable-markdown {
+  max-width: 24.375rem;
+}
+.oba-editor-status {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.4rem;
+  margin-top: 0.65rem;
+  padding: 0.35rem 0.65rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+}
+
+.oba-save-state {
+  color: var(--oba-success);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.oba-save-state::before {
+  content: "";
+  display: inline-block;
+  width: 0.42rem;
+  height: 0.42rem;
+  margin-right: 0.35rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.oba-save-state.is-dirty {
+  color: var(--ob-color-accent);
+}
+
+.oba-editor-nav {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.3rem;
+  margin-bottom: 0.75rem;
+  overflow-x: auto;
+}
+
+.oba-editor-primary,
+.oba-editor-advanced-actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.oba-editor-advanced {
+  flex: none;
+}
+
+.oba-editor-advanced > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.45rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  cursor: pointer;
+}
+
+.oba-editor-advanced-actions {
+  position: absolute;
+  z-index: 4;
+  max-width: min(32rem, calc(100vw - 2rem));
+  margin-top: 0.35rem;
+  padding: 0.4rem;
+  flex-wrap: wrap;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+  box-shadow: var(--oba-shadow-lg);
+}
+
+.oba-small {
+  color: var(--ob-color-subtle);
+  font-size: 0.8rem;
+}
+
+.oba-dropping {
+  outline: 2px dashed var(--ob-color-accent);
+}
+
+.oba-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Contributor registry */
+.oba-contributor-intro {
+  max-width: 54rem;
+  margin-bottom: 1rem;
+}
+
+.oba-contributor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.oba-contributor-card {
+  padding: 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  box-shadow: var(--oba-shadow-sm);
+}
+
+.oba-contributor-card > header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.oba-contributor-card h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.oba-contributor-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 1rem;
+}
+
+.oba-contributor-fields .oba-field:nth-child(n + 4) {
+  grid-column: 1 / -1;
+}
+
+.oba-shared-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 54rem;
+}
+
+.oba-shared-form fieldset {
+  min-width: 0;
+  margin: 0;
+}
+
+.oba-shared-form legend {
+  padding: 0 0.25rem;
+}
+
+.oba-shared-source-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.oba-shared-question {
+  margin: 0.25rem 0 0.75rem;
+  color: var(--ob-color-muted);
+}
+
+.oba-shared-sources {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding-left: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 64rem) {
+  .oba-app-header > .oba-small,
+  .oba-theme-label {
+    display: none;
+  }
+
+  .oba-theme-toggle {
+    min-width: 40px;
+    padding-inline: 0.65rem;
+  }
+
+  .oba-command-trigger > span {
+    display: none;
+  }
+
+  .oba-context-copy p {
+    display: none;
+  }
+
+  .oba-overview-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .oba-social-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .oba-optimize-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .oba-optimize-overview,
+  .oba-accessibility-guide {
+    position: static;
+  }
+
+  .oba-accessibility-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .oba-assistant-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 44rem) {
+  .oba-shell {
+    border-inline: 0;
+  }
+
+  .oba-app-header {
+    flex-wrap: wrap;
+    min-height: 4rem;
+  }
+
+  .oba-brand-copy,
+  .oba-account-label,
+  .oba-command-trigger > span,
+  .oba-personalize-trigger,
+  .oba-tool-label {
+    display: none;
+  }
+
+  .oba-command-trigger kbd {
+    font-size: 0;
+  }
+
+  .oba-command-trigger kbd::after {
+    content: "⌕";
+    font-size: 0.9rem;
+  }
+
+  .oba-toolbelt {
+    display: flex;
+    gap: 0.75rem;
+    padding-block: 0.6rem;
+    overflow-x: auto;
+  }
+
+  .oba-preferences-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .oba-module-row {
+    flex-wrap: wrap;
+  }
+
+  .oba-dialog-actions {
+    flex-wrap: wrap;
+  }
+
+  .oba-editor-primary {
+    min-width: max-content;
+  }
+
+  .oba-tool-group,
+  .oba-tool-actions {
+    display: contents;
+  }
+
+  .oba-context-bar {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .oba-context-bar .oba-publish {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .oba-main {
+    padding: 0.75rem;
+  }
+
+  .oba-editor-actions .oba-small {
+    display: none;
+  }
+
+  .oba-editor-status {
+    flex-wrap: wrap;
+  }
+
+  .oba-editor-status .oba-spacer {
+    display: none;
+  }
+
+  .oba-table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .oba-overview-grid,
+  .oba-overview-metrics {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .oba-overview-recent {
+    grid-row: auto;
+  }
+
+  .oba-credit-card > header {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .oba-credit-actions {
+    grid-column: 1 / -1;
+  }
+
+  .oba-credit-roles {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .oba-contributor-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .oba-contributor-fields .oba-field {
+    grid-column: auto;
+  }
+}
+
+/* Research source library */
+.oba-source-filters {
+  align-items: end;
+}
+
+.oba-source-filters .oba-field {
+  margin-bottom: 0;
+}
+
+.oba-source-layout {
+  display: grid;
+  grid-template-columns: minmax(14rem, 22rem) minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.oba-source-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-source-item {
+  display: grid;
+  width: 100%;
+  min-height: 44px;
+  gap: 0.15rem;
+  padding: 0.65rem 0.8rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.oba-source-item[aria-current="true"] {
+  border-color: var(--ob-color-accent);
+  box-shadow: inset 0.25rem 0 0 var(--ob-color-accent);
+}
+
+.oba-source-item:focus-visible {
+  outline: 3px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+.oba-source-editor {
+  min-width: 0;
+  padding: 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.oba-source-editor h2 {
+  margin-top: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-source-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 1rem;
+}
+
+.oba-source-fields [data-source-field="creators"],
+.oba-source-fields [data-source-field="identifiers"],
+.oba-source-fields [data-source-field="title"],
+.oba-source-location {
+  grid-column: 1 / -1;
+}
+
+.oba-source-location {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 1rem;
+}
+
+@media (max-width: 52rem) {
+  .oba-source-layout,
+  .oba-source-fields,
+  .oba-source-location {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Research notebook capture */
+.oba-small-heading {
+  margin: 1rem 0 0.5rem;
+  font-size: 1rem;
+}
+
+.oba-capture-form {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.oba-capture-form fieldset {
+  min-width: 0;
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.8rem 0.8rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+}
+
+.oba-capture-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+}
+
+.oba-capture-check input {
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0;
+}
+
+.oba-capture-checks {
+  max-height: 14rem;
+  overflow: auto;
+}
+
+.oba-capture-form textarea,
+.oba-capture-form input[type="text"],
+.oba-capture-form select {
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.oba-capture-form textarea:focus-visible,
+.oba-capture-form input:focus-visible,
+.oba-capture-form select:focus-visible,
+.oba-capture-form button:focus-visible,
+.oba-capture-checks:focus-visible {
+  outline: 3px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+.oba-capture-dialog {
+  width: min(40rem, calc(100vw - 2rem));
+}
+
+/* Knowledge Atlas: lists and forms only, no drawing. */
+.oba-atlas-incidents,
+.oba-atlas-facts,
+.oba-atlas-chips {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-atlas-incident {
+  padding: 0.6rem 0;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+/* Contested is said in words; the rule only repeats it for sighted readers. */
+.oba-atlas-incident[data-standing="contested"] {
+  padding-left: 0.6rem;
+  border-left: 4px double var(--ob-color-accent);
+}
+
+#oba-atlas-lists .oba-btn {
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+#oba-atlas-heading,
+.oba-atlas-incident p,
+.oba-atlas-facts li,
+.oba-atlas-notices li,
+.oba-atlas-explorer h3,
+#oba-atlas-entries .oba-source-item strong {
+  overflow-wrap: anywhere;
+}
+
+.oba-atlas-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.oba-atlas-explorer .oba-btn,
+.oba-atlas-chips .oba-btn,
+.oba-atlas-form .oba-btn,
+.oba-atlas-concept-links a {
+  min-height: 44px;
+}
+
+.oba-atlas-concept-links ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-atlas-concept-links a {
+  display: inline-flex;
+  align-items: center;
+}
+
+.oba-atlas-form input[inputmode="numeric"] {
+  max-width: 12rem;
+}
+
+.oba-atlas-explorer button:focus-visible,
+.oba-atlas-chips button:focus-visible,
+.oba-atlas-concept-links a:focus-visible,
+.oba-atlas-form fieldset:focus-visible,
+#oba-atlas-heading:focus-visible {
+  outline: 3px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 40rem) {
+  .oba-atlas-explorer .oba-toolbar,
+  .oba-atlas-edit + p + .oba-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .oba-atlas-form .oba-btn {
+    width: 100%;
+    max-width: 100%;
+    white-space: normal;
+  }
+}
+
+/* Chronology: lists and tables of text only. Competing datings sit side by side,
+   each with its own border, and wrap into one column on narrow screens or at high zoom. */
+.oba-chronology-rows,
+.oba-chronology-groups,
+.oba-chronology-competing,
+.oba-chronology-single {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-chronology-row,
+.oba-chronology-prompt {
+  padding: 0.6rem 0;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-chronology-competing {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  gap: 0.5rem;
+}
+
+.oba-chronology-dating {
+  padding: 0.5rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: 4px;
+}
+
+/* Outside the time window is said in words; the dashed edge only repeats it. */
+.oba-chronology-dating[data-in-window="false"] {
+  border-style: dashed;
+}
+
+.oba-chronology-filters .oba-toolbar,
+.oba-chronology-window .oba-toolbar {
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.oba-chronology-filters input[inputmode="numeric"] {
+  max-width: 8rem;
+}
+
+.oba-atlas-dating {
+  margin: 0.75rem 0;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-atlas-point,
+.oba-atlas-date-form {
+  margin: 0.5rem 0;
+}
+
+.oba-atlas-reads {
+  font-weight: 600;
+}
+
+.oba-chronology p,
+.oba-chronology li,
+.oba-chronology-results p,
+.oba-chronology-results li,
+.oba-chronology-results h4,
+.oba-atlas-reads {
+  overflow-wrap: anywhere;
+}
+
+.oba-chronology-results .oba-btn,
+.oba-chronology-filters .oba-btn {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.oba-chronology-results button:focus-visible,
+.oba-chronology-filters button:focus-visible,
+.oba-chronology button:focus-visible {
+  outline: 3px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 40rem) {
+  .oba-chronology-results .oba-toolbar,
+  .oba-chronology-filters .oba-toolbar,
+  .oba-chronology-window .oba-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .oba-chronology-filters input[inputmode="numeric"] {
+    max-width: 100%;
+  }
+}
+
+/* Comparison workspace: versions side by side, collapsing into one column in the same reading order. */
+.oba-compare-controls fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0.25rem 0.75rem 0.5rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+}
+
+.oba-compare-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.oba-compare-sequence,
+.oba-compare-places {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-compare-version {
+  min-width: 0;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+}
+
+.oba-compare-version h4 {
+  margin: 0 0 0.25rem;
+}
+
+.oba-compare-facts {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 0.15rem 0.75rem;
+  margin: 0.5rem 0;
+}
+
+.oba-compare-facts dt {
+  font-weight: 600;
+}
+
+.oba-compare-facts dd {
+  margin: 0;
+}
+
+.oba-compare-place {
+  padding-top: 0.75rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-compare-ident,
+.oba-compare-label {
+  margin: 0 0 0.25rem;
+  font-size: 0.9rem;
+}
+
+/* The stored wording, exactly: whitespace and line breaks are the source's. */
+.oba-compare-original,
+.oba-compare-normalized {
+  margin: 0 0 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-inline-start: 4px solid var(--ob-color-accent);
+  white-space: pre-wrap;
+  unicode-bidi: isolate;
+}
+
+/* Normalized text is set apart in words; the dashed rule only repeats it. */
+.oba-compare-normalized {
+  border-inline-start-style: dashed;
+}
+
+.oba-compare-version,
+.oba-compare-version h4,
+.oba-compare-ident,
+.oba-compare-facts dd,
+.oba-compare-original,
+.oba-compare-normalized,
+#oba-compare-heading,
+#oba-compare-alignments .oba-source-item strong {
+  overflow-wrap: anywhere;
+}
+
+.oba-compare-export {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-compare-export textarea {
+  width: 100%;
+  max-width: 100%;
+}
+
+.oba-compare-panel .oba-btn,
+.oba-compare-controls .oba-btn {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+}
+
+.oba-compare-panel input:focus-visible,
+.oba-compare-panel button:focus-visible,
+.oba-compare-panel textarea:focus-visible,
+.oba-compare-controls input:focus-visible,
+.oba-compare-controls select:focus-visible,
+.oba-alignment-form fieldset:focus-visible,
+#oba-compare-heading:focus-visible {
+  outline: 3px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 40rem) {
+  .oba-compare-controls,
+  .oba-compare-panel .oba-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .oba-compare-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Claims and evidence: supporting and contradicting side by side, never combined. */
+/* Inset from the pane border so text never touches it and focus rings are not clipped. */
+.oba-claims-region {
+  padding-inline: 0.75rem;
+}
+
+.oba-claims {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-claim {
+  padding: 0.75rem 0;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-claim-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.oba-claim-links {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-claim-link {
+  padding: 0.5rem 0;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+/* Gaps and prompts: a list of actions, marked by outcome without colour alone (the label says it). */
+.oba-claim-findings ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-claim-finding {
+  padding: 0.25rem 0 0.25rem 0.75rem;
+  border-inline-start: 3px solid var(--oba-panel-border);
+}
+
+.oba-claim-finding.is-detected {
+  border-inline-start-color: var(--ob-color-accent);
+}
+
+.oba-claim-finding code {
+  overflow-wrap: anywhere;
+}
+
+.oba-claim h4,
+.oba-claim h5,
+.oba-claim p,
+.oba-claim q,
+.oba-claim-form q {
+  overflow-wrap: anywhere;
+}
+
+.oba-claims .oba-btn {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.oba-claims button:focus-visible,
+.oba-claims fieldset:focus-visible,
+.oba-claim h4:focus-visible {
+  outline: 3px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 40rem) {
+  .oba-claim-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .oba-claims .oba-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+/* Anchors styled as buttons or tabs should not look like prose links. */
+a.oba-btn,
+a.oba-tab {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  color: var(--ob-color-text);
+}
+
+a.oba-btn-primary {
+  color: var(--ob-color-accent-contrast);
+}
+
+/* Compact filter controls in the list toolbar. */
+.oba-toolbar .oba-search {
+  width: auto;
+  flex: 1 1 14rem;
+  max-width: 22rem;
+}
+
+/* Analytics */
+.oba-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.oba-tile {
+  display: grid;
+  gap: 0.2rem;
+  padding: 1rem 1.2rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  box-shadow: var(--oba-shadow-sm);
+}
+
+.oba-tile-value {
+  font-family: var(--ob-font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.oba-tile-label {
+  color: var(--ob-color-muted);
+  font-size: 0.85rem;
+}
+
+.oba-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 8rem;
+  margin: 1rem 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-chart li {
+  display: flex;
+  flex: 1 1 0;
+  align-items: flex-end;
+  height: 100%;
+  min-width: 0;
+}
+
+.oba-chart-bar {
+  display: block;
+  width: 100%;
+  min-height: 2px;
+  border-radius: 2px 2px 0 0;
+  background: var(--ob-color-accent);
+}
+
+.oba-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.oba-table caption {
+  padding: 0.5rem 0;
+  text-align: left;
+}
+
+.oba-publish {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.oba-publish .oba-ok,
+.oba-publish .oba-error {
+  margin: 0;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+}
+
+.oba-source-interchange {
+  margin-block: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--oba-panel-border);
+  border-radius: 0.5rem;
+}
+
+.oba-evidence-exports {
+  margin-block: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--oba-panel-border);
+  border-radius: 0.5rem;
+}
+
+.oba-evidence-exports .oba-toolbar {
+  flex-wrap: wrap;
+}
+
+.oba-source-interchange > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.oba-source-interchange textarea {
+  width: 100%;
+  font-family: ui-monospace, monospace;
+}
+
+.oba-source-import-result:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.oba-source-import-list {
+  padding-inline-start: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-source-import-list li[data-import-action="conflict"] > strong {
+  color: var(--oba-danger);
+}
+
+.oba-invitations {
+  margin-top: 1rem;
+}
+
+.oba-invitations summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.oba-invitation-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding-left: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-invitation-result {
+  margin-top: 0.75rem;
+}
+
+.oba-invitation-link {
+  width: 100%;
+  max-width: 100%;
+  font-family: var(--ob-font-mono, monospace);
+}
+
+.oba-member-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-member-list > li,
+.oba-invitation-list > li {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.75rem;
+  border: 1px solid var(--ob-color-border, currentColor);
+  border-radius: 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-invitation-list {
+  padding-left: 0;
+  list-style: none;
+}
+
+.oba-confirm {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  border: 2px solid currentColor;
+  border-radius: 0.5rem;
+}
+
+.oba-confirm-title {
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+}
+
+.oba-confirm:focus-visible,
+.oba-invitations h3:focus-visible {
+  outline: 3px solid var(--ob-color-accent, currentColor);
+  outline-offset: 2px;
+}
+
+.oba-member .oba-toolbar {
+  flex-wrap: wrap;
+}
+
+.oba-member .oba-btn {
+  min-height: 2.75rem;
+}
+
+@media (max-width: 44rem) {
+  .oba-member .oba-toolbar .oba-btn,
+  .oba-confirm .oba-toolbar .oba-btn {
+    flex: 1 1 100%;
+  }
+}
+
+.oba-draft-prompt-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-draft-prompt-list > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-draft-form textarea,
+.oba-draft-conflict textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.oba-draft-conflict {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border: 2px solid currentColor;
+  border-radius: 0.5rem;
+}
+
+.oba-draft-conflict h4:focus-visible,
+.oba-draft h3:focus-visible {
+  outline: 3px solid var(--ob-color-accent, currentColor);
+  outline-offset: 2px;
+}
+
+.oba-draft-revealed {
+  margin: 0.25rem 0 0;
+  max-height: 20rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.oba-draft .oba-btn {
+  min-height: 2.75rem;
+}
+
+.oba-preview-combined {
+  width: 100%;
+  min-height: 24rem;
+  border: 2px dashed var(--ob-color-border, currentColor);
+}
+
+@media (max-width: 44rem) {
+  .oba-draft .oba-toolbar .oba-btn,
+  .oba-draft-prompt-list .oba-btn {
+    flex: 1 1 100%;
+  }
+}
+
+.oba-arrangement { margin-top: 1rem; }
+.oba-approval-rule { margin-top: 1rem; }
+.oba-arrangement-turn { margin: 0.5rem 0; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+.oba-arrangement-turn input[type="number"] { width: 5rem; }
+
+.oba-synthesis {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--ob-color-border, currentColor);
+}
+
+.oba-synthesis-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-synthesis-item {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ob-color-border, currentColor);
+  border-radius: 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-synthesis-form textarea,
+.oba-synthesis-body textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.oba-synthesis .oba-btn {
+  min-height: 2.75rem;
+}
+
+.oba-synthesis h4:focus-visible {
+  outline: 3px solid var(--ob-color-accent, currentColor);
+  outline-offset: 2px;
+}
+
+@media (max-width: 44rem) {
+  .oba-synthesis .oba-toolbar .oba-btn,
+  .oba-synthesis-prompt .oba-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* Media moments: located observations and quotations in the reflection's sources. */
+.oba-moments {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--ob-color-border, currentColor);
+}
+
+.oba-moments-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-moment {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ob-color-border, currentColor);
+  border-radius: 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-moment-quote {
+  margin: 0.25rem 0;
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--ob-color-border, currentColor);
+}
+
+.oba-moment-quote blockquote {
+  margin: 0;
+}
+
+/* Advice about a quotation: marked by a border and a heading-less list, never by colour alone. */
+.oba-moment-notices {
+  margin: 0.25rem 0;
+  padding: 0.25rem 0.5rem 0.25rem 1.5rem;
+  border-left: 3px solid var(--ob-color-accent, currentColor);
+  font-size: 0.875rem;
+}
+
+.oba-moment-notices[hidden] {
+  display: none;
+}
+
+.oba-moments-form fieldset {
+  min-width: 0;
+  margin: 0.5rem 0;
+}
+
+.oba-moments-form textarea,
+.oba-moments-form input[type="text"],
+.oba-moments-form select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.oba-moments .oba-btn {
+  min-height: 2.75rem;
+}
+
+.oba-moments h4:focus-visible,
+.oba-moments h5:focus-visible {
+  outline: 3px solid var(--ob-color-accent, currentColor);
+  outline-offset: 2px;
+}
+
+.oba-moments [aria-invalid="true"] {
+  outline: 2px solid var(--oba-danger);
+}
+
+@media (max-width: 44rem) {
+  .oba-moments .oba-toolbar .oba-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* Voice sessions (ADR 0272). One column from 320px; the cards stack on a phone and sit side by side from
+   48rem. The rough box is at least 40% of the screen tall, every control is at least 44px, and nothing
+   depends on hover or on a color alone: the timer says its state in words and a shape. */
+ob-voice-session,
+ob-voice-library {
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.oba-voice {
+  min-width: 0;
+}
+
+.oba-voice-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.oba-voice-fieldset {
+  min-width: 0;
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+}
+
+.oba-voice-fieldset legend {
+  padding: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.oba-voice-card,
+.oba-voice-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  cursor: pointer;
+}
+
+.oba-voice-card:has(input:checked),
+.oba-voice-choice:has(input:checked) {
+  border: 2px solid var(--ob-color-accent-border);
+  background: var(--ob-color-glow);
+}
+
+.oba-voice-card:has(input:focus-visible),
+.oba-voice-choice:has(input:focus-visible) {
+  outline: 3px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+.oba-voice-card input,
+.oba-voice-choice input {
+  flex: 0 0 auto;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0.15rem 0 0;
+}
+
+.oba-voice-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-voice-eyebrow {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ob-color-muted, inherit);
+}
+
+.oba-voice-card-title {
+  font-size: 1.05rem;
+}
+
+.oba-voice-rule {
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+.oba-voice-invitation {
+  max-width: 48rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-voice-timer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  margin: 0.5rem 0 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.oba-voice-clock {
+  font-size: 2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+
+.oba-voice-symbol {
+  font-size: 1.25rem;
+}
+
+.oba-voice-timer[data-state="warning"] {
+  border: 3px double var(--oba-danger);
+}
+
+.oba-voice-timer[data-state="locked"] {
+  border: 3px solid var(--ob-color-text);
+}
+
+.oba-voice-timer[data-state="warning"] .oba-voice-timer-state {
+  font-weight: 700;
+}
+
+.oba-voice-rough-input,
+.oba-voice-body {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  font: inherit;
+  line-height: 1.5;
+}
+
+.oba-voice-rough-input {
+  min-height: 40vh;
+}
+
+.oba-voice-body {
+  min-height: 40vh;
+}
+
+.oba-voice-rough-text {
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 24rem;
+  overflow: auto;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface-raised);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.oba-voice-polished,
+.oba-voice-rough {
+  min-width: 0;
+  margin-top: 1.5rem;
+}
+
+.oba-voice-title {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+.oba-voice-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin: 1rem calc(-1 * clamp(1rem, 2vw, 2rem)) 0;
+  padding: 0.5rem clamp(1rem, 2vw, 2rem) calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+  background: var(--ob-color-surface);
+  box-shadow: 0 -6px 16px rgb(0 0 0 / 0.08);
+}
+
+.oba-voice-actions .oba-btn {
+  flex: 1 1 7rem;
+  min-height: 44px;
+}
+
+.oba-voice-dirty,
+.oba-voice-savenote {
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 48rem) {
+  .oba-voice-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .oba-voice-actions .oba-btn {
+    flex: 0 0 auto;
+  }
+}
+
+/* The voice sample library (ADR 0274). Packs are groups; a row is a prompt with badges that say the stage in a
+   word and a shape. Everything wraps, and long titles never push the page sideways. */
+.oba-voice-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+}
+
+.oba-voice-group {
+  min-width: 0;
+  margin: 1.5rem 0;
+}
+
+.oba-voice-group h3 {
+  margin: 0 0 0.25rem;
+}
+
+.oba-voice-coverage {
+  margin: 0.25rem 0 0.5rem;
+  font-weight: 600;
+}
+
+.oba-voice-rows {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-voice-row {
+  min-width: 0;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  overflow-wrap: anywhere;
+}
+
+.oba-voice-row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+}
+
+.oba-voice-row-meta {
+  margin: 0.25rem 0 0;
+}
+
+.oba-voice-badges {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.oba-voice-badge {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.oba-voice-badge-polished {
+  border-width: 2px;
+  font-weight: 700;
+}
+
+.oba-voice-group > .oba-btn {
+  min-height: 44px;
+}
+
+/* Voice accessibility (ADR 0275). The timer says its state in words and a shape; its warning state also
+   pulses a little, which is switched off for people who asked their system for less motion. */
+.oba-voice-timer,
+.oba-voice-card,
+.oba-voice-choice {
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+@keyframes oba-voice-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+
+  50% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--oba-danger) 35%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .oba-voice-timer[data-state="warning"] {
+    animation: oba-voice-pulse 2s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oba-voice *,
+  .oba-voice-bar .oba-btn {
+    transition: none;
+    animation: none;
+    scroll-behavior: auto;
+    transform: none;
+  }
+}
+
+/* The voice view on a phone (ADR 0276). The prompt cards stack, the rough box is at least 40% of the screen
+   tall, the action bar stays within reach and above the keyboard, the gutters are the page's own (16px or
+   more), and a long unbroken word wraps instead of pushing the page sideways. */
+.oba-voice,
+.oba-voice-stage,
+.oba-voice-bar {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.oba-voice p,
+.oba-voice li,
+.oba-voice label,
+.oba-voice h2,
+.oba-voice h3,
+.oba-voice strong {
+  overflow-wrap: anywhere;
+}
+
+.oba-voice-bar.oba-voice-bar-static {
+  position: static;
+  box-shadow: none;
+}
+
+@media (max-height: 30rem) {
+  .oba-voice-bar {
+    position: static;
+    box-shadow: none;
+  }
+}
+
+/* Fields keep clear of the bar when the browser scrolls them into view. */
+.oba-voice :is(input, select, textarea, button) {
+  scroll-margin-bottom: 8rem;
+}
+
+.oba-voice :is(input[type="text"], textarea) {
+  font-size: max(1rem, 16px);
+}
+
+/* Citations in the visual editor: atomic chips that keep their Markdown. */
+.oba-citation {
+  display: inline;
+  padding: 0 0.3em;
+  border: var(--ob-border-width) solid var(--ob-color-accent-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface-raised);
+  font-family: var(--ob-font-mono, ui-monospace, monospace);
+  font-size: 0.9em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.oba-citation:focus-visible {
+  outline: 3px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+/* The status stays rendered so its first message is announced; an idle bar is only visually hidden. */
+.oba-citation-bar:has(> [role="status"]:empty):has(> button[hidden]) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.oba-citation-form select[size] {
+  min-height: 8rem;
+}
+
+.oba-citation-preview {
+  font-family: var(--ob-font-mono, ui-monospace, monospace);
+  overflow-wrap: anywhere;
+}
+
+.oba-series-order {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.5rem 0;
+  padding-left: 0;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+
+.oba-series-this {
+  padding: 0.25rem 0.5rem;
+  border: 2px solid currentColor;
+  border-radius: 0.5rem;
+}
+
+.oba-series-form input,
+.oba-series-form select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.oba-series .oba-btn {
+  min-height: 2.75rem;
+}
+
+.oba-series-create {
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 44rem) {
+  .oba-series .oba-toolbar .oba-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* Reader feedback moderation (ADR 0083). */
+.oba-feedback-list {
+  display: grid;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-feedback-item {
+  overflow-wrap: anywhere;
+}
+
+.oba-feedback-body {
+  white-space: pre-wrap;
+}
+
+.oba-feedback-item blockquote {
+  margin: 0.5rem 0;
+  border-left: 3px solid var(--ob-color-border);
+  padding-left: 0.75rem;
+}
+
+.oba-feedback-passage {
+  margin: 0.75rem 0;
+  border-left: 3px solid var(--oba-success);
+  padding: 0.25rem 0.75rem;
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-feedback-passage[data-check="reanchored"],
+.oba-feedback-passage[data-check="unknown-work"] {
+  border-left-color: var(--ob-color-accent-border);
+}
+
+.oba-feedback-passage[data-check="stale"] {
+  border-left-color: var(--oba-danger);
+}
+
+.oba-feedback-passage h4 {
+  margin: 0.25rem 0;
+}
+
+/* A suggestion for future work (RD13): the reader's statements, wrapped, never forcing a sideways scroll. */
+.oba-suggestion p {
+  overflow-wrap: anywhere;
+}
+
+.oba-suggestion-notice,
+.oba-suggestion-contact {
+  margin-block-start: .5rem;
+}
+
+/* Linking a suggestion to future work, and the library hints: wrapped and fluid, never a sideways scroll. */
+.oba-suggestion-link-form,
+.oba-suggestion-candidate {
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+
+.oba-suggestion-link-form select,
+.oba-suggestion-link-form input {
+  max-inline-size: 100%;
+  min-inline-size: 0;
+  box-sizing: border-box;
+}
+
+.oba-suggestion-candidate li {
+  overflow-wrap: anywhere;
+}
+
+.oba-feedback-reason {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.oba-feedback-revision summary {
+  cursor: pointer;
+}
+
+/* Skip link: off screen until it has keyboard focus. */
+.oba-skip-link {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 20;
+  padding: 0.5rem 0.9rem;
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-contrast);
+  font-weight: 700;
+  transform: translateY(-200%);
+}
+
+.oba-skip-link:focus {
+  outline: var(--ob-focus-ring);
+  outline-offset: 2px;
+  transform: none;
+}
+
+.oba-workspace-content:focus,
+.oba-context-copy h1:focus {
+  outline: none;
+}
+
+.oba-workspace-content:focus-visible,
+.oba-context-copy h1:focus-visible {
+  outline: var(--ob-focus-ring);
+  outline-offset: 2px;
+}
+
+/* Research workspace (ADR 0120): private research and the publishable draft are told apart in
+   words first; the border style only repeats it (solid for private, double for publishable). */
+.oba-research-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  padding: 0.6rem clamp(1rem, 2vw, 2rem);
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+  background: var(--ob-color-surface);
+}
+
+.oba-research-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.oba-research-group ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-research-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.4rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-visibility {
+  display: inline-block;
+  margin: 0;
+  padding: 0.1rem 0.5rem;
+  border: 2px solid var(--ob-color-border);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.oba-visibility[data-visibility="publishable"],
+.oba-visibility-note[data-visibility="publishable"] {
+  border-style: double;
+  border-width: 3px;
+  border-color: var(--ob-color-accent-border);
+}
+
+.oba-visibility-note {
+  margin: 0;
+  padding: 0.2rem 0.6rem;
+  border: 2px solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  font-size: 0.78rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-research-kept {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ob-color-accent);
+}
+
+.oba-research-draft-title {
+  max-width: 20rem;
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-workspace-status {
+  margin: 0;
+  padding: 0.4rem clamp(1rem, 2vw, 2rem);
+  font-size: 0.85rem;
+}
+
+.oba-workspace-status:empty {
+  padding: 0;
+}
+
+.oba-research-overview {
+  max-width: 60rem;
+}
+
+.oba-research-steps {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: oba-research-step;
+}
+
+.oba-research-step {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  counter-increment: oba-research-step;
+  overflow-wrap: anywhere;
+}
+
+.oba-research-step h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.oba-research-step h3::before {
+  content: counter(oba-research-step) ". ";
+}
+
+.oba-research-step p {
+  margin: 0;
+}
+
+.oba-research-step .oba-toolbar {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 44rem) {
+  .oba-research-nav {
+    flex-direction: column;
+    padding-block: 0.5rem;
+  }
+}
+
+/* The draft-side research panel (ADR 0122): beside the writing surface on wide screens, below
+   it on narrow ones, in reading order either way. */
+.oba-write-layout[data-research="open"] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-write-surface {
+  min-width: 0;
+}
+
+@media (min-width: 64rem) {
+  .oba-write-layout[data-research="open"] {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 22rem);
+  }
+
+  .oba-write-layout[data-research="open"] .oba-draft-research-slot {
+    border-left: var(--ob-border-width) solid var(--oba-panel-border);
+  }
+}
+
+.oba-draft-research-slot[hidden] {
+  display: none;
+}
+
+.oba-draft-research {
+  display: grid;
+  gap: 0.6rem;
+  align-content: start;
+  min-width: 0;
+  max-height: 80vh;
+  padding: 0.9rem 1rem;
+  overflow-y: auto;
+  background: var(--ob-color-surface);
+  overflow-wrap: anywhere;
+}
+
+.oba-draft-research-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.oba-draft-research-head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.oba-draft-research-head .oba-btn {
+  margin-left: auto;
+}
+
+.oba-draft-research p,
+.oba-draft-research h4,
+.oba-draft-research h5 {
+  margin: 0;
+}
+
+.oba-draft-research-results {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-draft-research-item {
+  display: grid;
+  gap: 0.15rem;
+  width: 100%;
+  padding: 0.45rem 0.6rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.oba-draft-research-item[aria-current="true"] {
+  border-color: var(--ob-color-accent-border);
+  box-shadow: inset 3px 0 0 var(--ob-color-accent);
+}
+
+.oba-draft-research-item:focus-visible {
+  outline: 3px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+.oba-draft-research-type {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.oba-draft-research-item .oba-visibility {
+  justify-self: start;
+}
+
+.oba-draft-research-detail {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-draft-research-detail[hidden] {
+  display: none;
+}
+
+.oba-draft-research-quote,
+.oba-draft-research-note {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.oba-draft-research-quote {
+  padding-left: 0.75rem;
+  border-left: 3px solid var(--ob-color-border);
+}
+
+.oba-draft-research-markdown pre {
+  max-width: 100%;
+  margin: 0.4rem 0 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
+
+.oba-draft-research .oba-toolbar {
+  flex-wrap: wrap;
+}
+
+.oba-draft-research-claims {
+  display: grid;
+  gap: 0.4rem;
+  padding-top: 0.6rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+/* Selected for readers (#196, ADR 0196): inside the draft-side research panel, so it reflows with
+   it. Everything wraps, nothing scrolls sideways, and controls stack at 320 pixels or 400% zoom. */
+.oba-draft-research-curate {
+  display: grid;
+  gap: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-curation {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  padding-top: 0.6rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+  overflow-wrap: anywhere;
+}
+
+.oba-curation h4,
+.oba-curation h5,
+.oba-curation p,
+.oba-curation dl,
+.oba-curation dd {
+  margin: 0;
+}
+
+.oba-curation fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+}
+
+.oba-curation textarea,
+.oba-curation input[type="text"] {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.oba-curation-new {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-curation-new[hidden],
+.oba-curation-form[hidden] {
+  display: none;
+}
+
+.oba-curation-items,
+.oba-curation-previews {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-curation-item,
+.oba-curation-previewed {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+  padding: 0.5rem 0.6rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+}
+
+.oba-curation-item[data-curation-status="withheld"] {
+  border-style: dashed;
+}
+
+.oba-curation-item .oba-toolbar,
+.oba-curation-confirm .oba-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.oba-curation-notices {
+  margin: 0;
+  padding-inline-start: 1.1rem;
+}
+
+.oba-curation-rows {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.1rem;
+}
+
+.oba-curation-rows dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.oba-curation-rows dd {
+  white-space: pre-wrap;
+}
+
+.oba-curation-exact pre {
+  max-width: 100%;
+  margin: 0.4rem 0 0;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 24rem) {
+  .oba-curation-item .oba-toolbar .oba-btn,
+  .oba-curation-confirm .oba-toolbar .oba-btn,
+  .oba-curation-new .oba-toolbar .oba-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* Research review before publication (#62, ADR 0123) */
+.oba-review-dialog {
+  width: min(48rem, calc(100vw - 2rem));
+}
+
+.oba-review {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.oba-review > h2,
+.oba-review > h3,
+.oba-review > h4 {
+  margin: 0;
+}
+
+.oba-review-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.oba-review-group > h3,
+.oba-review-group > h4,
+.oba-review-group > h5,
+.oba-review-group > p {
+  margin: 0;
+}
+
+/* The research checks shown inside What will be public and the draft-side panel (#194, ADR 0150). */
+.oba-boundary-checks:not(:empty),
+.oba-review.is-embedded {
+  margin-top: 1rem;
+  min-width: 0;
+}
+
+.oba-draft-research-checks {
+  display: grid;
+  gap: 0.4rem;
+  padding-top: 0.6rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-review-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-review-finding {
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+  padding: 0.8rem 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-left: 0.25rem solid var(--ob-color-accent);
+  border-radius: var(--ob-radius);
+  overflow-wrap: anywhere;
+}
+
+.oba-review-finding p {
+  margin: 0;
+}
+
+.oba-review-group.is-blocking .oba-review-finding {
+  border-left-color: var(--oba-danger);
+}
+
+.oba-review-meta code {
+  color: var(--ob-color-text);
+  font-weight: 700;
+}
+
+.oba-review-finding .oba-toolbar {
+  flex-wrap: wrap;
+}
+
+.oba-review-finding .oba-btn[aria-pressed="true"] {
+  border-color: var(--ob-color-accent);
+  box-shadow: inset 0 0 0 1px var(--ob-color-accent);
+}
+
+@media (max-width: 40rem) {
+  .oba-review .oba-dialog-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* The moderation inbox (ADR 0105): one decision per row, its guidance under it, wrapping at any
+   width or zoom. */
+/* Six states wrap rather than scroll, so the list reflows at any zoom. */
+.oba-moderation-states {
+  flex-wrap: wrap;
+  overflow-x: visible;
+}
+
+.oba-moderation-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.75rem 0;
+}
+
+.oba-answer-form {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  border-left: 3px solid var(--oba-success);
+  padding: 0.25rem 0.75rem;
+}
+
+.oba-answer-form h4 {
+  margin: 0.25rem 0;
+}
+
+.oba-answer-form textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.oba-moderation-actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.oba-moderation-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.oba-moderation-guidance {
+  flex: 1 1 100%;
+  margin: 0;
+}
+
+.oba-moderation-item h3:focus-visible {
+  outline: 2px solid var(--ob-color-accent-border);
+  outline-offset: 2px;
+}
+
+@media (max-width: 44rem) {
+  .oba-moderation-action select,
+  .oba-moderation-action .oba-btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* What will be public (ADR 0125): one section per projection, items that wrap at any width or zoom.
+   Published and withheld are told apart in words; the border style only repeats it. */
+.oba-boundary-projection {
+  margin-block: 1.25rem;
+  min-width: 0;
+}
+
+.oba-boundary-list {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-boundary-item {
+  min-width: 0;
+  padding: 0.6rem 0.8rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  overflow-wrap: anywhere;
+}
+
+.oba-boundary-item[data-boundary-state="withheld"] {
+  border-style: dashed;
+}
+
+.oba-boundary-item p {
+  margin: 0.2rem 0;
+}
+
+.oba-boundary-fields {
+  margin: 0.3rem 0 0;
+  padding-inline-start: 1.1rem;
+}
+
+.oba-boundary code,
+.oba-boundary bdi {
+  overflow-wrap: anywhere;
+}
+
+.oba-boundary-post {
+  margin-top: 1rem;
+  min-width: 0;
+}
+
+/* Correction decisions (ADR 0117): one disclosure per item, beside the moderation decisions, its
+   choices stacked so they reflow at any width or zoom. */
+.oba-decision {
+  margin-top: 0.75rem;
+  border-top: 1px solid var(--ob-color-border);
+  padding-top: 0.5rem;
+}
+
+.oba-decision > summary,
+.oba-feedback-decisions > summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.oba-decision-choices {
+  display: grid;
+  gap: 0.4rem;
+  min-inline-size: 0;
+  margin: 0.75rem 0;
+  border: 1px solid var(--ob-color-border);
+  border-radius: 0.35rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.oba-decision-choices[hidden],
+.oba-decision [hidden] {
+  display: none;
+}
+
+.oba-decision-choice p {
+  margin: 0.1rem 0 0 1.6rem;
+}
+
+.oba-decision select,
+.oba-decision textarea,
+.oba-decision input[type="text"] {
+  max-inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* Reading paths (ADR 0213, #77). Regions wrap instead of overflowing, so they reflow at 320px
+   and at 400% zoom; state is always words, never colour alone. */
+.oba-paths-list,
+.oba-paths-steps,
+.oba-paths-preview-list,
+.oba-paths-problem-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-paths-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  padding: 0.7rem 0;
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-paths-link,
+.oba-paths-meta,
+.oba-paths-step-title,
+.oba-paths-preview bdi,
+.oba-paths-problem-list li {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-paths-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.oba-paths-edit,
+.oba-paths-preview,
+.oba-paths-form,
+.oba-paths-source {
+  min-width: 0;
+}
+
+.oba-paths-preview {
+  padding: 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.oba-paths-preview h2,
+.oba-paths-problems h2,
+.oba-paths-form h2 {
+  margin-top: 0;
+  font-size: 1.15rem;
+}
+
+.oba-paths-form fieldset,
+.oba-paths-add {
+  min-width: 0;
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+}
+
+.oba-paths-step {
+  margin: 0 0 1rem;
+  padding: 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  box-shadow: var(--oba-shadow-sm);
+}
+
+.oba-paths-step-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.oba-paths-step-heading {
+  flex: 1 1 14rem;
+  min-width: 0;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.oba-paths-step-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.oba-paths-state {
+  flex: 1 1 100%;
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.oba-paths-state-warn {
+  padding: 0.2rem 0.5rem;
+  border-left: 3px solid var(--oba-danger);
+  background: var(--ob-color-surface-raised);
+  font-weight: 600;
+}
+
+.oba-paths-optional {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.oba-paths-problems {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: var(--ob-border-width) solid var(--oba-danger);
+  border-radius: var(--ob-radius);
+}
+
+.oba-paths-problem-list li {
+  margin: 0.35rem 0;
+}
+
+.oba-paths-preview-step {
+  padding: 0.6rem 0;
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-paths-preview-step p {
+  margin: 0.2rem 0;
+}
+
+.oba-paths-diagnostics {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-paths-source-text {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  font-family: var(--ob-font-mono, ui-monospace, monospace);
+  white-space: pre;
+  overflow: auto;
+}
+
+.oba-paths-conflict:not([hidden]) {
+  margin: 0 0 1rem;
+}
+
+.oba-link {
+  margin-left: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ob-color-link, inherit);
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+}
+
+.oba-paths-form textarea,
+.oba-paths-form select,
+.oba-paths-form input[type="text"] {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 62rem) {
+  .oba-paths-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Interpretation comparisons (ADR 0231, #89) reuse the reading-path regions above. Evidence and
+   provenance sit in fieldsets that wrap, and every state is words, never colour alone. */
+.oba-cmp-evidence {
+  margin: 0 0 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-cmp-evidence-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  padding: 0.35rem 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-cmp-evidence-name,
+.oba-cmp-evidence-state,
+.oba-cmp-item-heading {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-cmp-item-heading {
+  flex: 1 1 14rem;
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.oba-cmp-evidence-set,
+.oba-cmp-provenance {
+  min-width: 0;
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+}
+
+.oba-cmp-form textarea,
+.oba-cmp-form select,
+.oba-cmp-form input[type="text"] {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Landing page builder (ADR 0249, #326). One column from 320px; every control is a real button or
+   input at least 44px tall; state is always said in words, never by colour alone. */
+.oba-landing {
+  min-width: 0;
+}
+
+.oba-landing-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+}
+
+.oba-landing-head h2 {
+  margin: 0;
+}
+
+.oba-landing-cards,
+.oba-landing-items,
+.oba-landing-types {
+  margin: 0.75rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-landing-card {
+  min-width: 0;
+  margin: 0 0 0.75rem;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.oba-landing-card-hidden {
+  border-style: dashed;
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-landing-card-head {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.oba-landing-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+  font-size: 1.25rem;
+}
+
+.oba-landing-card-text {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.oba-landing-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-landing-card-summary,
+.oba-landing-hint {
+  margin: 0.15rem 0 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-landing-hidden-note {
+  font-weight: 400;
+  color: var(--ob-color-muted);
+}
+
+.oba-landing-attention {
+  margin: 0.25rem 0 0;
+  font-weight: 600;
+  color: var(--oba-danger);
+}
+
+.oba-landing-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.oba-landing-button {
+  min-width: 44px;
+}
+
+.oba-landing-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.oba-landing-form {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-landing-form .oba-field input[type="url"],
+.oba-landing-form .oba-field input[type="email"],
+.oba-landing-form .oba-field input[type="tel"],
+.oba-landing-form .oba-field input[type="number"],
+.oba-landing-form .oba-field input[type="text"],
+.oba-landing-form .oba-field select,
+.oba-landing-form .oba-field textarea {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0.55rem 0.7rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  /* 16px stops phone browsers zooming in when a field takes focus. */
+  font-size: 1rem;
+}
+
+.oba-landing-form .oba-field > label {
+  font-size: 0.95rem;
+}
+
+.oba-landing-form .oba-field input[aria-invalid="true"],
+.oba-landing-form .oba-field select[aria-invalid="true"],
+.oba-landing-form .oba-field textarea[aria-invalid="true"] {
+  border-color: var(--oba-danger);
+  border-width: 2px;
+}
+
+.oba-field-error {
+  margin: 0;
+  color: var(--oba-danger);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.oba-landing-group,
+.oba-landing-list,
+.oba-landing-item fieldset {
+  min-width: 0;
+  margin: 0 0 1rem;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+}
+
+.oba-landing-item {
+  margin-bottom: 0.75rem;
+}
+
+.oba-landing-item fieldset {
+  margin-bottom: 0;
+}
+
+.oba-landing-group legend,
+.oba-landing-list legend,
+.oba-landing-item legend {
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 0 0.35rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* A fieldset never grows to its widest word, and labels and legends wrap in a wider fallback font. */
+.oba-landing-form fieldset,
+.oba-look-control {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.oba-landing-form label,
+.oba-landing-form legend,
+.oba-look-control legend {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+/* Buttons in a form shrink to the column and wrap their words rather than push past the screen. */
+.oba-landing-form .oba-btn {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-inline: 0.6rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 40rem) {
+  .oba-landing-form fieldset {
+    margin-inline: 0;
+    padding-inline: 0.5rem;
+  }
+}
+
+.oba-landing-add-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.oba-landing-add-row .oba-btn {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+}
+
+.oba-landing-confirm {
+  margin: 0 0 1rem;
+}
+
+.oba-landing-confirm[hidden] {
+  display: none;
+}
+
+.oba-landing-picker {
+  margin: 0 0 1rem;
+  padding: 0.75rem;
+  border: 2px solid var(--ob-color-accent-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.oba-landing-picker h3 {
+  margin-top: 0;
+}
+
+.oba-landing-type {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 44px;
+  margin: 0 0 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.oba-landing-type:hover {
+  border-color: var(--ob-color-accent-border);
+}
+
+.oba-landing-type:focus-visible {
+  outline: var(--ob-focus-ring);
+  outline-offset: 2px;
+}
+
+.oba-landing-type-text {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-landing-status:empty {
+  display: none;
+}
+
+.oba-landing-toast {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0 0 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: var(--ob-border-width) solid var(--ob-color-accent-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-landing-toast[hidden] {
+  display: none;
+}
+
+.oba-landing-toast-text {
+  flex: 1 1 12rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-landing-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+/* Landing page preview (ADR 0250, #327). On a phone it opens as a full-screen sheet with Back; on a
+   wide screen it sits beside the builder. The frame is shown at the visitor's width and scaled to
+   fit, so it never makes the page scroll sideways. */
+.oba-landing-layout {
+  display: block;
+  min-width: 0;
+}
+
+.oba-landing-sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+}
+
+.oba-landing-sizes .oba-btn[aria-pressed="true"] {
+  border: 2px solid var(--ob-color-accent-border);
+  background: var(--ob-color-glow);
+  font-weight: 700;
+}
+
+.oba-landing-preview {
+  min-width: 0;
+}
+
+.oba-landing-stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-landing-frame {
+  display: block;
+  border: 0;
+  background: #fff;
+  max-width: none;
+}
+
+.oba-landing-sheet {
+  inset: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  overflow: auto;
+}
+
+.oba-landing-sheet:not([open]) {
+  display: none;
+}
+
+.oba-landing-sheet-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding: 0.5rem 1rem;
+  border-bottom: var(--ob-border-width) solid var(--oba-panel-border);
+  background: var(--ob-color-surface);
+}
+
+.oba-landing-sheet-head h2,
+.oba-landing-side-head h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.oba-landing-sheet-body {
+  padding: 0.75rem 1rem 1rem;
+}
+
+.oba-landing-side-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 64rem) {
+  .oba-landing-layout:has(.oba-landing-side:not([hidden])) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .oba-landing-side {
+    position: sticky;
+    top: 1rem;
+    min-width: 0;
+    padding: 1rem;
+    border: var(--ob-border-width) solid var(--oba-panel-border);
+    border-radius: var(--ob-radius);
+    background: var(--ob-color-surface);
+  }
+}
+
+/* Landing page builder on a phone (ADR 0251, #328). One column from 320px, the Preview, Save and
+   Publish bar stays at the bottom of the screen (and above the on-screen keyboard), controls are
+   at least 44px, nothing depends on hover, and text can grow to 400% without sideways scrolling. */
+.oba-landing,
+.oba-landing-bar {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.oba-landing-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin: 1rem calc(-1 * clamp(1rem, 2vw, 2rem)) 0;
+  padding: 0.5rem clamp(1rem, 2vw, 2rem) calc(0.5rem + env(safe-area-inset-bottom, 0px));
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+  background: var(--ob-color-surface);
+  box-shadow: 0 -6px 16px rgb(0 0 0 / 0.08);
+}
+
+.oba-landing-actions .oba-btn {
+  flex: 1 1 7rem;
+  min-height: 44px;
+}
+
+.oba-landing-dirty,
+.oba-landing-publish-note {
+  flex: 1 1 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-landing-card-actions .oba-btn {
+  flex: 1 1 6rem;
+}
+
+/* A short screen (a phone on its side, or very large text) has no room for a bar that stays put. */
+.oba-landing-bar.oba-landing-bar-static {
+  position: static;
+  box-shadow: none;
+}
+
+@media (max-height: 30rem) {
+  .oba-landing-bar {
+    position: static;
+    box-shadow: none;
+  }
+}
+
+/* Fields keep clear of the bar when the browser scrolls them into view. */
+.oba-landing-form :is(input, select, textarea, button),
+.oba-landing-picker button {
+  scroll-margin-bottom: 8rem;
+}
+
+@media (min-width: 40rem) {
+  .oba-landing-card-actions .oba-btn {
+    flex: 0 0 auto;
+  }
+
+  .oba-landing-actions .oba-btn {
+    flex: 0 0 auto;
+  }
+
+  .oba-landing-dirty {
+    flex: 1 1 12rem;
+  }
+
+  .oba-landing-type {
+    max-width: 48rem;
+  }
+}
+
+/* Customize look (ADR 0256, #350). One column from 320px; every choice is a real radio button in a
+   card that is at least 44px tall; the selection shows as a border and a mark, never color alone. */
+.oba-look-control {
+  min-width: 0;
+  margin: 0 0 1.25rem;
+  padding: 0.75rem 1rem 1rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+}
+
+.oba-look-control legend {
+  padding: 0 0.25rem;
+  font-weight: 700;
+}
+
+.oba-look-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.oba-look-options-palette {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+}
+
+.oba-look-option {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0.6rem 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  cursor: pointer;
+}
+
+.oba-look-option input[type="radio"] {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin: 0.15rem 0 0;
+}
+
+.oba-look-option[data-selected="true"] {
+  border: 3px solid var(--ob-color-accent-border);
+  padding: calc(0.6rem - 2px) calc(0.75rem - 2px);
+  background: var(--ob-color-glow);
+}
+
+.oba-look-option:has(input:focus-visible) {
+  outline: var(--ob-focus-ring);
+  outline-offset: 2px;
+}
+
+.oba-look-card-text {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-look-pair {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-look-swatches {
+  display: inline-flex;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.oba-look-chip {
+  display: inline-block;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1px solid var(--oba-panel-border);
+}
+
+.oba-look-chip-big {
+  flex: none;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+}
+
+.oba-look-swatch {
+  align-items: center;
+}
+
+.oba-look-swatch > span:not(.oba-look-chip) {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-look-picker-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.oba-look-picker-row input[type="color"] {
+  width: 4rem;
+  height: 44px;
+  padding: 2px;
+}
+
+.oba-look-sample {
+  font-size: 1.1rem;
+}
+
+.oba-look-font-modern-sans .oba-look-sample {
+  font-family: system-ui, "Segoe UI", sans-serif;
+}
+
+.oba-look-font-classic-serif .oba-look-sample {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.oba-look-font-friendly-rounded .oba-look-sample {
+  font-family: ui-rounded, "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+.oba-look-font-techie-mono .oba-look-sample {
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+
+.oba-look-summary {
+  margin: 0.25rem 0 0.5rem;
+}
+
+.oba-look-default,
+.oba-look-tools .oba-btn,
+.oba-look-modes .oba-btn {
+  min-height: 44px;
+}
+
+.oba-look-tools {
+  margin-bottom: 1rem;
+}
+
+.oba-look-adjustments[hidden] {
+  display: none;
+}
+
+/* Rich text landing section (ADR 0257, #330). The same word-processor surface as the Visual editor,
+   with a toolbar of words. The toolbar stays in view while the text scrolls and every button is at
+   least 44px tall. */
+.oba-landing-rich-label {
+  display: block;
+  font-weight: 700;
+}
+
+.oba-landing-rich-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.35rem 0;
+  background: var(--ob-color-surface);
+}
+
+.oba-landing-rich-toolbar .oba-btn {
+  flex: 1 1 auto;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.oba-landing-rich-toolbar .oba-btn[aria-pressed="true"] {
+  border: 2px solid var(--ob-color-accent-border);
+  background: var(--ob-color-glow);
+  font-weight: 700;
+}
+
+.oba-landing-rich-panel {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--ob-color-accent-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.oba-landing-rich-panel .oba-btn {
+  min-height: 44px;
+}
+
+.oba-rich-body.oba-landing-rich {
+  min-height: 10rem;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius-sm);
+}
+
+.oba-landing-rich .oba-protected-actions {
+  flex-wrap: wrap;
+}
+
+.oba-landing-rich .oba-protected-actions button {
+  min-height: 44px;
+}
+
+.oba-landing-form [contenteditable="true"] {
+  scroll-margin-bottom: 8rem;
+}
+
+/* Plain-language suggestions (ADR 0262). Everything wraps; nothing depends on a font's width. */
+.oba-checks-wrap {
+  min-width: 0;
+  margin: 8px 0;
+}
+.oba-checks {
+  border: 1px solid var(--oba-panel-border);
+  border-radius: 8px;
+  padding: 4px 12px;
+  max-width: 100%;
+}
+.oba-checks-summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 600;
+}
+.oba-checks-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.oba-checks-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid var(--oba-panel-border);
+  min-width: 0;
+}
+.oba-checks-message {
+  flex: 1 1 14rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.oba-checks-item .oba-btn {
+  flex: 0 1 auto;
+  max-width: 100%;
+  white-space: normal;
+}
+.oba-checks-ask {
+  flex: 1 1 100%;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.oba-checks-input {
+  min-height: 44px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.oba-checks-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* The Job form in the Write view (ADR 0287): one column, 44px targets, long names wrap. */
+.oba-job-form {
+  min-width: 0;
+  margin: 0 0 1rem;
+  padding: 0.75rem 0 0;
+  border-top: var(--ob-border-width) solid var(--ob-color-border);
+}
+.oba-job-form[hidden] {
+  display: none;
+}
+.oba-job-heading {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+.oba-job-form .oba-field input[type="date"] {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0.55rem 0.7rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.95rem;
+}
+.oba-job-form .oba-field input[type="text"],
+.oba-job-form .oba-field select {
+  min-height: 44px;
+  box-sizing: border-box;
+}
+.oba-job-group {
+  min-width: 0;
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+}
+.oba-job-photos {
+  list-style: none;
+  margin: 0 0 0.5rem;
+  padding: 0;
+}
+.oba-job-photos li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 0;
+  padding: 4px 0;
+}
+.oba-job-photo-name {
+  flex: 1 1 8rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.oba-job-photos .oba-btn,
+.oba-job-form > .oba-btn {
+  min-height: 44px;
+}
+.oba-job-add {
+  display: block;
+  margin: 0 0 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ob-color-muted);
+}
+.oba-job-group input[type="file"] {
+  max-width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+}
+.oba-job-problems {
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+/* The Business facts screen (ADR 0307): designed at 400px first. One column, 44px targets, every label and message wraps. */
+.oba-business {
+  display: grid;
+  gap: 1rem;
+  max-width: 40rem;
+  min-width: 0;
+}
+.oba-business-form {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+.oba-business-group {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0.75rem 0 0;
+  border: 0;
+  border-top: var(--ob-border-width) solid var(--ob-color-border);
+}
+.oba-business-group > legend {
+  padding: 0 0.5rem 0 0;
+  font-weight: 700;
+}
+.oba-business .oba-field {
+  min-width: 0;
+}
+.oba-business input[type="text"],
+.oba-business input[type="tel"],
+.oba-business input[type="email"],
+.oba-business select,
+.oba-business input[type="time"] {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0.55rem 0.7rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.95rem;
+}
+.oba-business-check {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+}
+.oba-business-check input {
+  flex: none;
+  width: 24px;
+  height: 24px;
+}
+.oba-business-day {
+  min-width: 0;
+  margin: 0;
+  padding: 0.5rem 0;
+  border: 0;
+  border-top: var(--ob-row-border-width) solid var(--ob-color-border);
+}
+.oba-business-day > legend {
+  padding: 0 0.5rem 0 0;
+  font-weight: 600;
+}
+.oba-business-day-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: flex-end;
+  min-width: 0;
+}
+.oba-business-day-row > label,
+.oba-business-times > label {
+  display: grid;
+  gap: 0.2rem;
+  flex: 1 1 8rem;
+  min-width: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.oba-business-times {
+  display: flex;
+  flex: 2 1 12rem;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  min-width: 0;
+}
+.oba-business-times[hidden] {
+  display: none;
+}
+.oba-business-copy,
+.oba-business-actions .oba-btn {
+  min-height: 44px;
+}
+.oba-business-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+}
+.oba-business-problem {
+  margin: 0.25rem 0 0;
+  overflow-wrap: anywhere;
+}
+.oba-business [aria-invalid="true"] {
+  border-color: var(--oba-danger);
+  outline-offset: 2px;
+}
+
+/* The Services screen (ADR 0313) reuses the Business facts form; these are its textareas, repeated rows and list. */
+.oba-business textarea {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0.55rem 0.7rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+.oba-services-rows {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.oba-services-row {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.oba-services-entry {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.75rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+}
+.oba-services-entry > legend {
+  padding: 0 0.25rem;
+  font-weight: 600;
+}
+.oba-services-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.oba-services-tools .oba-btn,
+.oba-services .oba-business-group > .oba-btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+.oba-services-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.oba-services-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.25rem 0;
+  border-bottom: var(--ob-row-border-width) solid var(--ob-color-border);
+  overflow-wrap: anywhere;
+}
+.oba-services-item a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.oba-services-delete {
+  padding-top: 0.5rem;
+  border-top: var(--ob-row-border-width) solid var(--ob-color-border);
+}
+.oba-services > p > a[data-action="service-back"] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* The Capture view (ADR 0296): designed at 400px first. One column, 44px or larger targets, every name wraps. */
+.oba-capture {
+  display: grid;
+  gap: 1rem;
+  max-width: 36rem;
+  min-width: 0;
+}
+.oba-capture-lead {
+  margin: 0;
+  color: var(--ob-color-muted);
+}
+.oba-capture-photo-row {
+  position: relative;
+  min-width: 0;
+}
+.oba-capture-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+.oba-capture-file:focus-visible + .oba-capture-add {
+  outline: var(--ob-focus-ring);
+  outline-offset: 2px;
+}
+.oba-capture-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 64px;
+  box-sizing: border-box;
+  font-size: 1.15rem;
+  text-align: center;
+}
+.oba-capture-photos {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.oba-capture-photos[hidden],
+.oba-capture-chips[hidden] {
+  display: none;
+}
+.oba-capture-photo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+.oba-capture-photo img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: var(--ob-radius-sm);
+}
+.oba-capture-photo-name {
+  flex: 1 1 8rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.oba-capture .oba-field input[type="text"],
+.oba-capture .oba-field select,
+.oba-capture .oba-field textarea {
+  width: 100%;
+  min-height: 44px;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+.oba-capture-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.oba-capture-chip {
+  min-height: 44px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.oba-capture-save {
+  min-height: 56px;
+  font-size: 1.05rem;
+}
+.oba-capture-status,
+.oba-capture-saved {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.oba-capture-status:empty,
+.oba-capture-saved:empty {
+  display: none;
+}
+.oba-capture-voice {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.oba-capture-voice-body {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.oba-capture-voice .oba-btn {
+  min-height: 56px;
+  font-size: 1.05rem;
+}
+.oba-capture-voice audio {
+  width: 100%;
+  max-width: 100%;
+}
+.oba-capture-voice-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.oba-capture-voice-actions .oba-btn {
+  flex: 1 1 8rem;
+}
+.oba-capture-timer {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.oba-capture-ai {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.oba-capture-ai[hidden] {
+  display: none;
+}
+.oba-capture-ai .oba-btn {
+  min-height: 48px;
+  max-width: 100%;
+}
+.oba-capture-ai-heading,
+.oba-capture-ai-title {
+  margin: 0;
+  font-size: 1.05rem;
+}
+.oba-capture-ai-sends {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 1.2rem;
+  overflow-wrap: anywhere;
+}
+.oba-capture-ai .oba-help,
+.oba-capture-ai p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.oba-capture-draft-form {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.oba-capture-ai .oba-capture-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  min-height: 44px;
+}
+.oba-capture-pending {
+  min-width: 0;
+  padding-top: 0.75rem;
+  border-top: var(--ob-border-width) solid var(--ob-color-border);
+}
+.oba-capture-pending[hidden] {
+  display: none;
+}
+.oba-capture-pending h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+.oba-capture-pending-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.oba-capture-pending-item {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.oba-capture-pending-state {
+  color: var(--ob-color-muted);
+  font-size: 0.9rem;
+}
+.oba-capture-pending-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.oba-capture-pending-actions .oba-btn {
+  min-height: 44px;
+}
+
+/* Earlier versions of the landing page (ADR 0264). Everything wraps; nothing depends on a font's width. */
+.oba-history-wrap {
+  margin: 16px 0;
+  min-width: 0;
+}
+.oba-history {
+  margin-top: 8px;
+  min-width: 0;
+}
+.oba-history-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.oba-history-item {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: center;
+  padding: 8px 0;
+  border-top: 1px solid var(--oba-panel-border);
+  min-width: 0;
+}
+.oba-history-when {
+  flex: 1 1 12rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.oba-history-summary {
+  flex: 2 1 12rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.oba-history-actions,
+.oba-history-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 1 1 100%;
+  min-width: 0;
+}
+.oba-history-item .oba-btn,
+.oba-history-preview .oba-btn {
+  min-height: 44px;
+  max-width: 100%;
+  white-space: normal;
+}
+.oba-history-confirm p {
+  flex: 1 1 100%;
+  margin: 0;
+}
+.oba-history-preview {
+  margin-top: 12px;
+  min-width: 0;
+}
+
+/* The landing builder's short tour and its Help words (ADR 0259). Nothing here moves, so reduced motion needs no special case. */
+.oba-landing-tour {
+  margin: 0 0 1rem;
+  border-inline-start: 4px solid var(--ob-color-accent-border);
+}
+
+.oba-landing-tour[hidden] {
+  display: none;
+}
+
+.oba-landing-tour h3 {
+  margin-top: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-landing-tour .oba-btn {
+  min-width: 0;
+  max-width: 100%;
+  white-space: normal;
+}
+
+.oba-landing-help {
+  margin: 0.5rem 0;
+}
+
+.oba-landing-help summary {
+  min-height: 44px;
+  padding-block: 0.5rem;
+  cursor: pointer;
+}
+
+.oba-landing-help dt {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.oba-landing-help dd {
+  margin-inline-start: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-voice-diff {
+  max-height: 20rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.82rem;
+}
+
+.oba-voice-diff span {
+  display: block;
+}
+
+.oba-voice-diff-add {
+  background: color-mix(in srgb, var(--oba-success) 16%, transparent);
+}
+
+.oba-voice-diff-remove {
+  background: color-mix(in srgb, var(--oba-danger) 16%, transparent);
+}
+
+.oba-voice-diff-header {
+  font-weight: 600;
+}
+
+/* The merged voice guide (ADR 0288): one column on a phone, the two texts of a change side by side
+   when there is room. No width depends on font metrics; long words wrap. */
+.oba-voice-merge-list {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.oba-voice-merge-list li,
+.oba-voice-merge-text,
+.oba-voice-merge-flag {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.oba-voice-merge-tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0 0.35rem;
+  border: 1px solid var(--oba-panel-border);
+  border-radius: 0.25rem;
+}
+
+.oba-voice-merge-flag {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--oba-danger);
+}
+
+.oba-voice-merge-change {
+  margin: 0;
+  min-width: 0;
+  border: 1px solid var(--oba-panel-border);
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+}
+
+.oba-voice-merge-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+}
+
+@media (min-width: 40rem) {
+  .oba-voice-merge-pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.oba-voice-merge-option {
+  display: flex;
+  gap: 0.4rem;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.oba-voice-merge-option label {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+/* Connected social accounts (ADR 0301). One column on a phone; cards wrap long ids and never push the page
+   sideways, whatever the font. Status is a word and a symbol, never a colour alone. */
+.oba-social {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.oba-social ul {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+
+.oba-social-providers,
+.oba-social-attempts,
+.oba-social-accounts {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.oba-social-provider,
+.oba-social-pending,
+.oba-social-failed,
+.oba-social-account {
+  min-width: 0;
+  padding: 0.75rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: 0.5rem;
+  overflow-wrap: anywhere;
+}
+
+.oba-social-provider h4,
+.oba-social-pending h4,
+.oba-social-account h4 {
+  margin: 0 0 0.25rem;
+}
+
+.oba-social-account-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+}
+
+.oba-social-badge {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+.oba-social-badge-needs-reauth,
+.oba-social-badge-expiring {
+  border-width: 2px;
+  font-weight: 700;
+}
+
+.oba-social-wrap {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.oba-social-facts {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0.5rem 0;
+}
+
+.oba-social-facts > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.5rem;
+  min-width: 0;
+}
+
+.oba-social-facts dt {
+  font-weight: 600;
+}
+
+.oba-social-facts dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-social-scopes li,
+.oba-social-notes li {
+  margin: 0.15rem 0;
+}
+
+.oba-social-destinations li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.25rem 0.5rem;
+  align-items: start;
+  padding: 0.5rem 0;
+  min-width: 0;
+}
+
+.oba-social-destinations input {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0.1rem 0 0;
+}
+
+.oba-social-destinations label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.oba-social-why {
+  grid-column: 2;
+  margin: 0;
+}
+
+.oba-social .oba-btn {
+  min-height: 44px;
+}
+
+.oba-social fieldset {
+  min-width: 0;
+  margin: 0 0 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: 0.5rem;
+}
+
+@media (min-width: 720px) {
+  .oba-social-providers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Social announcements (ADR 0310). One column, wrapping text, no fixed widths: the screen reads the
+   same on a phone and does not depend on a font's metrics. */
+.oba-announce {
+  display: grid;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.oba-announce > *,
+.oba-announce-composer > *,
+.oba-announce-row > * {
+  min-width: 0;
+}
+
+.oba-announce-status:empty {
+  display: none;
+}
+
+.oba-announce-status {
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  overflow-wrap: anywhere;
+}
+
+.oba-announce-composer {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.oba-announce-composer h2,
+.oba-announce-queue h2 {
+  margin: 0 0 0.25rem;
+}
+
+.oba-announce-count[data-over="true"] {
+  color: var(--oba-danger);
+  font-weight: 700;
+}
+
+.oba-announce-problems ul {
+  margin: 0.25rem 0 0;
+  padding-inline-start: 1.25rem;
+}
+
+.oba-announce-preview {
+  margin: 0 0 1rem;
+}
+
+.oba-announce-preview h3 {
+  margin: 0 0 0.5rem;
+}
+
+.oba-announce-card {
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  overflow-wrap: anywhere;
+}
+
+.oba-announce-card > p {
+  margin: 0;
+}
+
+.oba-announce-card-caption,
+.oba-announce-caption {
+  white-space: pre-wrap;
+}
+
+.oba-announce-url {
+  overflow-wrap: anywhere;
+  text-decoration: underline;
+}
+
+.oba-announce-list {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.oba-announce-row {
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.75rem;
+  border: var(--ob-border-width) solid var(--oba-panel-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  overflow-wrap: anywhere;
+}
+
+.oba-announce-row p {
+  margin: 0;
+}
+
+.oba-announce-row-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 0.75rem;
+}
+
+.oba-announce-badge {
+  display: inline-block;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.oba-announce-badge-published,
+.oba-announce-badge-failed {
+  border-width: 2px;
+  font-weight: 700;
+}
+
+.oba-announce-row-actions .oba-btn,
+.oba-announce-actions .oba-btn,
+.oba-announce-row-panel .oba-btn {
+  min-height: 44px;
+}
+
+.oba-announce-row-panel {
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: var(--ob-border-width) solid var(--oba-panel-border);
+}
+
+.oba-announce-recovery {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.oba-announce-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+}
+
+.oba-announce-next {
+  margin: 0;
+}
+
+.oba-announce-history summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.oba-announce-attempts {
+  margin: 0.25rem 0 0;
+  padding-left: 1.25rem;
+  overflow-wrap: anywhere;
+}

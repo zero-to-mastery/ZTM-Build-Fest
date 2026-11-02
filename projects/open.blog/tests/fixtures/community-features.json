@@ -1,0 +1,21 @@
+{
+  "notice": "The editors chose these reflections to feature. Each is one reader's view: featuring a reflection is an editorial choice, not a vote, and it does not mean the authors, the editors or the community agree with it.",
+  "reasons": [
+    { "id": "withdrawn", "standing": "mustComeOff", "explanation": "the reader withdrew this reflection" },
+    { "id": "deleted", "standing": "mustComeOff", "explanation": "the reflection's text has been deleted" },
+    { "id": "not-approved", "standing": "mustComeOff", "explanation": "the reflection is no longer approved and shown" },
+    { "id": "consent-declined", "standing": "mustComeOff", "explanation": "the reader no longer agrees to have it featured" },
+    { "id": "text-changed", "standing": "mustComeOff", "explanation": "the text is not the text the reader agreed to have featured" },
+    { "id": "misdated", "standing": "mustComeOff", "explanation": "it is dated as featured before the reflection was approved" },
+    { "id": "source-gone", "standing": "hidden", "explanation": "the article it is about is no longer published" }
+  ],
+  "notes": [
+    { "note": "Connects the tides to a shared rhythm.", "ok": true },
+    { "note": "A careful reading of the method.", "ok": true },
+    { "note": "Devoted to the moon.", "ok": true },
+    { "note": "Most popular reflection", "ok": false },
+    { "note": "12 readers agree", "ok": false },
+    { "note": "Everyone agrees with this.", "ok": false },
+    { "note": "A trending take", "ok": false }
+  ]
+}

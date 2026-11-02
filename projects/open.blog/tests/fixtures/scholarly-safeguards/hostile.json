@@ -1,0 +1,1948 @@
+{
+  "version": 1,
+  "synthetic": "Hostile inputs built by changing one thing in a valid, invented document. Every one is refused with a diagnostic scoped to the record it is about.",
+  "base": {
+    "library": {
+      "version": 1,
+      "sources": [
+        {
+          "id": "lanterns",
+          "kind": "work",
+          "title": "A Treatise of Lanterns",
+          "creators": [
+            {
+              "name": "Ida Vale",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "id": "lanterns-first",
+          "kind": "edition",
+          "of": "lanterns",
+          "title": "The Treatise of Lanterns, first printing",
+          "issued": "1801",
+          "volumes": 2,
+          "creators": [
+            {
+              "name": "Ned Orrin",
+              "role": "editor"
+            }
+          ]
+        },
+        {
+          "id": "lanterns-en",
+          "kind": "translation",
+          "of": "lanterns",
+          "basedOn": "lanterns-first",
+          "language": "en",
+          "title": "The Lantern Treatise",
+          "creators": [
+            {
+              "name": "Mara Quill",
+              "role": "translator"
+            }
+          ]
+        },
+        {
+          "id": "lanterns-ms",
+          "kind": "witness",
+          "of": "lanterns",
+          "title": "The Tower codex",
+          "repository": "Tower Archive",
+          "shelfmark": "T 12"
+        },
+        {
+          "id": "lanterns-p3",
+          "kind": "reference",
+          "of": "lanterns-first",
+          "location": {
+            "scheme": "page",
+            "value": "3",
+            "volume": "1"
+          }
+        },
+        {
+          "id": "other",
+          "kind": "work",
+          "title": "Another Treatise"
+        },
+        {
+          "id": "other-ed",
+          "kind": "edition",
+          "of": "other",
+          "title": "Another Treatise, printed"
+        }
+      ],
+      "interpretations": [
+        {
+          "id": "my-reading",
+          "kind": "reading",
+          "source": "lanterns-first",
+          "text": "Synthetic reading.",
+          "interpreters": [
+            {
+              "name": "The author"
+            }
+          ]
+        }
+      ]
+    },
+    "notebook": {
+      "version": 1,
+      "passages": [
+        {
+          "id": "p-first",
+          "source": "lanterns-first",
+          "excerpt": {
+            "text": "Synthetic passage one."
+          },
+          "locators": [
+            {
+              "kind": "page",
+              "value": "3"
+            },
+            {
+              "kind": "x-csl-volume",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "id": "p-en",
+          "source": "lanterns-en",
+          "excerpt": {
+            "text": "Synthetic passage two."
+          },
+          "locators": [
+            {
+              "kind": "page",
+              "value": "9"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        {
+          "id": "n1",
+          "kind": "question",
+          "text": "Synthetic question.",
+          "passages": [
+            "p-first"
+          ],
+          "sources": [
+            "lanterns"
+          ]
+        }
+      ]
+    },
+    "atlas": {
+      "version": 2,
+      "entries": [
+        {
+          "id": "ida",
+          "kind": "person",
+          "label": "Ida Vale"
+        },
+        {
+          "id": "ned",
+          "kind": "person",
+          "label": "Ned Orrin"
+        },
+        {
+          "id": "treatise",
+          "kind": "work",
+          "label": "The Treatise",
+          "source": "lanterns"
+        },
+        {
+          "id": "light",
+          "kind": "concept",
+          "label": "Light"
+        }
+      ],
+      "relationships": [
+        {
+          "id": "ida-wrote",
+          "kind": "authored",
+          "from": "ida",
+          "to": "treatise",
+          "assertedBy": {
+            "kind": "author"
+          },
+          "evidence": [
+            {
+              "source": "lanterns"
+            }
+          ]
+        }
+      ]
+    },
+    "claims": {
+      "version": 1,
+      "claims": [
+        {
+          "id": "c1",
+          "post": "lanterns",
+          "statement": "Synthetic claim.",
+          "anchor": {
+            "start": 0,
+            "end": 4,
+            "text": "Seen"
+          }
+        }
+      ],
+      "links": [
+        {
+          "id": "l1",
+          "claim": "c1",
+          "relation": "supports",
+          "evidence": {
+            "source": "lanterns-first",
+            "passage": "p-first"
+          }
+        }
+      ]
+    },
+    "alignments": {
+      "version": 1,
+      "alignments": [
+        {
+          "id": "lamp",
+          "label": "The lamp",
+          "correspondence": "partial",
+          "members": [
+            {
+              "source": "lanterns-first",
+              "passage": "p-first"
+            },
+            {
+              "source": "lanterns-en",
+              "passage": "p-en"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "library-too-large",
+      "file": "library",
+      "emits": [
+        "source-library: too-large"
+      ],
+      "ops": [],
+      "pad": 4400000
+    },
+    {
+      "id": "library-invalid-json",
+      "file": "library",
+      "emits": [
+        "source-library: invalid-json"
+      ],
+      "ops": [],
+      "text": "{"
+    },
+    {
+      "id": "library-unsupported-version",
+      "file": "library",
+      "emits": [
+        "source-library: unsupported-version"
+      ],
+      "ops": [
+        {
+          "set": "/version",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "library-missing-field",
+      "file": "library",
+      "emits": [
+        "source-library: missing-field"
+      ],
+      "ops": [
+        {
+          "remove": "/sources/0/title"
+        }
+      ]
+    },
+    {
+      "id": "library-invalid-field",
+      "file": "library",
+      "emits": [
+        "source-library: invalid-field"
+      ],
+      "ops": [
+        {
+          "set": "/sources/0/title",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": "library-invalid-id",
+      "file": "library",
+      "emits": [
+        "source-library: invalid-id"
+      ],
+      "ops": [
+        {
+          "set": "/sources/0/id",
+          "value": "Bad Id"
+        }
+      ]
+    },
+    {
+      "id": "library-duplicate-id",
+      "file": "library",
+      "emits": [
+        "source-library: duplicate-id"
+      ],
+      "ops": [
+        {
+          "append": "/sources",
+          "value": {
+            "id": "lanterns",
+            "kind": "work",
+            "title": "Again"
+          }
+        }
+      ]
+    },
+    {
+      "id": "library-unknown-kind",
+      "file": "library",
+      "emits": [
+        "source-library: unknown-kind"
+      ],
+      "ops": [
+        {
+          "set": "/sources/0/kind",
+          "value": "scroll"
+        }
+      ]
+    },
+    {
+      "id": "library-unresolved-relationship",
+      "file": "library",
+      "emits": [
+        "source-library: unresolved-relationship"
+      ],
+      "ops": [
+        {
+          "set": "/sources/1/of",
+          "value": "nowhere"
+        }
+      ]
+    },
+    {
+      "id": "library-invalid-relationship",
+      "file": "library",
+      "emits": [
+        "source-library: invalid-relationship"
+      ],
+      "ops": [
+        {
+          "set": "/sources/0/of",
+          "value": "lanterns-first"
+        }
+      ]
+    },
+    {
+      "id": "library-ambiguous-relationship",
+      "file": "library",
+      "emits": [
+        "source-library: ambiguous-relationship"
+      ],
+      "ops": [
+        {
+          "set": "/sources/2/basedOn",
+          "value": "other-ed"
+        }
+      ]
+    },
+    {
+      "id": "library-relationship-cycle",
+      "file": "library",
+      "emits": [
+        "source-library: relationship-cycle"
+      ],
+      "ops": [
+        {
+          "append": "/sources",
+          "value": {
+            "id": "lanterns-de",
+            "kind": "translation",
+            "of": "lanterns",
+            "basedOn": "lanterns-en",
+            "language": "de",
+            "title": "Die Laternenschrift"
+          }
+        },
+        {
+          "set": "/sources/2/basedOn",
+          "value": "lanterns-de"
+        }
+      ]
+    },
+    {
+      "id": "library-ambiguous-location",
+      "file": "library",
+      "emits": [
+        "source-library: ambiguous-location"
+      ],
+      "ops": [
+        {
+          "set": "/sources/4/location/volume",
+          "value": "9"
+        }
+      ]
+    },
+    {
+      "id": "library-invalid-identifier",
+      "file": "library",
+      "emits": [
+        "source-library: invalid-identifier"
+      ],
+      "ops": [
+        {
+          "set": "/sources/0/identifiers",
+          "value": [
+            {
+              "scheme": "doi",
+              "value": "nope"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "library-contributor-credit",
+      "file": "library",
+      "emits": [
+        "source-library: contributor-credit"
+      ],
+      "ops": [
+        {
+          "set": "/sources/0/credit",
+          "value": "Someone"
+        }
+      ]
+    },
+    {
+      "id": "library-conflicting-attribution",
+      "file": "library",
+      "emits": [
+        "source-library: conflicting-attribution"
+      ],
+      "ops": [
+        {
+          "set": "/sources/0/anonymous",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "notebook-too-large",
+      "file": "notebook",
+      "emits": [
+        "notebook: too-large"
+      ],
+      "ops": [],
+      "pad": 4400000
+    },
+    {
+      "id": "notebook-invalid-json",
+      "file": "notebook",
+      "emits": [
+        "notebook: invalid-json"
+      ],
+      "ops": [],
+      "text": "["
+    },
+    {
+      "id": "notebook-unsupported-version",
+      "file": "notebook",
+      "emits": [
+        "notebook: unsupported-version"
+      ],
+      "ops": [
+        {
+          "set": "/version",
+          "value": 2
+        }
+      ]
+    },
+    {
+      "id": "notebook-missing-field",
+      "file": "notebook",
+      "emits": [
+        "notebook: missing-field"
+      ],
+      "ops": [
+        {
+          "remove": "/passages/0/excerpt"
+        }
+      ]
+    },
+    {
+      "id": "notebook-invalid-field",
+      "file": "notebook",
+      "emits": [
+        "notebook: invalid-field"
+      ],
+      "ops": [
+        {
+          "set": "/passages/0/excerpt/text",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": "notebook-invalid-id",
+      "file": "notebook",
+      "emits": [
+        "notebook: invalid-id"
+      ],
+      "ops": [
+        {
+          "set": "/passages/0/id",
+          "value": "Bad Id"
+        }
+      ]
+    },
+    {
+      "id": "notebook-duplicate-id",
+      "file": "notebook",
+      "emits": [
+        "notebook: duplicate-id"
+      ],
+      "ops": [
+        {
+          "append": "/passages",
+          "value": {
+            "id": "p-first",
+            "source": "lanterns-first",
+            "excerpt": {
+              "text": "Again."
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "notebook-unknown-source",
+      "file": "notebook",
+      "emits": [
+        "notebook: unknown-source"
+      ],
+      "ops": [
+        {
+          "set": "/passages/0/source",
+          "value": "nowhere"
+        }
+      ]
+    },
+    {
+      "id": "notebook-unknown-passage",
+      "file": "notebook",
+      "emits": [
+        "notebook: unknown-passage"
+      ],
+      "ops": [
+        {
+          "set": "/notes/0/passages",
+          "value": [
+            "nowhere"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notebook-unknown-locator-kind",
+      "file": "notebook",
+      "emits": [
+        "notebook: unknown-locator-kind"
+      ],
+      "ops": [
+        {
+          "set": "/passages/0/locators",
+          "value": [
+            {
+              "kind": "bogus",
+              "value": "1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notebook-invalid-locator",
+      "file": "notebook",
+      "emits": [
+        "notebook: invalid-locator"
+      ],
+      "ops": [
+        {
+          "set": "/passages/0/locators",
+          "value": [
+            {
+              "kind": "timestamp",
+              "value": "1:5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "notebook-ambiguous-locator",
+      "file": "notebook",
+      "emits": [
+        "notebook: ambiguous-locator"
+      ],
+      "ops": [
+        {
+          "set": "/passages/0/source",
+          "value": "lanterns"
+        }
+      ]
+    },
+    {
+      "id": "notebook-not-private",
+      "file": "notebook",
+      "emits": [
+        "notebook: not-private"
+      ],
+      "ops": [
+        {
+          "set": "/passages/0/visibility",
+          "value": "public"
+        }
+      ]
+    },
+    {
+      "id": "notebook-contributor-credit",
+      "file": "notebook",
+      "emits": [
+        "notebook: contributor-credit"
+      ],
+      "ops": [
+        {
+          "set": "/passages/0/credit",
+          "value": "Someone"
+        }
+      ]
+    },
+    {
+      "id": "notebook-reader-feedback",
+      "file": "notebook",
+      "emits": [
+        "notebook: reader-feedback"
+      ],
+      "ops": [
+        {
+          "set": "/notes/0/attribution",
+          "value": {
+            "name": "A reader",
+            "publishName": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "atlas-too-large",
+      "file": "atlas",
+      "emits": [
+        "atlas: too-large"
+      ],
+      "ops": [],
+      "pad": 4400000
+    },
+    {
+      "id": "atlas-invalid-json",
+      "file": "atlas",
+      "emits": [
+        "atlas: invalid-json"
+      ],
+      "ops": [],
+      "text": "["
+    },
+    {
+      "id": "atlas-unsupported-version",
+      "file": "atlas",
+      "emits": [
+        "atlas: unsupported-version"
+      ],
+      "ops": [
+        {
+          "set": "/version",
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": "atlas-missing-field",
+      "file": "atlas",
+      "emits": [
+        "atlas: missing-field"
+      ],
+      "ops": [
+        {
+          "remove": "/entries/0/label"
+        }
+      ]
+    },
+    {
+      "id": "atlas-invalid-field",
+      "file": "atlas",
+      "emits": [
+        "atlas: invalid-field"
+      ],
+      "ops": [
+        {
+          "set": "/entries/0/label",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": "atlas-invalid-id",
+      "file": "atlas",
+      "emits": [
+        "atlas: invalid-id"
+      ],
+      "ops": [
+        {
+          "set": "/entries/0/id",
+          "value": "Bad Id"
+        }
+      ]
+    },
+    {
+      "id": "atlas-duplicate-id",
+      "file": "atlas",
+      "emits": [
+        "atlas: duplicate-id"
+      ],
+      "ops": [
+        {
+          "append": "/entries",
+          "value": {
+            "id": "ida",
+            "kind": "person",
+            "label": "Again"
+          }
+        }
+      ]
+    },
+    {
+      "id": "atlas-unknown-entry",
+      "file": "atlas",
+      "emits": [
+        "atlas: unknown-entry"
+      ],
+      "ops": [
+        {
+          "set": "/relationships/0/to",
+          "value": "nowhere"
+        }
+      ]
+    },
+    {
+      "id": "atlas-unknown-source",
+      "file": "atlas",
+      "emits": [
+        "atlas: unknown-source"
+      ],
+      "ops": [
+        {
+          "set": "/entries/2/source",
+          "value": "nowhere"
+        }
+      ]
+    },
+    {
+      "id": "atlas-unknown-passage",
+      "file": "atlas",
+      "emits": [
+        "atlas: unknown-passage"
+      ],
+      "ops": [
+        {
+          "set": "/relationships/0/evidence",
+          "value": [
+            {
+              "source": "lanterns-first",
+              "passage": "nowhere"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "atlas-unknown-locator-kind",
+      "file": "atlas",
+      "emits": [
+        "atlas: unknown-locator-kind"
+      ],
+      "ops": [
+        {
+          "set": "/relationships/0/evidence",
+          "value": [
+            {
+              "source": "lanterns-first",
+              "locators": [
+                {
+                  "kind": "bogus",
+                  "value": "1"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "atlas-invalid-locator",
+      "file": "atlas",
+      "emits": [
+        "atlas: invalid-locator"
+      ],
+      "ops": [
+        {
+          "set": "/relationships/0/evidence",
+          "value": [
+            {
+              "source": "lanterns-first",
+              "locators": [
+                {
+                  "kind": "timestamp",
+                  "value": "1:5"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "atlas-ambiguous-locator",
+      "file": "atlas",
+      "emits": [
+        "atlas: ambiguous-locator"
+      ],
+      "ops": [
+        {
+          "set": "/relationships/0/evidence",
+          "value": [
+            {
+              "source": "lanterns",
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "3"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "atlas-unknown-kind",
+      "file": "atlas",
+      "emits": [
+        "atlas: unknown-kind"
+      ],
+      "ops": [
+        {
+          "set": "/entries/0/kind",
+          "value": "deity"
+        }
+      ]
+    },
+    {
+      "id": "atlas-endpoint-kind",
+      "file": "atlas",
+      "emits": [
+        "atlas: endpoint-kind"
+      ],
+      "ops": [
+        {
+          "set": "/relationships/0/from",
+          "value": "light"
+        }
+      ]
+    },
+    {
+      "id": "atlas-wrong-source-kind",
+      "file": "atlas",
+      "emits": [
+        "atlas: wrong-source-kind"
+      ],
+      "ops": [
+        {
+          "set": "/entries/2/source",
+          "value": "lanterns-first"
+        }
+      ]
+    },
+    {
+      "id": "atlas-self-relationship",
+      "file": "atlas",
+      "emits": [
+        "atlas: self-relationship"
+      ],
+      "ops": [
+        {
+          "set": "/relationships/0/to",
+          "value": "ida"
+        },
+        {
+          "set": "/relationships/0/from",
+          "value": "ida"
+        },
+        {
+          "set": "/relationships/0/kind",
+          "value": "related-to"
+        }
+      ]
+    },
+    {
+      "id": "atlas-duplicate-relationship",
+      "file": "atlas",
+      "emits": [
+        "atlas: duplicate-relationship"
+      ],
+      "ops": [
+        {
+          "append": "/relationships",
+          "value": {
+            "id": "ida-wrote-again",
+            "kind": "authored",
+            "from": "ida",
+            "to": "treatise",
+            "assertedBy": {
+              "kind": "author"
+            },
+            "evidence": [
+              {
+                "source": "lanterns"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "atlas-cycle",
+      "file": "atlas",
+      "emits": [
+        "atlas: cycle"
+      ],
+      "ops": [
+        {
+          "append": "/entries",
+          "value": {
+            "id": "c1",
+            "kind": "concept",
+            "label": "One"
+          }
+        },
+        {
+          "append": "/entries",
+          "value": {
+            "id": "c2",
+            "kind": "concept",
+            "label": "Two"
+          }
+        },
+        {
+          "append": "/relationships",
+          "value": {
+            "id": "s1",
+            "kind": "specializes",
+            "from": "c1",
+            "to": "c2",
+            "assertedBy": {
+              "kind": "author"
+            },
+            "evidence": [
+              {
+                "source": "lanterns"
+              }
+            ]
+          }
+        },
+        {
+          "append": "/relationships",
+          "value": {
+            "id": "s2",
+            "kind": "specializes",
+            "from": "c2",
+            "to": "c1",
+            "assertedBy": {
+              "kind": "author"
+            },
+            "evidence": [
+              {
+                "source": "lanterns"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "atlas-missing-evidence",
+      "file": "atlas",
+      "emits": [
+        "atlas: missing-evidence"
+      ],
+      "ops": [
+        {
+          "remove": "/relationships/0/evidence"
+        }
+      ]
+    },
+    {
+      "id": "atlas-evidence-conflict",
+      "file": "atlas",
+      "emits": [
+        "atlas: evidence-conflict"
+      ],
+      "ops": [
+        {
+          "set": "/relationships/0/unsourced",
+          "value": true
+        }
+      ]
+    },
+    {
+      "id": "atlas-invalid-visibility",
+      "file": "atlas",
+      "emits": [
+        "atlas: invalid-visibility"
+      ],
+      "ops": [
+        {
+          "set": "/entries/0/visibility",
+          "value": "public"
+        }
+      ]
+    },
+    {
+      "id": "atlas-private-reference",
+      "file": "atlas",
+      "emits": [
+        "atlas: private-reference"
+      ],
+      "ops": [
+        {
+          "set": "/relationships/0/evidence",
+          "value": [
+            {
+              "source": "lanterns-first",
+              "passage": "p-first"
+            }
+          ]
+        },
+        {
+          "set": "/relationships/0/visibility",
+          "value": "approved"
+        }
+      ]
+    },
+    {
+      "id": "atlas-contributor-credit",
+      "file": "atlas",
+      "emits": [
+        "atlas: contributor-credit"
+      ],
+      "ops": [
+        {
+          "set": "/entries/0/credit",
+          "value": "Someone"
+        }
+      ]
+    },
+    {
+      "id": "atlas-invalid-date",
+      "file": "atlas",
+      "emits": [
+        "atlas: invalid-date"
+      ],
+      "ops": [
+        {
+          "set": "/entries/0/dates",
+          "value": [
+            {
+              "id": "d1",
+              "aspect": "birth",
+              "date": {
+                "at": {
+                  "year": 1700,
+                  "month": 13
+                }
+              },
+              "assertedBy": {
+                "kind": "author"
+              },
+              "evidence": [
+                {
+                  "source": "lanterns"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "atlas-aspect-kind",
+      "file": "atlas",
+      "emits": [
+        "atlas: aspect-kind"
+      ],
+      "ops": [
+        {
+          "set": "/entries/3/dates",
+          "value": [
+            {
+              "id": "d1",
+              "aspect": "birth",
+              "date": {
+                "at": {
+                  "year": 1700
+                }
+              },
+              "assertedBy": {
+                "kind": "author"
+              },
+              "evidence": [
+                {
+                  "source": "lanterns"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "atlas-duplicate-dating",
+      "file": "atlas",
+      "emits": [
+        "atlas: duplicate-dating"
+      ],
+      "ops": [
+        {
+          "set": "/entries/0/dates",
+          "value": [
+            {
+              "id": "d1",
+              "aspect": "birth",
+              "date": {
+                "at": {
+                  "year": 1700
+                }
+              },
+              "assertedBy": {
+                "kind": "author"
+              },
+              "evidence": [
+                {
+                  "source": "lanterns"
+                }
+              ]
+            },
+            {
+              "id": "d2",
+              "aspect": "birth",
+              "date": {
+                "at": {
+                  "year": 1700
+                }
+              },
+              "assertedBy": {
+                "kind": "author"
+              },
+              "evidence": [
+                {
+                  "source": "lanterns"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "claims-too-large",
+      "file": "claims",
+      "emits": [
+        "claims: too-large"
+      ],
+      "ops": [],
+      "pad": 4400000
+    },
+    {
+      "id": "claims-invalid-json",
+      "file": "claims",
+      "emits": [
+        "claims: invalid-json"
+      ],
+      "ops": [],
+      "text": "["
+    },
+    {
+      "id": "claims-unsupported-version",
+      "file": "claims",
+      "emits": [
+        "claims: unsupported-version"
+      ],
+      "ops": [
+        {
+          "set": "/version",
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": "claims-missing-field",
+      "file": "claims",
+      "emits": [
+        "claims: missing-field"
+      ],
+      "ops": [
+        {
+          "remove": "/claims/0/statement"
+        }
+      ]
+    },
+    {
+      "id": "claims-invalid-field",
+      "file": "claims",
+      "emits": [
+        "claims: invalid-field"
+      ],
+      "ops": [
+        {
+          "set": "/claims/0/statement",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": "claims-invalid-id",
+      "file": "claims",
+      "emits": [
+        "claims: invalid-id"
+      ],
+      "ops": [
+        {
+          "set": "/claims/0/id",
+          "value": "Bad Id"
+        }
+      ]
+    },
+    {
+      "id": "claims-duplicate-id",
+      "file": "claims",
+      "emits": [
+        "claims: duplicate-id"
+      ],
+      "ops": [
+        {
+          "append": "/claims",
+          "value": {
+            "id": "c1",
+            "post": "lanterns",
+            "statement": "Again."
+          }
+        }
+      ]
+    },
+    {
+      "id": "claims-unknown-source",
+      "file": "claims",
+      "emits": [
+        "claims: unknown-source"
+      ],
+      "ops": [
+        {
+          "set": "/links/0/evidence/source",
+          "value": "nowhere"
+        }
+      ]
+    },
+    {
+      "id": "claims-unknown-passage",
+      "file": "claims",
+      "emits": [
+        "claims: unknown-passage"
+      ],
+      "ops": [
+        {
+          "set": "/links/0/evidence/passage",
+          "value": "nowhere"
+        }
+      ]
+    },
+    {
+      "id": "claims-unknown-locator-kind",
+      "file": "claims",
+      "emits": [
+        "claims: unknown-locator-kind"
+      ],
+      "ops": [
+        {
+          "set": "/links/0/evidence",
+          "value": {
+            "source": "lanterns-first",
+            "locators": [
+              {
+                "kind": "bogus",
+                "value": "1"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "claims-invalid-locator",
+      "file": "claims",
+      "emits": [
+        "claims: invalid-locator"
+      ],
+      "ops": [
+        {
+          "set": "/links/0/evidence",
+          "value": {
+            "source": "lanterns-first",
+            "locators": [
+              {
+                "kind": "timestamp",
+                "value": "1:5"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "claims-ambiguous-locator",
+      "file": "claims",
+      "emits": [
+        "claims: ambiguous-locator"
+      ],
+      "ops": [
+        {
+          "set": "/links/0/evidence",
+          "value": {
+            "source": "lanterns",
+            "locators": [
+              {
+                "kind": "page",
+                "value": "3"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "claims-unknown-kind",
+      "file": "claims",
+      "emits": [
+        "claims: unknown-kind"
+      ],
+      "ops": [
+        {
+          "set": "/links/0/recordedBy",
+          "value": {
+            "kind": "crowd"
+          }
+        }
+      ]
+    },
+    {
+      "id": "claims-missing-evidence",
+      "file": "claims",
+      "emits": [
+        "claims: missing-evidence"
+      ],
+      "ops": [
+        {
+          "remove": "/links/0/evidence"
+        }
+      ]
+    },
+    {
+      "id": "claims-invalid-visibility",
+      "file": "claims",
+      "emits": [
+        "claims: invalid-visibility"
+      ],
+      "ops": [
+        {
+          "set": "/claims/0/visibility",
+          "value": "public"
+        }
+      ]
+    },
+    {
+      "id": "claims-private-reference",
+      "file": "claims",
+      "emits": [
+        "claims: private-reference"
+      ],
+      "ops": [
+        {
+          "set": "/links/0/visibility",
+          "value": "approved"
+        }
+      ]
+    },
+    {
+      "id": "claims-contributor-credit",
+      "file": "claims",
+      "emits": [
+        "claims: contributor-credit"
+      ],
+      "ops": [
+        {
+          "set": "/claims/0/credit",
+          "value": "Someone"
+        }
+      ]
+    },
+    {
+      "id": "claims-unknown-claim",
+      "file": "claims",
+      "emits": [
+        "claims: unknown-claim"
+      ],
+      "ops": [
+        {
+          "set": "/links/0/claim",
+          "value": "nowhere"
+        }
+      ]
+    },
+    {
+      "id": "claims-duplicate-link",
+      "file": "claims",
+      "emits": [
+        "claims: duplicate-link"
+      ],
+      "ops": [
+        {
+          "append": "/links",
+          "value": {
+            "id": "l2",
+            "claim": "c1",
+            "relation": "supports",
+            "evidence": {
+              "source": "lanterns-first",
+              "passage": "p-first"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "claims-anchor-mismatch",
+      "file": "claims",
+      "emits": [
+        "claims: anchor-mismatch"
+      ],
+      "ops": [
+        {
+          "set": "/claims/0/anchor",
+          "value": {
+            "start": 0,
+            "end": 9,
+            "text": "Seen"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-too-large",
+      "file": "alignments",
+      "emits": [
+        "alignments: too-large"
+      ],
+      "ops": [],
+      "pad": 4400000
+    },
+    {
+      "id": "alignments-invalid-json",
+      "file": "alignments",
+      "emits": [
+        "alignments: invalid-json"
+      ],
+      "ops": [],
+      "text": "["
+    },
+    {
+      "id": "alignments-unsupported-version",
+      "file": "alignments",
+      "emits": [
+        "alignments: unsupported-version"
+      ],
+      "ops": [
+        {
+          "set": "/version",
+          "value": 9
+        }
+      ]
+    },
+    {
+      "id": "alignments-missing-field",
+      "file": "alignments",
+      "emits": [
+        "alignments: missing-field"
+      ],
+      "ops": [
+        {
+          "remove": "/alignments/0/id"
+        }
+      ]
+    },
+    {
+      "id": "alignments-invalid-field",
+      "file": "alignments",
+      "emits": [
+        "alignments: invalid-field"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/label",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "id": "alignments-invalid-id",
+      "file": "alignments",
+      "emits": [
+        "alignments: invalid-id"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/id",
+          "value": "Bad Id"
+        }
+      ]
+    },
+    {
+      "id": "alignments-duplicate-id",
+      "file": "alignments",
+      "emits": [
+        "alignments: duplicate-id"
+      ],
+      "ops": [
+        {
+          "append": "/alignments",
+          "value": {
+            "id": "lamp",
+            "members": [
+              {
+                "source": "lanterns-first",
+                "passage": "p-first"
+              },
+              {
+                "source": "lanterns-en",
+                "passage": "p-en"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-unknown-source",
+      "file": "alignments",
+      "emits": [
+        "alignments: unknown-source"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/members/0/source",
+          "value": "nowhere"
+        }
+      ]
+    },
+    {
+      "id": "alignments-unknown-passage",
+      "file": "alignments",
+      "emits": [
+        "alignments: unknown-passage"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/members/0/passage",
+          "value": "nowhere"
+        }
+      ]
+    },
+    {
+      "id": "alignments-unknown-locator-kind",
+      "file": "alignments",
+      "emits": [
+        "alignments: unknown-locator-kind"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/members/0",
+          "value": {
+            "source": "lanterns-first",
+            "locators": [
+              {
+                "kind": "bogus",
+                "value": "1"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-invalid-locator",
+      "file": "alignments",
+      "emits": [
+        "alignments: invalid-locator"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/members/0",
+          "value": {
+            "source": "lanterns-first",
+            "locators": [
+              {
+                "kind": "timestamp",
+                "value": "1:5"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-ambiguous-locator",
+      "file": "alignments",
+      "emits": [
+        "alignments: ambiguous-locator"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/members/0",
+          "value": {
+            "source": "lanterns-first",
+            "locators": [
+              {
+                "kind": "folio",
+                "value": "3r"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-unknown-kind",
+      "file": "alignments",
+      "emits": [
+        "alignments: unknown-kind"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/recordedBy",
+          "value": {
+            "kind": "crowd"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-wrong-source-kind",
+      "file": "alignments",
+      "emits": [
+        "alignments: wrong-source-kind"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/members/0",
+          "value": {
+            "source": "lanterns",
+            "locators": [
+              {
+                "kind": "canonical",
+                "value": "1a"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-invalid-visibility",
+      "file": "alignments",
+      "emits": [
+        "alignments: invalid-visibility"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/visibility",
+          "value": "public"
+        }
+      ]
+    },
+    {
+      "id": "alignments-contributor-credit",
+      "file": "alignments",
+      "emits": [
+        "alignments: contributor-credit"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/credit",
+          "value": "Someone"
+        }
+      ]
+    },
+    {
+      "id": "alignments-unknown-interpretation",
+      "file": "alignments",
+      "emits": [
+        "alignments: unknown-interpretation"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/members/0",
+          "value": {
+            "interpretation": "nowhere"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-duplicate-member",
+      "file": "alignments",
+      "emits": [
+        "alignments: duplicate-member"
+      ],
+      "ops": [
+        {
+          "append": "/alignments/0/members",
+          "value": {
+            "source": "lanterns-first",
+            "passage": "p-first"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-conflicting-member",
+      "file": "alignments",
+      "emits": [
+        "alignments: conflicting-member"
+      ],
+      "ops": [
+        {
+          "append": "/alignments/0/members",
+          "value": {
+            "source": "lanterns-first",
+            "absent": true
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-missing-counterpart",
+      "file": "alignments",
+      "emits": [
+        "alignments: missing-counterpart"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/members",
+          "value": [
+            {
+              "source": "lanterns-first",
+              "passage": "p-first"
+            },
+            {
+              "source": "lanterns-first",
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "4"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "alignments-missing-locator",
+      "file": "alignments",
+      "emits": [
+        "alignments: missing-locator"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/members/0",
+          "value": {
+            "source": "lanterns-first"
+          }
+        }
+      ]
+    },
+    {
+      "id": "alignments-missing-original",
+      "file": "alignments",
+      "emits": [
+        "alignments: missing-original"
+      ],
+      "ops": [
+        {
+          "set": "/alignments/0/members/0",
+          "value": {
+            "source": "lanterns-first",
+            "locators": [
+              {
+                "kind": "page",
+                "value": "3"
+              }
+            ],
+            "normalized": {
+              "text": "x"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "operations": [
+    {
+      "id": "library-kind-changed",
+      "op": "library-kind-changed",
+      "emits": [
+        "source-library: kind-changed"
+      ]
+    },
+    {
+      "id": "library-unknown-source",
+      "op": "library-unknown-source",
+      "emits": [
+        "source-library: unknown-source"
+      ]
+    },
+    {
+      "id": "library-still-used",
+      "op": "library-still-used",
+      "emits": [
+        "source-library: still-used"
+      ]
+    },
+    {
+      "id": "notebook-source-changed",
+      "op": "notebook-source-changed",
+      "emits": [
+        "notebook: source-changed"
+      ]
+    },
+    {
+      "id": "notebook-still-linked",
+      "op": "notebook-still-linked",
+      "emits": [
+        "notebook: still-linked"
+      ]
+    },
+    {
+      "id": "notebook-unknown-entry",
+      "op": "notebook-unknown-entry",
+      "emits": [
+        "notebook: unknown-entry"
+      ]
+    },
+    {
+      "id": "atlas-still-linked",
+      "op": "atlas-still-linked",
+      "emits": [
+        "atlas: still-linked"
+      ]
+    },
+    {
+      "id": "atlas-shadowed-field",
+      "op": "atlas-shadowed-field",
+      "emits": [
+        "atlas: shadowed-field"
+      ]
+    },
+    {
+      "id": "claims-still-linked",
+      "op": "claims-still-linked",
+      "emits": [
+        "claims: still-linked"
+      ]
+    },
+    {
+      "id": "claims-unknown-link",
+      "op": "claims-unknown-link",
+      "emits": [
+        "claims: unknown-link"
+      ]
+    },
+    {
+      "id": "claims-shadowed-field",
+      "op": "claims-shadowed-field",
+      "emits": [
+        "claims: shadowed-field"
+      ]
+    },
+    {
+      "id": "claims-stale-anchor",
+      "op": "claims-stale-anchor",
+      "emits": [
+        "claims: stale-anchor"
+      ]
+    },
+    {
+      "id": "claims-ambiguous-anchor",
+      "op": "claims-ambiguous-anchor",
+      "emits": [
+        "claims: ambiguous-anchor"
+      ]
+    },
+    {
+      "id": "claims-unknown-post",
+      "op": "claims-unknown-post",
+      "emits": [
+        "claims: unknown-post"
+      ]
+    },
+    {
+      "id": "alignments-unknown-alignment",
+      "op": "alignments-unknown-alignment",
+      "emits": [
+        "alignments: unknown-alignment"
+      ]
+    },
+    {
+      "id": "alignments-shadowed-field",
+      "op": "alignments-shadowed-field",
+      "emits": [
+        "alignments: shadowed-field"
+      ]
+    }
+  ]
+}

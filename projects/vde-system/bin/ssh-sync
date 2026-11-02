@@ -1,0 +1,73 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE SSH Sync Command
+# Syncs VDE SSH public keys to the build context
+#
+# Usage: vde ssh-sync
+#
+# This command copies the VDE public key to the public-ssh-keys directory
+# which is used during Docker builds to bake the key into container images.
+
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+set -e
+
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+VDE_SCRIPTS_DIR="$(cd "$(dirname "${0}")" && pwd)"
+source "${VDE_ROOT_DIR}/lib/vm-common"
+
+# DEPRECATION GUARD: Enforce unified command usage
+if [[ -z "${VDE_ORCHESTRATED}" ]]; then
+    vde_log_warn "Standalone execution of $(basename "$0") is deprecated." "ssh"
+    vde_log_warn "Please use 'vde ssh-sync' instead." "ssh"
+    echo ""
+fi
+
+# Parse command line arguments
+if [[ "${1}" == "--help" ]] || [[ "${1}" == "-h" ]] ; then
+    cat <<EOF
+VDE SSH Sync - Sync SSH keys to VDE build context
+
+Usage: vde ssh-sync
+
+Description:
+  Copies the VDE SSH public key to the public-ssh-keys directory in the
+  VDE build context. This key is used during Docker builds to enable
+  SSH authentication into containers.
+
+  The command validates that the source is a public key file and ensures
+  no private keys are accidentally copied to the public directory.
+
+See also:
+  vde ssh-setup           Manage VDE SSH environment
+  vde ssh-setup init      Initialize SSH keys and sync
+EOF
+    exit ${VDE_SUCCESS}
+fi
+
+# ==============================================================================
+# Sync SSH Keys to Build Context
+# ==============================================================================
+
+echo ""
+echo "Syncing VDE SSH public key to build context..."
+echo ""
+
+if sync_ssh_keys_to_vde; then
+    log_success "✓ VDE SSH public key synced"
+    echo ""
+    echo "Build context location: ${VDE_ROOT_DIR}/public-ssh-keys/"
+    echo ""
+    exit ${VDE_SUCCESS}
+else
+    log_error "✗ Failed to sync SSH key"
+    echo ""
+    echo "Ensure VDE SSH environment is initialized:"
+    echo "  vde ssh-setup init"
+    echo ""
+    exit ${VDE_ERR_GENERAL}
+fi

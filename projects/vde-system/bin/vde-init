@@ -1,0 +1,523 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-init - Initialize VDE infrastructure
+set -e
+# Usage: vde-init [options]
+#
+# Options:
+#   -n, --networks-only    Only create networks, skip full setup
+#   -t, --testing          Create vde-testing network for tests
+#   -f, --force            Force recreate networks (delete and recreate)
+#   -q, --quiet            Suppress output
+#   -h, --help             Show this help message
+#
+# This script provides complete VDE initialization:
+#   - Creates VDE directory structure
+#   - Sets up SSH keys and agent
+#   - Generates docker-compose.yml files
+#   - Creates Docker networks (vde-net, vde-testing)
+#   - Sets proper file permissions
+#===============================================================================
+
+# Determine VDE root directory
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+# Source core libraries
+[[ -f "${VDE_ROOT_DIR}/lib/vde-shell-compat" ]] && source "${VDE_ROOT_DIR}/lib/vde-shell-compat" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-constants" ]] && source "${VDE_ROOT_DIR}/lib/vde-constants" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-errors" ]] && source "${VDE_ROOT_DIR}/lib/vde-errors" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-log" ]] && source "${VDE_ROOT_DIR}/lib/vde-log" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-security" ]] && source "${VDE_ROOT_DIR}/lib/vde-security" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-core" ]] && source "${VDE_ROOT_DIR}/lib/vde-core" &>/dev/null
+
+# Initialize security environment (network, permissions)
+vde_security_init
+
+# Initialize logging
+vde_log_init 2>/dev/null || true
+
+#===============================================================================
+# Functions
+#===============================================================================
+
+# vde_init_usage - Display usage information
+vde_init_usage() {
+    cat <<EOF
+Usage: vde-init [options]
+
+Initialize VDE infrastructure - complete project setup.
+
+Options:
+  -n, --networks-only    Only create networks, skip full setup
+  -t, --testing          Create vde-testing network for tests
+  -f, --force            Force recreate networks and refresh SSH keys
+  -q, --quiet            Suppress output
+  -h, --help             Show this help message
+
+This script performs complete VDE initialization:
+  - Creates VDE directory structure (projects, data, logs, etc.)
+  - Sets up SSH keys for VM-to-VM communication
+  - Generates docker-compose.yml files for all VM types
+  - Creates Docker networks (vde-net for production, vde-testing for tests)
+  - Sets proper file permissions
+  - Loads SSH agent with VDE keys
+
+Networks:
+  vde-net       - Production network for VMs (default)
+  vde-testing   - Isolated network for test suite
+
+Examples:
+  vde-init                    # Full project setup
+  vde-init --networks-only   # Only create networks
+  vde-init --testing         # Create test network
+  vde-init -n -f             # Recreate networks only
+
+EOF
+}
+
+# vde_init_check_prerequisites - Verify Docker is available
+vde_init_check_prerequisites() {
+    # Check Docker is installed
+    if ! command -v docker &>/dev/null; then
+        vde_error_simple "Docker is not installed or not in PATH"
+        echo "  Please install Docker Desktop first:"
+        echo "  https://www.docker.com/products/docker-desktop/"
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Check Docker daemon is running
+    if ! docker info &>/dev/null; then
+        vde_error_simple "Docker daemon is not running"
+        echo "  Please start Docker Desktop and try again"
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    return 0
+}
+
+# vde_init_create_directory_structure - Create VDE directories
+vde_init_create_directory_structure() {
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "Creating VDE directory structure..."
+    fi
+    
+    # Core directories
+    local dirs=(
+        "${VDE_ROOT_DIR}/projects"
+        "${VDE_ROOT_DIR}/data"
+        "${VDE_ROOT_DIR}/logs"
+        "${VDE_ROOT_DIR}/env-files"
+        "${VDE_ROOT_DIR}/public-ssh-keys"
+        "${VDE_ROOT_DIR}/.cache"
+        "${VDE_ROOT_DIR}/.locks"
+        "${VDE_ROOT_DIR}/.locks/ports"
+        "${VDE_ROOT_DIR}/.locks/vms"
+        "${VDE_ROOT_DIR}/configs"
+        "${VDE_ROOT_DIR}/templates"
+    )
+
+    for d in "${dirs[@]}"; do
+        mkdir -p "${d}" 2>/dev/null || true
+    done
+    
+    # Data subdirectories for core services
+    local service_dirs=(couchdb mongodb mysql nginx postgres redis rabbitmq jupyterlab)
+    for d in "${service_dirs[@]}"; do
+        mkdir -p "${VDE_ROOT_DIR}/data/${d}" 2>/dev/null || true
+    done
+    
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "  ✓ Directories created"
+    fi
+}
+
+# vde_init_generate_configs - Generate docker-compose files
+vde_init_generate_configs() {
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "Generating docker-compose configurations..."
+    fi
+    
+    # Run the generate-all-configs script
+    if "${VDE_ROOT_DIR}/bin/generate-all-configs" 2>/dev/null; then
+        if [[ "${QUIET}" = "0" ]] ; then
+            echo "  ✓ Configurations generated"
+        fi
+        return 0
+    else
+        vde_error_simple "Failed to generate configurations"
+        return ${VDE_ERR_GENERAL}
+    fi
+}
+
+# vde_init_setup_env - Set up .env file
+vde_init_setup_env() {
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "Initializing environment files..."
+    fi
+
+    local env_file="${VDE_ROOT_DIR}/.env"
+    local template_file="${VDE_ROOT_DIR}/.env.template"
+
+    if [[ ! -f "${env_file}" ]] ; then
+        if [[ -f "${template_file}" ]] ; then
+            cp "${template_file}" "${env_file}"
+            chmod 600 "${env_file}"
+            if [[ "${QUIET}" = "0" ]] ; then
+                echo "  ✓ Created .env from template"
+            fi
+        else
+            vde_log_error "Environment template missing: ${template_file}"
+            return 1
+        fi
+    else
+        if [[ "${QUIET}" = "0" ]] ; then
+            echo "  ✓ .env already exists"
+        fi
+    fi
+    return 0
+}
+
+# vde_init_setup_ssh - Set up SSH keys and agent
+vde_init_setup_ssh() {
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "Finalizing SSH configuration..."
+    fi
+
+    # SSH environment (keys/agent/sync) is handled via the inline Hard Rule in the main block.
+    # Here we perform the specific "prime the pump" configuration copy for init.
+
+    # 2. Prime the pump: Copy canonical artifact to active vault
+    # This satisfies the mandate to use the known-good copy of the file for init
+    local artifact_config="${VDE_ROOT_DIR}/configs/ssh/config"
+    if [[ -f "${artifact_config}" ]] ; then
+        if [[ "${QUIET}" = "0" ]] ; then
+            echo "  Priming SSH config from canonical artifact..."
+        fi
+        mkdir -p "$(dirname "${VDE_SSH_CONFIG}")"
+        cp "${artifact_config}" "${VDE_SSH_CONFIG}"
+        chmod 600 "${VDE_SSH_CONFIG}"
+
+        # HARD RULE: Always sync keys to .env during init to ensure harmony
+        "${VDE_ROOT_DIR}/bin/vde" ssh-sync >/dev/null 2>&1
+
+        if [[ "${QUIET}" = "0" ]] ; then
+            echo "  ✓ SSH config primed"
+        fi
+    else
+        vde_error_simple "Canonical SSH artifact not found at ${artifact_config}"
+        return ${VDE_ERR_NOT_FOUND}
+    fi
+
+    return 0
+}
+
+# vde_init_build_base_image - Build foundational vde-base image
+vde_init_build_base_image() {
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "Building foundational vde-base image..."
+    fi
+
+    # Check if image already exists to avoid redundant build during init
+    if docker image inspect vde-base:latest >/dev/null 2>&1; then
+        if [[ "${QUIET}" = "0" ]] ; then
+            echo "  ✓ vde-base image already exists"
+        fi
+        return 0
+    fi
+
+    # Using the canonical vde-rebuild tool per mandate
+    # We do NOT suppress output here so the user can see progress (or errors)
+    if "${VDE_ROOT_DIR}/bin/vde-rebuild" --vm base; then
+        if [[ "${QUIET}" = "0" ]] ; then
+            echo "  ✓ vde-base image built successfully"
+        fi
+        return 0
+    else
+        vde_error_simple "Failed to build vde-base image"
+        return ${VDE_ERR_GENERAL}
+    fi
+}
+
+# vde_init_create_network - Create a Docker network
+# Args: ${1} = network name
+vde_init_create_network() {
+    local network_name="${1}"
+    local force="${2}"
+    
+    # Check if network already exists
+    if docker network inspect "${network_name}" &>/dev/null; then
+        if [[ "${force}" = "1" ]] ; then
+            if [[ "${QUIET}" = "0" ]] ; then
+                echo "Removing existing network '${network_name}'..."
+            fi
+            docker network rm "${network_name}" &>/dev/null || true
+        else
+            if [[ "${QUIET}" = "0" ]] ; then
+                echo "  ✓ Network '${network_name}' already exists"
+            fi
+            return 0
+        fi
+    fi
+    
+    # Create the network
+    if docker network create "${network_name}" &>/dev/null; then
+        if [[ "${QUIET}" = "0" ]] ; then
+            echo "  ✓ Created network '${network_name}'"
+        fi
+        return 0
+    else
+        vde_error_simple "Failed to create network '${network_name}'"
+        return ${VDE_ERR_GENERAL}
+    fi
+}
+
+# vde_init_set_permissions - Set file permissions
+vde_init_set_permissions() {
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "Setting file permissions..."
+    fi
+    
+    # Set proper permissions on VDE directories
+    chmod 700 "${VDE_ROOT_DIR}/public-ssh-keys" 2>/dev/null || true
+    chmod 755 "${VDE_ROOT_DIR}/.cache" 2>/dev/null || true
+    chmod 755 "${VDE_ROOT_DIR}/.locks" 2>/dev/null || true
+    chmod 755 "${VDE_ROOT_DIR}/.locks/ports" 2>/dev/null || true
+    chmod 755 "${VDE_ROOT_DIR}/projects" 2>/dev/null || true
+    chmod 755 "${VDE_ROOT_DIR}/data" 2>/dev/null || true
+    chmod 755 "${VDE_ROOT_DIR}/logs" 2>/dev/null || true
+    chmod 755 "${VDE_ROOT_DIR}/env-files" 2>/dev/null || true
+    chmod 755 "${VDE_ROOT_DIR}/configs" 2>/dev/null || true
+    
+    # Set permissions on data subdirectories
+    for dir in couchdb mongodb mysql nginx postgres redis rabbitmq; do
+        chmod 755 "${VDE_ROOT_DIR}/data/${dir}" 2>/dev/null || true
+    done
+    
+    # Ensure scripts are executable
+    find "${VDE_ROOT_DIR}/scripts" -type f \( -name "*.sh" -o -name "*.zsh" \) -exec chmod +x {} \; 2>/dev/null || true
+    
+    # Set SSH directory permissions (recursive for keys)
+    local ssh_dir="${VDE_SSH_DIR}"
+    if [[ -d "${ssh_dir}" ]] ; then
+        chmod 700 "${ssh_dir}" 2>/dev/null || true
+        # Set permissions on all subdirectories
+        find "${ssh_dir}" -type d -exec chmod 700 {} \; 2>/dev/null || true
+        # Set permissions on private files (no extension)
+        find "${ssh_dir}" -type f ! -name "*.pub" -exec chmod 600 {} \; 2>/dev/null || true
+        # Set permissions on public keys
+        find "${ssh_dir}" -type f -name "*.pub" -exec chmod 644 {} \; 2>/dev/null || true
+    fi
+    
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "  ✓ Permissions set"
+    fi
+}
+
+# vde_init_install_githooks - Install VDE Git hooks
+vde_init_install_githooks() {
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "Installing VDE Git hooks..."
+    fi
+
+    # Using the dedicated installation script
+    if "${VDE_ROOT_DIR}/bin/install-githooks" >/dev/null 2>&1; then
+        if [[ "${QUIET}" = "0" ]] ; then
+            echo "  ✓ Git hooks installed"
+        fi
+        return 0
+    else
+        vde_error_simple "Failed to install Git hooks"
+        return ${VDE_ERR_GENERAL}
+    fi
+}
+
+# vde_init_register_clusters - Register default tech stack clusters
+vde_init_register_clusters() {
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "Registering default tech stack clusters..."
+    fi
+
+    # 1. Data Science Default (JupyterLab + Postgres)
+    # Using canonical CLI entrypoint per Mandate 10
+    "${VDE_ROOT_DIR}/bin/vde" cluster save default jupyterlab postgres >/dev/null 2>&1
+
+    # 2. MEAN Stack (Node/JS + MongoDB)
+    "${VDE_ROOT_DIR}/bin/vde" cluster save mean js mongodb >/dev/null 2>&1
+
+    # 3. LAMP Stack (PHP + MySQL + Nginx)
+    "${VDE_ROOT_DIR}/bin/vde" cluster save lamp php mysql nginx >/dev/null 2>&1
+
+    # 4. ELK Stack (Elasticsearch + Logstash + Kibana)
+    "${VDE_ROOT_DIR}/bin/vde" cluster save elk elasticsearch logstash kibana >/dev/null 2>&1
+
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo "  ✓ Default clusters registered"
+    fi
+}
+
+# vde_init_show_status - Show network status
+vde_init_show_status() {
+    local prod_network="${VDE_DOCKER_NETWORK}"
+    local test_network="${VDE_TEST_NETWORK}"
+    
+    echo ""
+    echo "VDE Network Status:"
+    echo "==================="
+    
+    # Check vde-net
+    if docker network inspect "${prod_network}" &>/dev/null; then
+        echo "  ${prod_network}: ✓ exists"
+    else
+        echo "  ${prod_network}: ✗ missing"
+    fi
+    
+    # Check vde-testing
+    if docker network inspect "${test_network}" &>/dev/null; then
+        echo "  ${test_network}: ✓ exists"
+    else
+        echo "  ${test_network}: ✗ missing"
+    fi
+    
+    echo ""
+    echo "Available networks:"
+    docker network ls --format '  {{.Name}}' | grep -E "^(${prod_network}|${test_network})" || echo "  (none)"
+    echo ""
+}
+
+#===============================================================================
+# Main
+#===============================================================================
+
+# Parse options
+NETWORKS_ONLY=0
+TESTING=0
+FORCE=0
+QUIET=0
+
+while [[ ${#} -gt 0 ]] ; do
+    case "${1}" in
+        -n|--networks-only)
+            NETWORKS_ONLY=1
+            shift
+            ;;
+        -t|--testing)
+            TESTING=1
+            shift
+            ;;
+        -f|--force)
+            FORCE=1
+            shift
+            ;;
+        -q|--quiet)
+            QUIET=1
+            shift
+            ;;
+        -h|--help)
+            vde_init_usage
+            exit ${VDE_SUCCESS}
+            ;;
+        *)
+            echo "Unknown option: ${1}"
+            vde_init_usage
+            exit ${VDE_ERR_GENERAL}
+            ;;
+    esac
+done
+
+# Welcome message
+if [[ "${QUIET}" = "0" ]] ; then
+    echo ""
+    echo "╔════════════════════════════════════════════════════════════╗"
+    echo "║          VDE Initialization                              ║"
+    echo "╚════════════════════════════════════════════════════════════╝"
+    echo ""
+fi
+
+# Full setup or networks only?
+if [[ "${NETWORKS_ONLY}" = "1" ]] ; then
+    # Networks-only mode
+    if ! vde_init_check_prerequisites; then
+        exit ${VDE_ERR_DOCKER}
+    fi
+    
+    # Create networks
+    if [[ "${TESTING}" = "1" ]] ; then
+        NETWORK_NAME="${VDE_TEST_NETWORK}"
+    else
+        NETWORK_NAME="${VDE_DOCKER_NETWORK}"
+    fi
+    
+    vde_init_create_network "${NETWORK_NAME}" "${FORCE}"
+    
+    if [[ "${QUIET}" = "0" ]] ; then
+        vde_init_show_status
+    fi
+else
+    # Full setup mode
+    if [[ "${QUIET}" = "0" ]] ; then
+        vde_log_info "Initializing VDE infrastructure..." "forge"
+    fi
+    
+    if ! vde_init_check_prerequisites; then
+        exit ${VDE_ERR_DOCKER}
+    fi
+    
+    # Hard Rule: Ensure SSH environment exists before proceeding
+    # If 'vde_student' key is missing, or if forced refresh, initialize SSH environment NOW
+    if [[ -z "${VDE_SSH_IDENTITY}" ]] || [[ ! -f "${VDE_SSH_IDENTITY}" ]] || [[ "${FORCE}" = "1" ]] ; then
+        if [[ "${QUIET}" = "0" ]] ; then
+            if [[ "${FORCE}" = "1" ]] ; then
+                vde_log_info "Forcing refresh of SSH environment..." "forge"
+            else
+                vde_log_info "'vde_student' key not found. Initializing SSH setup..." "forge"
+            fi
+        fi
+        
+        # Run SSH setup init via the main CLI entrypoint
+        local ssh_force_flag=""
+        [[ "${FORCE}" = "1" ]] && ssh_force_flag="--force"
+        
+        # We use the full path to avoid any ambiguity
+        "${VDE_ROOT_DIR}/bin/vde" ssh-setup init ${ssh_force_flag} || exit $?
+        
+        if [[ "${QUIET}" = "0" ]] ; then
+            vde_log_info "SSH environment ensured. Continuing initialization..." "forge"
+        fi
+    fi
+    
+    vde_init_create_directory_structure
+    vde_init_setup_env
+    vde_init_generate_configs
+    vde_init_setup_ssh
+    vde_init_build_base_image
+    
+    # Create production network
+    vde_init_create_network "${VDE_DOCKER_NETWORK}" "${FORCE}"
+    
+    # Create test network if requested
+    if [[ "${TESTING}" = "1" ]] ; then
+        vde_init_create_network "${VDE_TEST_NETWORK}" "${FORCE}"
+    fi
+    
+    vde_init_set_permissions
+    vde_init_install_githooks
+    vde_init_register_clusters
+    
+    if [[ "${QUIET}" = "0" ]] ; then
+        echo ""
+        echo "╔════════════════════════════════════════════════════════════╗"
+        echo "║          VDE Initialization Complete!                   ║"
+        echo "╚════════════════════════════════════════════════════════════╝"
+        echo ""
+        vde_init_show_status
+        vde_print_next_steps "init"
+    fi
+fi
+
+exit ${VDE_SUCCESS}

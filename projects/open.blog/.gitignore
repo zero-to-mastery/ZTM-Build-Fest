@@ -1,0 +1,19 @@
+/target
+/dist
+# wasm-pack output; only the two files the engine embeds are committed.
+/web/wasm/*
+!/web/wasm/openblog_wasm.js
+!/web/wasm/openblog_wasm_bg.wasm
+/.openblog
+/tests/browser/node_modules/
+/tests/browser/test-results/
+/tests/browser/playwright-report/
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Private themes that are not published with the engine. Add your own here.
+/themes/mnix/
+
+# Local Netlify folder
+.netlify

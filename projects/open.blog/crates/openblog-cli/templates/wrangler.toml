@@ -1,0 +1,16 @@
+# Cloudflare Worker settings for the open.blog view counter.
+# Written by `openblog analytics worker`. See worker.js for the setup steps.
+
+name = "openblog-counter"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+# Your blog's address, so visits from your own pages are not counted as referrers,
+# and the only origin allowed to post hits (comma-separate several, or "*").
+SITE_ORIGIN = "SITE_URL"
+
+[[kv_namespaces]]
+binding = "VIEWS"
+# Run `wrangler kv namespace create VIEWS` and paste the id it prints here.
+id = "REPLACE_WITH_KV_NAMESPACE_ID"

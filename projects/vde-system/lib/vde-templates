@@ -1,0 +1,113 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE Templates Library
+# Template rendering and VM creation from templates
+# Source this library with: source ./lib/vde-templates
+#
+# This library provides:
+# - Template file rendering with variable substitution
+# - VM-specific template wrappers (language, service)
+# - SSH configuration entry generation
+
+if [[ "${_VDE_TEMPLATES_LOADED:-}" = "1" ]]; then
+    return 0 2>/dev/null || exit 0
+fi
+_VDE_TEMPLATES_LOADED=1
+
+# Dependencies
+if [[ -z "${VDE_ROOT_DIR:-}" ]]; then
+    # Reliable ZSH-native path detection for sourced scripts
+    local _vde_templates_source="${(%):-%N}"
+    if [[ -z "${VDE_ROOT_DIR:-}" ]]; then
+    VDE_ROOT_DIR="${(%):-%x}"
+    VDE_ROOT_DIR="${VDE_ROOT_DIR:h:h}"
+fi
+fi
+[[ -f "${VDE_ROOT_DIR}/lib/vde-constants" ]] && source "${VDE_ROOT_DIR}/lib/vde-constants"
+[[ -f "${VDE_ROOT_DIR}/lib/vde-log" ]] && source "${VDE_ROOT_DIR}/lib/vde-log"
+
+# render_template TEMPLATE_FILE [VAR VALUE ...]
+# Generic template renderer using zsh native substitution
+render_template() {
+    local template_file="${1}"
+    [[ ! -f "${template_file}" ]] && return ${VDE_ERR_NOT_FOUND}
+    shift
+
+    local content
+    content=$(cat "${template_file}")
+
+    # Process pairs of VAR VALUE
+    while [[ ${#} -gt 0 ]]; do
+        local var="${1}"
+        local val="${2}"
+        shift 2
+        # Use zsh native substitution - it is faster and handles & / correctly
+        content="${content//\{\{${var}\}\}/${val}}"
+    done
+
+    echo "${content}"
+}
+
+# render_language_template NAME SSH_PORT INSTALL_CMD
+# Render docker-compose.yml for language VM
+render_language_template() {
+    local name="${1}" ssh_port="${2}" custom_cmd="${3:-}"
+    render_template "${TEMPLATES_DIR}/compose-language.yml" \
+        NAME "${name}" SSH_PORT "${ssh_port}" CUSTOM_CMD "${custom_cmd}"
+}
+
+# render_service_template NAME SSH_PORT SERVICE_PORTS INSTALL_CMD
+# Render docker-compose.yml for service VM
+render_service_template() {
+    local name="${1}" ssh_port="${2}" service_ports="${3}" install_cmd="${4:-}"
+    local template_file="${TEMPLATES_DIR}/compose-service.yml"
+    
+    if [[ ! -f "${template_file}" ]]; then
+        vde_log_error "Service template not found: ${template_file}"
+        return ${VDE_ERR_NOT_FOUND}
+    fi
+
+    local content
+    content=$(render_template "${template_file}" \
+        NAME "${name}" SSH_PORT "${ssh_port}" SERVICE_PORTS "${service_ports}" CUSTOM_CMD "${custom_cmd}")
+
+    # Handle multiple service ports if present
+    if [[ -n "${service_ports}" ]] && [[ "${service_ports}" != "null" ]]; then
+        local port_mapping=""
+        local p
+        local -a ports_array
+        ports_array=(${(s:,:)service_ports})
+        for p in "${ports_array[@]}"; do
+            p=$(echo "${p}" | tr -d ' ')
+            if [[ -n "${p}" ]]; then
+                [[ -n "${port_mapping}" ]] && port_mapping="${port_mapping}
+"
+                port_mapping="${port_mapping}      - \"${p}:${p}\""
+            fi
+        done
+        
+        # Replace placeholder using zsh native global replacement (escape # for extended glob)
+        content="${content//\#\#SERVICE_PORTS\#\#/${port_mapping}}"
+    else
+        # Remove placeholder if no ports (and the line it's on)
+        content=$(echo "${content}" | grep -v "##SERVICE_PORTS##")
+    fi
+
+    echo "${content}"
+}
+
+# render_ssh_entry VM_NAME PORT [HOSTNAME]
+# Render SSH config entry for VM
+render_ssh_entry() {
+    local vm_name="${1}" port="${2}" hostname="${3:-localhost}"
+    local host
+    host="$(vde_get_ssh_host "${vm_name}")"
+
+    # Use '~' for paths to avoid absolute path leaks in the audit
+    render_template "${TEMPLATES_DIR}/ssh-config.tmpl" \
+        SSH_HOST "${host}" SSH_PORT "${port}" \
+        HOST_NAME "${hostname}" \
+        IDENTITY_FILE "~/.ssh/vde/vde_student" \
+        KNOWN_HOSTS_FILE "~/.ssh/vde/known_hosts" \
+        COMMENT "VDE VM: ${vm_name}"
+}

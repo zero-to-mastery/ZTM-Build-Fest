@@ -1,0 +1,46 @@
+/* "Get your map" dialog. Only layout glue; components come from app.css. */
+.get-it { display: grid; gap: var(--space-4); min-width: 0; }
+.get-it-list { display: grid; gap: var(--space-4); }
+.get-it-intro { color: var(--text-2); }
+.get-it-choice-text { display: grid; gap: 2px; min-width: 0; }
+.get-it-chevron { color: var(--text-3); }
+.choice:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.get-it-step { display: grid; gap: var(--space-4); min-width: 0; }
+.get-it-back { justify-self: start; margin-left: calc(-1 * var(--space-2)); }
+.get-it-step > h3 { font-size: 18px; }
+.get-it-step > h3:focus { outline: none; }
+/* Focus lands on the heading when a step opens: keep it visible but quiet,
+   so it never reads as a text field. */
+.get-it [data-step-heading]:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; border-radius: 6px; }
+.get-it-step h4 { font-size: 15px; font-weight: 650; }
+
+.get-it-li { display: grid; gap: var(--space-3); min-width: 0; padding-top: 5px; }
+.get-it-li > .btn, .get-it-section > .btn { justify-self: start; }
+.get-it-section { display: grid; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--border); }
+.get-it-options { display: grid; gap: var(--space-4); }
+.get-it-option { display: grid; gap: var(--space-2); }
+.get-it-status:empty { display: none; }
+.get-it-glyph { display: inline-grid; }
+
+.get-it-error { font-size: 13px; color: var(--danger); }
+.get-it .input[aria-invalid="true"] { border-color: var(--danger); }
+.get-it a.btn[aria-disabled="true"] { pointer-events: none; }
+/* Inline links inside sentences still get a 24px tap target (WCAG 2.5.8). */
+.get-it-inline-link { display: inline-block; min-height: 24px; padding-block: 2px; line-height: 20px; }
+.get-it-inline-link[aria-disabled="true"] { color: var(--text-3); text-decoration: none; cursor: not-allowed; }
+.get-it-suggest { justify-self: start; }
+
+.get-it-link-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.get-it-link-row .input { flex: 1 1 220px; min-width: 0; font-family: var(--mono); font-size: 13px; }
+
+/* The file input stays focusable but invisible; its label is the button. */
+.get-it-file { position: relative; cursor: pointer; }
+.get-it-file:focus-within { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+.get-it-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.get-it-details summary { cursor: pointer; display: list-item; min-height: 32px; padding: 6px 0; color: var(--primary); font-weight: 600; font-size: 14px; }
+.get-it-details .code-box pre { padding-right: var(--space-3); }
+.get-it-details[open] summary { margin-bottom: var(--space-2); }
+/* An emptied snippet (repository not valid yet) keeps room for its Copy button. */
+.get-it .code-box pre { min-height: 52px; }

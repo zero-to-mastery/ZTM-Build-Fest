@@ -1,0 +1,30 @@
+From b17b5c3a3e28edd738694c69f4a60773736b35cc Mon Sep 17 00:00:00 2001
+From: scratch <scratch@example.invalid>
+Date: Wed, 30 Sep 2026 17:08:51 -0400
+Subject: [PATCH 2/2] fix(vde): forward typed arguments to audit,
+ check-tetrad/spine-check and heal
+
+---
+ bin/vde | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/bin/vde b/bin/vde
+index f237a4a..0e64b65 100755
+--- a/bin/vde
++++ b/bin/vde
+@@ -436,9 +436,9 @@ case ${ACTION} in
+     audit)
+-        vde_run "audit" "${VDE_ROOT_DIR}/bin/vde-gospel-audit.zsh" "$@"
++        vde_run "audit" "${VDE_ROOT_DIR}/bin/vde-gospel-audit.zsh" "${input_targets[@]}"
+         ;;
+     check-tetrad|spine-check)
+-        vde_run "check-tetrad" "${VDE_ROOT_DIR}/bin/vde-check-tetrad.zsh" "$@"
++        vde_run "check-tetrad" "${VDE_ROOT_DIR}/bin/vde-check-tetrad.zsh" "${input_targets[@]}"
+         ;;
+     heal)
+-        vde_run "heal" "${VDE_ROOT_DIR}/bin/vde-heal-docs.zsh" "$@"
++        vde_run "heal" "${VDE_ROOT_DIR}/bin/vde-heal-docs.zsh" "${input_targets[@]}"
+         ;;
+-- 
+2.43.0
+

@@ -1,0 +1,8 @@
+research blocking: the Knowledge Atlas: The Knowledge Atlas cannot be read. Repair: Fix the named record or field; the file is left unchanged until you do. [atlas: file-unreadable]
+research detected (acknowledgement stale): posts/cave.md: abstract-missing message. Repair: Do the thing. [research-profile: abstract-missing]
+research detected: posts/cave.md:7: The link to /atlas/the-good/ names a page the next build does not publish: the atlas entry `the-good` is not approved. Repair: Approve the atlas entry if it is ready to be public, or remove the link. [publication-context: context-link-unpublished]
+research detected: posts/cave.md:12:1: citation-unresolved message. Repair: Do the thing. [citation-review: citation-unresolved]
+research potential (acknowledged): posts/cave.md:5:1: citation-reference-incomplete message. Repair: Do the thing. [citation-review: citation-reference-incomplete]
+research needs-review: comparison cave-places: The approval of comparison `cave-places` no longer holds. Repair: Check the place and update the member or its passage. [alignments: stale-approval]
+research needs-review: claim c1 in posts/cave.md: claim-location-unreviewed message. Repair: Do the thing. [claim-review: claim-location-unreviewed]
+Research checks: 1 must be fixed before the next build. Detected: 4. Potential: 1 (1 acknowledged). Needs review: 2.

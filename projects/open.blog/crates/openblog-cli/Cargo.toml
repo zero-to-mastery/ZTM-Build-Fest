@@ -1,0 +1,33 @@
+[package]
+name = "openblog-cli"
+description = "The openblog command: build a static blog from Markdown, serve it locally, and import from Hashnode without a Pro plan."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[[bin]]
+name = "openblog"
+path = "src/main.rs"
+
+[dependencies]
+openblog-core = { path = "../openblog-core" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+# The importer and explicit URL snapshots need HTTP and HTML-to-Markdown conversion.
+ureq = { version = "3", default-features = false, features = ["rustls"] }
+url = { workspace = true }
+htmd = "0.5"
+html5ever = "0.38"
+markup5ever_rcdom = "0.38"
+pulldown-cmark = { workspace = true }
+# Admin login: a vetted password hash and OS randomness, never hand-rolled crypto.
+argon2 = "0.5"
+getrandom = "0.3"
+blake2 = "0.10"
+hmac = "0.12"
+sha2 = "0.10"
+base64 = "0.23"
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.52", features = ["Win32_Foundation", "Win32_Security_Cryptography", "Win32_System_Threading"] }

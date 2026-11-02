@@ -1,0 +1,2319 @@
+{
+  "description": "Third Perspective submissions (ADRs 0109 to 0114), read and received by both crates/openblog-core/src/third_perspective.rs and web/components/third-perspective.js. A case's `request` (or its exact `text`) is received at `receivedAt` with a receipt whose digest is `receiptDigest`; `expect` is the canonical record, or the code of the first problem. `consentChanges` change a reader's consent through their receipt: `clarification` is the new clarification consent, and `feature` is the reader's choice about feature consent (ADR 0177), left out to keep it bound to the revision it was, `\"decline\"` to take it back, or the revision number the reader agrees to feature, which must be the revision they saw: `expect` is the copy's consent records afterwards, or the code. The attributed-section cases (ADR 0126) hold the reserved `ob-by-` anchor space to the same rule in the build and the browser.",
+  "receivedAt": "2026-10-26T10:00:00Z",
+  "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e",
+  "cases": [
+    {
+      "name": "the smallest submission: the whole work, anonymous, agreeing only to publish",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "record": {
+          "version": 1,
+          "kind": "third-perspective",
+          "body": "Another way to read the ending.",
+          "revision": 1,
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target": {
+              "version": 1,
+              "kind": "work"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          },
+          "intake": {
+            "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+          },
+          "consents": [
+            {
+              "number": 1,
+              "givenAt": "2026-10-26T10:00:00Z",
+              "publish": true,
+              "attribution": {
+                "publishName": false
+              },
+              "clarification": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "a section with a prompt category, a name shown, clarification and feature consent, and the reader clock",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "methods",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true,
+          "clarification": true,
+          "feature": true
+        },
+        "category": "connection",
+        "attribution": {
+          "name": "Ada",
+          "publishName": true
+        },
+        "seenAt": "2026-10-26T09:41:00Z"
+      },
+      "expect": {
+        "record": {
+          "version": 1,
+          "kind": "third-perspective",
+          "category": "connection",
+          "body": "Another way to read the ending.",
+          "revision": 1,
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target": {
+              "version": 1,
+              "kind": "section",
+              "section": "methods",
+              "digest": "0123456789abcdef0123456789abcdef"
+            },
+            "seenAt": "2026-10-26T09:41:00Z",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "name": "Ada",
+              "publishName": true
+            }
+          },
+          "intake": {
+            "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+          },
+          "consents": [
+            {
+              "number": 1,
+              "givenAt": "2026-10-26T10:00:00Z",
+              "publish": true,
+              "attribution": {
+                "publishName": true
+              },
+              "clarification": true,
+              "featureRevision": 1
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "the opening section, a private name collapsed, the text trimmed with its line breaks kept",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section"
+        },
+        "body": "  First thought.\r\n\r\nSecond thought.\r  ",
+        "consent": {
+          "publish": true,
+          "clarification": false
+        },
+        "attribution": {
+          "name": "  Ada \t Lovelace ",
+          "publishName": false
+        }
+      },
+      "expect": {
+        "record": {
+          "version": 1,
+          "kind": "third-perspective",
+          "body": "First thought.\n\nSecond thought.",
+          "revision": 1,
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target": {
+              "version": 1,
+              "kind": "section"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "name": "Ada Lovelace",
+              "publishName": false
+            }
+          },
+          "intake": {
+            "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+          },
+          "consents": [
+            {
+              "number": 1,
+              "givenAt": "2026-10-26T10:00:00Z",
+              "publish": true,
+              "attribution": {
+                "publishName": false
+              },
+              "clarification": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "a reader clock ahead of the receiver is dropped",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "seenAt": "2026-10-26T11:00:00Z"
+      },
+      "expect": {
+        "record": {
+          "version": 1,
+          "kind": "third-perspective",
+          "body": "Another way to read the ending.",
+          "revision": 1,
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target": {
+              "version": 1,
+              "kind": "work"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          },
+          "intake": {
+            "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+          },
+          "consents": [
+            {
+              "number": 1,
+              "givenAt": "2026-10-26T10:00:00Z",
+              "publish": true,
+              "attribution": {
+                "publishName": false
+              },
+              "clarification": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "an empty name is no name",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "attribution": {
+          "name": "   ",
+          "publishName": false
+        }
+      },
+      "expect": {
+        "record": {
+          "version": 1,
+          "kind": "third-perspective",
+          "body": "Another way to read the ending.",
+          "revision": 1,
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target": {
+              "version": 1,
+              "kind": "work"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          },
+          "intake": {
+            "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+          },
+          "consents": [
+            {
+              "number": 1,
+              "givenAt": "2026-10-26T10:00:00Z",
+              "publish": true,
+              "attribution": {
+                "publishName": false
+              },
+              "clarification": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "null optional fields are left out",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "category": null,
+        "seenAt": null
+      },
+      "expect": {
+        "record": {
+          "version": 1,
+          "kind": "third-perspective",
+          "body": "Another way to read the ending.",
+          "revision": 1,
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target": {
+              "version": 1,
+              "kind": "work"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          },
+          "intake": {
+            "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+          },
+          "consents": [
+            {
+              "number": 1,
+              "givenAt": "2026-10-26T10:00:00Z",
+              "publish": true,
+              "attribution": {
+                "publishName": false
+              },
+              "clarification": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "a reflection of exactly 4000 characters",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "record": {
+          "version": 1,
+          "kind": "third-perspective",
+          "body": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "revision": 1,
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target": {
+              "version": 1,
+              "kind": "work"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          },
+          "intake": {
+            "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+          },
+          "consents": [
+            {
+              "number": 1,
+              "givenAt": "2026-10-26T10:00:00Z",
+              "publish": true,
+              "attribution": {
+                "publishName": false
+              },
+              "clarification": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "not JSON",
+      "text": "{\"version\":1,",
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "a version written as 1.0",
+      "text": "{\"version\": 1.0, \"kind\": \"third-perspective\", \"work\": \"/posts/tides/\", \"revision\": \"p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"target\": {\"version\": 1, \"kind\": \"work\"}, \"body\": \"Another way to read the ending.\", \"consent\": {\"publish\": true}}",
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "a newer version",
+      "request": {
+        "version": 2,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "unsupportedVersion"
+      }
+    },
+    {
+      "name": "no version",
+      "request": {
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "an array",
+      "text": "[1]",
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "no consent",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending."
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "consent without publish",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "clarification": true
+        }
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "an unknown field",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "rating": 5
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "an unknown consent field",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true,
+          "agree": true
+        }
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "a null attribution",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "attribution": null
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "a category that is not text",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "category": 3
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "a body that is not text",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": 7,
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "another kind",
+      "request": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "wrongKind"
+      }
+    },
+    {
+      "name": "a null target",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": null,
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "no target",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "a work target with a section",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work",
+          "section": "methods"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "a section digest that is not 32 hex digits",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "methods",
+          "digest": "xyz"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "a quotation",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "methods",
+          "exact": "tides",
+          "prefix": "",
+          "suffix": "",
+          "start": 0
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "targetNotAllowed"
+      }
+    },
+    {
+      "name": "a quotation missing its fields is still a quotation",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "quote"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "targetNotAllowed"
+      }
+    },
+    {
+      "name": "a newer target",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 2,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "unsupportedVersion"
+      }
+    },
+    {
+      "name": "a score is not a category",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "category": "rating"
+      },
+      "expect": {
+        "code": "unknownCategory"
+      }
+    },
+    {
+      "name": "the target is checked before the category",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "nope"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "category": "rating"
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "a reader clock that is not a UTC time",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "seenAt": "2026-10-26 10:00"
+      },
+      "expect": {
+        "code": "invalidTime"
+      }
+    },
+    {
+      "name": "not agreeing to publish",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": false,
+          "clarification": true
+        }
+      },
+      "expect": {
+        "code": "publicationConsentRequired"
+      }
+    },
+    {
+      "name": "publication consent is checked before the text",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "  ",
+        "consent": {
+          "publish": false
+        }
+      },
+      "expect": {
+        "code": "publicationConsentRequired"
+      }
+    },
+    {
+      "name": "an empty reflection",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": " \n\t ",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidBody"
+      }
+    },
+    {
+      "name": "a text-direction override",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Tides \u202e reversed",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidBody"
+      }
+    },
+    {
+      "name": "a control character",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Bell \u0007 here",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidBody"
+      }
+    },
+    {
+      "name": "a reflection longer than 4000 characters",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidBody"
+      }
+    },
+    {
+      "name": "the text is checked before the work",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidBody"
+      }
+    },
+    {
+      "name": "a work that is not a site path",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidWork"
+      }
+    },
+    {
+      "name": "a passage revision of model 0",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p0:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidRevision"
+      }
+    },
+    {
+      "name": "a name with a text-direction override",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "attribution": {
+          "name": "Ada\u202e",
+          "publishName": true
+        }
+      },
+      "expect": {
+        "code": "invalidName"
+      }
+    },
+    {
+      "name": "a name longer than 80 characters",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "attribution": {
+          "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      },
+      "expect": {
+        "code": "invalidName"
+      }
+    },
+    {
+      "name": "showing a name without one",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        },
+        "attribution": {
+          "publishName": true
+        }
+      },
+      "expect": {
+        "code": "consentWithoutName"
+      }
+    },
+    {
+      "name": "an attributed section: the reserved anchor with its digest is an ordinary section target",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "record": {
+          "version": 1,
+          "kind": "third-perspective",
+          "body": "Another way to read the ending.",
+          "revision": 1,
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target": {
+              "version": 1,
+              "kind": "section",
+              "section": "ob-by-mina-0",
+              "digest": "0123456789abcdef0123456789abcdef"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          },
+          "intake": {
+            "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+          },
+          "consents": [
+            {
+              "number": 1,
+              "givenAt": "2026-10-26T10:00:00Z",
+              "publish": true,
+              "attribution": {
+                "publishName": false
+              },
+              "clarification": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "an attributed section by a contributor whose key has a hyphen and a later place",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-ada-lovelace-12",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "record": {
+          "version": 1,
+          "kind": "third-perspective",
+          "body": "Another way to read the ending.",
+          "revision": 1,
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target": {
+              "version": 1,
+              "kind": "section",
+              "section": "ob-by-ada-lovelace-12",
+              "digest": "0123456789abcdef0123456789abcdef"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          },
+          "intake": {
+            "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+          },
+          "consents": [
+            {
+              "number": 1,
+              "givenAt": "2026-10-26T10:00:00Z",
+              "publish": true,
+              "attribution": {
+                "publishName": false
+              },
+              "clarification": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "a heading id that only looks like the reserved prefix keeps its ordinary meaning",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "obey-the-tide",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "record": {
+          "version": 1,
+          "kind": "third-perspective",
+          "body": "Another way to read the ending.",
+          "revision": 1,
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "target": {
+              "version": 1,
+              "kind": "section",
+              "section": "obey-the-tide",
+              "digest": "0123456789abcdef0123456789abcdef"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          },
+          "intake": {
+            "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+          },
+          "consents": [
+            {
+              "number": 1,
+              "givenAt": "2026-10-26T10:00:00Z",
+              "publish": true,
+              "attribution": {
+                "publishName": false
+              },
+              "clarification": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "an attributed anchor without the digest of its text",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "an attributed anchor whose contributor is not lowercase",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-Mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "an attributed anchor with a place written with a leading zero",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-01",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "an attributed anchor with no place",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "an attributed anchor with a place of four digits",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-1000",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "an attributed anchor with an empty contributor",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by--1",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "only the reserved prefix",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    },
+    {
+      "name": "an attributed anchor with a doubled hyphen in its contributor",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mi--na-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Another way to read the ending.",
+        "consent": {
+          "publish": true
+        }
+      },
+      "expect": {
+        "code": "invalidTarget"
+      }
+    }
+  ],
+  "consentChanges": [
+    {
+      "name": "agreeing to be asked appends a record",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "Another way to read the ending.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Ada",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": false
+          }
+        ]
+      },
+      "moderation": {
+        "state": "pending",
+        "revision": 1,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": true,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": false
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-26T12:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "declining again appends another",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "Another way to read the ending.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Ada",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": false
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-26T12:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "pending",
+        "revision": 1,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": false,
+      "at": "2026-10-26T13:00:00Z",
+      "expect": {
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": false
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-26T12:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          },
+          {
+            "number": 3,
+            "givenAt": "2026-10-26T13:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "the same choice changes nothing",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "Another way to read the ending.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Ada",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": false
+          }
+        ]
+      },
+      "moderation": {
+        "state": "pending",
+        "revision": 1,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": false,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "code": "unchanged"
+      }
+    },
+    {
+      "name": "a time before the last record is refused",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "Another way to read the ending.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Ada",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": false
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-26T12:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "pending",
+        "revision": 1,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": false,
+      "at": "2026-10-26T11:00:00Z",
+      "expect": {
+        "code": "invalidTime"
+      }
+    },
+    {
+      "name": "feature consent stays with the current text",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "Another way to read the ending.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          }
+        ]
+      },
+      "moderation": {
+        "state": "pending",
+        "revision": 1,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": true,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-26T12:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true,
+            "featureRevision": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "a withdrawn copy is closed",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "Another way to read the ending.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Ada",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": false
+          }
+        ]
+      },
+      "moderation": {
+        "state": "withdrawn",
+        "revision": 1,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": true,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "code": "closed"
+      }
+    },
+    {
+      "name": "a purged copy has nothing to change",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "Another way to read the ending.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Ada",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": false
+          }
+        ]
+      },
+      "moderation": {
+        "state": "rejected",
+        "revision": 1,
+        "approvedRevision": null,
+        "contentRetained": false
+      },
+      "clarification": true,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "code": "contentPurged"
+      }
+    },
+    {
+      "name": "changing what the reader is asked never renews feature consent for edited text",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "A clearer reading of the ending.",
+        "revision": 2,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          }
+        ],
+        "revisedAt": "2026-10-26T11:00:00Z"
+      },
+      "moderation": {
+        "state": "pending",
+        "revision": 2,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": true,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-26T12:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true,
+            "featureRevision": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "after approval a change to clarification keeps the feature consent where it was",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "A clearer reading of the ending.",
+        "revision": 2,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          }
+        ],
+        "revisedAt": "2026-10-26T11:00:00Z"
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 2,
+        "approvedRevision": 2,
+        "contentRetained": true
+      },
+      "clarification": true,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-26T12:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true,
+            "featureRevision": 1
+          }
+        ]
+      }
+    },
+    {
+      "name": "agreeing for the revision the reader saw binds feature consent to it",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "A clearer reading of the ending.",
+        "revision": 2,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          }
+        ],
+        "revisedAt": "2026-10-26T11:00:00Z"
+      },
+      "moderation": {
+        "state": "pending",
+        "revision": 2,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": false,
+      "feature": 2,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-26T12:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "agreeing for the approved revision binds it once approved",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "A clearer reading of the ending.",
+        "revision": 2,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          }
+        ],
+        "revisedAt": "2026-10-26T11:00:00Z"
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 2,
+        "approvedRevision": 2,
+        "contentRetained": true
+      },
+      "clarification": false,
+      "feature": 2,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-26T12:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 2
+          }
+        ]
+      }
+    },
+    {
+      "name": "agreeing for a revision the reader did not see is stale",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "A clearer reading of the ending.",
+        "revision": 2,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          }
+        ],
+        "revisedAt": "2026-10-26T11:00:00Z"
+      },
+      "moderation": {
+        "state": "pending",
+        "revision": 2,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": false,
+      "feature": 1,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "code": "staleRevision"
+      }
+    },
+    {
+      "name": "declining takes feature consent back",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "A clearer reading of the ending.",
+        "revision": 2,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          }
+        ],
+        "revisedAt": "2026-10-26T11:00:00Z"
+      },
+      "moderation": {
+        "state": "pending",
+        "revision": 2,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": false,
+      "feature": "decline",
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-26T12:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "there is no text to agree to feature once rejected",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "A clearer reading of the ending.",
+        "revision": 2,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false,
+            "featureRevision": 1
+          }
+        ],
+        "revisedAt": "2026-10-26T11:00:00Z"
+      },
+      "moderation": {
+        "state": "rejected",
+        "revision": 2,
+        "approvedRevision": null,
+        "contentRetained": true
+      },
+      "clarification": false,
+      "feature": 2,
+      "at": "2026-10-26T12:00:00Z",
+      "expect": {
+        "code": "featureNotAvailable"
+      }
+    }
+  ]
+}

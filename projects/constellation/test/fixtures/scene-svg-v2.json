@@ -1,0 +1,179 @@
+{
+  "account": "fixture",
+  "repositories": [
+    {
+      "name": "one",
+      "full_name": "fixture/project-0",
+      "language": "Rust",
+      "languages": {
+        "Rust": 100,
+        "HTML": 20
+      },
+      "topics": [
+        "stars",
+        "art"
+      ],
+      "stargazers_count": 0,
+      "created_at": "2019-01-01T00:00:00Z",
+      "pushed_at": "2026-01-01T00:00:00Z"
+    },
+    {
+      "name": "two",
+      "full_name": "fixture/project-1",
+      "language": "JavaScript",
+      "languages": {
+        "JavaScript": 100,
+        "HTML": 20
+      },
+      "topics": [
+        "stars",
+        "tools"
+      ],
+      "stargazers_count": 17,
+      "created_at": "2020-01-01T00:00:00Z",
+      "pushed_at": "2026-01-01T00:00:00Z"
+    },
+    {
+      "name": "three",
+      "full_name": "fixture/project-2",
+      "language": "Rust",
+      "languages": {
+        "Rust": 100,
+        "HTML": 20
+      },
+      "topics": [
+        "stars",
+        "art"
+      ],
+      "stargazers_count": 34,
+      "created_at": "2021-01-01T00:00:00Z",
+      "pushed_at": "2026-01-01T00:00:00Z"
+    },
+    {
+      "name": "<four>",
+      "full_name": "fixture/project-3",
+      "language": "Python",
+      "languages": {
+        "Python": 100,
+        "HTML": 20
+      },
+      "topics": [
+        "stars",
+        "tools"
+      ],
+      "stargazers_count": 51,
+      "created_at": "2022-01-01T00:00:00Z",
+      "pushed_at": "2026-01-01T00:00:00Z"
+    }
+  ],
+  "cases": [
+    {
+      "options": {
+        "referenceDate": "2026-09-01T00:00:00.000Z"
+      },
+      "sha256": "61dac4c94e2c29011f6ae66587b0f7292f7f8c80f1618bd88461aab2b85a959a"
+    },
+    {
+      "options": {
+        "layout": "compact",
+        "theme": "midnight",
+        "bridges": true,
+        "referenceDate": "2026-09-01T00:00:00.000Z"
+      },
+      "sha256": "9542fadb43e889e1c357b50f42b9fe2b0b78683d32f9e07b07b22da90f4a5951"
+    },
+    {
+      "options": {
+        "arrangement": "galaxy",
+        "colorConnections": true,
+        "nodeColorMode": "language",
+        "nodeShape": "diamond",
+        "referenceDate": "2026-09-01T00:00:00.000Z"
+      },
+      "sha256": "f3a60e162850138b60d3ac1a204da53d94d76a9bf617f5ebe6c7122e9b763701"
+    },
+    {
+      "options": {
+        "arrangement": "solar-system",
+        "nodeMode": "combined",
+        "referenceDate": "2026-09-01T00:00:00.000Z"
+      },
+      "sha256": "81671124075711499d020833c917ff10b0db6ac2cca1a308c1ba3b08ca0e5de5"
+    },
+    {
+      "options": {
+        "starPositions": {
+          "fixture/project-0": {
+            "x": 140,
+            "y": 180
+          }
+        },
+        "hiddenNodes": [
+          "fixture/project-1"
+        ],
+        "labelOffsets": {
+          "fixture/project-0": {
+            "x": 10,
+            "y": 20
+          }
+        },
+        "referenceDate": "2026-09-01T00:00:00.000Z"
+      },
+      "sha256": "bd3ec24d0d6a02ef97f9eab2073cd75ff73b1efb4b1b856fdb110f248f8a5fe5"
+    },
+    {
+      "options": {
+        "layoutRefinement": {
+          "enabled": true,
+          "intensity": 3
+        },
+        "selection": {
+          "start": "fixture/project-0",
+          "end": "fixture/project-2"
+        },
+        "referenceDate": "2026-09-01T00:00:00.000Z"
+      },
+      "sha256": "df970d541491162d0b3345ab874bd58029e969e683728f1c8ee8c50a86aef279"
+    },
+    {
+      "options": {
+        "ringAnimation": {
+          "enabled": true
+        },
+        "floatingAnimation": {
+          "enabled": true
+        },
+        "perspective": {
+          "enabled": true,
+          "animate": true
+        },
+        "referenceDate": "2026-09-01T00:00:00.000Z"
+      },
+      "sha256": "846369e5a86cc8a15ef81dfc0653e818ce1607f8f41c22c0065f09019b47f372"
+    },
+    {
+      "options": {
+        "history": {
+          "timeLapse": {
+            "enabled": true,
+            "mode": "crossfade"
+          }
+        },
+        "referenceDate": "2026-09-01T00:00:00.000Z"
+      },
+      "sha256": "74f7a5df0ec74e3e860b737e7669ce15f6776643f4931bf140f58e9c3f46cefe"
+    },
+    {
+      "options": {
+        "history": {
+          "timeLapse": {
+            "enabled": true,
+            "mode": "grow"
+          }
+        },
+        "referenceDate": "2026-09-01T00:00:00.000Z"
+      },
+      "sha256": "3a32d85f92af2f2393c86485973e588f4a099d6b19ba6c5c133d99673a22938b"
+    }
+  ]
+}

@@ -1,0 +1,596 @@
+[
+  {
+    "projectId": "octo/compiler",
+    "depth": 1,
+    "result": {
+      "version": 1,
+      "status": "ok",
+      "project": {
+        "id": "octo/compiler",
+        "label": "compiler"
+      },
+      "depth": 1,
+      "connections": [
+        {
+          "id": "nav:13:octo/compiler12:octo/runtime",
+          "projectId": "octo/runtime",
+          "label": "runtime",
+          "degree": 1,
+          "path": [
+            "octo/compiler",
+            "octo/runtime"
+          ],
+          "relationshipTypes": [
+            "authored-family",
+            "shared-language",
+            "shared-topic"
+          ],
+          "relationships": [
+            {
+              "type": "authored-family",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "group:user:toolchain",
+                  "label": "Toolchain",
+                  "edgeIds": [
+                    "member:compiler-toolchain",
+                    "member:runtime-toolchain"
+                  ],
+                  "provenance": [
+                    "user"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "shared-language",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "language:rust",
+                  "label": "Rust",
+                  "edgeIds": [
+                    "uses-language:compiler",
+                    "uses-language:runtime"
+                  ],
+                  "provenance": [
+                    "source"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "shared-topic",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "topic:wasm",
+                  "label": "wasm",
+                  "edgeIds": [
+                    "has-topic:compiler-wasm",
+                    "has-topic:runtime-wasm"
+                  ],
+                  "provenance": [
+                    "source"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nav:13:octo/compiler9:octo/site",
+          "projectId": "octo/site",
+          "label": "site",
+          "degree": 1,
+          "path": [
+            "octo/compiler",
+            "octo/site"
+          ],
+          "relationshipTypes": [
+            "explicit-relationship"
+          ],
+          "relationships": [
+            {
+              "type": "explicit-relationship",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "edgeIds": [
+                    "project-relationship:site-compiler"
+                  ],
+                  "provenance": [
+                    "user"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "secondDegree": [],
+      "truncated": false,
+      "diagnostics": [
+        {
+          "code": "derived-groups-not-relationships",
+          "severity": "info",
+          "ids": [
+            "group:owner:octo"
+          ],
+          "count": 1
+        }
+      ]
+    }
+  },
+  {
+    "projectId": "octo/compiler",
+    "depth": 2,
+    "result": {
+      "version": 1,
+      "status": "ok",
+      "project": {
+        "id": "octo/compiler",
+        "label": "compiler"
+      },
+      "depth": 2,
+      "connections": [
+        {
+          "id": "nav:13:octo/compiler12:octo/runtime",
+          "projectId": "octo/runtime",
+          "label": "runtime",
+          "degree": 1,
+          "path": [
+            "octo/compiler",
+            "octo/runtime"
+          ],
+          "relationshipTypes": [
+            "authored-family",
+            "shared-language",
+            "shared-topic"
+          ],
+          "relationships": [
+            {
+              "type": "authored-family",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "group:user:toolchain",
+                  "label": "Toolchain",
+                  "edgeIds": [
+                    "member:compiler-toolchain",
+                    "member:runtime-toolchain"
+                  ],
+                  "provenance": [
+                    "user"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "shared-language",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "language:rust",
+                  "label": "Rust",
+                  "edgeIds": [
+                    "uses-language:compiler",
+                    "uses-language:runtime"
+                  ],
+                  "provenance": [
+                    "source"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "shared-topic",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "topic:wasm",
+                  "label": "wasm",
+                  "edgeIds": [
+                    "has-topic:compiler-wasm",
+                    "has-topic:runtime-wasm"
+                  ],
+                  "provenance": [
+                    "source"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nav:13:octo/compiler9:octo/site",
+          "projectId": "octo/site",
+          "label": "site",
+          "degree": 1,
+          "path": [
+            "octo/compiler",
+            "octo/site"
+          ],
+          "relationshipTypes": [
+            "explicit-relationship"
+          ],
+          "relationships": [
+            {
+              "type": "explicit-relationship",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "edgeIds": [
+                    "project-relationship:site-compiler"
+                  ],
+                  "provenance": [
+                    "user"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "secondDegree": [
+        {
+          "projectId": "octo/docs",
+          "label": "docs",
+          "degree": 2,
+          "via": [
+            "octo/site"
+          ],
+          "viaCount": 1,
+          "path": [
+            "octo/compiler",
+            "octo/site",
+            "octo/docs"
+          ],
+          "hops": [
+            {
+              "from": "octo/compiler",
+              "to": "octo/site",
+              "relationshipTypes": [
+                "explicit-relationship"
+              ]
+            },
+            {
+              "from": "octo/site",
+              "to": "octo/docs",
+              "relationshipTypes": [
+                "shared-language",
+                "shared-topic"
+              ]
+            }
+          ]
+        }
+      ],
+      "truncated": false,
+      "diagnostics": [
+        {
+          "code": "derived-groups-not-relationships",
+          "severity": "info",
+          "ids": [
+            "group:owner:octo"
+          ],
+          "count": 1
+        }
+      ]
+    }
+  },
+  {
+    "projectId": "octo/site",
+    "depth": 2,
+    "result": {
+      "version": 1,
+      "status": "ok",
+      "project": {
+        "id": "octo/site",
+        "label": "site"
+      },
+      "depth": 2,
+      "connections": [
+        {
+          "id": "nav:9:octo/docs9:octo/site",
+          "projectId": "octo/docs",
+          "label": "docs",
+          "degree": 1,
+          "path": [
+            "octo/site",
+            "octo/docs"
+          ],
+          "relationshipTypes": [
+            "shared-language",
+            "shared-topic"
+          ],
+          "relationships": [
+            {
+              "type": "shared-language",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "language:typescript",
+                  "label": "TypeScript",
+                  "edgeIds": [
+                    "uses-language:docs",
+                    "uses-language:site"
+                  ],
+                  "provenance": [
+                    "source"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "shared-topic",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "topic:web",
+                  "label": "web",
+                  "edgeIds": [
+                    "has-topic:docs-web",
+                    "has-topic:site-web"
+                  ],
+                  "provenance": [
+                    "source"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "nav:13:octo/compiler9:octo/site",
+          "projectId": "octo/compiler",
+          "label": "compiler",
+          "degree": 1,
+          "path": [
+            "octo/site",
+            "octo/compiler"
+          ],
+          "relationshipTypes": [
+            "explicit-relationship"
+          ],
+          "relationships": [
+            {
+              "type": "explicit-relationship",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "edgeIds": [
+                    "project-relationship:site-compiler"
+                  ],
+                  "provenance": [
+                    "user"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "secondDegree": [
+        {
+          "projectId": "octo/runtime",
+          "label": "runtime",
+          "degree": 2,
+          "via": [
+            "octo/compiler"
+          ],
+          "viaCount": 1,
+          "path": [
+            "octo/site",
+            "octo/compiler",
+            "octo/runtime"
+          ],
+          "hops": [
+            {
+              "from": "octo/site",
+              "to": "octo/compiler",
+              "relationshipTypes": [
+                "explicit-relationship"
+              ]
+            },
+            {
+              "from": "octo/compiler",
+              "to": "octo/runtime",
+              "relationshipTypes": [
+                "authored-family",
+                "shared-language",
+                "shared-topic"
+              ]
+            }
+          ]
+        }
+      ],
+      "truncated": false,
+      "diagnostics": [
+        {
+          "code": "derived-groups-not-relationships",
+          "severity": "info",
+          "ids": [
+            "group:owner:octo"
+          ],
+          "count": 1
+        }
+      ]
+    }
+  },
+  {
+    "projectId": "octo/runtime",
+    "depth": 1,
+    "result": {
+      "version": 1,
+      "status": "ok",
+      "project": {
+        "id": "octo/runtime",
+        "label": "runtime"
+      },
+      "depth": 1,
+      "connections": [
+        {
+          "id": "nav:13:octo/compiler12:octo/runtime",
+          "projectId": "octo/compiler",
+          "label": "compiler",
+          "degree": 1,
+          "path": [
+            "octo/runtime",
+            "octo/compiler"
+          ],
+          "relationshipTypes": [
+            "authored-family",
+            "shared-language",
+            "shared-topic"
+          ],
+          "relationships": [
+            {
+              "type": "authored-family",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "group:user:toolchain",
+                  "label": "Toolchain",
+                  "edgeIds": [
+                    "member:compiler-toolchain",
+                    "member:runtime-toolchain"
+                  ],
+                  "provenance": [
+                    "user"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "shared-language",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "language:rust",
+                  "label": "Rust",
+                  "edgeIds": [
+                    "uses-language:compiler",
+                    "uses-language:runtime"
+                  ],
+                  "provenance": [
+                    "source"
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "shared-topic",
+              "evidenceCount": 1,
+              "evidence": [
+                {
+                  "nodeId": "topic:wasm",
+                  "label": "wasm",
+                  "edgeIds": [
+                    "has-topic:compiler-wasm",
+                    "has-topic:runtime-wasm"
+                  ],
+                  "provenance": [
+                    "source"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "secondDegree": [],
+      "truncated": false,
+      "diagnostics": [
+        {
+          "code": "derived-groups-not-relationships",
+          "severity": "info",
+          "ids": [
+            "group:owner:octo"
+          ],
+          "count": 1
+        }
+      ]
+    }
+  },
+  {
+    "projectId": "octo/loner",
+    "depth": 1,
+    "result": {
+      "version": 1,
+      "status": "ok",
+      "project": {
+        "id": "octo/loner",
+        "label": "loner"
+      },
+      "depth": 1,
+      "connections": [],
+      "secondDegree": [],
+      "truncated": false,
+      "diagnostics": [
+        {
+          "code": "derived-groups-not-relationships",
+          "severity": "info",
+          "ids": [
+            "group:owner:octo"
+          ],
+          "count": 1
+        },
+        {
+          "code": "no-supported-relationships",
+          "severity": "info",
+          "ids": [
+            "octo/loner"
+          ],
+          "count": 1
+        }
+      ]
+    }
+  },
+  {
+    "projectId": "octo/removed",
+    "depth": 1,
+    "result": {
+      "version": 1,
+      "status": "unavailable",
+      "project": null,
+      "depth": 1,
+      "connections": [],
+      "secondDegree": [],
+      "truncated": false,
+      "diagnostics": [
+        {
+          "code": "unknown-project",
+          "severity": "warning",
+          "ids": [
+            "octo/removed"
+          ],
+          "count": 1
+        }
+      ]
+    }
+  },
+  {
+    "projectId": "language:rust",
+    "depth": 1,
+    "result": {
+      "version": 1,
+      "status": "unavailable",
+      "project": null,
+      "depth": 1,
+      "connections": [],
+      "secondDegree": [],
+      "truncated": false,
+      "diagnostics": [
+        {
+          "code": "not-a-project",
+          "severity": "warning",
+          "ids": [
+            "language:rust"
+          ],
+          "count": 1
+        }
+      ]
+    }
+  }
+]

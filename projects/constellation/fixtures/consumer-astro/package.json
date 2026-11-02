@@ -1,0 +1,9 @@
+{
+  "name": "constellation-astro-consumer-fixture",
+  "private": true,
+  "type": "module",
+  "scripts": { "dev": "astro dev --host 127.0.0.1" },
+  "devDependencies": {
+    "astro": "5.18.2"
+  }
+}

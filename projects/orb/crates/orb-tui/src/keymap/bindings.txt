@@ -1,0 +1,541 @@
+## sidebar on a plain session
+/ -> Search: search
+<C-d> -> SelectHalfPageDown: half page down
+<C-g> +<leader>
+<C-g> / -> OpenSearch: grep
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> b -> SwitchBranch: branch
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> f -> FilterProjects: filter projects
+<C-g> i -> NewIncognito: incognito
+<C-g> l -> FocusPanes: panes
+<C-g> n -> NewSession: new session
+<C-g> q -> Quit: quit
+<C-g> t +tab
+<C-g> t 1 -> GoToTab(1): tab
+<C-g> t 2 -> GoToTab(2): tab
+<C-g> t 3 -> GoToTab(3): tab
+<C-g> t 4 -> GoToTab(4): tab
+<C-g> t 5 -> GoToTab(5): tab
+<C-g> t 6 -> GoToTab(6): tab
+<C-g> t 7 -> GoToTab(7): tab
+<C-g> t 8 -> GoToTab(8): tab
+<C-g> t 9 -> GoToTab(9): tab
+<C-g> t n -> NewTab: new tab
+<C-g> t r -> RenameTab: rename tab
+<C-g> t x -> CloseTab: close tab
+<C-g> w -> ChangeWorkspace: workspace
+<C-u> -> SelectHalfPageUp: half page up
+Enter -> Attach: attach
+G -> SelectLast: bottom
+d -> Delete: delete
+g +...
+g g -> SelectFirst: top
+h -> Fold: close
+i -> Search: search
+j -> SelectNext: next session
+k -> SelectPrev: previous session
+l -> Unfold: open
+p -> TogglePin: pin
+r -> Rename: rename
+s -> ToggleSettle: settle
+
+## sidebar on an Incognito session
+/ -> Search: search
+<C-d> -> SelectHalfPageDown: half page down
+<C-g> +<leader>
+<C-g> / -> OpenSearch: grep
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> f -> FilterProjects: filter projects
+<C-g> i -> NewIncognito: incognito
+<C-g> l -> FocusPanes: panes
+<C-g> n -> NewSession: new session
+<C-g> q -> Quit: quit
+<C-g> t +tab
+<C-g> t 1 -> GoToTab(1): tab
+<C-g> t 2 -> GoToTab(2): tab
+<C-g> t 3 -> GoToTab(3): tab
+<C-g> t 4 -> GoToTab(4): tab
+<C-g> t 5 -> GoToTab(5): tab
+<C-g> t 6 -> GoToTab(6): tab
+<C-g> t 7 -> GoToTab(7): tab
+<C-g> t 8 -> GoToTab(8): tab
+<C-g> t 9 -> GoToTab(9): tab
+<C-g> t n -> NewTab: new tab
+<C-g> t r -> RenameTab: rename tab
+<C-g> t x -> CloseTab: close tab
+<C-u> -> SelectHalfPageUp: half page up
+Enter -> Attach: attach
+G -> SelectLast: bottom
+d -> Delete: delete
+g +...
+g g -> SelectFirst: top
+h -> Fold: close
+i -> Search: search
+j -> SelectNext: next session
+k -> SelectPrev: previous session
+l -> Unfold: open
+p -> TogglePin: pin
+r -> Rename: rename
+s -> ToggleSettle: settle
+
+## sidebar on a colony
+/ -> Search: search
+<C-d> -> SelectHalfPageDown: half page down
+<C-g> +<leader>
+<C-g> , -> OpenColonists: colonists
+<C-g> / -> OpenSearch: grep
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> f -> FilterProjects: filter projects
+<C-g> i -> NewIncognito: incognito
+<C-g> l -> FocusPanes: panes
+<C-g> n -> NewSession: new session
+<C-g> q -> Quit: quit
+<C-g> t +tab
+<C-g> t 1 -> GoToTab(1): tab
+<C-g> t 2 -> GoToTab(2): tab
+<C-g> t 3 -> GoToTab(3): tab
+<C-g> t 4 -> GoToTab(4): tab
+<C-g> t 5 -> GoToTab(5): tab
+<C-g> t 6 -> GoToTab(6): tab
+<C-g> t 7 -> GoToTab(7): tab
+<C-g> t 8 -> GoToTab(8): tab
+<C-g> t 9 -> GoToTab(9): tab
+<C-g> t n -> NewTab: new tab
+<C-g> t r -> RenameTab: rename tab
+<C-g> t x -> CloseTab: close tab
+<C-u> -> SelectHalfPageUp: half page up
+Enter -> Attach: attach
+G -> SelectLast: bottom
+d -> Delete: delete
+g +...
+g g -> SelectFirst: top
+h -> Fold: close
+i -> Search: search
+j -> SelectNext: next session
+k -> SelectPrev: previous session
+l -> Unfold: open
+p -> TogglePin: pin
+r -> Rename: rename
+s -> ToggleSettle: settle
+
+## sidebar on a plain session's agent row
+/ -> Search: search
+<C-d> -> SelectHalfPageDown: half page down
+<C-g> +<leader>
+<C-g> / -> OpenSearch: grep
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> b -> SwitchBranch: branch
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> f -> FilterProjects: filter projects
+<C-g> i -> NewIncognito: incognito
+<C-g> l -> FocusPanes: panes
+<C-g> n -> NewSession: new session
+<C-g> q -> Quit: quit
+<C-g> t +tab
+<C-g> t 1 -> GoToTab(1): tab
+<C-g> t 2 -> GoToTab(2): tab
+<C-g> t 3 -> GoToTab(3): tab
+<C-g> t 4 -> GoToTab(4): tab
+<C-g> t 5 -> GoToTab(5): tab
+<C-g> t 6 -> GoToTab(6): tab
+<C-g> t 7 -> GoToTab(7): tab
+<C-g> t 8 -> GoToTab(8): tab
+<C-g> t 9 -> GoToTab(9): tab
+<C-g> t n -> NewTab: new tab
+<C-g> t r -> RenameTab: rename tab
+<C-g> t x -> CloseTab: close tab
+<C-g> w -> ChangeWorkspace: workspace
+<C-u> -> SelectHalfPageUp: half page up
+Enter -> Attach: attach
+G -> SelectLast: bottom
+d -> Delete: delete
+g +...
+g g -> SelectFirst: top
+h -> Fold: close
+i -> Search: search
+j -> SelectNext: next session
+k -> SelectPrev: previous session
+l -> Unfold: open
+r -> Rename: rename
+
+## sidebar on an Incognito session's agent row
+/ -> Search: search
+<C-d> -> SelectHalfPageDown: half page down
+<C-g> +<leader>
+<C-g> / -> OpenSearch: grep
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> f -> FilterProjects: filter projects
+<C-g> i -> NewIncognito: incognito
+<C-g> l -> FocusPanes: panes
+<C-g> n -> NewSession: new session
+<C-g> q -> Quit: quit
+<C-g> t +tab
+<C-g> t 1 -> GoToTab(1): tab
+<C-g> t 2 -> GoToTab(2): tab
+<C-g> t 3 -> GoToTab(3): tab
+<C-g> t 4 -> GoToTab(4): tab
+<C-g> t 5 -> GoToTab(5): tab
+<C-g> t 6 -> GoToTab(6): tab
+<C-g> t 7 -> GoToTab(7): tab
+<C-g> t 8 -> GoToTab(8): tab
+<C-g> t 9 -> GoToTab(9): tab
+<C-g> t n -> NewTab: new tab
+<C-g> t r -> RenameTab: rename tab
+<C-g> t x -> CloseTab: close tab
+<C-u> -> SelectHalfPageUp: half page up
+Enter -> Attach: attach
+G -> SelectLast: bottom
+d -> Delete: delete
+g +...
+g g -> SelectFirst: top
+h -> Fold: close
+i -> Search: search
+j -> SelectNext: next session
+k -> SelectPrev: previous session
+l -> Unfold: open
+r -> Rename: rename
+
+## sidebar on a colony's agent row
+/ -> Search: search
+<C-d> -> SelectHalfPageDown: half page down
+<C-g> +<leader>
+<C-g> , -> OpenColonists: colonists
+<C-g> / -> OpenSearch: grep
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> f -> FilterProjects: filter projects
+<C-g> i -> NewIncognito: incognito
+<C-g> l -> FocusPanes: panes
+<C-g> n -> NewSession: new session
+<C-g> q -> Quit: quit
+<C-g> t +tab
+<C-g> t 1 -> GoToTab(1): tab
+<C-g> t 2 -> GoToTab(2): tab
+<C-g> t 3 -> GoToTab(3): tab
+<C-g> t 4 -> GoToTab(4): tab
+<C-g> t 5 -> GoToTab(5): tab
+<C-g> t 6 -> GoToTab(6): tab
+<C-g> t 7 -> GoToTab(7): tab
+<C-g> t 8 -> GoToTab(8): tab
+<C-g> t 9 -> GoToTab(9): tab
+<C-g> t n -> NewTab: new tab
+<C-g> t r -> RenameTab: rename tab
+<C-g> t x -> CloseTab: close tab
+<C-u> -> SelectHalfPageUp: half page up
+Enter -> Attach: attach
+G -> SelectLast: bottom
+d -> Delete: delete
+g +...
+g g -> SelectFirst: top
+h -> Fold: close
+i -> Search: search
+j -> SelectNext: next session
+k -> SelectPrev: previous session
+l -> Unfold: open
+r -> Rename: rename
+
+## sidebar on a colony's colonists row
+/ -> Search: search
+<C-d> -> SelectHalfPageDown: half page down
+<C-g> +<leader>
+<C-g> , -> OpenColonists: colonists
+<C-g> / -> OpenSearch: grep
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> f -> FilterProjects: filter projects
+<C-g> i -> NewIncognito: incognito
+<C-g> l -> FocusPanes: panes
+<C-g> n -> NewSession: new session
+<C-g> q -> Quit: quit
+<C-u> -> SelectHalfPageUp: half page up
+Enter -> Attach: attach
+G -> SelectLast: bottom
+g +...
+g g -> SelectFirst: top
+h -> Fold: close
+i -> Search: search
+j -> SelectNext: next session
+k -> SelectPrev: previous session
+l -> Unfold: open
+
+## sidebar on a plain session's colonists row
+/ -> Search: search
+<C-d> -> SelectHalfPageDown: half page down
+<C-g> +<leader>
+<C-g> / -> OpenSearch: grep
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> f -> FilterProjects: filter projects
+<C-g> i -> NewIncognito: incognito
+<C-g> l -> FocusPanes: panes
+<C-g> n -> NewSession: new session
+<C-g> q -> Quit: quit
+<C-u> -> SelectHalfPageUp: half page up
+Enter -> Attach: attach
+G -> SelectLast: bottom
+g +...
+g g -> SelectFirst: top
+h -> Fold: close
+i -> Search: search
+j -> SelectNext: next session
+k -> SelectPrev: previous session
+l -> Unfold: open
+
+## sidebar on nothing
+/ -> Search: search
+<C-d> -> SelectHalfPageDown: half page down
+<C-g> +<leader>
+<C-g> / -> OpenSearch: grep
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> f -> FilterProjects: filter projects
+<C-g> i -> NewIncognito: incognito
+<C-g> l -> FocusPanes: panes
+<C-g> n -> NewSession: new session
+<C-g> q -> Quit: quit
+<C-u> -> SelectHalfPageUp: half page up
+Enter -> Attach: attach
+G -> SelectLast: bottom
+g +...
+g g -> SelectFirst: top
+h -> Fold: close
+i -> Search: search
+j -> SelectNext: next session
+k -> SelectPrev: previous session
+l -> Unfold: open
+
+## sidebar on the settled shelf header
+/ -> Search: search
+<C-d> -> SelectHalfPageDown: half page down
+<C-g> +<leader>
+<C-g> / -> OpenSearch: grep
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> f -> FilterProjects: filter projects
+<C-g> i -> NewIncognito: incognito
+<C-g> l -> FocusPanes: panes
+<C-g> n -> NewSession: new session
+<C-g> q -> Quit: quit
+<C-u> -> SelectHalfPageUp: half page up
+Enter -> Attach: attach
+G -> SelectLast: bottom
+g +...
+g g -> SelectFirst: top
+h -> Fold: close
+i -> Search: search
+j -> SelectNext: next session
+k -> SelectPrev: previous session
+l -> Unfold: open
+
+## pane of a plain session
+<C-g> +<leader>
+<C-g> / -> OpenSearch: grep
+<C-g> <C-g> -> SendCtrlG: send ctrl g
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> b -> SwitchBranch: branch
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> h -> LeavePane: sidebar
+<C-g> i -> NewIncognito: incognito
+<C-g> m -> EnterPaneMode(Move): move mode
+<C-g> n -> NewSession: new session
+<C-g> p +pane
+<C-g> p c -> RenamePane: rename pane
+<C-g> p d -> SplitPane(Down): split down
+<C-g> p e -> ToggleFloatEmbed: embed/float
+<C-g> p f -> ToggleZoom: zoom
+<C-g> p i -> TogglePinFloat: pin float
+<C-g> p r -> SplitPane(Right): split right
+<C-g> p s -> StackPane: stack
+<C-g> p w -> ToggleFloats: floats
+<C-g> p x -> ClosePane: close pane
+<C-g> q -> Quit: quit
+<C-g> r -> EnterPaneMode(Resize): resize mode
+<C-g> t +tab
+<C-g> t 1 -> GoToTab(1): tab
+<C-g> t 2 -> GoToTab(2): tab
+<C-g> t 3 -> GoToTab(3): tab
+<C-g> t 4 -> GoToTab(4): tab
+<C-g> t 5 -> GoToTab(5): tab
+<C-g> t 6 -> GoToTab(6): tab
+<C-g> t 7 -> GoToTab(7): tab
+<C-g> t 8 -> GoToTab(8): tab
+<C-g> t 9 -> GoToTab(9): tab
+<C-g> t b -> BreakPane: break pane
+<C-g> t n -> NewTab: new tab
+<C-g> t r -> RenameTab: rename tab
+<C-g> t x -> CloseTab: close tab
+<C-g> w -> ChangeWorkspace: workspace
+
+## pane of an Incognito session
+<C-g> +<leader>
+<C-g> / -> OpenSearch: grep
+<C-g> <C-g> -> SendCtrlG: send ctrl g
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> h -> LeavePane: sidebar
+<C-g> i -> NewIncognito: incognito
+<C-g> m -> EnterPaneMode(Move): move mode
+<C-g> n -> NewSession: new session
+<C-g> p +pane
+<C-g> p c -> RenamePane: rename pane
+<C-g> p d -> SplitPane(Down): split down
+<C-g> p e -> ToggleFloatEmbed: embed/float
+<C-g> p f -> ToggleZoom: zoom
+<C-g> p i -> TogglePinFloat: pin float
+<C-g> p r -> SplitPane(Right): split right
+<C-g> p s -> StackPane: stack
+<C-g> p w -> ToggleFloats: floats
+<C-g> p x -> ClosePane: close pane
+<C-g> q -> Quit: quit
+<C-g> r -> EnterPaneMode(Resize): resize mode
+<C-g> t +tab
+<C-g> t 1 -> GoToTab(1): tab
+<C-g> t 2 -> GoToTab(2): tab
+<C-g> t 3 -> GoToTab(3): tab
+<C-g> t 4 -> GoToTab(4): tab
+<C-g> t 5 -> GoToTab(5): tab
+<C-g> t 6 -> GoToTab(6): tab
+<C-g> t 7 -> GoToTab(7): tab
+<C-g> t 8 -> GoToTab(8): tab
+<C-g> t 9 -> GoToTab(9): tab
+<C-g> t b -> BreakPane: break pane
+<C-g> t n -> NewTab: new tab
+<C-g> t r -> RenameTab: rename tab
+<C-g> t x -> CloseTab: close tab
+
+## pane of a colony
+<C-g> +<leader>
+<C-g> , -> OpenColonists: colonists
+<C-g> / -> OpenSearch: grep
+<C-g> <C-g> -> SendCtrlG: send ctrl g
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> h -> LeavePane: sidebar
+<C-g> i -> NewIncognito: incognito
+<C-g> m -> EnterPaneMode(Move): move mode
+<C-g> n -> NewSession: new session
+<C-g> p +pane
+<C-g> p c -> RenamePane: rename pane
+<C-g> p d -> SplitPane(Down): split down
+<C-g> p e -> ToggleFloatEmbed: embed/float
+<C-g> p f -> ToggleZoom: zoom
+<C-g> p i -> TogglePinFloat: pin float
+<C-g> p r -> SplitPane(Right): split right
+<C-g> p s -> StackPane: stack
+<C-g> p w -> ToggleFloats: floats
+<C-g> p x -> ClosePane: close pane
+<C-g> q -> Quit: quit
+<C-g> r -> EnterPaneMode(Resize): resize mode
+<C-g> t +tab
+<C-g> t 1 -> GoToTab(1): tab
+<C-g> t 2 -> GoToTab(2): tab
+<C-g> t 3 -> GoToTab(3): tab
+<C-g> t 4 -> GoToTab(4): tab
+<C-g> t 5 -> GoToTab(5): tab
+<C-g> t 6 -> GoToTab(6): tab
+<C-g> t 7 -> GoToTab(7): tab
+<C-g> t 8 -> GoToTab(8): tab
+<C-g> t 9 -> GoToTab(9): tab
+<C-g> t b -> BreakPane: break pane
+<C-g> t n -> NewTab: new tab
+<C-g> t r -> RenameTab: rename tab
+<C-g> t x -> CloseTab: close tab
+
+## pane with nothing shown
+<C-g> +<leader>
+<C-g> / -> OpenSearch: grep
+<C-g> <C-g> -> SendCtrlG: send ctrl g
+<C-g> C -> OpenWorlds: worlds
+<C-g> P -> OpenProjects: projects
+<C-g> Space -> OpenSessionPicker: sessions
+<C-g> W -> OpenWorktreePicker: worktrees
+<C-g> b -> SwitchBranch: branch
+<C-g> c -> NewColony: new colony
+<C-g> e -> ToggleSidebar: sidebar
+<C-g> h -> LeavePane: sidebar
+<C-g> i -> NewIncognito: incognito
+<C-g> m -> EnterPaneMode(Move): move mode
+<C-g> n -> NewSession: new session
+<C-g> p +pane
+<C-g> p c -> RenamePane: rename pane
+<C-g> p d -> SplitPane(Down): split down
+<C-g> p e -> ToggleFloatEmbed: embed/float
+<C-g> p f -> ToggleZoom: zoom
+<C-g> p i -> TogglePinFloat: pin float
+<C-g> p r -> SplitPane(Right): split right
+<C-g> p s -> StackPane: stack
+<C-g> p w -> ToggleFloats: floats
+<C-g> p x -> ClosePane: close pane
+<C-g> q -> Quit: quit
+<C-g> r -> EnterPaneMode(Resize): resize mode
+<C-g> t +tab
+<C-g> t 1 -> GoToTab(1): tab
+<C-g> t 2 -> GoToTab(2): tab
+<C-g> t 3 -> GoToTab(3): tab
+<C-g> t 4 -> GoToTab(4): tab
+<C-g> t 5 -> GoToTab(5): tab
+<C-g> t 6 -> GoToTab(6): tab
+<C-g> t 7 -> GoToTab(7): tab
+<C-g> t 8 -> GoToTab(8): tab
+<C-g> t 9 -> GoToTab(9): tab
+<C-g> t b -> BreakPane: break pane
+<C-g> t n -> NewTab: new tab
+<C-g> t r -> RenameTab: rename tab
+<C-g> t x -> CloseTab: close tab
+<C-g> w -> ChangeWorkspace: workspace

@@ -1,0 +1,14 @@
+{
+  "label": "Demo (theme with its own web component)",
+  "extends": "base",
+  "colorScheme": "light",
+  "colors": {
+    "light": { "accent": "#0d7c66", "accentSoft": "#0d7c66", "accentBorder": "#9fd3c5", "link": "#0a6a57", "glow": "#dff3ee" },
+    "dark": { "accent": "#5fd3b8", "accentSoft": "#5fd3b8", "accentBorder": "#2a6b5b", "link": "#7fe0c8", "glow": "#163a32" }
+  },
+  "options": {
+    "headingWrapper": "demo-reveal"
+  },
+  "scripts": ["reveal.js"],
+  "stylesheets": ["theme.css"]
+}

@@ -1,0 +1,80 @@
+{
+ "args": [
+  "rebuild",
+  "python",
+  "--no-cache"
+ ],
+ "docker_calls": [
+  "docker network inspect vde-net",
+  "docker ps --format \\{\\{.Names\\}\\}",
+  "docker info",
+  "docker network inspect vde-net",
+  "docker ps --format \\{\\{.Names\\}\\}",
+  "docker compose -f configs/docker/languages/python/docker-compose.yml --env-file <ROOT>/env-files/python.env build --no-cache"
+ ],
+ "env": {},
+ "exit_code": 0,
+ "final_fake_state": {
+  "containers": [],
+  "images": [
+   "vde-base:latest",
+   "vde-python:latest",
+   "vde-go:latest",
+   "vde-postgres:latest",
+   "vde-jupyterlab:latest"
+  ],
+  "running": []
+ },
+ "home_changes": {
+  "added": [
+   ".ssh/vde/agent_env",
+   ".ssh/vde/known_hosts",
+   ".ssh/vde/vde_student",
+   ".ssh/vde/vde_student.pub"
+  ],
+  "modified": [],
+  "removed": []
+ },
+ "id": "rebuild.python.nocache",
+ "mode": "real",
+ "repo_changes": {
+  "added": [
+   "public-ssh-keys/.keep",
+   "public-ssh-keys/vde_student.pub"
+  ],
+  "modified": [],
+  "removed": []
+ },
+ "scenario": "images",
+ "stderr": [
+  "<TS> [INFO ] [vde       ] VM types loaded from cache",
+  "<TS> [INFO ] [vde       ] Initializing VDE security environment...",
+  "<TS> [INFO ] [vde       ] Enforcing strict directory permissions...",
+  "<TS> [INFO ] [vde       ] Directory permissions enforced",
+  "<TS> [INFO ] [vde       ] Enforcing container network isolation...",
+  "<TS> [INFO ] [vde       ] VM types loaded from cache",
+  "[INFO] Syncing SSH keys to build context...",
+  "<TS> [INFO ] [vde       ] Initializing VDE security environment...",
+  "<TS> [INFO ] [vde       ] Enforcing strict directory permissions...",
+  "<TS> [INFO ] [vde       ] Directory permissions enforced",
+  "<TS> [INFO ] [vde       ] Enforcing container network isolation...",
+  "[INFO] Generating new VDE SSH key...",
+  "[INFO] SSH agent started with 1 key(s)"
+ ],
+ "stdout": [
+  "Generating public/private ed25519 key pair.",
+  "Your identification has been saved in <HOME>/.ssh/vde/vde_student",
+  "Your public key has been saved in <HOME>/.ssh/vde/vde_student.pub",
+  "The key fingerprint is:",
+  "SHA256:<FP> vde@vm",
+  "The key's randomart image is:",
+  "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+  "Rebuilding vde-python...",
+  "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501",
+  "\u2713 vde-python rebuilt successfully",
+  "Done!",
+  "Next:",
+  "  vde start python   - ignite your VM",
+  "  vde list           - list status of all created Spokes"
+ ]
+}

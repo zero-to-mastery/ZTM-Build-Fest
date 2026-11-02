@@ -1,0 +1,162 @@
+[package]
+name = "orb"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+license.workspace = true
+description.workspace = true
+repository.workspace = true
+authors.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[workspace]
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+publish = false
+license = "Apache-2.0"
+description = "A terminal multiplexer that is mission control for your coding agents"
+repository = "https://github.com/zqccer/orb"
+authors = ["zqccer"]
+readme = "README.md"
+keywords = ["terminal", "multiplexer", "tui", "coding-agents", "claude-code"]
+categories = ["command-line-utilities", "development-tools"]
+
+[dependencies]
+orb-domain = { workspace = true }
+orb-tui = { workspace = true }
+error-stack = { workspace = true }
+jiff = { workspace = true }
+tokio = { workspace = true }
+wherror = { workspace = true }
+
+[dev-dependencies]
+rstest = { workspace = true }
+
+[workspace.dependencies]
+orb-term = { path = "crates/orb-term" }
+orb-domain = { path = "crates/orb-domain" }
+orb-tui = { path = "crates/orb-tui" }
+wherror = "2.4"
+error-stack = "0.8"
+ratatui = { version = "0.30.2", features = ["unstable-rendered-line-info"] }
+rstest = "0.27"
+alacritty_terminal = { version = "0.26", default-features = false }
+portable-pty = "0.9"
+terminput = "0.5"
+terminput-crossterm = "0.4"
+base64 = "0.22"
+tokio = { version = "1.53", features = ["rt-multi-thread", "process", "time", "sync", "macros", "signal"] }
+kameo = "0.22"
+async-trait = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0", features = ["preserve_order"] }
+rusqlite = { version = "0.40", default-features = false, features = ["fallible_uint", "bundled"] }
+ratatui-which-key = "0.14"
+unicode-segmentation = "1.13"
+fuzzy-matcher = "0.3"
+tempfile = "3.27"
+jiff = "0.2.37"
+notify-rust = "4.18"
+rustix = { version = "1.1", features = ["event"] }
+
+# crossterm reads a pixel mouse report at pixel 0 as 0 - 1 (kitty counts
+# pixels from 0). Let it wrap in debug builds as it does in release builds,
+# so orb can add the 1 back instead of the input thread panicking.
+[profile.dev.package.crossterm]
+overflow-checks = false
+
+[lints]
+workspace = true
+
+[workspace.lints.rust]
+missing_docs = "allow"
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+doc_markdown = "allow"
+module_name_repetitions = "allow"
+must_use_candidate = "allow"
+struct_excessive_bools = "allow"
+wildcard_imports = "allow"
+match_wildcard_for_single_variants = "allow"
+cast_possible_truncation = "allow"
+cast_sign_loss = "allow"
+cast_precision_loss = "allow"
+cast_possible_wrap = "allow"
+float_cmp = "allow"
+implicit_hasher = "allow"
+single_match = "allow"
+single_match_else = "allow"
+min_ident_chars = "allow"
+rest_pat_in_fully_bound_structs = "allow"
+
+allow_attributes = "warn"
+allow_attributes_without_reason = "deny"
+as_underscore = "deny"
+clone_on_ref_ptr = "allow"
+create_dir = "deny"
+dbg_macro = "warn"
+else_if_without_else = "warn"
+empty_drop = "warn"
+empty_enum_variants_with_brackets = "deny"
+empty_structs_with_brackets = "deny"
+error_impl_error = "deny"
+exit = "deny"
+expect_used = "warn"
+field_scoped_visibility_modifiers = "warn"
+filetype_is_file = "warn"
+float_cmp_const = "deny"
+get_unwrap = "deny"
+if_then_some_else_none = "warn"
+impl_trait_in_params = "deny"
+integer_division = "allow"
+large_include_file = "deny"
+let_underscore_must_use = "allow"
+lossy_float_literal = "deny"
+map_err_ignore = "deny"
+map_with_unused_argument_over_ranges = "warn"
+missing_assert_message = "warn"
+missing_docs_in_private_items = "allow"
+mixed_read_write_in_expression = "warn"
+multiple_unsafe_ops_per_block = "deny"
+mutex_atomic = "deny"
+mutex_integer = "deny"
+needless_raw_strings = "allow"
+needless_raw_string_hashes = "allow"
+non_zero_suggestions = "deny"
+too_many_arguments = "allow"
+panic = "warn"
+panic_in_result_fn = "deny"
+partial_pub_fields = "deny"
+pathbuf_init_then_push = "warn"
+print_stderr = "warn"
+print_stdout = "warn"
+pub_with_shorthand = "allow"
+rc_buffer = "warn"
+rc_mutex = "deny"
+redundant_test_prefix = "deny"
+redundant_type_annotations = "deny"
+renamed_function_params = "warn"
+return_and_then = "warn"
+same_name_method = "warn"
+str_to_string = "warn"
+string_add = "warn"
+string_slice = "deny"
+todo = "warn"
+undocumented_unsafe_blocks = "warn"
+unimplemented = "warn"
+unnecessary_safety_comment = "deny"
+unnecessary_safety_doc = "deny"
+unneeded_field_pattern = "warn"
+unreachable = "warn"
+unused_result_ok = "warn"
+unused_trait_names = "allow"
+unwrap_in_result = "deny"
+use_debug = "warn"
+verbose_file_reads = "warn"
+
+indexing_slicing = "deny"

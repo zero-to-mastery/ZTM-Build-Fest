@@ -1,0 +1,80 @@
+{
+  "format": "openblog-interpretation-comparison",
+  "version": 1,
+  "title": "What the cave stands for",
+  "subject": "Readings of the cave image in Plato's Republic, book VII.",
+  "status": "published",
+  "interpretations": [
+    {
+      "id": "political",
+      "attribution": {
+        "kind": "named",
+        "name": "A political reading",
+        "certainty": "attributed"
+      },
+      "statement": "The cave is a picture of a city that mistakes its own customs for the world.",
+      "evidence": [
+        {
+          "link": "link-political"
+        }
+      ],
+      "uncertainty": "The text never says the cave is a city."
+    },
+    {
+      "id": "epistemic",
+      "attribution": {
+        "kind": "anonymous",
+        "description": "An anonymous twelfth-century commentator",
+        "certainty": "uncertain"
+      },
+      "statement": "The cave is a picture of how a mind moves from opinion to understanding.",
+      "evidence": [
+        {
+          "source": "commentary",
+          "locator": "f. 12r"
+        }
+      ]
+    },
+    {
+      "id": "epistemic-fr",
+      "attribution": {
+        "kind": "source",
+        "source": "commentary"
+      },
+      "statement": "La caverne figure le passage de l'opinion a la connaissance.",
+      "language": "fr",
+      "translationOf": "epistemic"
+    }
+  ],
+  "relations": [
+    {
+      "from": "political",
+      "to": "epistemic",
+      "kind": "differs-from",
+      "note": "They read the same image at different scales."
+    }
+  ],
+  "explanations": [
+    {
+      "id": "cave-beginner",
+      "level": "beginner",
+      "text": "Imagine people who have only ever seen shadows on a wall.",
+      "origin": {
+        "kind": "ai-draft",
+        "tool": "an AI writing assistant",
+        "draftedAt": "2026-10-20T10:00:00Z"
+      },
+      "approval": {
+        "by": "The author",
+        "at": "2026-10-21T09:00:00Z",
+        "digest": "a9131220db97d355d14adfafe74822a96a9d012a0831999485f1044e73a5d88d"
+      }
+    },
+    {
+      "id": "cave-scholarly",
+      "level": "scholarly",
+      "text": "Both readings are attested; neither is settled by the text alone."
+    }
+  ],
+  "x-note": "kept as written"
+}

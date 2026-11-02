@@ -1,0 +1,243 @@
+{
+  "version": 1,
+  "fixtures": [
+    {
+      "name": "legacy-article",
+      "path": "posts/legacy.md",
+      "config": {
+        "title": "Portable fixture",
+        "url": "https://example.test/blog",
+        "postPath": "/{slug}/",
+        "author": { "name": "Site Author" }
+      },
+      "source": "---\ntitle: Café notes\ndate: 2026-10-24\ncomments: locked\n---\nA résumé with a [relative link](../reference/).\n\n## Repeated heading\n\nFirst section.\n\n## Repeated heading\n\nSecond section with ![café](/images/café.png).\n",
+      "semantics": "Prose, Unicode, duplicate headings, relative links, image alternative text, and comment policy remain part of the legacy article.",
+      "expected": {
+        "public": true,
+        "level": "fully-portable",
+        "comments": "locked",
+        "sourceUrl": null,
+        "creditProvenance": "legacy-site-author",
+        "authors": ["Site Author"],
+        "references": [],
+        "capabilities": [],
+        "headingIds": ["repeated-heading", "repeated-heading-2"],
+        "htmlContains": ["<h2 id=\"repeated-heading\">", "<h2 id=\"repeated-heading-2\">", "alt=\"café\""],
+        "textContains": ["résumé", "café"],
+        "markdownContains": ["A résumé", "## Repeated heading"],
+        "links": [
+          {
+            "input": "/images/café.png",
+            "resolved": "https://example.test/blog/images/caf%C3%A9.png"
+          }
+        ],
+        "invalidLinks": ["javascript:alert(1)", "https://user:secret@example.test/"]
+      }
+    },
+    {
+      "name": "research-and-credits",
+      "path": "posts/study.md",
+      "config": {
+        "title": "Portable fixture",
+        "url": "https://example.test",
+        "contributors": {
+          "ada": { "name": "Ada Example", "url": "https://ada.example" }
+        }
+      },
+      "source": "---\ntitle: Shared study\ndate: 2026-10-24\nprofile: research\nsourceUrl: https://origin.example/study\ncomments: hidden\n---\n## Abstract\nA concise summary.\n\n## References\n1. [Prior work](https://doi.org/10.1000/prior)\n",
+      "semantics": "Research references, source provenance, and ordered author credit remain associated with the same published work.",
+      "credits": {
+        "version": 1,
+        "credits": [
+          {
+            "contributor": "ada",
+            "roles": [{ "vocabulary": "crossref", "role": "author" }]
+          }
+        ]
+      },
+      "expected": {
+        "public": true,
+        "level": "fully-portable",
+        "comments": "hidden",
+        "sourceUrl": "https://origin.example/study",
+        "creditProvenance": "explicit-sidecar",
+        "authors": ["Ada Example"],
+        "references": [
+          {
+            "label": "Prior work",
+            "url": "https://doi.org/10.1000/prior"
+          }
+        ],
+        "capabilities": [],
+        "htmlContains": ["A concise summary.", "Prior work"],
+        "textContains": ["A concise summary."],
+        "markdownContains": ["## References", "https://doi.org/10.1000/prior"],
+        "portableHtmlContains": [
+          "<span class=\"ob-contributor-name\"><a href=\"https://ada.example\">Ada Example</a></span><span class=\"ob-contributor-roles\">Author</span>",
+          "<li><a href=\"https://doi.org/10.1000/prior\">Prior work</a></li>",
+          "Originally published at <a class=\"u-syndication\" href=\"https://origin.example/study\" rel=\"noopener\">origin.example/study</a>."
+        ]
+      }
+    },
+    {
+      "name": "recipe-callout-media",
+      "path": "posts/recipe.md",
+      "config": {
+        "title": "Portable fixture",
+        "url": "https://example.test"
+      },
+      "source": "---\ntitle: Basil pasta\ndate: 2026-10-24\nprofile: recipe\ncomments: open\n---\nA weeknight recipe.\n\n> [!TIP]\n> Use **fresh** basil.\n\n![Basil](/images/basil.png)\n\n## Ingredients\n\n- 1 cup flour\n- 2 eggs\n\n## Steps\n\n1. Mix.\n2. Bake.\n",
+      "semantics": "Recipe ingredients and steps, a callout, and image alternative text remain readable in the native representation.",
+      "expected": {
+        "public": true,
+        "level": "fully-portable",
+        "comments": "open",
+        "sourceUrl": null,
+        "creditProvenance": "legacy-site-author",
+        "authors": [],
+        "references": [],
+        "capabilities": [],
+        "recipe": true,
+        "htmlContains": [
+          "class=\"ob-callout ob-callout-tip\"",
+          "class=\"ob-recipe-part ob-recipe-ingredients\"",
+          "alt=\"Basil\"",
+          "1 cup flour",
+          "Bake."
+        ],
+        "textContains": ["Use fresh basil", "1 cup flour", "Bake"],
+        "markdownContains": ["[!TIP]", "## Ingredients", "## Steps"],
+        "portableHtmlContains": [
+          "<p class=\"ob-callout-title\"><strong>Tip</strong></p>",
+          "<ol class=\"ob-recipe-list ob-steps\">"
+        ]
+      }
+    },
+    {
+      "name": "knowledge-check",
+      "path": "posts/quiz.md",
+      "config": {
+        "title": "Portable fixture",
+        "url": "https://example.test"
+      },
+      "source": "---\ntitle: Knowledge check\ndate: 2026-10-24\n---\n```quiz\nWhat does a draft do?\n- [x] Keeps a post out of public feeds\n- [ ] Deletes the source\n```\n",
+      "semantics": "A question, answer choices, and correctness remain available in the native accessible quiz widget.",
+      "expected": {
+        "public": true,
+        "level": "gracefully-transformed",
+        "comments": "open",
+        "sourceUrl": null,
+        "creditProvenance": "legacy-site-author",
+        "authors": [],
+        "references": [],
+        "capabilities": [
+          {
+            "id": "knowledge-check",
+            "portability": "gracefully-transformed",
+            "fallback": "static-question-and-choices",
+            "semanticsContains": "answer choices"
+          }
+        ],
+        "htmlContains": ["class=\"ob-knowledge-check\"", "Keeps a post out of public feeds"],
+        "textContains": [],
+        "textExcludes": ["What does a draft do"],
+        "semanticLoss": "The current text view omits fenced quiz content; later conversion work must add a static text fallback.",
+        "markdownContains": ["```quiz"],
+        "portableHtmlContains": [
+          "<p class=\"ob-quiz-prompt\"><strong>What does a draft do?</strong></p>",
+          "Answer: A. Keeps a post out of public feeds"
+        ]
+      }
+    },
+    {
+      "name": "runnable-and-web-sandbox",
+      "path": "posts/code.md",
+      "config": {
+        "title": "Portable fixture",
+        "url": "https://example.test"
+      },
+      "source": "---\ntitle: Code examples\ndate: 2026-10-24\n---\n```rust runnable\nfn main() {}\n```\n\n```web runnable\n---html\n<button>Hi</button>\n---css\nbutton { color: red; }\n---js\nconsole.log('hi');\n```\n",
+      "semantics": "Runnable source code and an isolated web preview remain distinct capabilities with static fallbacks.",
+      "expected": {
+        "public": true,
+        "level": "gracefully-transformed",
+        "comments": "open",
+        "sourceUrl": null,
+        "creditProvenance": "legacy-site-author",
+        "authors": [],
+        "references": [],
+        "capabilities": [
+          {
+            "id": "runnable-code",
+            "portability": "gracefully-transformed",
+            "fallback": "pre-code",
+            "semanticsContains": "execution affordance"
+          },
+          {
+            "id": "web-sandbox",
+            "portability": "gracefully-transformed",
+            "fallback": "source-code",
+            "semanticsContains": "isolated preview"
+          }
+        ],
+        "htmlContains": ["<ob-rust-playground>", "<ob-web-sandbox>", "&lt;button&gt;Hi&lt;/button&gt;"],
+        "textContains": [],
+        "markdownContains": ["```rust runnable", "```web runnable"],
+        "portableHtmlContains": [
+          "Run and edit this example on",
+          "<p class=\"ob-web-sandbox-label\">HTML</p>",
+          "Open the live preview on"
+        ]
+      }
+    },
+    {
+      "name": "unknown-syntax-and-hostile-code",
+      "path": "posts/future.md",
+      "config": {
+        "title": "Portable fixture",
+        "url": "https://example.test"
+      },
+      "source": "---\ntitle: Future syntax\ndate: 2026-10-24\n---\n```future-capability\n<script>alert(1)</script>\n```\n",
+      "semantics": "Unknown fenced syntax stays authored content; HTML-looking code is escaped and is not executed as markup.",
+      "expected": {
+        "public": true,
+        "level": "canonical-only-interaction",
+        "comments": "open",
+        "sourceUrl": null,
+        "creditProvenance": "legacy-site-author",
+        "authors": [],
+        "references": [],
+        "capabilities": [],
+        "htmlContains": ["<pre><code class=\"language-future-capability\">&lt;script&gt;alert(1)&lt;/script&gt;"],
+        "textContains": [],
+        "markdownContains": ["```future-capability", "<script>alert(1)</script>"],
+        "unknownDescriptor": {
+          "id": "future-capability",
+          "portability": "canonical-only-interaction",
+          "fallback": "untransformed-markdown",
+          "diagnostic": "UnknownCapability"
+        }
+      }
+    },
+    {
+      "name": "draft-excluded-from-public-projection",
+      "path": "posts/draft.md",
+      "config": {
+        "title": "Portable fixture",
+        "url": "https://example.test"
+      },
+      "source": "---\ntitle: Private draft sentinel\ndate: 2026-10-24\ndraft: true\n---\nThis must remain private.\n",
+      "semantics": "A draft is rejected by the public projection and omitted from generated public feeds.",
+      "expected": {
+        "public": false,
+        "level": "not-public",
+        "comments": "open",
+        "sourceUrl": null,
+        "creditProvenance": "legacy-site-author",
+        "authors": [],
+        "references": [],
+        "capabilities": []
+      }
+    }
+  ]
+}

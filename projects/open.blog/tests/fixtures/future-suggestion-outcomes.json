@@ -1,0 +1,4957 @@
+{
+  "description": "Editorial standing, outcomes, links to future work and the clearing of private identity (RD13.3, ADRs 0162 to 0164), decided by crates/openblog-core/src/future_suggestion.rs and read by web/components/future-suggestion.js and the hosted function. `standings`: a moderation state with and without a recorded link, and the standing, outcome and reader's receipt text derived. `links`: a stored row and a request, and the links the details hold afterwards or the code that refused it. `details`: stored details read for their links. `scrub`: a stored row, and whether it owes the clearing of its contact and unshown name now (`periodPassed` says the closed-item period has passed). Regenerate with OPENBLOG_BLESS=1 cargo test -p openblog-core --test future_suggestion_contract.",
+  "details": [
+    {
+      "details": {
+        "type": "text"
+      },
+      "expect": {
+        "conversions": []
+      },
+      "name": "no links"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "tide-tables",
+            "kind": "draft"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "tide-tables",
+            "kind": "draft"
+          }
+        ]
+      },
+      "name": "one link"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-0",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-1",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-2",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-3",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-4",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-5",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-6",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-7",
+            "kind": "series"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-0",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-1",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-2",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-3",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-4",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-5",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-6",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-7",
+            "kind": "series"
+          }
+        ]
+      },
+      "name": "eight links"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-0",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-1",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-2",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-3",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-4",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-5",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-6",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-7",
+            "kind": "series"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "s-8",
+            "kind": "series"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "nine links"
+    },
+    {
+      "details": {
+        "conversions": [],
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "an empty list"
+    },
+    {
+      "details": {
+        "conversions": "draft",
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "not a list"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "a",
+            "kind": "draft"
+          },
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "a",
+            "kind": "draft"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "a repeated target"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "a",
+            "kind": "page"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "an unknown kind"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "Survey",
+            "kind": "library-source"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "an uppercase library id"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "yesterday",
+            "by": "owner",
+            "id": "a",
+            "kind": "draft"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "a time that is not canonical"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "a",
+            "kind": "draft",
+            "note": "x"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "an extra field"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "id": "a",
+            "kind": "draft"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "a missing account"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "ow\u0007ner",
+            "id": "a",
+            "kind": "draft"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "an account with a control character"
+    },
+    {
+      "details": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo",
+            "id": "a",
+            "kind": "draft"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "an account of 65 characters"
+    },
+    {
+      "details": {
+        "contact": {
+          "address": "ada@example.org",
+          "followUp": true
+        },
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "tide-tables",
+            "kind": "draft"
+          }
+        ],
+        "type": "text"
+      },
+      "expect": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "tide-tables",
+            "kind": "draft"
+          }
+        ]
+      },
+      "name": "links beside a contact"
+    }
+  ],
+  "links": [
+    {
+      "expect": {
+        "conversions": [
+          {
+            "at": "2026-11-01T09:00:00Z",
+            "by": "owner",
+            "id": "tide-tables",
+            "kind": "draft"
+          }
+        ]
+      },
+      "name": "the site Admin links an accepted suggestion to a draft",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "conversions": [
+          {
+            "at": "2026-11-01T09:00:00Z",
+            "by": "coord",
+            "id": "the-tides",
+            "kind": "series"
+          }
+        ]
+      },
+      "name": "a coordinator links it to a series",
+      "request": {
+        "actor": "coord",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "series",
+        "role": "coordinator",
+        "target": "the-tides"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "conversions": [
+          {
+            "at": "2026-11-01T09:00:00Z",
+            "by": "owner",
+            "id": "survey-1850",
+            "kind": "library-source"
+          }
+        ]
+      },
+      "name": "a library source is its lowercase ascii id",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "library-source",
+        "role": "site-admin",
+        "target": "survey-1850"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidTarget"
+      },
+      "name": "a library source id is not a slug with capitals",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "library-source",
+        "role": "site-admin",
+        "target": "Survey-1850"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "conversions": [
+          {
+            "at": "2026-11-01T09:00:00Z",
+            "by": "owner",
+            "id": "marées-hautes",
+            "kind": "draft"
+          }
+        ]
+      },
+      "name": "a slug may keep a non-ascii letter",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "marées-hautes"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidTarget"
+      },
+      "name": "a slug is not words",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "Tide Tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidTarget"
+      },
+      "name": "a slug is not empty",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "series",
+        "role": "site-admin",
+        "target": ""
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidTarget"
+      },
+      "name": "a slug is at most 64 characters",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "series",
+        "role": "site-admin",
+        "target": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidTarget"
+      },
+      "name": "an unknown kind",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "post",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "denied"
+      },
+      "name": "a contributing author may not",
+      "request": {
+        "actor": "writer",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "contributing-author",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "denied"
+      },
+      "name": "a submitter may not",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "submitter",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "denied"
+      },
+      "name": "the public may not",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "public",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "notAccepted"
+      },
+      "name": "a pending suggestion cannot be linked",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "pending"
+      }
+    },
+    {
+      "expect": {
+        "code": "notAccepted"
+      },
+      "name": "a clarification suggestion cannot be linked",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "clarification"
+      }
+    },
+    {
+      "expect": {
+        "code": "notAccepted"
+      },
+      "name": "a rejected suggestion cannot be linked",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "rejected"
+      }
+    },
+    {
+      "expect": {
+        "code": "notAccepted"
+      },
+      "name": "a removed suggestion cannot be linked",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "removed"
+      }
+    },
+    {
+      "expect": {
+        "code": "notAccepted"
+      },
+      "name": "a withdrawn suggestion cannot be linked",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "withdrawn"
+      }
+    },
+    {
+      "expect": {
+        "code": "notAccepted"
+      },
+      "name": "an approval of an older text does not count",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 2,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "notAccepted"
+      },
+      "name": "a text the reader was asked about cannot be linked",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": 1,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "notAccepted"
+      },
+      "name": "a purged suggestion cannot be linked",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "alreadyLinked"
+      },
+      "name": "the same target twice",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "tide-tables",
+            "kind": "draft"
+          },
+          {
+            "at": "2026-11-01T09:00:00Z",
+            "by": "owner",
+            "id": "tide-tables",
+            "kind": "series"
+          }
+        ]
+      },
+      "name": "the same id as another kind is another link",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "series",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "conversions": [
+          {
+            "at": "2026-10-27T10:00:00Z",
+            "by": "owner",
+            "id": "tide-tables",
+            "kind": "draft"
+          },
+          {
+            "at": "2026-11-01T09:00:00Z",
+            "by": "coord",
+            "id": "survey-1850",
+            "kind": "library-source"
+          }
+        ]
+      },
+      "name": "a second link is added after the first",
+      "request": {
+        "actor": "coord",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "library-source",
+        "role": "coordinator",
+        "target": "survey-1850"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "tooMany"
+      },
+      "name": "a ninth link",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "draft-9"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "draft-0",
+              "kind": "draft"
+            },
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "draft-1",
+              "kind": "draft"
+            },
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "draft-2",
+              "kind": "draft"
+            },
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "draft-3",
+              "kind": "draft"
+            },
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "draft-4",
+              "kind": "draft"
+            },
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "draft-5",
+              "kind": "draft"
+            },
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "draft-6",
+              "kind": "draft"
+            },
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "draft-7",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "denied"
+      },
+      "name": "an Admin account is named",
+      "request": {
+        "actor": "",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "denied"
+      },
+      "name": "an Admin account name is at most 64 characters",
+      "request": {
+        "actor": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "conversions": [
+          {
+            "at": "2026-11-01T09:00:00Z",
+            "by": "owner",
+            "id": "tide-tables",
+            "kind": "draft"
+          }
+        ]
+      },
+      "name": "a link keeps the contact and name out of its record",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "approved"
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidDetails"
+      },
+      "name": "links are refused on details that were already malformed",
+      "request": {
+        "actor": "owner",
+        "at": "2026-11-01T09:00:00Z",
+        "kind": "draft",
+        "role": "site-admin",
+        "target": "tide-tables"
+      },
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      }
+    }
+  ],
+  "scrub": [
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": true,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": true,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": true,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": true,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": true,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": true,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": 1,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "approved"
+      },
+      "status": "approved"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "pending"
+      },
+      "status": "pending"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "rejected"
+      },
+      "status": "rejected"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a contact",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "an unshown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": null,
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "a shown name",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": true,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": "Ada",
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": false,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": false,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": false,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": true,
+      "purged": false,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": null,
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    },
+    {
+      "expect": false,
+      "identity": "nothing private",
+      "linked": true,
+      "periodPassed": true,
+      "purged": true,
+      "row": {
+        "approved_revision": null,
+        "body": "Her letters from the 1850 survey would help with the tide tables.",
+        "clarification_asked": null,
+        "details": {
+          "conversions": [
+            {
+              "at": "2026-10-27T10:00:00Z",
+              "by": "owner",
+              "id": "tide-tables",
+              "kind": "draft"
+            }
+          ],
+          "type": "text"
+        },
+        "item_revision": 1,
+        "kind": "future-suggestion",
+        "publish_name": false,
+        "purged_at": "2026-12-01T00:00:00Z",
+        "reader_name": null,
+        "status": "removed"
+      },
+      "status": "removed"
+    }
+  ],
+  "standings": [
+    {
+      "expect": {
+        "outcome": null,
+        "reader": {
+          "acceptance": false,
+          "note": null
+        },
+        "standing": {
+          "id": "received",
+          "label": "Received"
+        }
+      },
+      "linked": false,
+      "state": "pending"
+    },
+    {
+      "expect": {
+        "outcome": null,
+        "reader": {
+          "acceptance": false,
+          "note": null
+        },
+        "standing": {
+          "id": "received",
+          "label": "Received"
+        }
+      },
+      "linked": true,
+      "state": "pending"
+    },
+    {
+      "expect": {
+        "outcome": null,
+        "reader": {
+          "acceptance": false,
+          "note": null
+        },
+        "standing": {
+          "id": "needs-clarification",
+          "label": "Waiting for the reader to say more"
+        }
+      },
+      "linked": false,
+      "state": "clarification"
+    },
+    {
+      "expect": {
+        "outcome": null,
+        "reader": {
+          "acceptance": false,
+          "note": null
+        },
+        "standing": {
+          "id": "needs-clarification",
+          "label": "Waiting for the reader to say more"
+        }
+      },
+      "linked": true,
+      "state": "clarification"
+    },
+    {
+      "expect": {
+        "outcome": {
+          "id": "held",
+          "label": "Held"
+        },
+        "reader": {
+          "acceptance": true,
+          "note": "Accepted means the editors are interested in exploring this. It does not mean they agree with it, have checked it, or have permission to use it."
+        },
+        "standing": {
+          "id": "interested",
+          "label": "Editors are interested"
+        }
+      },
+      "linked": false,
+      "state": "approved"
+    },
+    {
+      "expect": {
+        "outcome": {
+          "id": "converted",
+          "label": "Converted"
+        },
+        "reader": {
+          "acceptance": true,
+          "note": "An editor has recorded a link between it and work they are doing. That is a record, not a promise to publish, and it says nothing about who is right."
+        },
+        "standing": {
+          "id": "converted",
+          "label": "Linked to future work"
+        }
+      },
+      "linked": true,
+      "state": "approved"
+    },
+    {
+      "expect": {
+        "outcome": {
+          "id": "declined",
+          "label": "Declined"
+        },
+        "reader": {
+          "acceptance": false,
+          "note": "Not taking an idea forward is about this site's plans. It is not a judgement of the idea or of you."
+        },
+        "standing": {
+          "id": "declined",
+          "label": "Not taken forward"
+        }
+      },
+      "linked": false,
+      "state": "rejected"
+    },
+    {
+      "expect": {
+        "outcome": {
+          "id": "declined",
+          "label": "Declined"
+        },
+        "reader": {
+          "acceptance": false,
+          "note": "Not taking an idea forward is about this site's plans. It is not a judgement of the idea or of you."
+        },
+        "standing": {
+          "id": "declined",
+          "label": "Not taken forward"
+        }
+      },
+      "linked": true,
+      "state": "rejected"
+    },
+    {
+      "expect": {
+        "outcome": {
+          "id": "closed",
+          "label": "Closed"
+        },
+        "reader": {
+          "acceptance": false,
+          "note": "Not taking an idea forward is about this site's plans. It is not a judgement of the idea or of you."
+        },
+        "standing": {
+          "id": "declined",
+          "label": "Not taken forward"
+        }
+      },
+      "linked": false,
+      "state": "removed"
+    },
+    {
+      "expect": {
+        "outcome": {
+          "id": "converted",
+          "label": "Converted"
+        },
+        "reader": {
+          "acceptance": true,
+          "note": "An editor has recorded a link between it and work they are doing. That is a record, not a promise to publish, and it says nothing about who is right."
+        },
+        "standing": {
+          "id": "closed-converted",
+          "label": "Linked to future work, now closed"
+        }
+      },
+      "linked": true,
+      "state": "removed"
+    },
+    {
+      "expect": {
+        "outcome": null,
+        "reader": {
+          "acceptance": false,
+          "note": null
+        },
+        "standing": {
+          "id": "withdrawn",
+          "label": "Withdrawn by the reader"
+        }
+      },
+      "linked": false,
+      "state": "withdrawn"
+    },
+    {
+      "expect": {
+        "outcome": null,
+        "reader": {
+          "acceptance": false,
+          "note": null
+        },
+        "standing": {
+          "id": "withdrawn",
+          "label": "Withdrawn by the reader"
+        }
+      },
+      "linked": true,
+      "state": "withdrawn"
+    }
+  ]
+}

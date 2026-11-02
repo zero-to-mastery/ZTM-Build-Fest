@@ -1,0 +1,27 @@
+# Render blueprint: run this blog with its admin editor and view counter as a
+# Docker web service. In Render choose "New > Blueprint" and point it at this
+# repository. Set OPENBLOG_ADMIN_PASSWORD in the dashboard after the first deploy.
+#
+# Render's free tier has no persistent disk: posts you save in the editor live
+# only until the next deploy unless you publish them (the Publish button), and
+# view counts survive through the analytics branch backup. For a persistent
+# .openblog folder, uncomment the disk section (paid plans).
+services:
+  - type: web
+    name: openblog
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: OPENBLOG_BEHIND_PROXY
+        value: "1"
+      - key: OPENBLOG_ADMIN_USER
+        value: admin
+      - key: OPENBLOG_ADMIN_PASSWORD
+        sync: false
+      - key: GIT_AUTHOR_NAME
+        value: open.blog
+    # disk:
+    #   name: openblog-data
+    #   mountPath: /blog/.openblog
+    #   sizeGB: 1

@@ -1,0 +1,525 @@
+#!/usr/bin/env zsh
+# @forge (Governance Sentinel)
+set -e
+#===============================================================================
+# vde-health - Health Check Command for VDE
+# Checks Docker, containers, ports, and SSH connectivity
+# Exit codes: 0=Healthy, 1=Minor issues, 2=Major issues, 3=Critical failure
+#===============================================================================
+
+# Source dependencies
+VDE_ROOT_DIR="${0:h:h}"
+[[ -f "${VDE_ROOT_DIR}/lib/vde-constants" ]] && source "${VDE_ROOT_DIR}/lib/vde-constants"
+[[ -f "${VDE_ROOT_DIR}/lib/vde-shell-compat" ]] && source "${VDE_ROOT_DIR}/lib/vde-shell-compat"
+[[ -f "${VDE_ROOT_DIR}/lib/vde-log" ]] && source "${VDE_ROOT_DIR}/lib/vde-log"
+
+# Initialize logging
+vde_log_init 2>/dev/null || true
+
+# Health status codes
+[[ -z "${VDE_HEALTH_OK}" ]] && readonly VDE_HEALTH_OK=0
+[[ -z "${VDE_HEALTH_MINOR}" ]] && readonly VDE_HEALTH_MINOR=30
+[[ -z "${VDE_HEALTH_MAJOR}" ]] && readonly VDE_HEALTH_MAJOR=31
+[[ -z "${VDE_HEALTH_CRITICAL}" ]] && readonly VDE_HEALTH_CRITICAL=32
+
+# Health check results
+typeset -gA _VDE_HEALTH_CHECKS=()
+_VDE_HEALTH_OVERALL=0
+_VDE_HEALTH_MINOR_COUNT=0
+_VDE_HEALTH_MAJOR_COUNT=0
+_VDE_HEALTH_CRITICAL_COUNT=0
+
+#===============================================================================
+# Health Check Functions
+#===============================================================================
+
+# Main health check - runs all checks
+vde_health_check() {
+    local format="${1:-text}"
+    local verbose="${2:-0}"
+    
+    vde_log_info "Running health checks" "health"
+    
+    # Run all health checks
+    vde_health_docker
+    vde_health_network
+    vde_health_containers
+    vde_health_ports
+    vde_health_ssh
+    vde_health_disk
+    vde_health_memory
+    
+    # Generate report
+    vde_health_report "${format}" "${verbose}"
+    
+    return ${_VDE_HEALTH_OVERALL}
+}
+
+# Check Docker daemon status
+vde_health_docker() {
+    local check_name="docker_daemon"
+    local health_status="OK"
+    local message="Docker daemon is running"
+    
+    # Check if Docker is installed
+    if ! command -v docker >/dev/null 2>&1; then
+        health_status="CRITICAL"
+        message="Docker is not installed"
+        _VDE_HEALTH_CRITICAL_COUNT=$((_VDE_HEALTH_CRITICAL_COUNT + 1))
+    elif ! docker info >/dev/null 2>&1; then
+        health_status="CRITICAL"
+        message="Docker daemon is not responding"
+        _VDE_HEALTH_CRITICAL_COUNT=$((_VDE_HEALTH_CRITICAL_COUNT + 1))
+    else
+        # Check Docker version
+        local docker_version
+        docker_version=$(docker --version 2>/dev/null || echo "unknown")
+        message="Docker version: ${docker_version}"
+    fi
+    
+    _VDE_HEALTH_CHECKS[${check_name}]="${health_status}|${message}"
+}
+
+# Check VDE network exists
+vde_health_network() {
+    local check_name="network"
+    local health_status="OK"
+    local message="VDE networks are configured"
+    
+    # Source constants if not already loaded
+    if [[ -z "${VDE_DOCKER_NETWORK}" ]]; then
+        source "${VDE_ROOT_DIR}/lib/vde-constants" 2>/dev/null || true
+    fi
+    
+    local network_name="${VDE_DOCKER_NETWORK:-vde-net}"
+    
+    # Check if Docker is available
+    if ! command -v docker >/dev/null 2>&1; then
+        health_status="CRITICAL"
+        message="Docker not available for network check"
+        _VDE_HEALTH_CRITICAL_COUNT=$((_VDE_HEALTH_CRITICAL_COUNT + 1))
+        _VDE_HEALTH_CHECKS[${check_name}]="${health_status}|${message}"
+        return
+    fi
+    
+    # Check if vde-net exists
+    if docker network inspect "${network_name}" &>/dev/null; then
+        message="Network '${network_name}' exists"
+    else
+        health_status="MAJOR"
+        message="Network '${network_name}' missing - run 'vde init' to create"
+        _VDE_HEALTH_MAJOR_COUNT=$((_VDE_HEALTH_MAJOR_COUNT + 1))
+    fi
+    
+    _VDE_HEALTH_CHECKS[${check_name}]="${health_status}|${message}"
+}
+
+# Check container health
+vde_health_containers() {
+    local check_name="containers"
+    local health_status="OK"
+    local message="All containers are healthy"
+    
+    if ! command -v docker >/dev/null 2>&1; then
+        health_status="CRITICAL"
+        message="Docker not available"
+        _VDE_HEALTH_CRITICAL_COUNT=$((_VDE_HEALTH_CRITICAL_COUNT + 1))
+        _VDE_HEALTH_CHECKS[${check_name}]="${health_status}|${message}"
+        return
+    fi
+    
+    # Get container states
+    local running
+    local stopped
+    local total
+    
+    running=$(docker ps -q 2>/dev/null | command wc -l || echo 0)
+    total=$(docker ps -aq 2>/dev/null | command wc -l || echo 0)
+    stopped=$((total - running))
+    
+    if [[ "${total}" -eq 0 ]]; then
+        health_status="MINOR"
+        message="No containers found"
+        _VDE_HEALTH_MINOR_COUNT=$((_VDE_HEALTH_MINOR_COUNT + 1))
+    elif [[ "${stopped}" -gt 0 ]]; then
+        health_status="MINOR"
+        message="${stopped} containers stopped (out of ${total} total)"
+        _VDE_HEALTH_MINOR_COUNT=$((_VDE_HEALTH_MINOR_COUNT + 1))
+    else
+        message="${running} containers running"
+    fi
+    
+    # Check for unhealthy containers
+    local unhealthy
+    unhealthy=$(docker ps --filter "health=unhealthy" -q 2>/dev/null | command wc -l || echo 0)
+    if [[ "${unhealthy}" -gt 0 ]]; then
+        health_status="MAJOR"
+        message="${unhealthy} unhealthy containers detected"
+        _VDE_HEALTH_MAJOR_COUNT=$((_VDE_HEALTH_MAJOR_COUNT + 1))
+    fi
+    
+    _VDE_HEALTH_CHECKS[${check_name}]="${health_status}|${message}|${running}|${stopped}|${total}"
+}
+
+# Check port availability
+vde_health_ports() {
+    local check_name="ports"
+    local health_status="OK"
+    local message="Required ports are available"
+    
+    # Check commonly used ports
+    local checked_ports=()
+    local blocked_ports=()
+    
+    # Common VDE ports to check
+    for port in 22 80 443 3306 5432 6379 27017; do
+        if command -v lsof >/dev/null 2>&1; then
+            if lsof -i :${port} >/dev/null 2>&1; then
+                checked_ports+=("${port} (in use)")
+            else
+                checked_ports+=("${port} (available)")
+            fi
+        elif command -v netstat >/dev/null 2>&1; then
+            if netstat -tuln 2>/dev/null | grep -q ":${port} "; then
+                checked_ports+=("${port} (in use)")
+            else
+                checked_ports+=("${port} (available)")
+            fi
+        fi
+    done
+    
+    if [[ ${#checked_ports[@]} -gt 0 ]]; then
+        message="Ports: ${checked_ports[*]}"
+    fi
+    
+    _VDE_HEALTH_CHECKS[${check_name}]="${health_status}|${message}"
+}
+
+# Check SSH connectivity
+vde_health_ssh() {
+    local check_name="ssh"
+    local health_status="OK"
+    local message="SSH is configured"
+    
+    # Check if SSH is available
+    if ! command -v ssh >/dev/null 2>&1; then
+        health_status="MINOR"
+        message="SSH client not installed"
+        _VDE_HEALTH_MINOR_COUNT=$((_VDE_HEALTH_MINOR_COUNT + 1))
+        _VDE_HEALTH_CHECKS[${check_name}]="${health_status}|${message}"
+        return
+    fi
+    
+    # Check VDE SSH config (isolated)
+    if [[ -f "${VDE_SSH_CONFIG}" ]]; then
+        message="VDE SSH config exists"
+    fi
+    
+    # Check for SSH agent
+    if [[ -n "${SSH_AUTH_SOCK}" ]]; then
+        message="${message} (agent running)"
+    else
+        message="${message} (agent not running)"
+    fi
+    
+    _VDE_HEALTH_CHECKS[${check_name}]="${health_status}|${message}"
+}
+
+# Check disk space
+vde_health_disk() {
+    local check_name="disk"
+    local health_status="OK"
+    local message=""
+    
+    # Get disk usage
+    local disk_usage
+    disk_usage=$(command df -h / 2>/dev/null | command tail -1 | command awk '{print $5}' | command tr -d '%' || echo 0)
+    
+    if [[ "${disk_usage}" -ge 90 ]]; then
+        health_status="CRITICAL"
+        message="Disk usage is ${disk_usage}%"
+        _VDE_HEALTH_CRITICAL_COUNT=$((_VDE_HEALTH_CRITICAL_COUNT + 1))
+    elif [[ "${disk_usage}" -ge 80 ]]; then
+        health_status="MAJOR"
+        message="Disk usage is ${disk_usage}%"
+        _VDE_HEALTH_MAJOR_COUNT=$((_VDE_HEALTH_MAJOR_COUNT + 1))
+    elif [[ "${disk_usage}" -ge 70 ]]; then
+        health_status="MINOR"
+        message="Disk usage is ${disk_usage}%"
+        _VDE_HEALTH_MINOR_COUNT=$((_VDE_HEALTH_MINOR_COUNT + 1))
+    else
+        message="Disk usage is ${disk_usage}%"
+    fi
+    
+    _VDE_HEALTH_CHECKS[${check_name}]="${health_status}|${message}"
+}
+
+# Check memory availability
+vde_health_memory() {
+    local check_name="memory"
+    local health_status="OK"
+    local message=""
+    
+    # Get memory usage
+    local mem_usage=0
+    
+    if _is_zsh || [[ "$(uname)" == "Darwin" ]]; then
+        # macOS: Use vm_stat to calculate memory usage percentage
+        local vm_stat_output
+        vm_stat_output=$(command vm_stat 2>/dev/null)
+        
+        if [[ -n "${vm_stat_output}" ]]; then
+            # Get page count values
+            local free_pages
+            local active_pages
+            local inactive_pages
+            local wired_pages
+            local speculative_pages
+            
+            free_pages=$(echo "${vm_stat_output}" | command grep "Pages free" | command awk '{print $3}' | command tr -d '.')
+            active_pages=$(echo "${vm_stat_output}" | command grep "Pages active" | command awk '{print $3}' | command tr -d '.')
+            inactive_pages=$(echo "${vm_stat_output}" | command grep "Pages inactive" | command awk '{print $3}' | command tr -d '.')
+            wired_pages=$(echo "${vm_stat_output}" | command grep "Pages wired down" | command awk '{print $4}' | command tr -d '.')
+            speculative_pages=$(echo "${vm_stat_output}" | command grep "Pages speculative" | command awk '{print $3}' | command tr -d '.')
+            
+            # Calculate total pages and used pages
+            local total_pages=$((free_pages + active_pages + inactive_pages + wired_pages + speculative_pages))
+            local used_pages=$((active_pages + inactive_pages + wired_pages + speculative_pages))
+            
+            # Calculate percentage
+            if [[ "${total_pages}" -gt 0 ]]; then
+                mem_usage=$((used_pages * 100 / total_pages))
+            fi
+        fi
+    else
+        # Linux: Use free command
+        mem_usage=$(command free 2>/dev/null | command grep Mem | command awk '{print int($3/$2 * 100)}' || echo 0)
+    fi
+    
+    local triage=""
+    if [[ "${mem_usage}" -ge 90 ]]; then
+        health_status="CRITICAL"
+        message="Memory usage is ${mem_usage}%"
+        triage="ACTION: Quench Spokes with 'vde stop all' or 'vde nuke' to reclaim host resources."
+        _VDE_HEALTH_CRITICAL_COUNT=$((_VDE_HEALTH_CRITICAL_COUNT + 1))
+    elif [[ "${mem_usage}" -ge 80 ]]; then
+        health_status="MAJOR"
+        message="Memory usage is ${mem_usage}%"
+        triage="ADVICE: System memory is low. Consider stopping unused VMs."
+        _VDE_HEALTH_MAJOR_COUNT=$((_VDE_HEALTH_MAJOR_COUNT + 1))
+    elif [[ "${mem_usage}" -ge 70 ]]; then
+        health_status="MINOR"
+        message="Memory usage is ${mem_usage}%"
+        _VDE_HEALTH_MINOR_COUNT=$((_VDE_HEALTH_MINOR_COUNT + 1))
+    else
+        message="Memory usage is ${mem_usage}%"
+    fi
+    
+    _VDE_HEALTH_CHECKS[${check_name}]="${health_status}|${message}|${triage}"
+}
+
+#===============================================================================
+# Report Generation
+#===============================================================================
+
+# Generate health report
+vde_health_report() {
+    local format="${1:-text}"
+    local verbose="${2:-0}"
+    
+    # Calculate overall health
+    if [[ "${_VDE_HEALTH_CRITICAL_COUNT}" -gt 0 ]]; then
+        _VDE_HEALTH_OVERALL=${VDE_HEALTH_CRITICAL}
+    elif [[ "${_VDE_HEALTH_MAJOR_COUNT}" -gt 0 ]]; then
+        _VDE_HEALTH_OVERALL=${VDE_HEALTH_MAJOR}
+    elif [[ "${_VDE_HEALTH_MINOR_COUNT}" -gt 0 ]]; then
+        _VDE_HEALTH_OVERALL=${VDE_HEALTH_MINOR}
+    else
+        _VDE_HEALTH_OVERALL=${VDE_HEALTH_OK}
+    fi
+    
+    # Generate report based on format
+    case "${format}" in
+        json)
+            vde_health_report_json
+            ;;
+        text|*)
+            vde_health_report_text "${verbose}"
+            ;;
+    esac
+}
+
+# Generate text report
+vde_health_report_text() {
+    local verbose="${1}"
+    local timestamp
+    timestamp=$(vde_shell_date_iso8601)
+    
+    local status_text
+    case "${_VDE_HEALTH_OVERALL}" in
+        ${VDE_HEALTH_OK}) status_text="HEALTHY" ;;
+        ${VDE_HEALTH_MINOR}) status_text="MINOR ISSUES" ;;
+        ${VDE_HEALTH_MAJOR}) status_text="MAJOR ISSUES" ;;
+        ${VDE_HEALTH_CRITICAL}) status_text="CRITICAL FAILURE" ;;
+        *) status_text="UNKNOWN" ;;
+    esac
+    
+    echo "=============================================="
+    echo "VDE Health Report"
+    echo "=============================================="
+    echo "Timestamp: ${timestamp}"
+    echo "Overall Status: ${status_text}"
+    echo ""
+    echo "Summary:"
+    echo "  Critical: ${_VDE_HEALTH_CRITICAL_COUNT}"
+    echo "  Major: ${_VDE_HEALTH_MAJOR_COUNT}"
+    echo "  Minor: ${_VDE_HEALTH_MINOR_COUNT}"
+    echo ""
+    echo "Checks:"
+    echo "----------------------------------------------"
+    
+    for check in "${(@k)_VDE_HEALTH_CHECKS}"; do
+        local result="${_VDE_HEALTH_CHECKS[${check}]}"
+        local parts=("${(@s:|:)result}")
+        local health_status="${parts[1]}"
+        local message="${parts[2]}"
+        local triage="${parts[3]:-}"
+        
+        # Determine triage based on check type if parts length is higher
+        if [[ "${check}" == "memory" ]]; then
+            triage="${parts[3]:-}"
+        elif [[ "${check}" == "containers" ]]; then
+            # For containers: status|message|running|stopped|total
+            # No specific triage string, but we can synthesize one if unhealthy
+            [[ "${health_status}" == "MAJOR" ]] && triage="ADVICE: Check logs for unhealthy containers: 'vde logs <name>'"
+        fi
+        
+        local status_indicator=""
+        case "${health_status}" in
+            OK) status_indicator="[OK]" ;;
+            MINOR) status_indicator="[MINOR]" ;;
+            MAJOR) status_indicator="[MAJOR]" ;;
+            CRITICAL) status_indicator="[CRITICAL]" ;;
+            *) status_indicator="[????]" ;;
+        esac
+        
+        echo "  ${status_indicator} ${check}"
+        echo "         ${message}"
+        [[ -n "${triage}" && "${triage}" != [0-9]# ]] && echo "         \033[1;33m${triage}\033[0m"
+        echo ""
+    done
+    
+    echo "=============================================="
+    echo "Exit code: ${_VDE_HEALTH_OVERALL}"
+    echo "=============================================="
+}
+
+# Generate JSON report
+vde_health_report_json() {
+    local timestamp
+    timestamp=$(vde_shell_date_iso8601)
+    
+    local status_text
+    case "${_VDE_HEALTH_OVERALL}" in
+        ${VDE_HEALTH_OK}) status_text="healthy" ;;
+        ${VDE_HEALTH_MINOR}) status_text="minor_issues" ;;
+        ${VDE_HEALTH_MAJOR}) status_text="major_issues" ;;
+        ${VDE_HEALTH_CRITICAL}) status_text="critical" ;;
+        *) status_text="unknown" ;;
+    esac
+    
+    echo "{"
+    echo "  \"timestamp\": \"${timestamp}\","
+    echo "  \"status\": \"${status_text}\","
+    echo "  \"exit_code\": ${_VDE_HEALTH_OVERALL},"
+    echo "  \"summary\": {"
+    echo "    \"critical\": ${_VDE_HEALTH_CRITICAL_COUNT},"
+    echo "    \"major\": ${_VDE_HEALTH_MAJOR_COUNT},"
+    echo "    \"minor\": ${_VDE_HEALTH_MINOR_COUNT}"
+    echo "  },"
+    echo "  \"checks\": {"
+    
+    local first=1
+    for check in "${(@k)_VDE_HEALTH_CHECKS}"; do
+        [[ "${first}" -eq 0 ]] && echo ","
+        first=0
+        
+        local result="${_VDE_HEALTH_CHECKS[${check}]}"
+        local parts=("${(@s:|:)result}")
+        local health_status="${parts[1]}"
+        local message="${parts[2]}"
+        local triage="${parts[3]:-}"
+        
+        echo "    \"${check}\": {"
+        echo "      \"status\": \"${health_status}\","
+        echo "      \"message\": \"${message}\","
+        echo "      \"triage\": \"${triage}\""
+        echo -n "    }"
+    done
+    
+    echo ""
+    echo "  }"
+    echo "}"
+}
+
+#===============================================================================
+# Usage
+#===============================================================================
+
+vde_health_usage() {
+    cat <<EOF
+Usage: $(basename "${0}") [OPTIONS]
+
+Run VDE health checks and report system status.
+
+Options:
+  -f, --format FORMAT   Output format: text (default), json
+  -v, --verbose         Show verbose output
+  -h, --help            Show this help message
+
+Exit codes:
+  0 - System is healthy
+  1 - Minor issues detected
+  2 - Major issues detected
+  3 - Critical failure
+
+Examples:
+  $(basename "${0}")                    # Run all health checks
+  $(basename "${0}") -f json            # Output in JSON format
+  $(basename "${0}") -v                 # Verbose output
+EOF
+}
+
+#===============================================================================
+# Main
+#===============================================================================
+
+# Parse arguments
+FORMAT="text"
+VERBOSE=0
+
+while [[ ${#} -gt 0 ]]; do
+    case "${1}" in
+        -f|--format)
+            FORMAT="${2}"
+            shift 2
+            ;;
+        -v|--verbose)
+            VERBOSE=1
+            shift
+            ;;
+        -h|--help)
+            vde_health_usage
+            exit ${VDE_SUCCESS}
+            ;;
+        *)
+            echo "Unknown option: ${1}"
+            vde_health_usage
+            exit ${VDE_ERR_GENERAL}
+            ;;
+    esac
+done
+
+# Run health check
+vde_health_check "${FORMAT}" "${VERBOSE}"
+exit ${?}

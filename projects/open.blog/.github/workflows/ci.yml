@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Lint
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Test
+        run: cargo test --workspace
+      - name: Test front-end components
+        run: node --test tests/web/*.test.mjs tests/portability-contracts.test.mjs
+      - name: Test container startup
+        run: sh tests/docker-entrypoint.sh
+      - name: Check documentation links
+        run: node scripts/check-doc-links.mjs
+      - name: Build the starter site
+        run: cargo run -p openblog-cli -- build
+      - name: Build the portable publishing example
+        run: cargo run -p openblog-cli -- build --root examples/portable-publishing
+      - name: Install browser test dependencies
+        working-directory: tests/browser
+        run: npm ci
+      - name: Install Chromium
+        working-directory: tests/browser
+        run: npx playwright install --with-deps chromium
+      - name: Test browser publication and independent feed readers
+        working-directory: tests/browser
+        run: npm test
+
+  social-queue-sql:
+    # Runs the real plpgsql of the social delivery queue (claim, SKIP LOCKED, leases, settle and the
+    # rollbacks) against a throwaway Postgres, so the SQL is tested and not only matched by regexes.
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test the social queue SQL against Postgres
+        env:
+          OPENBLOG_TEST_PG_URL: postgresql://postgres:postgres@localhost:5432/postgres
+        run: node --test tests/web/social-queue-sql.test.mjs

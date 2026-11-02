@@ -1,0 +1,332 @@
+#!/usr/bin/env zsh
+# @shared-law (Sovereign Law)
+# VDE Constants Library
+# Centralized constants for the Virtual Development Environment
+# Source this library with: source ./lib/vde-constants
+#
+# This file contains all magic numbers, configuration values, and constants
+# used throughout the VDE system. Centralizing these values improves:
+# - Maintainability: Change values in one place
+# - Documentation: Each constant is explained
+# consistency: All scripts use the same values
+#
+# Language: This is a ZSH-exclusive library. Use of non-ZSH shells is strictly 
+# forbidden by Mandate C of the Mandalorian Creed.
+
+# =============================================================================
+# SOURCE GUARD
+# =============================================================================
+# Prevent multiple sourcing which causes readonly variable errors
+
+if [[ "${_VDE_CONSTANTS_LOADED:-}" == "1" ]] ; then
+    return 0 2>/dev/null || exit 0
+fi
+_VDE_CONSTANTS_LOADED=1
+
+# =============================================================================
+# STANDARD RETURN CODES
+# =============================================================================
+# All VDE functions should use these standardized return codes for consistency.
+# This enables proper error handling and debugging across the system.
+
+# Success - Operation completed successfully
+VDE_SUCCESS=0
+# General error - Unspecified failure
+VDE_ERR_GENERAL=1
+# Invalid input - Bad arguments, malformed input, validation failure
+VDE_ERR_INVALID_INPUT=2
+# Resource not found - File, VM, container, or other resource doesn't exist
+VDE_ERR_NOT_FOUND=3
+# Permission denied - Insufficient permissions for operation
+VDE_ERR_PERMISSION=4
+# Timeout - Operation exceeded time limit
+VDE_ERR_TIMEOUT=5
+# Already exists - Resource already exists when trying to create
+VDE_ERR_EXISTS=6
+# Dependency error - Required dependency missing or failed
+VDE_ERR_DEPENDENCY=7
+# Docker error - Docker-specific operation failure
+VDE_ERR_DOCKER=8
+# Lock error - Failed to acquire lock for atomic operation
+VDE_ERR_LOCK=9
+# Lock contention - Lock is busy but still active (Transient)
+VDE_ERR_LOCK_CONTENTION=12
+# Invalid data - Data validation failed (corrupt file, schema mismatch)
+VDE_ERR_INVALID_DATA=10
+# Cache invalid - Cache is stale, corrupt, or missing (needs regeneration)
+VDE_ERR_CACHE_INVALID=11
+# Sync drift - JSON/Cache does not match Hub timestamp authority
+VDE_ERR_SYNC_DRIFT=13
+# No port available - All ports in range are occupied
+VDE_ERR_NO_PORT=14
+
+# Health Check Codes (30-39 range)
+VDE_HEALTH_OK=0
+VDE_HEALTH_MINOR=30
+VDE_HEALTH_MAJOR=31
+VDE_HEALTH_CRITICAL=32
+
+# =============================================================================
+# BRANCH CONFIGURATION
+# =============================================================================
+# VDE uses semantic branch naming to ensure portability.
+# VDE_PRODUCTION_BRANCH: The stable, certified Sovereign Baseline (default: main)
+# VDE_ANVIL_BRANCH: The active integration and development branch (default: develop)
+
+VDE_PRODUCTION_BRANCH="${VDE_PRODUCTION_BRANCH:-main}"
+VDE_ANVIL_BRANCH="${VDE_ANVIL_BRANCH:-develop}"
+VDE_STABLE_ALIAS="stable"
+
+# =============================================================================
+# PORT CONFIGURATION
+# =============================================================================
+# VDE uses specific port ranges to avoid conflicts with common services.
+# Language VMs and Service VMs have separate ranges for easy identification.
+
+# Language VM SSH Port Range (2200-2299)
+# These ports are used for SSH access to language development containers
+# (Python, Ruby, Rust, Go, JavaScript, etc.)
+# Range provides capacity for up to 100 language VMs
+VDE_LANG_PORT_START=2200
+VDE_LANG_PORT_END=2299
+
+
+# Service VM SSH Port Range (2400-2499)
+# These ports are used for SSH access to service containers
+# (PostgreSQL, Redis, MongoDB, Nginx, etc.)
+# Range provides capacity for up to 100 service VMs
+VDE_SVC_PORT_START=2400
+VDE_SVC_PORT_END=2499
+
+# Default SSH port inside containers
+# All VDE containers expose SSH on port 22 internally
+VDE_CONTAINER_SSH_PORT=22
+
+# =============================================================================
+# TIMEOUT CONFIGURATION
+# =============================================================================
+# Timeouts for various operations to prevent hanging and enable proper cleanup
+
+# Docker operation timeout (seconds)
+# Maximum time to wait for docker-compose up/down operations
+VDE_DOCKER_TIMEOUT=600
+
+# SSH connection timeout (seconds)
+# Maximum time to wait for SSH connection to container
+VDE_SSH_TIMEOUT=60
+
+# Lock acquisition timeout (seconds)
+# Maximum time to wait when acquiring file locks
+VDE_LOCK_TIMEOUT=60
+
+# Health check timeout (seconds)
+# Maximum time to wait for container health check
+VDE_HEALTH_TIMEOUT=180
+
+# Container startup wait (seconds)
+# Time to wait after container starts before checking health
+VDE_STARTUP_WAIT=15
+
+# =============================================================================
+# RETRY CONFIGURATION
+# =============================================================================
+# Retry settings for transient failures (network issues, resource contention)
+
+# Maximum retry attempts for docker operations
+VDE_MAX_RETRIES=3
+
+# Base delay for exponential backoff (seconds)
+# Actual delay = VDE_RETRY_BASE_DELAY * (2 ^ attempt)
+VDE_RETRY_BASE_DELAY=2
+
+# Maximum delay between retries (seconds)
+# Caps the exponential backoff to prevent excessive waits
+VDE_RETRY_MAX_DELAY=30
+
+# =============================================================================
+# LOCK CONFIGURATION
+# =============================================================================
+# Settings for file-based locking to prevent race conditions
+
+# Stale lock threshold (seconds)
+# Locks older than this are considered stale and can be cleaned up
+VDE_STALE_LOCK_AGE=120
+
+# Lock check interval base (seconds)
+# Base interval for checking lock availability
+VDE_LOCK_CHECK_INTERVAL=0.1
+
+# =============================================================================
+# LOGGING CONFIGURATION
+# =============================================================================
+# Settings for VDE logging system
+
+# Log retention (days)
+# How long to keep log files before rotation/cleanup
+VDE_LOG_RETENTION_DAYS=30
+
+# Maximum log file size (bytes)
+# Logs larger than this will be rotated
+VDE_MAX_LOG_SIZE=10485760  # 10MB
+
+# =============================================================================
+# DOCKER CONFIGURATION
+# =============================================================================
+# Docker-specific settings and defaults
+
+# Default Docker network name for VDE containers
+VDE_DOCKER_NETWORK="${VDE_DOCKER_NETWORK:-vde-net}"
+
+# Test network name for VDE test suite
+VDE_TEST_NETWORK="${VDE_TEST_NETWORK:-vde-testing}"
+
+# Docker compose project name prefix
+VDE_COMPOSE_PROJECT_PREFIX="${VDE_COMPOSE_PROJECT_PREFIX:-vde}"
+
+# Container naming patterns - All VMs now consistently use vde- prefix
+VDE_CONTAINER_PREFIX="${VDE_CONTAINER_PREFIX:-vde-}"
+
+# Maximum parallel VM load (Fleet Reduction Strike v2.0.6)
+VDE_MAX_PARALLEL_VMS=3
+
+# Docker port probe cooldown (milliseconds)
+# Tunable delay after a successful Docker port probe before actual docker run.
+# Addresses Docker networking lag on macOS.
+VDE_PORT_PROBE_COOLDOWN=500
+
+# =============================================================================
+# SSH CONFIGURATION
+# =============================================================================
+# SSH-related constants
+
+# Default SSH user for VDE containers
+VDE_SSH_USER="${VDE_SSH_USER:-devuser}"
+
+# SSH key types in order of preference (most secure first)
+VDE_SSH_KEY_PREFERENCE="${VDE_SSH_KEY_PREFERENCE:-vde_student id_ecdsa id_rsa id_dsa}"
+
+# =============================================================================
+# HOME DIRECTORY CONFIGURATION
+# =============================================================================
+# Cross-platform home directory configuration for portability
+# Supports Linux native, WSL2, and macOS
+
+# User home directory (cross-platform)
+# NOTE: Use this instead of raw ${HOME} for consistency
+VDE_HOME_DIR="${VDE_HOME_DIR:-${HOME}}"
+
+# =============================================================================
+# VDE SSH ISOLATION
+# =============================================================================
+# VDE uses an isolated SSH directory to prevent interference with user's
+# personal SSH configuration. All VDE SSH files are stored under .vde/ssh/
+# within the project root.
+
+# VDE SSH directory (isolated from user's SSH)
+VDE_SSH_DIR="${VDE_SSH_DIR:-${VDE_HOME_DIR}/.ssh/vde}"
+
+# VDE SSH config file (contains only VDE VM entries)
+VDE_SSH_CONFIG="${VDE_SSH_CONFIG:-${VDE_SSH_DIR}/config}"
+
+# VDE SSH known_hosts file (contains only VDE VM host keys)
+VDE_SSH_KNOWN_HOSTS="${VDE_SSH_KNOWN_HOSTS:-${VDE_SSH_DIR}/known_hosts}"
+
+# VDE SSH identity key (auto-generated, VDE-specific)
+VDE_SSH_IDENTITY="${VDE_SSH_IDENTITY:-${VDE_SSH_DIR}/vde_student}"
+
+# VDE SSH public key
+VDE_SSH_IDENTITY_PUB="${VDE_SSH_IDENTITY_PUB:-${VDE_SSH_DIR}/vde_student.pub}"
+
+# VDE SSH Agent environment file
+VDE_SSH_AGENT_ENV="${VDE_SSH_AGENT_ENV:-${VDE_SSH_DIR}/agent_env}"
+
+# =============================================================================
+# VDE DIRECTORY PATHS
+# =============================================================================
+# Core VDE directories - can be overridden by setting VDE_*_DIR environment variables
+
+# Root directory of the VDE project. (Mandate 24: Absolute Scope)
+if [[ -z "${VDE_ROOT_DIR:-}" ]]; then
+    VDE_ROOT_DIR="${(%):-%x}"
+    VDE_ROOT_DIR="${VDE_ROOT_DIR:h:h}"
+fi
+export VDE_ROOT_DIR
+
+# Configuration directory (e.g., configs/docker)
+CONFIGS_DIR="${VDE_CONFIGS_DIR:-${VDE_ROOT_DIR}/configs/docker}"
+# Scripts directory (standard for all VDE commands)
+VDE_SCRIPTS_DIR="${VDE_SCRIPTS_DIR:-${VDE_ROOT_DIR}/bin}"
+# Maintain BIN_DIR as an alias for internal consistency
+BIN_DIR="${VDE_SCRIPTS_DIR}"
+# Templates directory
+TEMPLATES_DIR="${VDE_TEMPLATES_DIR:-${VDE_ROOT_DIR}/templates}"
+# Data directory
+DATA_DIR="${VDE_DATA_DIR:-${VDE_ROOT_DIR}/data}"
+# Backup directory
+BACKUP_DIR="${VDE_BACKUP_DIR:-${VDE_ROOT_DIR}/backup}"
+# Cache directory
+export VDE_CACHE_DIR="${VDE_CACHE_DIR:-${VDE_ROOT_DIR}/.cache}"
+
+# Lock directory
+VDE_LOCKS_DIR="${VDE_LOCKS_DIR:-${VDE_ROOT_DIR}/.locks}"
+VDE_VM_LOCKS_DIR="${VDE_VM_LOCKS_DIR:-${VDE_LOCKS_DIR}/vms}"
+VDE_PORT_LOCKS_DIR="${VDE_PORT_LOCKS_DIR:-${VDE_LOCKS_DIR}/ports}"
+
+# Docker and Container state
+VDE_DOCKER_STATE_DIR="${VDE_DOCKER_STATE_DIR:-${VDE_ROOT_DIR}/.docker-state}"
+export VDE_DOCKER_STATE_DIR
+
+# =============================================================================
+# FILE PATHS DERIVED FROM DIRECTORY CONSTANTS
+# =============================================================================
+
+# VM type configuration files
+VM_TYPES_CONF="${VDE_VM_TYPES_CONF:-${DATA_DIR}/vm-types.conf}"
+VM_TYPES_JSON="${VDE_VM_TYPES_JSON:-${DATA_DIR}/vm-types.json}"
+
+# Cache files
+VM_TYPES_CACHE="${VDE_VM_TYPES_CACHE:-${VDE_CACHE_DIR}/vm-types.cache}"
+VDE_PORT_REGISTRY="${VDE_PORT_REGISTRY:-${VDE_CACHE_DIR}/port-registry}"
+PORT_REGISTRY="${VDE_PORT_REGISTRY}" # Maintain alias for backward compatibility
+
+# =============================================================================
+# VALIDATION PATTERNS
+# =============================================================================
+VDE_VM_NAME_PATTERN='^[a-z0-9-]+$'
+VDE_SSH_PORT_PATTERN='^[0-9]+$'
+
+# =============================================================================
+# STANDARD MESSAGES
+# =============================================================================
+VDE_MSG_VM_NOT_FOUND="VM '%s' not found"
+VDE_MSG_VM_EXISTS="VM '%s' already exists"
+VDE_MSG_INVALID_NAME="Invalid VM name: '%s'"
+VDE_MSG_DOCKER_FAILED="Docker operation failed for VM '%s'"
+VDE_MSG_TIMEOUT="Operation timed out for VM '%s'"
+VDE_MSG_LOCK_FAILED="Failed to acquire lock for VM '%s'"
+VDE_MSG_NO_SSH_KEY="SSH key not found: '%s'"
+
+# Make all constants readonly if not in test mode
+if [[ "${VDE_TEST_MODE:-0}" -ne 1 ]] ; then
+    readonly VDE_SUCCESS \
+             VDE_ERR_GENERAL VDE_ERR_INVALID_INPUT VDE_ERR_NOT_FOUND VDE_ERR_PERMISSION \
+             VDE_ERR_TIMEOUT VDE_ERR_EXISTS VDE_ERR_DEPENDENCY VDE_ERR_DOCKER VDE_ERR_LOCK \
+             VDE_ERR_INVALID_DATA VDE_ERR_CACHE_INVALID \
+             VDE_ERR_LOCK_CONTENTION VDE_ERR_SYNC_DRIFT VDE_ERR_NO_PORT \
+             VDE_HEALTH_OK VDE_HEALTH_MINOR VDE_HEALTH_MAJOR VDE_HEALTH_CRITICAL \
+             VDE_LOCKS_DIR VDE_VM_LOCKS_DIR VDE_PORT_LOCKS_DIR \
+             VDE_CONTAINER_SSH_PORT VDE_DOCKER_TIMEOUT VDE_SSH_TIMEOUT VDE_LOCK_TIMEOUT \
+             VDE_MAX_PARALLEL_VMS VDE_PORT_PROBE_COOLDOWN \
+             VDE_HEALTH_TIMEOUT VDE_STARTUP_WAIT VDE_MAX_RETRIES VDE_RETRY_BASE_DELAY \
+             VDE_RETRY_MAX_DELAY VDE_STALE_LOCK_AGE VDE_LOCK_CHECK_INTERVAL \
+             VDE_LOG_RETENTION_DAYS VDE_MAX_LOG_SIZE VDE_DOCKER_NETWORK VDE_TEST_NETWORK \
+             VDE_COMPOSE_PROJECT_PREFIX VDE_CONTAINER_PREFIX \
+             VDE_DOCKER_STATE_DIR \
+             VDE_PRODUCTION_BRANCH VDE_ANVIL_BRANCH VDE_STABLE_ALIAS \
+             VDE_SSH_USER VDE_SSH_KEY_PREFERENCE VDE_HOME_DIR VDE_SSH_DIR \
+             VDE_SSH_CONFIG VDE_SSH_KNOWN_HOSTS VDE_SSH_IDENTITY VDE_SSH_IDENTITY_PUB \
+             VDE_SSH_AGENT_ENV \
+             VDE_VM_NAME_PATTERN VDE_SSH_PORT_PATTERN \
+             VDE_MSG_VM_NOT_FOUND VDE_MSG_VM_EXISTS VDE_MSG_INVALID_NAME \
+             VDE_MSG_DOCKER_FAILED VDE_MSG_TIMEOUT VDE_MSG_LOCK_FAILED VDE_MSG_NO_SSH_KEY
+fi

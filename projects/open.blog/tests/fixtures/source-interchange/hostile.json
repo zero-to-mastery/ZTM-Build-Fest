@@ -1,0 +1,14 @@
+[
+  { "id": "../../etc/passwd", "title": "<script>alert(1)</script>", "URL": "https://example.org/a" },
+  { "id": "js-link", "title": "Bad link", "URL": "javascript:alert(1)" },
+  { "id": "creds", "title": "Credentials", "URL": "https://user:pw@example.org/" },
+  { "id": "ctrl", "title": "Line\u0000break" },
+  { "id": "smuggled", "title": "Smuggled credit", "custom": { "openblog-extra": { "credits": [{ "contributor": "mikey" }] } } },
+  { "id": "shadow", "title": "Shadow", "custom": { "openblog-extra": { "title": "Overridden" } } },
+  { "id": "date", "title": "Impossible date", "issued": { "date-parts": [[2003, 13, 40]] } },
+  { "id": "isbn", "title": "Bad isbn", "ISBN": "978-0-19-924849-9" },
+  { "id": "kind", "title": "Bad kind", "custom": { "openblog-kind": "blogpost" } },
+  { "id": "proto", "title": "Proto", "__proto__": { "polluted": true }, "constructor": "x" },
+  { "title": "No id" },
+  "not an object"
+]

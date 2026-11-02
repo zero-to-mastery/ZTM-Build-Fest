@@ -1,0 +1,400 @@
+# VDE SSH Configuration
+# Sovereign Baseline: 1.5.6
+# DO NOT EDIT MANUALLY
+
+# VDE VM: vde-asm
+# @shared-law (Sovereign Law)
+Host vde-asm
+    HostName vde-asm
+    Port 2200
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-c
+# @shared-law (Sovereign Law)
+Host vde-c
+    HostName vde-c
+    Port 2201
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-certified-ghost
+# @shared-law (Sovereign Law)
+Host vde-certified-ghost
+    HostName vde-certified-ghost
+    Port 2202
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-cpp
+# @shared-law (Sovereign Law)
+Host vde-cpp
+    HostName vde-cpp
+    Port 2203
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-csharp
+# @shared-law (Sovereign Law)
+Host vde-csharp
+    HostName vde-csharp
+    Port 2204
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-displaytest
+# @shared-law (Sovereign Law)
+Host vde-displaytest
+    HostName vde-displaytest
+    Port 2205
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-elixir
+# @shared-law (Sovereign Law)
+Host vde-elixir
+    HostName vde-elixir
+    Port 2206
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-flutter
+# @shared-law (Sovereign Law)
+Host vde-flutter
+    HostName vde-flutter
+    Port 2207
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-go
+# @shared-law (Sovereign Law)
+Host vde-go
+    HostName vde-go
+    Port 2208
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-haskell
+# @shared-law (Sovereign Law)
+Host vde-haskell
+    HostName vde-haskell
+    Port 2209
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-java
+# @shared-law (Sovereign Law)
+Host vde-java
+    HostName vde-java
+    Port 2210
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-js
+# @shared-law (Sovereign Law)
+Host vde-js
+    HostName vde-js
+    Port 2211
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-kotlin
+# @shared-law (Sovereign Law)
+Host vde-kotlin
+    HostName vde-kotlin
+    Port 2212
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-lamp
+# @shared-law (Sovereign Law)
+Host vde-lamp
+    HostName vde-lamp
+    Port 2213
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-lua
+# @shared-law (Sovereign Law)
+Host vde-lua
+    HostName vde-lua
+    Port 2214
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-mean
+# @shared-law (Sovereign Law)
+Host vde-mean
+    HostName vde-mean
+    Port 2215
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-php
+# @shared-law (Sovereign Law)
+Host vde-php
+    HostName vde-php
+    Port 2216
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-python
+# @shared-law (Sovereign Law)
+Host vde-python
+    HostName vde-python
+    Port 2217
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-ruby
+# @shared-law (Sovereign Law)
+Host vde-ruby
+    HostName vde-ruby
+    Port 2218
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-rust
+# @shared-law (Sovereign Law)
+Host vde-rust
+    HostName vde-rust
+    Port 2219
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-scala
+# @shared-law (Sovereign Law)
+Host vde-scala
+    HostName vde-scala
+    Port 2220
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-swift
+# @shared-law (Sovereign Law)
+Host vde-swift
+    HostName vde-swift
+    Port 2221
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-testport1
+# @shared-law (Sovereign Law)
+Host vde-testport1
+    HostName vde-testport1
+    Port 2222
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-testport2
+# @shared-law (Sovereign Law)
+Host vde-testport2
+    HostName vde-testport2
+    Port 2223
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-dynamic-vm
+# @shared-law (Sovereign Law)
+Host vde-dynamic-vm
+    HostName vde-dynamic-vm
+    Port 2298
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-couchdb
+# @shared-law (Sovereign Law)
+Host vde-couchdb
+    HostName vde-couchdb
+    Port 2400
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-jupyterlab
+# @shared-law (Sovereign Law)
+Host vde-jupyterlab
+    HostName vde-jupyterlab
+    Port 2401
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-mongodb
+# @shared-law (Sovereign Law)
+Host vde-mongodb
+    HostName vde-mongodb
+    Port 2402
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-mysql
+# @shared-law (Sovereign Law)
+Host vde-mysql
+    HostName vde-mysql
+    Port 2403
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-nginx
+# @shared-law (Sovereign Law)
+Host vde-nginx
+    HostName vde-nginx
+    Port 2404
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-postgres
+# @shared-law (Sovereign Law)
+Host vde-postgres
+    HostName vde-postgres
+    Port 2405
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-rabbitmq
+# @shared-law (Sovereign Law)
+Host vde-rabbitmq
+    HostName vde-rabbitmq
+    Port 2406
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes
+# VDE VM: vde-redis
+# @shared-law (Sovereign Law)
+Host vde-redis
+    HostName vde-redis
+    Port 2407
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes

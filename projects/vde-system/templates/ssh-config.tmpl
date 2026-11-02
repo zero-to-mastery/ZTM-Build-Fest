@@ -1,0 +1,12 @@
+# {{COMMENT}}
+# @shared-law (Sovereign Law)
+Host {{SSH_HOST}}
+    HostName {{HOST_NAME}}
+    Port {{SSH_PORT}}
+    User devuser
+    IdentityFile {{IDENTITY_FILE}}
+    UserKnownHostsFile {{KNOWN_HOSTS_FILE}}
+    StrictHostKeyChecking no
+    PasswordAuthentication no
+    ForwardAgent yes
+    RequestTTY yes

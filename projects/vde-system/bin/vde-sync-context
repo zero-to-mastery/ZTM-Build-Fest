@@ -1,0 +1,24 @@
+#!/usr/bin/env zsh
+# @forge (Context Synchronization)
+#===============================================================================
+cat <<'PROMPT'
+Please review and update the VDE context documentation:
+
+1. Read all context files in docs/context/
+2. Compare with the actual codebase (bin/, lib/, data/, docs/)
+3. Identify what's outdated or missing
+4. Propose specific updates
+
+Focus on:
+- New/removed CLI commands in bin/
+- New/removed libraries in lib/
+- Changes to vm-types.conf
+- Architecture changes in ARCHITECTURE.md or VDE-SPEC.md
+
+For each issue found, tell me:
+- Which file to update
+- What specific change to make
+- The exact text to replace/add
+
+Then apply all updates using edit_block.
+PROMPT

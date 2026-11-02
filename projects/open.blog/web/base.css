@@ -1,0 +1,4811 @@
+/*
+ * open.blog base stylesheet.
+ *
+ * This file contains structure and behaviour only. Every colour, font, size,
+ * radius and spacing decision is a --ob-* custom property written by the
+ * active theme (see themes/<name>/theme.json). To restyle the blog, change the
+ * theme's tokens, or add rules to the theme's own stylesheet.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.ob-field-journal,
+.ob-video-production {
+  margin-block: var(--ob-space-6, 2rem);
+  padding: var(--ob-space-5, 1.5rem);
+  border: 1px solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius, 0.5rem);
+}
+
+.ob-field-journal dl,
+.ob-video-production dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 1rem;
+}
+
+.ob-field-journal dt,
+.ob-video-production dt,
+.ob-field-journal figcaption {
+  font-size: 0.85em;
+  color: var(--ob-color-muted, inherit);
+}
+
+.ob-field-journal dd,
+.ob-video-production dd {
+  margin: 0.2rem 0 0;
+  font-weight: 650;
+}
+
+.ob-field-journal svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 5rem;
+}
+
+.ob-field-journal polyline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+  vector-effect: non-scaling-stroke;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  background: var(--ob-color-outer, var(--ob-color-page));
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--ob-color-page);
+  color: var(--ob-color-text);
+  font-family: var(--ob-font-body);
+  /* --ob-text-scale is 1 unless the owner picked a text size (ADR 0248). */
+  font-size: calc(var(--ob-body-size) * var(--ob-text-scale, 1));
+  line-height: var(--ob-body-leading);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+main:focus {
+  outline: none;
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--ob-color-link);
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  color: var(--ob-color-accent);
+}
+
+:focus-visible {
+  outline: var(--ob-focus-ring);
+  outline-offset: 4px;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--ob-font-mono);
+}
+
+.ob-skip {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--ob-color-ink);
+  color: #fff;
+}
+
+.ob-skip:focus {
+  top: 1rem;
+}
+
+/* ---------- Layout ---------- */
+
+.ob-container {
+  width: min(var(--ob-max-width), 100% - 2 * var(--ob-gutter));
+  margin: 0 auto;
+  padding-block: 2rem 4rem;
+}
+
+.ob-container-reading {
+  width: min(var(--ob-reading-width), 100% - 2 * var(--ob-gutter));
+}
+
+.ob-section {
+  margin-block: 3rem;
+}
+
+/* ---------- Header ---------- */
+
+.ob-header {
+  border-bottom: var(--ob-border-width) solid var(--ob-color-border);
+}
+
+.ob-header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.5rem;
+  width: min(var(--ob-max-width), 100% - 2 * var(--ob-gutter));
+  margin: 0 auto;
+  padding-block: 0.5rem;
+}
+
+.ob-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 44px;
+  color: var(--ob-color-text);
+  font-family: var(--ob-font-heading);
+  font-weight: var(--ob-heading-weight);
+  text-decoration: none;
+}
+
+.ob-brand:hover {
+  color: var(--ob-color-accent);
+}
+
+.ob-brand-logo {
+  width: 54px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: var(--ob-radius-sm);
+}
+
+.ob-nav {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.ob-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-nav-link {
+  display: block;
+  min-height: 44px;
+  padding: 0.7rem 0.25rem;
+  color: var(--ob-color-text);
+  text-decoration: none;
+}
+
+.ob-nav-link:hover,
+.ob-nav-link[aria-current="page"] {
+  color: var(--ob-color-accent-soft);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ob-nav-link {
+    transition: transform var(--ob-motion) ease-out;
+  }
+
+  .ob-nav-link:is(:hover, :focus-visible) {
+    transform: translateX(6px);
+  }
+}
+
+.ob-icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: var(--ob-border-width) solid var(--ob-color-accent-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ob-color-accent-soft);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ob-icon-button:hover {
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-contrast);
+}
+
+/* ---------- Headings ---------- */
+
+.ob-title,
+.ob-prose h1,
+.ob-prose h2,
+.ob-prose h3,
+.ob-prose h4,
+.ob-prose h5,
+.ob-prose h6 {
+  font-family: var(--ob-font-heading);
+  font-weight: var(--ob-heading-weight);
+  line-height: var(--ob-heading-leading);
+  letter-spacing: var(--ob-heading-tracking);
+  text-transform: var(--ob-heading-transform);
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+h1.ob-title {
+  margin: 0.5rem 0 1rem;
+  font-size: calc(var(--ob-title-size) * var(--ob-text-scale, 1));
+}
+
+h2.ob-title {
+  margin: 0.5rem 0 1rem;
+  font-size: calc(var(--ob-section-title-size) * var(--ob-text-scale, 1));
+}
+
+.ob-heading {
+  margin-bottom: 1.5rem;
+}
+
+.ob-code-label {
+  display: block;
+  color: var(--ob-color-muted);
+  font-family: var(--ob-font-body);
+  font-size: 0.875rem;
+}
+
+.ob-eyebrow {
+  margin: 0;
+  color: var(--ob-color-muted);
+  font-size: 0.875rem;
+}
+
+.ob-post-subtitle {
+  max-width: 62ch;
+  margin: 0.25rem 0 0.75rem;
+  color: var(--ob-color-muted);
+  font-family: var(--ob-font-heading);
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.ob-lede {
+  max-width: 62ch;
+  color: var(--ob-color-muted);
+}
+
+.ob-meta {
+  color: var(--ob-color-muted);
+  font-size: 0.875rem;
+}
+
+.ob-empty {
+  color: var(--ob-color-muted);
+}
+
+/* ---------- Lists ---------- */
+
+.ob-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Rows: a compact list with a hover fill, as on the mnix.dev blog section. */
+.ob-list-rows {
+  border-bottom: var(--ob-row-border-width) solid var(--ob-color-accent-soft);
+}
+
+.ob-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem clamp(0.75rem, 4vw, 3rem);
+  border-top: var(--ob-row-border-width) solid var(--ob-color-accent-soft);
+  color: var(--ob-color-text);
+  text-decoration: none;
+}
+
+.ob-row:hover,
+.ob-row:focus-visible {
+  background: var(--ob-color-accent);
+  color: var(--ob-hover-text);
+}
+
+.ob-row:hover .ob-meta,
+.ob-row:focus-visible .ob-meta,
+.ob-row:hover .ob-row-title,
+.ob-row:focus-visible .ob-row-title {
+  color: var(--ob-hover-ink, var(--ob-color-ink));
+}
+
+.ob-row-title {
+  margin: 0;
+  font-family: var(--ob-font-heading);
+  font-size: calc(var(--ob-row-title-size) * var(--ob-text-scale, 1));
+  font-weight: var(--ob-heading-weight);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.ob-row-body {
+  display: block;
+  min-width: 0;
+}
+
+.ob-row-body .ob-meta {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.ob-row-arrow {
+  flex: none;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ob-row-arrow {
+    transition: transform var(--ob-motion) ease-out;
+  }
+
+  .ob-row:is(:hover, :focus-visible) .ob-row-arrow {
+    transform: translateX(8px);
+  }
+}
+
+/* Cards: a responsive grid with optional cover images. */
+.ob-list-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: 1.25rem;
+}
+
+.ob-card {
+  min-width: 0;
+  overflow: hidden;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.ob-card-link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.ob-card:hover {
+  border-color: var(--ob-color-accent-border);
+  box-shadow: var(--ob-shadow);
+}
+
+.ob-card-cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: var(--ob-color-surface-raised);
+}
+
+.ob-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 1.1rem 1.25rem;
+}
+
+.ob-card-title {
+  margin: 0;
+  font-family: var(--ob-font-heading);
+  font-size: 1.2rem;
+  font-weight: var(--ob-heading-weight);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.ob-card:hover .ob-card-title {
+  color: var(--ob-color-accent-soft);
+}
+
+.ob-card-summary {
+  color: var(--ob-color-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- Tags ---------- */
+
+.ob-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-tags a {
+  display: inline-block;
+  padding: 0.15rem 0.7rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: 999px;
+  color: var(--ob-color-muted);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.ob-tags a:hover {
+  border-color: var(--ob-color-accent-border);
+  color: var(--ob-color-accent-soft);
+}
+
+.ob-count {
+  color: var(--ob-color-subtle);
+}
+
+/* ---------- Post ---------- */
+
+.ob-post-header {
+  margin-bottom: 2rem;
+}
+
+.ob-post-header .ob-meta {
+  margin: 0;
+}
+
+.ob-cover {
+  margin: 0 0 2rem;
+}
+
+.ob-cover img {
+  display: block;
+  width: 100%;
+  border-radius: var(--ob-radius);
+}
+
+.ob-toc {
+  margin: 0 0 2rem;
+  padding: 0.75rem 1.1rem;
+  border-left: 2px solid var(--ob-color-accent-border);
+  background: var(--ob-color-surface-raised);
+  border-radius: 0 var(--ob-radius-sm) var(--ob-radius-sm) 0;
+}
+
+.ob-toc summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ob-toc ol {
+  margin: 0.75rem 0 0.25rem;
+  padding-left: 1.25rem;
+}
+
+.ob-toc .ob-toc-l3 {
+  margin-left: 1rem;
+  list-style-type: circle;
+}
+
+.ob-work-meta {
+  margin: 0 0 1.5rem;
+  padding: 0.85rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.ob-work-meta dl {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  margin: 0;
+}
+
+.ob-work-meta dt {
+  color: var(--ob-color-subtle);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ob-work-meta dd {
+  margin: 0.1rem 0 0;
+  overflow-wrap: anywhere;
+}
+
+.ob-contributions {
+  margin: 0 0 1.5rem;
+  padding: 0.85rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.ob-contributions-title {
+  margin: 0 0 0.65rem;
+  font-family: var(--ob-font-heading);
+  font-size: 1rem;
+}
+
+.ob-contributions ul {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-contributor-name {
+  font-weight: 600;
+}
+
+.ob-contributor-roles {
+  color: var(--ob-color-muted);
+}
+
+.ob-contributor-roles::before {
+  content: " — ";
+}
+
+.ob-orcid {
+  margin: 0.2rem 0 0;
+  color: var(--ob-color-muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+.ob-orcid a {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.ob-orcid-icon {
+  display: inline-block;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+}
+
+.ob-orcid-icon img {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: 48px;
+  transform: translate(-12px, -12px);
+}
+
+.ob-source {
+  color: var(--ob-color-muted);
+  font-size: 0.9rem;
+}
+
+/* ---------- Prose (rendered Markdown) ---------- */
+
+.ob-prose {
+  overflow-wrap: break-word;
+}
+
+.ob-prose > :first-child {
+  margin-top: 0;
+}
+
+.ob-prose h2 {
+  margin: 2.5em 0 0.6em;
+  font-size: 1.6em;
+}
+
+.ob-prose h3 {
+  margin: 2em 0 0.5em;
+  font-size: 1.25em;
+}
+
+.ob-prose h4,
+.ob-prose h5,
+.ob-prose h6 {
+  margin: 1.6em 0 0.4em;
+  font-size: 1.05em;
+}
+
+.ob-prose p,
+.ob-prose ul,
+.ob-prose ol,
+.ob-prose blockquote,
+.ob-prose pre,
+.ob-prose table,
+.ob-prose figure {
+  margin: 1.1em 0;
+}
+
+.ob-prose li + li {
+  margin-top: 0.35em;
+}
+
+.ob-prose hr {
+  margin: 2.5em 0;
+  border: 0;
+  border-top: var(--ob-border-width) solid var(--ob-color-border);
+}
+
+.ob-prose blockquote {
+  padding: 0.1em 1.1em;
+  border-left: 3px solid var(--ob-color-accent-border);
+  color: var(--ob-color-muted);
+}
+
+.ob-prose code {
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+  background: var(--ob-color-code-bg);
+  color: var(--ob-color-code-text);
+  font-size: 0.9em;
+}
+
+.ob-prose pre {
+  position: relative;
+  overflow-x: auto;
+  padding: 1rem 1.2rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-code-bg);
+  color: var(--ob-color-code-text);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  tab-size: 4;
+}
+
+.ob-prose pre code {
+  padding: 0;
+  background: none;
+  font-size: inherit;
+}
+
+.ob-prose img {
+  display: block;
+  margin: 1.5em auto;
+  border-radius: var(--ob-radius-sm);
+}
+
+.ob-prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.ob-prose th,
+.ob-prose td {
+  padding: 0.5rem 0.8rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  text-align: left;
+}
+
+.ob-prose th {
+  background: var(--ob-color-surface-raised);
+}
+
+.ob-prose input[type="checkbox"] {
+  margin-right: 0.5em;
+}
+
+.ob-heading-anchor {
+  margin-left: 0.4em;
+  color: var(--ob-color-subtle);
+  font-weight: 400;
+  text-decoration: none;
+  opacity: 0;
+}
+
+.ob-prose :is(h2, h3, h4, h5, h6):hover .ob-heading-anchor,
+.ob-heading-anchor:focus {
+  opacity: 1;
+}
+
+.ob-prose :is(h2, h3, h4, h5, h6) {
+  scroll-margin-top: 1.5rem;
+}
+
+.footnote-definition {
+  display: flex;
+  gap: 0.5em;
+  margin: 0.5em 0;
+  font-size: 0.9em;
+  color: var(--ob-color-muted);
+}
+
+.footnote-definition p {
+  margin: 0;
+}
+
+/* Generated citation notes: each links back to every place it is cited. */
+.ob-citation-back {
+  margin-inline-start: 0.25em;
+  text-decoration: none;
+}
+
+.ob-citation-back:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Following a marker lands on its note, and a way back lands on the marker:
+   clear of the top edge, and marked so the eye finds where it arrived.
+   Long addresses wrap at high zoom instead of widening the page. */
+.ob-citation-note,
+.ob-citation a {
+  scroll-margin-block: 1.5rem;
+}
+
+.ob-citation-note {
+  overflow-wrap: anywhere;
+}
+
+.ob-citation-note:target,
+.ob-citation a:target {
+  outline: 2px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+.ob-citation-note:focus:not(:focus-visible, :target) {
+  outline: none;
+}
+
+/* A concept link (ADR 0172): a word the author tied to an atlas entry. The
+   dotted underline marks it as a link to an entry rather than to another
+   page, and does not rely on colour; the visually hidden words after the
+   label say the same to a screen reader. */
+a.ob-concept {
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.2em;
+}
+
+a.ob-concept:hover,
+a.ob-concept:focus-visible {
+  text-decoration-style: solid;
+}
+
+/* <ob-citation-previews>: one preview at a time, placed straight after the
+   marker it describes (so Tab reaches its links next) and moved below or
+   above the marker, inside the viewport, by the offsets the component sets. */
+ob-citation-previews {
+  display: none;
+}
+
+.ob-citation-preview {
+  position: absolute;
+  z-index: 20;
+  display: block;
+  box-sizing: border-box;
+  /* The component sets the viewport's width without its scrollbar, less the
+     gutters; `100vw` would count a classic scrollbar. */
+  inline-size: 28rem;
+  max-inline-size: var(--ob-citation-preview-max-inline-size, calc(100vw - 1rem));
+  max-block-size: min(20rem, 70vh);
+  overflow: auto;
+  padding: 0.75rem 1rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  box-shadow: var(--ob-shadow);
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.5;
+  text-align: start;
+  text-indent: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  translate: var(--ob-citation-preview-x, 0) var(--ob-citation-preview-y, 1.5em);
+}
+
+.ob-citation-preview[hidden],
+.ob-citation-preview [hidden] {
+  display: none;
+}
+
+.ob-citation-preview-details,
+.ob-citation-preview-reference,
+.ob-citation-preview-locators {
+  display: block;
+}
+
+.ob-citation-preview-locators {
+  margin-block-start: 0.25rem;
+  color: var(--ob-color-muted);
+}
+
+.ob-citation-preview-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-block-start: 0.5rem;
+}
+
+.ob-citation-preview a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ob-citation-preview:not([hidden]) {
+    animation: ob-citation-preview-in var(--ob-motion, 150ms) ease-out;
+  }
+}
+
+@keyframes ob-citation-preview-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* <ob-concept-previews> (ADR 0174): one preview at a time, placed straight
+   after the concept link it describes (so Tab reaches its link next) and moved
+   below or above the link, inside the viewport, by the offsets the component
+   sets. It is the citation preview's box with the entry's own lines. */
+ob-concept-previews {
+  display: none;
+}
+
+.ob-concept-preview {
+  position: absolute;
+  z-index: 20;
+  display: block;
+  box-sizing: border-box;
+  inline-size: 28rem;
+  max-inline-size: var(--ob-concept-preview-max-inline-size, calc(100vw - 1rem));
+  max-block-size: min(24rem, 70vh);
+  overflow: auto;
+  padding: 0.75rem 1rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  box-shadow: var(--ob-shadow);
+  font-size: 0.9rem;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.5;
+  text-align: start;
+  text-indent: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  translate: var(--ob-concept-preview-x, 0) var(--ob-concept-preview-y, 1.5em);
+}
+
+.ob-concept-preview[hidden],
+.ob-concept-preview [hidden] {
+  display: none;
+}
+
+.ob-concept-preview-details,
+.ob-concept-preview-kind,
+.ob-concept-preview-provenance,
+.ob-concept-preview-summary,
+.ob-concept-preview-clipped,
+.ob-concept-preview-source,
+.ob-concept-preview-relationships,
+.ob-concept-preview-relationship,
+.ob-concept-preview-heading,
+.ob-concept-preview-statement,
+.ob-concept-preview-how,
+.ob-concept-preview-uncertainty,
+.ob-concept-preview-evidence,
+.ob-concept-preview-more {
+  display: block;
+}
+
+.ob-concept-preview-kind {
+  font-weight: 600;
+}
+
+.ob-concept-preview-provenance,
+.ob-concept-preview-clipped,
+.ob-concept-preview-source,
+.ob-concept-preview-how,
+.ob-concept-preview-evidence,
+.ob-concept-preview-more {
+  color: var(--ob-color-muted);
+}
+
+.ob-concept-preview-summary,
+.ob-concept-preview-source,
+.ob-concept-preview-relationships {
+  margin-block-start: 0.5rem;
+}
+
+.ob-concept-preview-heading {
+  font-weight: 600;
+}
+
+.ob-concept-preview-relationship {
+  margin-block-start: 0.25rem;
+}
+
+.ob-concept-preview-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin-block-start: 0.5rem;
+}
+
+.ob-concept-preview a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ob-concept-preview:not([hidden]) {
+    animation: ob-concept-preview-in var(--ob-motion, 150ms) ease-out;
+  }
+}
+
+@keyframes ob-concept-preview-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Syntax highlighting (tokens painted by <ob-code highlight>) ---------- */
+
+.tok-keyword { color: var(--ob-color-code-keyword); }
+.tok-string { color: var(--ob-color-code-string); }
+.tok-comment { color: var(--ob-color-code-comment); font-style: italic; }
+.tok-number { color: var(--ob-color-code-number); }
+.tok-function { color: var(--ob-color-code-function); }
+.tok-type { color: var(--ob-color-code-type); }
+.tok-attr { color: var(--ob-color-code-attr); }
+.tok-tag { color: var(--ob-color-code-tag); }
+.tok-meta { color: var(--ob-color-code-meta); }
+.tok-variable { color: var(--ob-color-code-variable); }
+.tok-prompt { color: var(--ob-color-code-comment); user-select: none; }
+/* Finer tokens; a theme that predates them falls back to an older colour. */
+.tok-property { color: var(--ob-color-code-property, var(--ob-color-code-attr)); }
+.tok-operator { color: var(--ob-color-code-operator, var(--ob-color-code-variable)); }
+.tok-punctuation { color: var(--ob-color-code-punctuation, inherit); }
+.tok-constant { color: var(--ob-color-code-constant, var(--ob-color-code-number)); }
+.tok-regex { color: var(--ob-color-code-regex, var(--ob-color-code-string)); }
+
+/* Line numbers (added by <ob-code line-numbers>). They are a CSS counter, not
+   text, so copying the code never includes them. */
+.ob-prose code.ob-numbered {
+  counter-reset: ob-line;
+}
+
+.ob-numbered .ob-line::before {
+  display: inline-block;
+  min-width: calc(var(--ob-line-digits, 2) * 1ch);
+  margin-right: 1.6ch;
+  color: var(--ob-color-code-line-number, var(--ob-color-subtle));
+  text-align: right;
+  content: counter(ob-line);
+  counter-increment: ob-line;
+  opacity: 0.75;
+  user-select: none;
+}
+
+/* Lines a fence marks with {2,4-6}: a full-width band with an accent edge.
+   The band is neutral so token colours keep their contrast. */
+.ob-prose pre > code.ob-has-hl {
+  display: inline-block;
+  min-width: 100%;
+}
+
+.ob-line-hl {
+  display: inline-block;
+  min-width: calc(100% + 2.4rem);
+  margin-inline: -1.2rem;
+  padding-inline: calc(1.2rem - 3px) 1.2rem;
+  border-left: 3px solid var(--ob-color-accent);
+  background: color-mix(in srgb, var(--ob-color-text) 4%, transparent);
+}
+
+/* ```js title="app.js" puts a caption bar on top of the block. */
+.ob-prose .ob-code-block {
+  margin: 1.1em 0;
+}
+
+.ob-code-block pre {
+  margin: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ob-code-title {
+  padding: 0.45rem 1.2rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-bottom: 0;
+  border-radius: var(--ob-radius-sm) var(--ob-radius-sm) 0 0;
+  background: var(--ob-color-surface-raised);
+  color: var(--ob-color-muted);
+  font-family: var(--ob-font-mono);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Editable code: runnable fences and web sandboxes ---------- */
+
+ob-rust-playground {
+  display: block;
+  margin: 1.1em 0;
+}
+
+ob-code-runner {
+  display: block;
+  margin: 1.1em 0;
+}
+
+.ob-code-block ob-code-runner { margin: 0; }
+
+ob-code-runner[data-enhanced="true"] > pre.ob-code-runner-source { display: none; }
+
+.ob-code-runner-stdin,
+.ob-code-runner-output {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-code-bg);
+  color: var(--ob-color-code-text);
+  font-family: var(--ob-font-mono);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  tab-size: 4;
+}
+
+.ob-code-runner-stdin { min-height: 4.5rem; margin-top: 0.65rem; resize: vertical; }
+.ob-code-runner-output { margin-top: 0.65rem; overflow: auto; max-height: 28rem; white-space: pre-wrap; }
+
+.ob-code-block ob-rust-playground {
+  margin: 0;
+}
+
+/* The original highlighted block remains visible if JavaScript is disabled or
+   the enhancement fails to load. */
+ob-rust-playground[data-enhanced="true"] > pre.ob-rust-source {
+  display: none;
+}
+
+.ob-code-editor-shell {
+  overflow: hidden;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-code-bg);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--ob-color-code-text) 5%, transparent);
+}
+
+.ob-code-block .ob-code-editor-shell {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.ob-code-editor-shell:focus-within {
+  border-color: var(--ob-color-accent);
+  outline: 2px solid color-mix(in srgb, var(--ob-color-accent) 35%, transparent);
+  outline-offset: 2px;
+}
+
+.ob-code-editor-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.75rem;
+  border-bottom: var(--ob-border-width) solid var(--ob-color-border);
+  background: color-mix(in srgb, var(--ob-color-code-bg) 82%, var(--ob-color-surface-raised));
+  color: var(--ob-color-muted);
+  font-family: var(--ob-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.ob-code-editor-live {
+  display: inline-flex;
+  gap: 0.25rem;
+  align-items: center;
+  color: var(--ob-color-accent);
+  font-weight: 700;
+}
+
+.ob-code-cursor {
+  display: inline-block;
+  font-size: 1rem;
+  line-height: 0.7;
+  animation: ob-code-cursor-blink 1s steps(1, end) infinite;
+}
+
+@keyframes ob-code-cursor-blink {
+  50% { opacity: 0; }
+}
+
+.ob-code-editor-stack {
+  position: relative;
+  min-height: 10rem;
+}
+
+.ob-prose .ob-code-editor-decoration,
+.ob-code-editor {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 10rem;
+  margin: 0;
+  padding: 1rem 1.2rem;
+  border: 0;
+  border-radius: 0;
+  color: var(--ob-color-code-text);
+  font-family: var(--ob-font-mono);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  tab-size: 4;
+  white-space: pre;
+}
+
+.ob-prose .ob-code-editor-decoration {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  scrollbar-width: none;
+}
+
+.ob-code-editor {
+  position: relative;
+  display: block;
+  resize: vertical;
+  overflow: auto;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: transparent;
+  caret-color: var(--ob-color-code-text);
+  -webkit-text-fill-color: transparent;
+  cursor: text;
+}
+
+.ob-code-editor-shell[data-line-numbers="true"] .ob-code-editor {
+  padding-left: calc(1.2rem + var(--ob-code-line-digits, 2) * 1ch + 1.6ch);
+}
+
+.ob-code-editor::selection {
+  background: color-mix(in srgb, var(--ob-color-accent) 35%, transparent);
+}
+
+.ob-code-editor-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.65rem;
+}
+
+.ob-code-editor-controls button,
+.ob-web-sandbox-tab,
+.ob-rust-external {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.75rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.82rem;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ob-code-editor-controls .ob-code-editor-run {
+  border-color: var(--ob-color-accent);
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-text, #fff);
+}
+
+.ob-code-editor-controls button[aria-disabled="true"] {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.ob-code-editor-note,
+.ob-code-editor-status {
+  margin: 0.55rem 0 0;
+  color: var(--ob-color-muted);
+  font-size: 0.8rem;
+}
+
+.ob-code-editor-status {
+  margin-top: 0.25rem;
+  font-family: var(--ob-font-mono);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+
+.ob-code-editor-controls + .ob-code-editor-note {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: var(--ob-border-width) solid var(--ob-color-border);
+}
+
+.ob-rust-output-panel {
+  margin-top: 0.65rem;
+  overflow: hidden;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-code-bg);
+}
+
+.ob-rust-output-label {
+  padding: 0.35rem 0.75rem;
+  border-bottom: var(--ob-border-width) solid var(--ob-color-border);
+  color: var(--ob-color-muted);
+  font-family: var(--ob-font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* "Check my code": the author's own feedback for a `rust runnable check` fence. */
+.ob-rust-check-panel {
+  margin-top: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-left-width: 4px;
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-code-bg);
+}
+.ob-rust-check-panel[data-state="passed"] { border-left-color: var(--ob-color-accent); }
+.ob-rust-check-summary { margin: 0; font-weight: 700; }
+.ob-rust-check-list { margin: 0.5rem 0 0; padding-left: 1.25rem; }
+.ob-rust-check-item { margin: 0.25rem 0; }
+.ob-rust-check-panel[hidden] { display: none; }
+
+.ob-prose .ob-rust-output {
+  max-height: 22rem;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ob-code-cursor { animation: none; }
+}
+
+ob-web-sandbox { display: block; margin: 1.5em 0; }
+.ob-code-block ob-web-sandbox { margin: 0; }
+/* The HTML, CSS, and JavaScript editors use the shared editable-code styles above;
+   only the source tabs and the preview frame are sandbox-specific. */
+.ob-web-sandbox-tabs { display: flex; flex-wrap: wrap; gap: 0.25rem; margin-bottom: 0.65rem; border-bottom: var(--ob-border-width) solid var(--ob-color-border); }
+.ob-web-sandbox-tab { min-height: 2rem; margin-bottom: calc(var(--ob-border-width) * -1); padding: 0.3rem 0.8rem; border-color: transparent; border-bottom: 2px solid transparent; border-radius: var(--ob-radius-sm) var(--ob-radius-sm) 0 0; background: transparent; color: var(--ob-color-muted); }
+.ob-web-sandbox-tab:hover { color: var(--ob-color-text); }
+.ob-web-sandbox-tab[aria-pressed="true"] { border-bottom-color: var(--ob-color-accent); color: var(--ob-color-accent); font-weight: 600; }
+.ob-web-sandbox-preview { display: block; box-sizing: border-box; width: 100%; min-height: 18rem; margin-top: 0.65rem; border: var(--ob-border-width) solid var(--ob-color-border); border-radius: var(--ob-radius-sm); background: #fff; }
+/* Console output forwarded from the preview, shown only once something is logged. */
+.ob-web-sandbox-console { margin-top: 0.5rem; border: var(--ob-border-width) solid var(--ob-color-border); border-radius: var(--ob-radius-sm); background: var(--ob-color-code-bg); color: var(--ob-color-code-text); }
+.ob-web-sandbox-console-title { margin: 0; padding: 0.35rem 0.75rem; border-bottom: var(--ob-border-width) solid var(--ob-color-border); font: 700 0.7rem / 1.6 var(--ob-font-mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.ob-web-sandbox-console-log { max-height: 16rem; margin: 0; padding: 0.4rem 0; overflow: auto; list-style: none; font: 0.8rem / 1.6 var(--ob-font-mono); }
+.ob-web-sandbox-console-entry { padding: 0.1rem 0.75rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ob-web-sandbox-console-warn { color: var(--ob-color-callout-warning, #b08800); }
+.ob-web-sandbox-console-error { color: var(--ob-color-callout-caution, #cf222e); }
+
+
+/* ---------- Callouts: > [!NOTE], [!TIP], [!IMPORTANT], [!WARNING], [!CAUTION] ---------- */
+
+.ob-callout {
+  --ob-callout: var(--ob-color-callout-note, #2f81f7);
+  margin: 1.4em 0;
+  padding: 0.75rem 1.1rem;
+  border-left: 4px solid var(--ob-callout);
+  border-radius: var(--ob-radius-sm);
+  background: color-mix(in srgb, var(--ob-callout) 9%, transparent);
+}
+
+.ob-callout > :last-child {
+  margin-bottom: 0;
+}
+
+.ob-callout .ob-callout-title {
+  margin: 0 0 0.35em;
+  color: var(--ob-callout);
+  font-weight: 700;
+}
+
+.ob-callout-tip { --ob-callout: var(--ob-color-callout-tip, #2da44e); }
+.ob-callout-important { --ob-callout: var(--ob-color-callout-important, #8250df); }
+.ob-callout-warning { --ob-callout: var(--ob-color-callout-warning, #bf8700); }
+.ob-callout-caution { --ob-callout: var(--ob-color-callout-caution, #cf222e); }
+
+/* ---------- Knowledge checks: ```quiz ---------- */
+
+.ob-knowledge-check {
+  display: block;
+  margin: 1.5rem 0;
+}
+
+.ob-knowledge-check > ob-quiz {
+  display: block;
+}
+
+.ob-knowledge-check > ob-quiz + ob-quiz {
+  margin-top: 0.85rem;
+}
+
+ob-quiz fieldset {
+  margin: 0;
+  padding: 1rem 1.1rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface-raised);
+}
+
+ob-quiz legend {
+  padding: 0 0.35rem;
+  font-weight: 700;
+}
+
+.ob-quiz-choices {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.ob-quiz-choice {
+  display: flex;
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.65rem 0.75rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  cursor: pointer;
+}
+
+.ob-quiz-choice:has(input:focus-visible) {
+  outline: 2px solid var(--ob-color-accent);
+  outline-offset: 2px;
+}
+
+.ob-quiz-choice.ob-quiz-selected {
+  border-color: var(--ob-color-accent-border);
+}
+
+.ob-quiz-choice.ob-quiz-correct {
+  border-color: var(--ob-color-callout-tip, #2da44e);
+  background: color-mix(in srgb, var(--ob-color-callout-tip, #2da44e) 9%, transparent);
+}
+
+.ob-quiz-feedback {
+  margin: 0.85rem 0 0;
+}
+
+.ob-quiz-result {
+  margin-right: 0.35em;
+}
+
+.ob-quiz-retry {
+  margin-top: 0.75rem;
+  padding: 0.45rem 0.8rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ob-quiz-error {
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--ob-color-callout-caution, #cf222e);
+  color: var(--ob-color-callout-caution, #cf222e);
+}
+
+/* ---------- Before and after: ```compare (<ob-compare> adds the reveal control) ---------- */
+
+/* Tokens a theme may set. Each falls back to a token every theme already has. */
+ob-compare {
+  --ob-compare-radius: var(--ob-radius);
+  --ob-compare-gap: var(--ob-space-4, 1rem);
+  --ob-compare-line: #fff;
+  --ob-compare-line-width: 2px;
+  --ob-compare-handle: var(--ob-color-accent);
+  --ob-compare-handle-ink: var(--ob-color-accent-contrast);
+  --ob-compare-handle-size: 2.75rem;
+  --ob-compare-focus: var(--ob-color-accent);
+  --ob-compare-tag-bg: rgb(0 0 0 / 0.7);
+  --ob-compare-tag-ink: #fff;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ob-compare-gap);
+  margin: 1.5rem 0;
+}
+
+@media (max-width: 36rem) {
+  ob-compare {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.ob-compare-pane {
+  margin: 0;
+  min-width: 0;
+}
+
+.ob-compare-pane img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+  border-radius: var(--ob-compare-radius);
+}
+
+.ob-compare-pane figcaption {
+  margin-top: 0.4rem;
+  color: var(--ob-color-muted);
+  font-size: 0.9em;
+}
+
+.ob-compare-label {
+  color: var(--ob-color-text);
+  font-weight: 700;
+}
+
+ob-compare[data-enhanced] {
+  display: block;
+}
+
+ob-compare[data-enhanced] .ob-compare-pane {
+  margin-top: 0.4rem;
+}
+
+ob-compare[data-enhanced] .ob-compare-pane figcaption {
+  margin-top: 0;
+}
+
+.ob-compare-stage {
+  position: relative;
+  aspect-ratio: var(--ob-compare-ratio, 4 / 3);
+  overflow: hidden;
+  border-radius: var(--ob-compare-radius);
+  background: var(--ob-color-surface-raised);
+  /* Horizontal drags move the reveal; vertical ones still scroll the page. */
+  touch-action: pan-y;
+  user-select: none;
+  cursor: ew-resize;
+}
+
+.ob-compare-stage img,
+.ob-compare-over {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ob-compare-stage img {
+  display: block;
+  margin: 0;
+  object-fit: cover;
+  border-radius: 0;
+  pointer-events: none;
+}
+
+.ob-compare-over {
+  clip-path: inset(0 0 0 var(--ob-compare-pos, 50%));
+}
+
+.ob-compare-range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ob-compare-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--ob-compare-pos, 50%);
+  width: var(--ob-compare-line-width);
+  transform: translateX(-50%);
+  background: var(--ob-compare-line);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.35);
+  pointer-events: none;
+}
+
+.ob-compare-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: var(--ob-compare-handle-size);
+  height: var(--ob-compare-handle-size);
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--ob-compare-line);
+  border-radius: 50%;
+  background: var(--ob-compare-handle);
+  color: var(--ob-compare-handle-ink);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.45);
+}
+
+.ob-compare-knob::before {
+  content: "\2194";
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.ob-compare-range:focus-visible ~ .ob-compare-bar .ob-compare-knob {
+  outline: 3px solid var(--ob-compare-focus);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px #fff, 0 1px 4px rgb(0 0 0 / 0.45);
+}
+
+.ob-compare-tag {
+  position: absolute;
+  top: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-compare-tag-bg);
+  color: var(--ob-compare-tag-ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.ob-compare-tag-before {
+  left: 0.5rem;
+}
+
+.ob-compare-tag-after {
+  right: 0.5rem;
+}
+
+.ob-compare-error {
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--ob-color-callout-caution, #cf222e);
+  color: var(--ob-color-callout-caution, #cf222e);
+}
+
+/* ---------- Recipes (posts with `recipe: true`; controls added by <ob-recipe>) ---------- */
+
+.ob-recipe-card {
+  margin: 1.5rem 0;
+  padding: 1rem 1.2rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.ob-recipe-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  margin: 0;
+}
+
+.ob-recipe-facts dt {
+  color: var(--ob-color-subtle);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ob-recipe-facts dd {
+  margin: 0.1rem 0 0;
+  font-weight: 600;
+}
+
+.ob-recipe-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.6rem;
+  margin-top: 0.9rem;
+}
+
+.ob-recipe-actions:empty {
+  display: none;
+}
+
+.ob-recipe-button,
+.ob-recipe-jump {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  padding: 0.25rem 0.8rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.875rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ob-recipe-button:hover,
+.ob-recipe-jump:hover {
+  border-color: var(--ob-color-accent-border);
+}
+
+.ob-recipe-button[aria-pressed="true"] {
+  border-color: var(--ob-color-accent);
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-contrast);
+}
+
+.ob-recipe-button:disabled,
+.ob-recipe-button[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.ob-recipe-actions [hidden] {
+  display: none !important;
+}
+
+.ob-recipe-jump {
+  border-color: var(--ob-color-accent-border);
+  color: var(--ob-color-link);
+}
+
+.ob-recipe-scale {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+}
+
+.ob-recipe-scale .ob-recipe-button {
+  justify-content: center;
+  min-width: 2.25rem;
+  padding: 0;
+  font-size: 1.1rem;
+}
+
+.ob-recipe-count {
+  min-width: 1.5ch;
+  font-weight: 700;
+  text-align: center;
+}
+
+.ob-qty-scaled {
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--ob-color-accent) 18%, transparent);
+}
+
+.ob-done .ob-qty-scaled {
+  background: none;
+}
+
+.ob-recipe-list > li + li {
+  margin-top: 0.45em;
+}
+
+.ob-steps > li + li {
+  margin-top: 0.8em;
+}
+
+.ob-has-checks .ob-ingredients {
+  padding-left: 0.2rem;
+  list-style: none;
+}
+
+.ob-has-checks .ob-recipe-list > li {
+  cursor: pointer;
+}
+
+.ob-check {
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0 0.6em 0 0;
+  vertical-align: -0.15em;
+  accent-color: var(--ob-color-accent);
+  cursor: pointer;
+}
+
+.ob-recipe-list > li.ob-done {
+  color: var(--ob-color-subtle);
+  text-decoration: line-through;
+  text-decoration-color: color-mix(in srgb, currentColor 60%, transparent);
+}
+
+.ob-timer {
+  padding: 0 0.45em;
+  border: 1px dashed var(--ob-color-accent-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ob-color-link);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.ob-timer::before {
+  content: "⏱ ";
+}
+
+.ob-timer[data-state="running"] {
+  border-style: solid;
+  background: color-mix(in srgb, var(--ob-color-accent) 16%, transparent);
+}
+
+.ob-timer[data-state="done"] {
+  border-style: solid;
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-contrast);
+}
+
+/* While running, the countdown replaces the label; once done, both show. */
+.ob-timer-clock:empty,
+.ob-timer[data-state="running"] .ob-timer-label {
+  display: none;
+}
+
+.ob-timer[data-state="done"] .ob-timer-clock::before {
+  content: " · ";
+}
+
+/* Cook mode: larger, easier to read from a step back. */
+ob-recipe.ob-cooking .ob-recipe-part {
+  font-size: 1.15em;
+}
+
+.ob-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- Embeds (standalone supported links become players) ---------- */
+
+.ob-embed {
+  margin: 2em 0;
+}
+
+.ob-embed iframe {
+  display: block;
+  width: 100%;
+  height: var(--ob-embed-height, 30rem);
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface-raised);
+}
+
+.ob-embed-youtube iframe,
+.ob-embed-vimeo iframe {
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.ob-embed-openstreetmap iframe {
+  height: auto;
+  aspect-ratio: 4 / 3;
+  max-height: 24rem;
+}
+
+.ob-piece {
+  margin-block: 1.5em;
+}
+
+.ob-piece-error {
+  padding: 0.75rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius);
+}
+
+.ob-embed figcaption {
+  margin-top: 0.4rem;
+  color: var(--ob-color-muted);
+  font-size: 0.85rem;
+}
+
+/* ---------- Code copy button (added by <ob-code>) ---------- */
+
+.ob-copy {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  padding: 0.2rem 0.6rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-muted);
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.ob-prose pre:hover .ob-copy,
+.ob-copy:focus-visible {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .ob-copy {
+    opacity: 1;
+  }
+}
+
+/* ---------- Share, related ---------- */
+
+.ob-share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2.5rem 0 1rem;
+}
+
+.ob-share-label {
+  margin-right: 0.25rem;
+  color: var(--ob-color-muted);
+  font-size: 0.875rem;
+}
+
+.ob-share ul,
+.ob-share li {
+  display: contents;
+}
+
+.ob-share a,
+.ob-share button {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ob-color-text);
+  font: inherit;
+  font-size: 0.85rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.ob-share a:hover,
+.ob-share button:hover {
+  border-color: var(--ob-color-accent-border);
+  color: var(--ob-color-accent-soft);
+}
+
+.ob-related {
+  margin-top: 2.5rem;
+}
+
+.ob-related-title {
+  margin: 0 0 1rem;
+  font-family: var(--ob-font-heading);
+  font-size: 1.2rem;
+}
+
+.ob-post-extra {
+  margin-top: 2.5rem;
+}
+
+ob-views:empty {
+  display: none;
+}
+
+ob-comments {
+  display: block;
+  margin-block: var(--ob-space-8, 2rem);
+  border-top: 1px solid var(--ob-color-border);
+  padding-top: var(--ob-space-6, 1.5rem);
+}
+
+.ob-comments-list { padding-inline-start: 1.25rem; }
+.ob-comments-list li { margin-block: 1rem; }
+.ob-comments-list p { margin-block: .25rem; white-space: pre-wrap; }
+.ob-comments-form { display: grid; gap: .75rem; max-width: 42rem; }
+.ob-comments-form label { display: grid; gap: .25rem; font-weight: 600; }
+.ob-comments-form input,
+.ob-comments-form textarea { font: inherit; padding: .65rem; border: 1px solid var(--ob-color-border); border-radius: .35rem; background: var(--ob-color-surface); color: inherit; }
+.ob-comments-form button { justify-self: start; }
+/* Optional captcha (ADR 0322). No motion, no fixed widths: the provider's widget may be
+   wider than a 320px screen, so its box scrolls instead of the page. */
+.ob-comments-captcha-note { margin: 0; font-size: .875rem; overflow-wrap: anywhere; opacity: .85; }
+.ob-comments-captcha { max-width: 100%; overflow-x: auto; min-height: 1px; }
+.ob-comments-captcha[hidden],
+.ob-comments-captcha-retry[hidden] { display: none; }
+
+/* Passage feedback (ADR 0082): a single-column form that fits 320px, a
+   status line outside the form, a copy-and-send fallback, and a button
+   placed next to the reader's selection by the offsets the component sets. */
+.ob-feedback {
+  margin-block: var(--ob-space-8, 2rem);
+  border-top: 1px solid var(--ob-color-border);
+  padding-top: var(--ob-space-6, 1.5rem);
+}
+
+/* Approved reader notes on a post's canonical page (ADR 0083): static text, no script. */
+.ob-reader-feedback {
+  margin-block: var(--ob-space-8, 2rem);
+  border-top: 1px solid var(--ob-color-border);
+  padding-top: var(--ob-space-6, 1.5rem);
+}
+
+/* A passage revision is one long word; let it wrap at 320px. */
+.ob-feedback code,
+.ob-reader-note code,
+.ob-third-perspective code {
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+.ob-reader-feedback-list {
+  display: grid;
+  gap: var(--ob-space-6, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-reader-note {
+  max-inline-size: 42rem;
+  overflow-wrap: anywhere;
+}
+
+.ob-reader-note h3 {
+  margin-block: 0 .5rem;
+  font-size: 1.1rem;
+}
+
+.ob-reader-note blockquote {
+  margin: .5rem 0;
+  border-inline-start: 3px solid var(--ob-color-border);
+  padding-inline-start: 1rem;
+}
+
+.ob-reader-note-meta,
+.ob-reader-note-stale {
+  color: var(--ob-color-subtle, inherit);
+  font-size: .9rem;
+}
+
+.ob-reader-note-response {
+  margin-block-start: .75rem;
+  border-inline-start: 3px solid var(--ob-color-accent, currentColor);
+  padding-inline-start: 1rem;
+}
+
+.ob-reader-note-response h4 {
+  margin-block: 0 .25rem;
+  font-size: 1rem;
+}
+
+/* The author's decision on a published suggestion (ADR 0119): its words name the outcome, so
+   nothing relies on colour; an undecided suggestion has a dashed rule instead of a solid one. */
+.ob-reader-note-outcome,
+.ob-reader-outcome {
+  overflow-wrap: anywhere;
+}
+
+.ob-reader-note-outcome {
+  margin-block-start: .75rem;
+  border-inline-start: 3px solid var(--ob-color-border);
+  padding-inline-start: 1rem;
+}
+
+.ob-reader-note-outcome[data-outcome="unresolved"] {
+  border-inline-start-style: dashed;
+}
+
+.ob-reader-note-outcome h4 {
+  margin-block: 0 .25rem;
+  font-size: 1rem;
+}
+
+.ob-reader-note-outcome p {
+  margin-block: .25rem;
+}
+
+.ob-reader-note-outcome code {
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+/* Approved Third Perspectives on a work's canonical page (ADR 0115): readers' reflections, set
+   apart from the authors' text, static and without a script. */
+.ob-third-perspectives {
+  margin-block: var(--ob-space-8, 2rem);
+  border-top: 1px solid var(--ob-color-border);
+  padding-top: var(--ob-space-6, 1.5rem);
+}
+
+.ob-third-perspectives-list {
+  display: grid;
+  gap: var(--ob-space-6, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-perspective {
+  max-inline-size: 42rem;
+  min-inline-size: 0;
+  border-inline-start: 3px solid var(--ob-color-border);
+  padding-inline-start: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.ob-perspective h3 {
+  margin-block: 0 .5rem;
+  font-size: 1.1rem;
+}
+
+.ob-perspective-meta,
+.ob-perspective-earlier {
+  color: var(--ob-color-subtle, inherit);
+  font-size: .9rem;
+}
+
+/* Featured reflections on a work's canonical page (ADR 0184): the editors' choice of reflections
+   already shown above, in a plain list with its framing as text. Nothing here is a ranking: the
+   marks are borders and words, never colour or size alone, and nothing moves. */
+.ob-community-perspectives {
+  margin-block: var(--ob-space-8, 2rem);
+  border-top: 1px solid var(--ob-color-border);
+  padding-top: var(--ob-space-6, 1.5rem);
+  min-inline-size: 0;
+}
+
+.ob-community-notice {
+  max-inline-size: 42rem;
+  overflow-wrap: anywhere;
+}
+
+.ob-community-perspectives-list {
+  display: grid;
+  gap: var(--ob-space-6, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-community-perspectives-list > li {
+  min-inline-size: 0;
+}
+
+.ob-feature {
+  max-inline-size: 42rem;
+  min-inline-size: 0;
+  border-inline-start: 3px solid var(--ob-color-border);
+  padding-inline-start: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.ob-feature h3 {
+  margin-block: 0 .5rem;
+  font-size: 1.1rem;
+}
+
+.ob-feature-status {
+  margin-block: 0 .5rem;
+  font-size: .9rem;
+}
+
+.ob-feature-provenance {
+  color: var(--ob-color-subtle, inherit);
+  font-size: .9rem;
+}
+
+.ob-feature-note {
+  border-block-start: 1px dashed var(--ob-color-border);
+  padding-block-start: .5rem;
+}
+
+.ob-feature:target {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.ob-feature a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+@media (forced-colors: active) {
+  .ob-feature,
+  .ob-community-perspectives {
+    border-color: CanvasText;
+  }
+}
+
+/* The conversation after an author's own section (ADR 0138): inside that section's turn, after
+   the author's words, so it never moves them. A reader's reflection and the author's response are
+   told apart by their headings and labels, which are text; the border style only repeats it. */
+ob-conversation {
+  display: block;
+}
+
+.ob-conversation {
+  min-inline-size: 0;
+  margin-block: var(--ob-space-6, 1.5rem) 0;
+  border-top: 1px solid var(--ob-color-border);
+  padding-top: var(--ob-space-4, 1rem);
+  overflow-wrap: anywhere;
+}
+
+.ob-conversation > h3 {
+  margin-block: 0 .5rem;
+  font-size: 1rem;
+}
+
+.ob-conversation-note {
+  margin-block: 0 var(--ob-space-4, 1rem);
+  color: var(--ob-color-subtle, inherit);
+  font-size: .9rem;
+}
+
+.ob-conversation-list {
+  display: grid;
+  gap: var(--ob-space-4, 1rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-conversation-list[hidden] {
+  display: none;
+}
+
+.ob-conversation-list > li {
+  display: grid;
+  gap: .75rem;
+  min-inline-size: 0;
+}
+
+.ob-perspective h4,
+.ob-author-response h4,
+.ob-author-response h5 {
+  margin-block: 0 .5rem;
+  font-size: 1rem;
+}
+
+.ob-author-response {
+  max-inline-size: 42rem;
+  min-inline-size: 0;
+  margin-inline-start: 1rem;
+  border-inline-start: 3px double var(--ob-color-border);
+  padding-inline-start: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.ob-perspective > .ob-author-response {
+  margin-block-start: .75rem;
+}
+
+.ob-perspective:target,
+.ob-author-response:target,
+.ob-conversation:target {
+  outline: 2px solid currentColor;
+  outline-offset: 4px;
+}
+
+.ob-conversation-toggle {
+  margin-block: 0 var(--ob-space-4, 1rem);
+}
+
+.ob-conversation-toggle:focus-visible,
+.ob-conversation a:focus-visible,
+.ob-third-perspectives-where a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+ob-passage-feedback {
+  display: block;
+}
+
+.ob-passage-feedback-form {
+  display: grid;
+  gap: 1rem;
+  max-inline-size: 42rem;
+}
+
+.ob-passage-feedback-form fieldset {
+  display: grid;
+  gap: .5rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: .75rem 1rem 1rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+}
+
+.ob-passage-feedback-form legend {
+  padding-inline: .25rem;
+  font-weight: 600;
+}
+
+.ob-passage-feedback-field,
+.ob-passage-feedback-subfield {
+  display: grid;
+  gap: .25rem;
+}
+
+.ob-passage-feedback-subfield {
+  margin-inline-start: 1.75rem;
+}
+
+.ob-passage-feedback-field > label,
+.ob-passage-feedback-subfield > label,
+.ob-passage-feedback-fallback > label {
+  font-weight: 600;
+}
+
+.ob-passage-feedback-choice {
+  display: flex;
+  gap: .5rem;
+  align-items: baseline;
+}
+
+/* Where in an offered source (ADR 0116): side by side when they fit, stacked on a phone. */
+.ob-passage-feedback-locator {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.ob-passage-feedback-locator > .ob-passage-feedback-subfield {
+  flex: 1 1 8rem;
+  min-inline-size: 0;
+  margin-inline-start: 0;
+}
+
+.ob-passage-feedback-form input:not([type="radio"], [type="checkbox"]),
+.ob-passage-feedback-form select,
+.ob-passage-feedback-form textarea,
+.ob-passage-feedback-fallback textarea {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  font: inherit;
+  padding: .65rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+  background: var(--ob-color-surface);
+  color: inherit;
+}
+
+.ob-passage-feedback-form [aria-invalid="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ob-passage-feedback-hint,
+.ob-passage-feedback-quote,
+.ob-passage-feedback-error,
+.ob-passage-feedback-status,
+.ob-passage-feedback-done,
+.ob-passage-feedback-fallback-message {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ob-passage-feedback-hint,
+.ob-passage-feedback-quote {
+  color: var(--ob-color-muted);
+}
+
+.ob-passage-feedback-quote {
+  margin-inline-start: 1.75rem;
+  font-style: italic;
+  white-space: pre-wrap;
+}
+
+.ob-passage-feedback-error,
+.ob-passage-feedback-alert:not(:empty) {
+  font-weight: 600;
+}
+
+.ob-passage-feedback-error::before {
+  content: "Error: ";
+}
+
+.ob-passage-feedback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  align-items: center;
+}
+
+.ob-passage-feedback-form button[aria-disabled="true"] {
+  cursor: progress;
+  opacity: .7;
+}
+
+.ob-passage-feedback-status:empty {
+  display: none;
+}
+
+.ob-passage-feedback-done,
+.ob-passage-feedback-fallback {
+  max-inline-size: 42rem;
+  margin-block: 1rem;
+}
+
+.ob-passage-feedback-fallback {
+  display: grid;
+  gap: .5rem;
+}
+
+.ob-passage-feedback [hidden],
+ob-passage-feedback [hidden] {
+  display: none;
+}
+
+.ob-passage-feedback-selection {
+  position: fixed;
+  z-index: 20;
+  left: var(--ob-passage-feedback-x, 8px);
+  top: var(--ob-passage-feedback-y, 8px);
+  max-inline-size: calc(100vw - 16px);
+  padding: .4rem .75rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border);
+  border-radius: var(--ob-radius, .35rem);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  box-shadow: var(--ob-shadow);
+  font: inherit;
+  font-size: .9rem;
+}
+
+.ob-passage-feedback-form :focus-visible,
+.ob-passage-feedback-fallback :focus-visible,
+.ob-passage-feedback-selection:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Third Perspectives (ADR 0114): one column at every width, native controls, visible focus. */
+
+ob-third-perspective {
+  display: block;
+}
+
+.ob-third-perspective-form {
+  display: grid;
+  gap: 1rem;
+  max-inline-size: 42rem;
+}
+
+.ob-third-perspective-form fieldset {
+  display: grid;
+  gap: .5rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: .75rem 1rem 1rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+}
+
+.ob-third-perspective-form legend {
+  padding-inline: .25rem;
+  font-weight: 600;
+}
+
+.ob-third-perspective-field,
+.ob-third-perspective-subfield {
+  display: grid;
+  gap: .25rem;
+}
+
+.ob-third-perspective-subfield {
+  margin-inline-start: 1.75rem;
+}
+
+.ob-third-perspective-field > label,
+.ob-third-perspective-subfield > label,
+.ob-third-perspective-fallback > label {
+  font-weight: 600;
+}
+
+.ob-third-perspective-choice {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .15rem .5rem;
+  align-items: baseline;
+}
+
+.ob-third-perspective-choice > .ob-third-perspective-hint {
+  grid-column: 2;
+}
+
+.ob-third-perspective-form input:not([type="radio"], [type="checkbox"]),
+.ob-third-perspective-form select,
+.ob-third-perspective-form textarea,
+.ob-third-perspective-fallback textarea {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  font: inherit;
+  padding: .65rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+  background: var(--ob-color-surface);
+  color: inherit;
+}
+
+.ob-third-perspective-form [aria-invalid="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ob-third-perspective-hint,
+.ob-third-perspective-error,
+.ob-third-perspective-status,
+.ob-third-perspective-done,
+.ob-third-perspective-fallback-message {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ob-third-perspective-hint {
+  color: var(--ob-color-muted);
+}
+
+.ob-third-perspective-error,
+.ob-third-perspective-alert:not(:empty) {
+  font-weight: 600;
+}
+
+.ob-third-perspective-error::before {
+  content: "Error: ";
+}
+
+.ob-third-perspective-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  align-items: center;
+}
+
+.ob-third-perspective-form button[aria-disabled="true"],
+.ob-third-perspective-fallback button[aria-disabled="true"] {
+  cursor: progress;
+  opacity: .7;
+}
+
+.ob-third-perspective-status:empty {
+  display: none;
+}
+
+.ob-third-perspective-done,
+.ob-third-perspective-fallback {
+  max-inline-size: 42rem;
+  margin-block: 1rem;
+}
+
+.ob-third-perspective-fallback {
+  display: grid;
+  gap: .5rem;
+}
+
+.ob-third-perspective [hidden],
+ob-third-perspective [hidden] {
+  display: none;
+}
+
+.ob-third-perspective-form :focus-visible,
+.ob-third-perspective-fallback :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Suggestions for future work (RD13): one column at every width, native controls, visible focus; a fieldset or the region itself never forces a sideways scroll. */
+
+ob-future-suggestion {
+  display: block;
+}
+
+.ob-future-suggestion-form {
+  display: grid;
+  gap: 1rem;
+  max-inline-size: 42rem;
+}
+
+.ob-future-suggestion-form fieldset {
+  display: grid;
+  gap: .5rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: .75rem 1rem 1rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+}
+
+.ob-future-suggestion-form legend {
+  padding-inline: .25rem;
+  font-weight: 600;
+}
+
+.ob-future-suggestion-field,
+.ob-future-suggestion-subfield {
+  display: grid;
+  gap: .25rem;
+}
+
+.ob-future-suggestion-subfield {
+  margin-inline-start: 1.75rem;
+}
+
+.ob-future-suggestion-field > label,
+.ob-future-suggestion-subfield > label,
+.ob-future-suggestion-fallback > label {
+  font-weight: 600;
+}
+
+.ob-future-suggestion-choice {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .15rem .5rem;
+  align-items: baseline;
+}
+
+.ob-future-suggestion-choice > .ob-future-suggestion-hint {
+  grid-column: 2;
+}
+
+.ob-future-suggestion-form input:not([type="radio"], [type="checkbox"]),
+.ob-future-suggestion-form select,
+.ob-future-suggestion-form textarea,
+.ob-future-suggestion-fallback textarea {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  font: inherit;
+  padding: .65rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+  background: var(--ob-color-surface);
+  color: inherit;
+}
+
+.ob-future-suggestion-form [aria-invalid="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ob-future-suggestion-hint,
+.ob-future-suggestion-error,
+.ob-future-suggestion-status,
+.ob-future-suggestion-done,
+.ob-future-suggestion-fallback-message {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ob-future-suggestion-hint {
+  color: var(--ob-color-muted);
+}
+
+.ob-future-suggestion-error,
+.ob-future-suggestion-alert:not(:empty) {
+  font-weight: 600;
+}
+
+.ob-future-suggestion-error::before {
+  content: "Error: ";
+}
+
+.ob-future-suggestion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  align-items: center;
+}
+
+.ob-future-suggestion-form button[aria-disabled="true"],
+.ob-future-suggestion-fallback button[aria-disabled="true"] {
+  cursor: progress;
+  opacity: .7;
+}
+
+.ob-future-suggestion-status:empty {
+  display: none;
+}
+
+.ob-future-suggestion-done,
+.ob-future-suggestion-fallback {
+  max-inline-size: 42rem;
+  margin-block: 1rem;
+}
+
+.ob-future-suggestion-fallback {
+  display: grid;
+  gap: .5rem;
+}
+
+.ob-future-suggestion [hidden],
+ob-future-suggestion [hidden] {
+  display: none;
+}
+
+.ob-future-suggestion-form :focus-visible,
+.ob-future-suggestion-fallback :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ob-future-suggestion-form fieldset[hidden],
+.ob-future-suggestion-form [hidden] {
+  display: none;
+}
+
+.ob-future-suggestion-form textarea {
+  resize: vertical;
+}
+
+.ob-future-suggestion {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Series ---------- */
+
+.ob-series-box {
+  margin: 3rem 0 2rem;
+  padding: 1.25rem 1.4rem;
+  border: var(--ob-border-width) solid var(--ob-color-accent-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+}
+
+.ob-series-nav,
+.ob-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.ob-series-nav {
+  margin-top: 1rem;
+}
+
+.ob-series-nav a {
+  display: flex;
+  flex-direction: column;
+  max-width: 48%;
+  text-decoration: none;
+}
+
+.ob-series-next {
+  margin-left: auto;
+  text-align: right;
+}
+
+.ob-series-nav a {
+  min-height: 2.75rem;
+  justify-content: center;
+}
+
+.ob-series-edge .ob-meta {
+  font-style: italic;
+}
+
+/* Decorative progress cells (aria-hidden): hollow = not marked, ringed = this part, filled = marked complete. */
+.ob-series-path {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-series-path li {
+  flex: 1 1 0;
+  min-width: 0.75rem;
+  max-width: 2.5rem;
+  height: 0.65rem;
+  border: 2px solid var(--ob-color-accent-border);
+  border-radius: 2px;
+}
+
+.ob-series-path li[data-done] {
+  background: var(--ob-color-accent-soft);
+  border-color: var(--ob-color-accent-soft);
+}
+
+.ob-series-path li[data-current] {
+  height: 0.95rem;
+  border-style: double;
+  border-width: 4px;
+  border-color: var(--ob-color-text);
+}
+
+@media (max-width: 40rem) {
+  .ob-series-nav {
+    flex-direction: column;
+  }
+
+  .ob-series-nav a,
+  .ob-series-next {
+    max-width: 100%;
+    margin-left: 0;
+    text-align: left;
+  }
+}
+
+.ob-series-parts-details {
+  margin-top: 1rem;
+}
+
+.ob-series-parts-details summary {
+  cursor: pointer;
+}
+
+.ob-series-parts {
+  margin: 0.75rem 0 0;
+  padding-left: 1.5rem;
+}
+
+.ob-series-parts a[aria-current="page"] {
+  color: var(--ob-color-accent-soft);
+  font-weight: 600;
+}
+
+.ob-series-parts-full {
+  padding: 0;
+  list-style: none;
+}
+
+.ob-part {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0.5rem;
+  border-top: var(--ob-border-width) solid var(--ob-color-border);
+  color: inherit;
+  text-decoration: none;
+}
+
+.ob-part:hover {
+  background: var(--ob-color-surface-raised);
+}
+
+.ob-part-number {
+  flex: none;
+  color: var(--ob-color-accent-soft);
+  font-family: var(--ob-font-heading);
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.ob-part-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ob-part-title {
+  font-family: var(--ob-font-heading);
+  font-weight: var(--ob-heading-weight);
+  font-size: 1.15rem;
+}
+
+.ob-part-summary {
+  color: var(--ob-color-muted);
+  font-size: 0.95rem;
+}
+
+/* Who wrote each part, shown only in a series that holds a collaborative work (ADR 0040). */
+.ob-series-contributors {
+  margin: 0.5rem 0 1rem;
+}
+
+.ob-part-credit {
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Pager, archive ---------- */
+
+.ob-pager {
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.ob-pager a {
+  text-decoration: none;
+}
+
+.ob-pager-status {
+  color: var(--ob-color-muted);
+  font-size: 0.875rem;
+}
+
+.ob-post-pager {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: var(--ob-border-width) solid var(--ob-color-border);
+}
+
+.ob-post-pager a {
+  max-width: 48%;
+}
+
+.ob-archive-year {
+  margin: 2rem 0 0.5rem;
+  font-family: var(--ob-font-heading);
+}
+
+.ob-archive {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-archive li {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.4rem 0;
+  border-bottom: var(--ob-border-width) solid var(--ob-color-border);
+}
+
+/* A long unbroken title wraps instead of pushing the page sideways. */
+.ob-archive li > a {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Search ---------- */
+
+.ob-search-form {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.ob-search-form input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+  font: inherit;
+}
+
+.ob-search-results {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-search-results li {
+  padding: 1rem 0;
+  border-top: var(--ob-border-width) solid var(--ob-color-border);
+}
+
+.ob-search-results a {
+  font-family: var(--ob-font-heading);
+  font-size: 1.15rem;
+}
+
+.ob-search-results p {
+  margin: 0.25rem 0 0;
+  color: var(--ob-color-muted);
+  font-size: 0.95rem;
+}
+
+.ob-search-results mark {
+  background: var(--ob-color-glow);
+  color: inherit;
+}
+
+/* ---------- Footer, back to top ---------- */
+
+.ob-footer {
+  margin-top: auto;
+  border-top: var(--ob-border-width) solid var(--ob-color-border);
+  color: var(--ob-color-muted);
+  font-size: 0.875rem;
+}
+
+.ob-footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 2rem;
+  width: min(var(--ob-max-width), 100% - 2 * var(--ob-gutter));
+  margin: 0 auto;
+  padding-block: 1.75rem;
+}
+
+.ob-footer p {
+  margin: 0;
+}
+
+.ob-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-footer a {
+  color: var(--ob-color-muted);
+}
+
+.ob-footer a:hover {
+  color: var(--ob-color-accent-soft);
+}
+
+.ob-powered {
+  flex-basis: 100%;
+  color: var(--ob-color-subtle);
+  font-size: 0.8rem;
+}
+
+/* ---------- Business facts (ADR 0306) ----------
+   One block for every theme: the footer on each page and the Landing page's Business facts
+   section both write `.ob-business`. Tokens only, so a theme restyles it by changing tokens. */
+
+.ob-footer-business {
+  flex-basis: 100%;
+  padding-bottom: 1rem;
+  border-bottom: var(--ob-row-border-width) solid var(--ob-color-border);
+}
+
+.ob-business {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.75rem 2rem;
+  color: var(--ob-color-text);
+}
+
+.ob-business > * {
+  margin: 0;
+}
+
+.ob-business-name {
+  font-weight: 700;
+}
+
+.ob-business-name,
+.ob-business-badge {
+  grid-column: 1 / -1;
+}
+
+.ob-badge {
+  display: inline-block;
+  padding: 0.2rem 0.75rem;
+  border: var(--ob-border-width) solid var(--ob-color-accent-soft);
+  border-radius: var(--ob-radius-sm);
+  color: var(--ob-color-accent-soft);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.ob-business-contact,
+.ob-business-notes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-business-contact li,
+.ob-business-notes li {
+  margin: 0.25rem 0;
+}
+
+.ob-business-contact a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.ob-business-hours div {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.2rem 0;
+}
+
+.ob-business-hours dt {
+  font-weight: 600;
+}
+
+.ob-business-hours dd {
+  margin: 0;
+  text-align: end;
+}
+
+ob-back-to-top {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 20;
+}
+
+ob-back-to-top button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: var(--ob-border-width) solid var(--ob-color-accent-border);
+  border-radius: 50%;
+  background: var(--ob-color-surface);
+  box-shadow: var(--ob-shadow);
+  color: var(--ob-color-accent-soft);
+  font-size: 1.25rem;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.5rem);
+  transition:
+    opacity var(--ob-motion) ease,
+    transform var(--ob-motion) ease;
+}
+
+ob-back-to-top[visible] button {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+ob-back-to-top button:hover {
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-contrast);
+}
+
+/* ---------- Motion and print ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media print {
+  .ob-header,
+  .ob-footer,
+  .ob-series-box,
+  .ob-post-pager,
+  .ob-copy,
+  .ob-feedback,
+  .ob-passage-feedback-selection,
+  ob-back-to-top,
+  ob-theme-toggle {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .ob-recipe-actions,
+  .ob-check,
+  .ob-timer::before,
+  .ob-timer-clock {
+    display: none !important;
+  }
+
+  .ob-timer .ob-timer-label {
+    display: inline !important;
+  }
+
+  .ob-recipe-card {
+    background: none;
+    color: inherit;
+  }
+
+  /* Citation notes print whole and together with their numbers; the ways
+     back to a marker are for screens only. */
+  .ob-citation-back,
+  .ob-citation-preview {
+    display: none !important;
+  }
+
+  /* Entry previews are for screens; a printed concept link is its label. */
+  .ob-concept-preview {
+    display: none !important;
+  }
+
+  .ob-citation-note {
+    break-inside: avoid;
+    color: inherit;
+  }
+
+  .ob-citation-note:target,
+  .ob-citation a:target {
+    outline: none;
+  }
+
+  .ob-recipe-facts dt {
+    color: #555;
+  }
+
+  .ob-qty-scaled {
+    background: none;
+  }
+
+  .ob-timer,
+  .ob-timer[data-state] {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+  }
+
+  /* "Print recipe": the title, the summary, the ingredients and the steps. */
+  .ob-print-recipe .ob-post-header > :not(.ob-heading, h1),
+  .ob-print-recipe .ob-cover,
+  .ob-print-recipe .ob-toc,
+  .ob-print-recipe .ob-prose > :not(.ob-recipe-part),
+  .ob-print-recipe .ob-post > :not(.ob-post-header, ob-recipe),
+  .ob-print-recipe .ob-heading-anchor,
+  .ob-print-recipe .ob-code-label {
+    display: none !important;
+  }
+
+  .ob-print-recipe .ob-recipe-list > li.ob-done {
+    color: inherit;
+    text-decoration: none;
+  }
+  .ob-conversation,
+  .ob-perspective,
+  .ob-author-response {
+    break-inside: avoid;
+  }
+
+  .ob-conversation ob-abuse-report,
+  .ob-conversation-toggle {
+    display: none;
+  }
+
+  ob-conversation .ob-conversation-list[hidden] {
+    display: grid;
+  }
+}
+/* Shared reflections: every layout (ADR 0031, ADR 0032). The markup is already in reading
+   order; this only places it, and only on wide screens. Below 48em, in print and without CSS it
+   reads top to bottom in that same order. */
+.ob-reflection .ob-round { margin: 1.5rem 0; }
+.ob-reflection .ob-round-prompt { font-weight: 600; }
+.ob-reflection .ob-turn { min-width: 0; overflow-wrap: anywhere; }
+.ob-reflection .ob-turn-author { font-size: 1.1rem; margin: 0 0 .5rem; }
+.ob-reflection .ob-turn-label { font-size: .9rem; font-style: italic; margin: 0 0 .5rem; }
+.ob-reflection .ob-turn pre, .ob-reflection .ob-turn table { max-width: 100%; overflow-x: auto; }
+.ob-reflection .ob-turn img { max-width: 100%; height: auto; }
+@media screen and (min-width: 48em) {
+  .ob-reflection-side-by-side.ob-lanes-2 .ob-round,
+  .ob-reflection-side-by-side.ob-lanes-3 .ob-round { display: grid; gap: 1rem 2rem; align-items: start; grid-auto-flow: row; }
+  .ob-reflection-side-by-side.ob-lanes-2 .ob-round { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ob-reflection-side-by-side.ob-lanes-3 .ob-round { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ob-reflection-side-by-side .ob-round-prompt { grid-column: 1 / -1; margin: 0; }
+  .ob-reflection-side-by-side .ob-lane-0 { grid-column: 1; }
+  .ob-reflection-side-by-side .ob-lane-1 { grid-column: 2; }
+  .ob-reflection-side-by-side .ob-lane-2 { grid-column: 3; }
+  .ob-reflection-point-counterpoint.ob-lanes-2 .ob-round { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 2rem; align-items: start; grid-auto-flow: row; }
+  .ob-reflection-point-counterpoint .ob-round-prompt { grid-column: 1 / -1; margin: 0; }
+  .ob-reflection-point-counterpoint .ob-lane-0 { grid-column: 1; }
+  .ob-reflection-point-counterpoint .ob-lane-1 { grid-column: 2; }
+  .ob-reflection-alternating-dialogue.ob-lanes-2 .ob-turn { max-width: 80%; margin: 0 0 1rem; }
+  .ob-reflection-alternating-dialogue.ob-lanes-2 .ob-lane-1 { margin-inline-start: auto; }
+  .ob-reflection-roundtable .ob-round { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 1rem 2rem; align-items: start; }
+  .ob-reflection-roundtable .ob-round-prompt { grid-column: 1 / -1; margin: 0; }
+}
+
+/* Published media moments (ADR 0066): static, no script; long titles and addresses wrap. */
+.ob-moments .ob-moment { overflow-wrap: anywhere; }
+.ob-moments .ob-moment h3 { margin-bottom: 0.25rem; }
+.ob-moment-by { margin-top: 0; font-size: 0.9rem; font-style: italic; }
+.ob-moment-quotation blockquote { margin: 0; }
+.ob-moment-quotation figcaption { margin-top: 0.4rem; font-size: 0.9rem; color: var(--ob-color-muted); }
+@media print {
+  .ob-moment-link a::after { content: " (" attr(href) ")"; }
+}
+
+/* Reading modes and supplements (ADR 0140-0142). A supplement is a labelled group that holds the
+   author's quote and ends with a visible end line, so it reads as set apart with or without this
+   stylesheet. The build never hides one: <ob-reading-modes> sets `hidden` from the reader's mode,
+   and a supplement holding a warning (data-ob-always) is never hidden. */
+ob-reading-modes { display: block; }
+.ob-supplement {
+  --ob-supplement-edge: var(--ob-color-accent, currentColor);
+  margin: 1.4em 0;
+  padding: 0.75rem 1.1rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-inline-start: 4px solid var(--ob-supplement-edge);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: color-mix(in srgb, var(--ob-supplement-edge) 6%, transparent);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ob-supplement[hidden]:not([hidden="until-found"]) { display: none; }
+.ob-supplement .ob-supplement { margin-block: 0.9em; }
+/* Hidden but findable (ADR 0144): the browser skips the contents, and the box shrinks to nothing so
+   no empty frame is left, a nested one too (so this follows the nested margin above). Find in page
+   and a link into it reveal it. */
+.ob-supplement[hidden="until-found"] { margin: 0; padding: 0; border-width: 0; background: none; }
+.ob-supplement > blockquote { margin: 0; padding: 0; border: 0; background: none; }
+.ob-supplement > blockquote > :first-child { margin-top: 0; }
+.ob-supplement > blockquote > :last-child { margin-bottom: 0; }
+.ob-supplement-label { margin: 0 0 0.5em; font-size: 0.9em; }
+.ob-supplement-kind { color: var(--ob-supplement-edge); font-weight: 700; }
+.ob-supplement-level, .ob-supplement-always { color: var(--ob-color-muted, inherit); }
+.ob-supplement-title { font-weight: 600; }
+.ob-supplement-skip:not(:focus):not(:active) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.ob-supplement-skip { display: inline-block; margin: 0 0 0.5em; font-size: 0.9em; }
+.ob-supplement-end { margin: 0.6em 0 0; font-size: 0.8em; color: var(--ob-color-muted, inherit); }
+.ob-supplement-end strong { font-weight: 600; }
+.ob-supplement[data-ob-always] { --ob-supplement-edge: var(--ob-color-callout-warning, #bf8700); }
+.ob-supplement[data-ob-revealed] { outline: 2px dashed var(--ob-supplement-edge); outline-offset: 2px; }
+/* A supplement fades in only when the reader just chose a mode that shows it and has not asked for
+   reduced motion: never on load, never on a page where script has not applied a mode. */
+@media (prefers-reduced-motion: no-preference) {
+  .ob-supplement.ob-just-shown:not([hidden]) { animation: ob-supplement-in 0.18s ease-out; }
+}
+@keyframes ob-supplement-in { from { opacity: 0; } to { opacity: 1; } }
+/* Before script has applied a mode, hide the layers the author's default mode hides, so the page does
+   not paint every layer and then jump. Only on a screen where script is on (without it, and in print,
+   nothing is hidden), and never a warning. The hiding is the animation's first keyframe held through a
+   six second delay, so if the script never arrives the layers return by themselves. The component
+   marks itself `ob-reading-started` as its first act, which ends this at once; `animation: none` for
+   reduced motion removes it altogether, and `animation-play-state` keeps a paused-animation rule from
+   freezing the hidden state. What remains: with script that loads but is slower than six seconds the
+   layers appear and are then hidden, and a browser without `scripting` or `:defined` shows the page
+   as the build wrote it. */
+@media screen and (scripting: enabled) {
+  ob-reading-modes:not(:defined):not(.ob-reading-started)[default="standard"] .ob-supplement:not([data-ob-always], :has(.ob-callout-warning, .ob-callout-caution), .ob-callout-warning .ob-supplement, .ob-callout-caution .ob-supplement),
+  ob-reading-modes:not(:defined):not(.ob-reading-started)[default="guided"] .ob-supplement[data-ob-level="deep-dive"]:not([data-ob-always], :has(.ob-callout-warning, .ob-callout-caution), .ob-callout-warning .ob-supplement, .ob-callout-caution .ob-supplement) {
+    animation: ob-supplement-wait 0.01s 6s backwards;
+    animation-play-state: running !important;
+  }
+}
+@keyframes ob-supplement-wait { from { height: 0; margin: 0; padding: 0; border-width: 0; overflow: hidden; visibility: hidden; } }
+
+.ob-reading-controls {
+  margin: 0 0 1.25rem;
+  padding: 0.5rem 0.9rem 0.75rem;
+  min-width: 0;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+}
+.ob-reading-controls legend { padding: 0 0.35rem; font-weight: 700; }
+.ob-reading-note { margin: 0 0 0.5rem; font-size: 0.9em; color: var(--ob-color-muted, inherit); overflow-wrap: anywhere; }
+.ob-reading-options { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+.ob-reading-option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  column-gap: 0.5rem;
+  flex: 1 1 12rem;
+  min-width: 0;
+  min-height: 2.75rem;
+}
+.ob-reading-option input { width: 1.25rem; height: 1.25rem; margin: 0; }
+.ob-reading-option label { font-weight: 600; padding-block: 0.4rem; }
+.ob-reading-help { grid-column: 2; margin-top: -0.25rem; font-size: 0.85em; color: var(--ob-color-muted, inherit); overflow-wrap: anywhere; }
+.ob-reading-reset { margin-top: 0.5rem; min-height: 2.75rem; max-width: 100%; }
+.ob-reading-reset[aria-disabled="true"] { opacity: 0.55; cursor: default; }
+/* Paper only: one line that says which layers the printed page leaves out. */
+.ob-reading-print-note { display: none; }
+@media print {
+  .ob-reading-controls, .ob-supplement-skip { display: none; }
+  .ob-reading-print-note:not(:empty) { display: block; margin: 0 0 1rem; font-style: italic; color: #000; }
+  /* Paper follows the mode on screen: the browser would otherwise print a findable hidden layer
+     with its box taken away. */
+  .ob-supplement[hidden] { display: none; }
+  /* A shown supplement stays a boxed, labelled group on paper, in ink, not in a tint. */
+  .ob-supplement { break-inside: avoid; border: 1px solid #000; border-inline-start-width: 4px; background: none; }
+  .ob-supplement-kind, .ob-supplement-level, .ob-supplement-always, .ob-supplement-end { color: #000; }
+}
+/* Windows high contrast and the like: the box stays drawn in the system's own colours, and a layer
+   the reader navigated into keeps a visible outline. */
+@media (forced-colors: active) {
+  .ob-supplement { border: 1px solid CanvasText; border-inline-start: 4px solid CanvasText; background: none; }
+  .ob-supplement[data-ob-revealed] { outline-color: Highlight; }
+  .ob-supplement-skip:focus { outline: 2px solid Highlight; }
+}
+
+/* ---------- Landing sections (ob-home-*, ADR 0247) ---------- */
+/* Theme-neutral: these rules read --ob-* tokens only, so every theme gets a
+   legible, accessible result and restyles by changing tokens. */
+
+.ob-home-section {
+  min-width: 0;
+  margin-block: 2.5rem;
+  overflow-wrap: anywhere;
+}
+
+.ob-home-section > :first-child {
+  margin-top: 0;
+}
+
+.ob-home-section > :last-child {
+  margin-bottom: 0;
+}
+
+.ob-home-welcome {
+  padding: var(--ob-space-5, 1.5rem);
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+}
+
+.ob-home-lede {
+  max-width: var(--ob-reading-width);
+  color: var(--ob-color-muted);
+  font-size: 1.15em;
+}
+
+.ob-home-rich-text,
+.ob-home-faq {
+  max-width: var(--ob-reading-width);
+}
+
+.ob-home-image,
+.ob-home-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--ob-radius);
+}
+
+.ob-home-figure {
+  margin: 0;
+}
+
+.ob-home-figure figcaption {
+  margin-top: 0.5rem;
+  color: var(--ob-color-muted);
+  font-size: 0.9em;
+}
+
+.ob-home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-block: 1rem;
+}
+
+.ob-home-button {
+  display: inline-flex;
+  flex: 0 1 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0.6rem 1.25rem;
+  border: var(--ob-border-width) solid var(--ob-color-accent);
+  border-radius: var(--ob-radius);
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+}
+
+.ob-home-button-primary,
+.ob-home-button-primary:is(:hover, :focus-visible) {
+  background: var(--ob-color-accent);
+  color: var(--ob-color-accent-contrast);
+}
+
+.ob-home-button-primary:is(:hover, :focus-visible) {
+  text-decoration: underline;
+}
+
+.ob-home-button-secondary {
+  border-color: var(--ob-color-accent-border);
+  background: transparent;
+  color: var(--ob-color-link);
+}
+
+.ob-home-button-secondary:is(:hover, :focus-visible) {
+  background: var(--ob-hover-background);
+  color: var(--ob-hover-text);
+}
+
+.ob-home-link {
+  display: inline-block;
+  padding-block: 0.4rem;
+}
+
+.ob-home-hours {
+  width: 100%;
+  max-width: 32rem;
+  border-collapse: collapse;
+}
+
+.ob-home-hours caption {
+  padding-bottom: 0.5rem;
+  color: var(--ob-color-muted);
+  font-weight: 600;
+  text-align: start;
+}
+
+.ob-home-hours :is(th, td) {
+  padding: 0.5rem 0.75rem 0.5rem 0;
+  border-bottom: var(--ob-row-border-width) solid var(--ob-color-border);
+  text-align: start;
+  vertical-align: top;
+}
+
+.ob-home-hours th {
+  font-weight: 600;
+}
+
+.ob-home-note {
+  color: var(--ob-color-muted);
+}
+
+.ob-home-contact {
+  font-style: normal;
+}
+
+.ob-home-contact p {
+  margin: 0.25rem 0;
+}
+
+.ob-home-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-home-social a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0.4rem 1rem;
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-radius: var(--ob-radius);
+}
+
+.ob-home-faq-item {
+  border-bottom: var(--ob-row-border-width) solid var(--ob-color-border);
+}
+
+.ob-home-faq-item summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-block: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.ob-home-faq-item[open] > summary {
+  color: var(--ob-color-accent-soft);
+}
+
+.ob-home-faq-item > div {
+  padding-bottom: 0.75rem;
+}
+
+.ob-home-callout-box {
+  padding: var(--ob-space-4, 1rem) var(--ob-space-5, 1.5rem);
+  border: var(--ob-border-width) solid var(--ob-color-border);
+  border-inline-start: 6px solid var(--ob-color-accent);
+  border-radius: var(--ob-radius-sm);
+  background: var(--ob-color-surface);
+  color: var(--ob-color-text);
+}
+
+.ob-home-callout-success .ob-home-callout-box {
+  border-inline-start-color: var(--ob-color-success, var(--ob-color-accent-soft));
+}
+
+/* The tone is also a different line, not only a different color. */
+.ob-home-callout-warning .ob-home-callout-box {
+  border-inline-start-style: double;
+  border-inline-start-color: var(--ob-color-warning, var(--ob-color-accent));
+}
+
+.ob-home-callout-title {
+  margin: 0 0 0.25rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ob-home-button {
+    transition:
+      background-color var(--ob-motion) ease-out,
+      color var(--ob-motion) ease-out;
+  }
+}
+
+@media (max-width: 30rem) {
+  .ob-home-welcome {
+    padding: var(--ob-space-4, 1rem);
+  }
+
+  .ob-home-actions .ob-home-button {
+    flex: 1 1 100%;
+  }
+}
+
+/* Knowledge Atlas datings and timeline (ADR 0099, ADR 0100): static lists that read in order
+   without CSS or JavaScript. Competing datings sit side by side where there is room and stack
+   on narrow screens; nothing moves. Print shows the whole timeline without its filters. */
+.ob-atlas-datings { list-style: none; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+.ob-atlas-dating { min-width: 0; overflow-wrap: anywhere; padding: 0.5rem 0.75rem; border: 1px solid var(--ob-color-border); border-radius: var(--ob-radius-sm, 4px); }
+.ob-atlas-dating dl { margin: 0.25rem 0 0; }
+.ob-atlas-dating dd { margin-inline-start: 1rem; }
+.ob-atlas-date { margin: 0; font-weight: 600; }
+.ob-atlas-periods, .ob-atlas-aspects { padding-inline-start: 0; list-style: none; }
+.ob-atlas-aspect { margin: 0 0 1.25rem; min-width: 0; overflow-wrap: anywhere; }
+.ob-atlas-aspect-name { margin-bottom: 0.25rem; font-weight: 600; }
+.ob-atlas-trail li { margin-bottom: 0.5rem; overflow-wrap: anywhere; }
+.ob-atlas-timeline-tools { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; align-items: center; margin: 1rem 0; }
+.ob-atlas-timeline-field { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin: 0; }
+.ob-atlas-timeline-tools select { max-width: 100%; }
+.ob-atlas-timeline-status { flex-basis: 100%; margin: 0; }
+@media print {
+  .ob-atlas-timeline-tools { display: none !important; }
+  .ob-atlas-timeline li[hidden] { display: list-item !important; }
+  .ob-atlas-timeline section[hidden] { display: block !important; }
+  .ob-atlas-dating { break-inside: avoid; }
+}
+
+/* Knowledge Atlas relationship trails (ADR 0175): a static ordered list of steps grouped by how
+   far they are from the entry, readable without CSS or JavaScript. Each step is a bordered item
+   whose facts stack on narrow screens and wrap anywhere, so a long label never overflows. Nothing
+   moves. Print shows the whole trail without its filters, even where a filter hid steps. */
+.ob-trail-depths, .ob-trail-steps { list-style: none; padding-inline-start: 0; margin: 0; }
+.ob-trail-depth { margin: 0 0 1.5rem; min-width: 0; }
+.ob-trail-step { min-width: 0; margin: 0 0 0.75rem; padding: 0.5rem 0.75rem; overflow-wrap: anywhere; border: 1px solid var(--ob-color-border); border-inline-start-width: 4px; border-radius: var(--ob-radius-sm, 4px); }
+.ob-trail-step[data-standing="contested"] { border-inline-start-style: double; }
+.ob-trail-step[data-again="true"] { border-style: dashed; }
+.ob-trail-statement { margin: 0 0 0.25rem; font-weight: 600; }
+.ob-trail-facts { margin: 0.25rem 0; }
+.ob-trail-facts dd { margin-inline-start: 1rem; }
+.ob-trail-facts ul { margin: 0; padding-inline-start: 1.25rem; }
+.ob-trail-tools { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; align-items: center; margin: 1rem 0; }
+.ob-trail-field { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; margin: 0; max-width: 100%; }
+.ob-trail-tools select { max-width: 100%; }
+.ob-trail-status { flex-basis: 100%; margin: 0; }
+@media print {
+  .ob-trail-tools { display: none !important; }
+  .ob-atlas-trail-section li[hidden] { display: list-item !important; }
+  .ob-trail-step { break-inside: avoid; }
+}
+@media (forced-colors: active) {
+  .ob-trail-step { border-color: CanvasText; }
+}
+
+/* Reading path pages (#78, ADR 0215): a plain ordered list of steps, each a bordered group whose text
+   wraps anywhere so nothing overflows at 320 pixels or at 400% zoom. It reads in order without CSS or
+   JavaScript. The optional progress controls are added by <ob-reading-path>; print leaves them out and
+   keeps every step whole. */
+.ob-path-steps { list-style: none; margin: 1rem 0; padding: 0; }
+.ob-path-step { border: 1px solid var(--ob-border, currentColor); border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 1rem; overflow-wrap: anywhere; }
+.ob-path-step[data-optional="true"] { border-style: dashed; }
+.ob-path-step-title { margin: 0 0 0.25rem; font-size: 1.15rem; }
+.ob-path-step p { margin: 0.35rem 0; }
+.ob-path-relation { font-weight: 600; }
+.ob-path-nav { display: flex; flex-wrap: wrap; gap: 0.25rem 0.75rem; }
+.ob-path-tools { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; align-items: center; margin: 1rem 0; }
+.ob-path-tools .ob-path-status { flex-basis: 100%; margin: 0; }
+.ob-path-read { border-inline-start-width: 0.35rem; }
+@media print {
+  .ob-path-tools, .ob-path-progress { display: none !important; }
+  .ob-path-step { break-inside: avoid; }
+}
+@media (forced-colors: active) {
+  .ob-path-step { border-color: CanvasText; }
+}
+
+/* Interpretation comparison pages (#90, ADR 0232): a plain ordered list of interpretations, each a
+   bordered group, then the relations, then every explanation level as its own section. Text wraps
+   anywhere so nothing overflows at 320 pixels or at 400% zoom. It reads in order without CSS or
+   JavaScript. <ob-explanation-levels> only adds the level buttons; print shows every level and
+   leaves the buttons out. */
+.ob-interp-list { list-style: none; margin: 1rem 0; padding: 0; }
+.ob-interp { border: 1px solid var(--ob-border, currentColor); border-radius: 0.5rem; padding: 0.75rem 1rem; margin-bottom: 1rem; overflow-wrap: anywhere; }
+.ob-interp-title { margin: 0 0 0.25rem; font-size: 1.15rem; }
+.ob-interp p, .ob-explanation p { margin: 0.35rem 0; }
+.ob-interp-who { font-weight: 600; }
+.ob-interp-evidence, .ob-interp-relations, .ob-interp-contents ul, .ob-level-links ul { padding-inline-start: 1.25rem; overflow-wrap: anywhere; }
+.ob-level { border-inline-start: 0.25rem solid var(--ob-border, currentColor); padding-inline-start: 0.75rem; margin: 1rem 0; overflow-wrap: anywhere; }
+.ob-explanation { margin-bottom: 1rem; }
+.ob-explanation-about { margin: 0.5rem 0 0.25rem; font-size: 1rem; }
+.ob-level-switch { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
+.ob-level-switch button { min-block-size: 2.75rem; padding: 0.4rem 0.9rem; font: inherit; }
+.ob-level-switch button[aria-pressed="true"] { font-weight: 700; text-decoration: underline; }
+@media print {
+  .ob-level-switch, .ob-level-status, .ob-level-mode-note { display: none !important; }
+  .ob-level[hidden], .ob-explanation[hidden] { display: block !important; }
+  .ob-level-links li[hidden] { display: list-item !important; }
+  ob-explanation-levels .ob-level-links[hidden] { display: block !important; }
+  .ob-interp, .ob-explanation { break-inside: avoid; }
+}
+@media (forced-colors: active) {
+  .ob-interp { border-color: CanvasText; }
+  .ob-level { border-color: CanvasText; }
+  .ob-level-switch button[aria-pressed="true"] { border: 2px solid Highlight; }
+}
+
+/* Curated research context on a post's page (#197, ADR 0197): a static ordered list of the items the
+   author chose, each a bordered group whose facts stack and wrap anywhere, so nothing overflows at
+   320 pixels or at 400% zoom. It reads in order without CSS or JavaScript. Print keeps every item
+   whole, in ink. */
+.ob-curated { margin: 2rem 0; min-width: 0; overflow-wrap: anywhere; }
+.ob-curated-note { margin: 0 0 1rem; font-size: 0.9em; color: var(--ob-color-muted, inherit); }
+.ob-curated-items, .ob-curated-context { list-style: none; padding-inline-start: 0; margin: 0 0 1rem; }
+.ob-curated-item { min-width: 0; margin: 0 0 0.75rem; padding: 0.5rem 0.75rem; border: 1px solid var(--ob-color-border); border-inline-start-width: 4px; border-radius: var(--ob-radius-sm, 4px); }
+.ob-curated-item:target { outline: 2px solid var(--ob-color-link, currentColor); outline-offset: 2px; }
+.ob-curated-heading { margin: 0 0 0.25rem; font-size: 1.05em; }
+.ob-curated-fields { margin: 0.25rem 0; }
+.ob-curated-fields dt { font-weight: 600; }
+.ob-curated-fields dd { margin-inline-start: 1rem; }
+.ob-curated-fields ul, .ob-curated-notices { margin: 0; padding-inline-start: 1.25rem; }
+.ob-curated-missing, .ob-curated-origin { margin: 0.25rem 0; font-size: 0.9em; }
+.ob-curated-via { font-size: 0.85em; color: var(--ob-color-muted, inherit); }
+@media print {
+  .ob-curated-item { break-inside: avoid; border-color: #000; }
+  .ob-curated-note, .ob-curated-via { color: #000; }
+}
+@media (forced-colors: active) {
+  .ob-curated-item { border-color: CanvasText; }
+}
+
+/* Featured reflections print whole, in text-colour marks (ADR 0184). Kept after the earlier print
+   blocks: a test reads the first one. */
+@media print {
+  .ob-feature {
+    break-inside: avoid;
+    border-inline-start-color: currentColor;
+  }
+}
+
+/* <ob-git-sandbox>: in-memory Git lesson widget. Themed through --ob-* tokens. */
+ob-git-sandbox {
+  display: block;
+  margin-block: var(--ob-space-5, 1.5rem);
+  padding: var(--ob-space-4, 1rem);
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius, 0.5rem);
+  background: var(--ob-color-surface, transparent);
+}
+
+ob-git-sandbox .ob-git-note { margin: 0 0 1rem; color: var(--ob-color-muted, inherit); font-size: 0.85em; }
+ob-git-sandbox .ob-git-graph { overflow-x: auto; }
+ob-git-sandbox .ob-git-svg { display: block; width: 100%; height: auto; max-height: 22rem; }
+ob-git-sandbox .ob-git-edge { fill: none; stroke: var(--ob-color-border, currentColor); stroke-width: 2.5; }
+ob-git-sandbox .ob-git-node circle { fill: var(--ob-color-surface-raised, var(--ob-color-surface, Canvas)); stroke: var(--ob-color-accent-soft, currentColor); stroke-width: 2.5; }
+ob-git-sandbox .ob-git-node.is-merge circle { stroke-dasharray: 4 3; }
+ob-git-sandbox .ob-git-node.is-head circle { fill: var(--ob-color-accent, currentColor); }
+ob-git-sandbox .ob-git-id,
+ob-git-sandbox .ob-git-branch { fill: var(--ob-color-text, currentColor); font: 0.7rem var(--ob-font-mono, monospace); text-anchor: middle; }
+ob-git-sandbox .ob-git-branch { fill: var(--ob-color-accent-soft, currentColor); font-weight: 700; }
+ob-git-sandbox .ob-git-branch.is-current { text-decoration: underline; }
+ob-git-sandbox .ob-git-refs { display: grid; gap: 0.5rem; margin: 1rem 0; padding: 0; list-style: none; }
+ob-git-sandbox .ob-git-refs li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+ob-git-sandbox .ob-git-ref { font-family: var(--ob-font-mono, monospace); font-size: 0.85em; margin-right: auto; }
+ob-git-sandbox .ob-git-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+ob-git-sandbox .ob-git-resolve-actions { display: contents; }
+ob-git-sandbox button {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.9rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-accent-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: transparent;
+  color: var(--ob-color-text, inherit);
+  font: inherit;
+  cursor: pointer;
+}
+ob-git-sandbox button:hover:not(:disabled) { background: var(--ob-color-accent, currentColor); color: var(--ob-color-accent-contrast, Canvas); }
+ob-git-sandbox button:disabled { opacity: 0.5; cursor: not-allowed; }
+ob-git-sandbox button:focus-visible,
+ob-git-sandbox .ob-git-input:focus-visible,
+ob-git-sandbox .ob-git-log:focus-visible { outline: var(--ob-focus-ring, 3px solid currentColor); outline-offset: 2px; }
+ob-git-sandbox .ob-git-form { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+ob-git-sandbox .ob-git-form label { flex-basis: 100%; font-size: 0.8em; color: var(--ob-color-muted, inherit); }
+ob-git-sandbox .ob-git-input {
+  flex: 1 1 14rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.7rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 1rem var(--ob-font-mono, monospace);
+}
+ob-git-sandbox .ob-git-log {
+  min-height: 5.5rem;
+  margin: 1rem 0 0;
+  padding: 0.75rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 0.85rem/1.5 var(--ob-font-mono, monospace);
+}
+ob-git-sandbox .ob-git-log[data-error="true"] { border-left: 4px solid var(--ob-color-accent, currentColor); }
+
+/* <ob-fetch-lab>: simulated network inspector and Web Storage panel. */
+ob-fetch-lab { display: block; margin-block: var(--ob-space-5, 1.5rem); }
+ob-fetch-lab .ob-fetch-note { margin: 0 0 1rem; color: var(--ob-color-muted, inherit); font-size: 0.85em; }
+ob-fetch-lab .ob-fetch-panel {
+  min-width: 0;
+  margin-bottom: 1rem;
+  padding: var(--ob-space-4, 1rem);
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius, 0.5rem);
+  background: var(--ob-color-surface, transparent);
+}
+ob-fetch-lab .ob-fetch-panel h3 { margin: 0 0 0.75rem; font-size: 1rem; }
+ob-fetch-lab .ob-fetch-presets,
+ob-fetch-lab .ob-fetch-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+ob-fetch-lab .ob-fetch-form { display: grid; gap: 0.75rem; grid-template-columns: minmax(6rem, 8rem) 1fr; }
+ob-fetch-lab .ob-fetch-form > :nth-child(n + 3) { grid-column: 1 / -1; }
+ob-fetch-lab .ob-fetch-form > button { justify-self: start; }
+ob-fetch-lab .ob-lab-field { display: grid; gap: 0.25rem; min-width: 0; }
+ob-fetch-lab .ob-lab-field label,
+ob-fetch-lab .ob-fetch-check { font-size: 0.8em; color: var(--ob-color-muted, inherit); }
+ob-fetch-lab input[type="text"],
+ob-fetch-lab select,
+ob-fetch-lab textarea {
+  min-height: 2.75rem;
+  width: 100%;
+  padding: 0.4rem 0.7rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 1rem var(--ob-font-mono, monospace);
+}
+ob-fetch-lab button {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.9rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-accent-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: transparent;
+  color: var(--ob-color-text, inherit);
+  font: inherit;
+  cursor: pointer;
+}
+ob-fetch-lab button:hover:not(:disabled) { background: var(--ob-color-accent, currentColor); color: var(--ob-color-accent-contrast, Canvas); }
+ob-fetch-lab button:disabled { opacity: 0.5; cursor: not-allowed; }
+ob-fetch-lab :is(button, input, select, textarea, pre):focus-visible { outline: var(--ob-focus-ring, 3px solid currentColor); outline-offset: 2px; }
+ob-fetch-lab .ob-fetch-stages { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1rem; padding: 0; list-style: none; counter-reset: stage; }
+ob-fetch-lab .ob-fetch-stages li {
+  flex: 1 1 6rem;
+  padding: 0.5rem 0.75rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  font-family: var(--ob-font-mono, monospace);
+  font-size: 0.85em;
+  text-align: center;
+}
+ob-fetch-lab .ob-fetch-stages li[data-state="active"]::before { content: "… "; }
+ob-fetch-lab .ob-fetch-stages li[data-state="done"] { border-color: var(--ob-color-accent-soft, currentColor); }
+ob-fetch-lab .ob-fetch-stages li[data-state="done"]::before { content: "✓ "; }
+ob-fetch-lab .ob-fetch-stages li[data-state="error"] { border-style: dashed; border-width: 2px; }
+ob-fetch-lab .ob-fetch-stages li[data-state="error"]::before { content: "✕ "; }
+ob-fetch-lab .ob-fetch-result { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+ob-fetch-lab :is(.ob-fetch-out, .ob-fetch-code) {
+  margin: 0;
+  padding: 0.75rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 0.85rem/1.5 var(--ob-font-mono, monospace);
+}
+ob-fetch-lab .ob-fetch-code { margin-top: 1rem; }
+ob-fetch-lab .ob-fetch-out[data-error="true"] { border-left: 4px solid var(--ob-color-accent, currentColor); }
+ob-fetch-lab .ob-fetch-lesson { margin: 0.75rem 0 0; font-size: 0.9em; }
+ob-fetch-lab .ob-fetch-usage { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem; font-family: var(--ob-font-mono, monospace); font-size: 0.85em; }
+ob-fetch-lab meter { width: 10rem; max-width: 100%; }
+ob-fetch-lab .ob-fetch-items { margin: 0 0 1rem; padding: 0; list-style: none; font: 0.8rem var(--ob-font-mono, monospace); overflow-wrap: anywhere; }
+ob-fetch-lab .ob-fetch-items li { padding-block: 0.15rem; }
+ob-fetch-lab .ob-fetch-empty { color: var(--ob-color-muted, inherit); }
+ob-fetch-lab .ob-fetch-check { display: block; margin-block: 0.75rem; }
+
+/* <ob-component-lab>: live Shadow DOM architecture explorer. */
+ob-component-lab { display: block; margin-block: var(--ob-space-5, 1.5rem); }
+ob-component-lab .ob-cl-note { margin: 0 0 1rem; color: var(--ob-color-muted, inherit); font-size: 0.85em; }
+ob-component-lab .ob-cl-panel {
+  min-width: 0;
+  margin-bottom: 1rem;
+  padding: var(--ob-space-4, 1rem);
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius, 0.5rem);
+  background: var(--ob-color-surface, transparent);
+}
+ob-component-lab .ob-cl-panel h3 { margin: 0 0 0.75rem; font-size: 1rem; }
+ob-component-lab .ob-cl-stage { padding: 1rem; border: 1px dashed var(--ob-color-border, currentColor); border-radius: var(--ob-radius-sm, 4px); }
+ob-component-lab .ob-cl-controls { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+ob-component-lab .ob-cl-field { display: grid; gap: 0.25rem; min-width: 0; }
+ob-component-lab .ob-cl-field label,
+ob-component-lab .ob-cl-check label { font-size: 0.85em; }
+ob-component-lab .ob-cl-field output { font: 0.8rem var(--ob-font-mono, monospace); color: var(--ob-color-muted, inherit); }
+ob-component-lab .ob-cl-check { display: flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; }
+ob-component-lab input[type="checkbox"] { width: 1.25rem; height: 1.25rem; accent-color: var(--ob-color-accent, currentColor); }
+ob-component-lab input[type="color"] { width: 100%; min-height: 2.75rem; padding: 0.2rem; background: transparent; border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor); border-radius: var(--ob-radius-sm, 4px); }
+ob-component-lab input[type="range"] { width: 100%; min-height: 2.75rem; accent-color: var(--ob-color-accent, currentColor); }
+ob-component-lab select {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.7rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 1rem var(--ob-font-mono, monospace);
+}
+ob-component-lab :is(input, select, pre):focus-visible { outline: var(--ob-focus-ring, 3px solid currentColor); outline-offset: 2px; }
+ob-component-lab .ob-cl-code {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem;
+  overflow-x: auto;
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 0.8rem/1.5 var(--ob-font-mono, monospace);
+}
+ob-component-lab :is(.ob-cl-slots, .ob-cl-notes) { margin: 0; padding-left: 1.25rem; font-size: 0.9em; }
+ob-component-lab .ob-cl-slots { font-family: var(--ob-font-mono, monospace); font-size: 0.85em; }
+ob-component-lab .ob-cl-notes li { margin-bottom: 0.4rem; }
+
+/* <ob-evolution-lab>, <ob-audio-lab>, <ob-native-lab>: embeddable versions of the series labs. */
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) {
+  display: block;
+  margin-block: var(--ob-space-5, 1.5rem);
+  padding: var(--ob-space-4, 1rem);
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius, 0.5rem);
+  background: var(--ob-color-surface, transparent);
+}
+
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) :is(.ob-evo-note, .ob-audio-note, .ob-native-note) {
+  margin: 0 0 1rem;
+  color: var(--ob-color-muted, inherit);
+  font-size: 0.85em;
+}
+
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) button {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.9rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-accent-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: transparent;
+  color: var(--ob-color-text, inherit);
+  font: inherit;
+  cursor: pointer;
+}
+
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) button:hover:not(:disabled),
+ob-evolution-lab .ob-evo-eras button[aria-pressed="true"] {
+  background: var(--ob-color-accent, currentColor);
+  color: var(--ob-color-accent-contrast, Canvas);
+}
+
+/* <ob-git-sandbox>: in-memory Git lesson widget. Themed through --ob-* tokens. */
+ob-git-sandbox {
+  display: block;
+  margin-block: var(--ob-space-5, 1.5rem);
+  padding: var(--ob-space-4, 1rem);
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius, 0.5rem);
+  background: var(--ob-color-surface, transparent);
+}
+
+ob-git-sandbox .ob-git-note { margin: 0 0 1rem; color: var(--ob-color-muted, inherit); font-size: 0.85em; }
+ob-git-sandbox .ob-git-graph { overflow-x: auto; }
+ob-git-sandbox .ob-git-svg { display: block; width: 100%; height: auto; max-height: 22rem; }
+ob-git-sandbox .ob-git-edge { fill: none; stroke: var(--ob-color-border, currentColor); stroke-width: 2.5; }
+ob-git-sandbox .ob-git-node circle { fill: var(--ob-color-surface-raised, var(--ob-color-surface, Canvas)); stroke: var(--ob-color-accent-soft, currentColor); stroke-width: 2.5; }
+ob-git-sandbox .ob-git-node.is-merge circle { stroke-dasharray: 4 3; }
+ob-git-sandbox .ob-git-node.is-head circle { fill: var(--ob-color-accent, currentColor); }
+ob-git-sandbox .ob-git-id,
+ob-git-sandbox .ob-git-branch { fill: var(--ob-color-text, currentColor); font: 0.7rem var(--ob-font-mono, monospace); text-anchor: middle; }
+ob-git-sandbox .ob-git-branch { fill: var(--ob-color-accent-soft, currentColor); font-weight: 700; }
+ob-git-sandbox .ob-git-branch.is-current { text-decoration: underline; }
+ob-git-sandbox .ob-git-refs { display: grid; gap: 0.5rem; margin: 1rem 0; padding: 0; list-style: none; }
+ob-git-sandbox .ob-git-refs li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+ob-git-sandbox .ob-git-ref { font-family: var(--ob-font-mono, monospace); font-size: 0.85em; margin-right: auto; }
+ob-git-sandbox .ob-git-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+ob-git-sandbox .ob-git-resolve-actions { display: contents; }
+ob-git-sandbox button {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.9rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-accent-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: transparent;
+  color: var(--ob-color-text, inherit);
+  font: inherit;
+  cursor: pointer;
+}
+ob-git-sandbox button:hover:not(:disabled) { background: var(--ob-color-accent, currentColor); color: var(--ob-color-accent-contrast, Canvas); }
+ob-git-sandbox button:disabled { opacity: 0.5; cursor: not-allowed; }
+ob-git-sandbox button:focus-visible,
+ob-git-sandbox .ob-git-input:focus-visible,
+ob-git-sandbox .ob-git-log:focus-visible { outline: var(--ob-focus-ring, 3px solid currentColor); outline-offset: 2px; }
+ob-git-sandbox .ob-git-form { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+ob-git-sandbox .ob-git-form label { flex-basis: 100%; font-size: 0.8em; color: var(--ob-color-muted, inherit); }
+ob-git-sandbox .ob-git-input {
+  flex: 1 1 14rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.7rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 1rem var(--ob-font-mono, monospace);
+}
+ob-git-sandbox .ob-git-log {
+  min-height: 5.5rem;
+  margin: 1rem 0 0;
+  padding: 0.75rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 0.85rem/1.5 var(--ob-font-mono, monospace);
+}
+ob-git-sandbox .ob-git-log[data-error="true"] { border-left: 4px solid var(--ob-color-accent, currentColor); }
+
+/* <ob-fetch-lab>: simulated network inspector and Web Storage panel. */
+ob-fetch-lab { display: block; margin-block: var(--ob-space-5, 1.5rem); }
+ob-fetch-lab .ob-fetch-note { margin: 0 0 1rem; color: var(--ob-color-muted, inherit); font-size: 0.85em; }
+ob-fetch-lab .ob-fetch-panel {
+  min-width: 0;
+  margin-bottom: 1rem;
+  padding: var(--ob-space-4, 1rem);
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius, 0.5rem);
+  background: var(--ob-color-surface, transparent);
+}
+ob-fetch-lab .ob-fetch-panel h3 { margin: 0 0 0.75rem; font-size: 1rem; }
+ob-fetch-lab .ob-fetch-presets,
+ob-fetch-lab .ob-fetch-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+ob-fetch-lab .ob-fetch-form { display: grid; gap: 0.75rem; grid-template-columns: minmax(6rem, 8rem) 1fr; }
+ob-fetch-lab .ob-fetch-form > :nth-child(n + 3) { grid-column: 1 / -1; }
+ob-fetch-lab .ob-fetch-form > button { justify-self: start; }
+ob-fetch-lab .ob-lab-field { display: grid; gap: 0.25rem; min-width: 0; }
+ob-fetch-lab .ob-lab-field label,
+ob-fetch-lab .ob-fetch-check { font-size: 0.8em; color: var(--ob-color-muted, inherit); }
+ob-fetch-lab input[type="text"],
+ob-fetch-lab select,
+ob-fetch-lab textarea {
+  min-height: 2.75rem;
+  width: 100%;
+  padding: 0.4rem 0.7rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 1rem var(--ob-font-mono, monospace);
+}
+ob-fetch-lab button {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.9rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-accent-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: transparent;
+  color: var(--ob-color-text, inherit);
+  font: inherit;
+  cursor: pointer;
+}
+ob-fetch-lab button:hover:not(:disabled) { background: var(--ob-color-accent, currentColor); color: var(--ob-color-accent-contrast, Canvas); }
+ob-fetch-lab button:disabled { opacity: 0.5; cursor: not-allowed; }
+ob-fetch-lab :is(button, input, select, textarea, pre):focus-visible { outline: var(--ob-focus-ring, 3px solid currentColor); outline-offset: 2px; }
+ob-fetch-lab .ob-fetch-stages { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1rem; padding: 0; list-style: none; counter-reset: stage; }
+ob-fetch-lab .ob-fetch-stages li {
+  flex: 1 1 6rem;
+  padding: 0.5rem 0.75rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  font-family: var(--ob-font-mono, monospace);
+  font-size: 0.85em;
+  text-align: center;
+}
+ob-fetch-lab .ob-fetch-stages li[data-state="active"]::before { content: "… "; }
+ob-fetch-lab .ob-fetch-stages li[data-state="done"] { border-color: var(--ob-color-accent-soft, currentColor); }
+ob-fetch-lab .ob-fetch-stages li[data-state="done"]::before { content: "✓ "; }
+ob-fetch-lab .ob-fetch-stages li[data-state="error"] { border-style: dashed; border-width: 2px; }
+ob-fetch-lab .ob-fetch-stages li[data-state="error"]::before { content: "✕ "; }
+ob-fetch-lab .ob-fetch-result { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+ob-fetch-lab :is(.ob-fetch-out, .ob-fetch-code) {
+  margin: 0;
+  padding: 0.75rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 0.85rem/1.5 var(--ob-font-mono, monospace);
+}
+ob-fetch-lab .ob-fetch-code { margin-top: 1rem; }
+ob-fetch-lab .ob-fetch-out[data-error="true"] { border-left: 4px solid var(--ob-color-accent, currentColor); }
+ob-fetch-lab .ob-fetch-lesson { margin: 0.75rem 0 0; font-size: 0.9em; }
+ob-fetch-lab .ob-fetch-usage { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem; font-family: var(--ob-font-mono, monospace); font-size: 0.85em; }
+ob-fetch-lab meter { width: 10rem; max-width: 100%; }
+ob-fetch-lab .ob-fetch-items { margin: 0 0 1rem; padding: 0; list-style: none; font: 0.8rem var(--ob-font-mono, monospace); overflow-wrap: anywhere; }
+ob-fetch-lab .ob-fetch-items li { padding-block: 0.15rem; }
+ob-fetch-lab .ob-fetch-explain { margin: 0 0 1rem; font-size: 0.9em; }
+ob-fetch-lab .ob-fetch-world { margin-bottom: 1rem; font: 0.85rem var(--ob-font-mono, monospace); white-space: pre-wrap; overflow-wrap: anywhere; }
+ob-fetch-lab .ob-fetch-empty { color: var(--ob-color-muted, inherit); }
+ob-fetch-lab .ob-fetch-check { display: block; margin-block: 0.75rem; }
+
+/* <ob-component-lab>: live Shadow DOM architecture explorer. */
+ob-component-lab { display: block; margin-block: var(--ob-space-5, 1.5rem); }
+ob-component-lab .ob-cl-note { margin: 0 0 1rem; color: var(--ob-color-muted, inherit); font-size: 0.85em; }
+ob-component-lab .ob-cl-panel {
+  min-width: 0;
+  margin-bottom: 1rem;
+  padding: var(--ob-space-4, 1rem);
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius, 0.5rem);
+  background: var(--ob-color-surface, transparent);
+}
+ob-component-lab .ob-cl-panel h3 { margin: 0 0 0.75rem; font-size: 1rem; }
+ob-component-lab .ob-cl-stage { padding: 1rem; border: 1px dashed var(--ob-color-border, currentColor); border-radius: var(--ob-radius-sm, 4px); }
+ob-component-lab .ob-cl-controls { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+ob-component-lab .ob-cl-field { display: grid; gap: 0.25rem; min-width: 0; }
+ob-component-lab .ob-cl-field label,
+ob-component-lab .ob-cl-check label { font-size: 0.85em; }
+ob-component-lab .ob-cl-field output { font: 0.8rem var(--ob-font-mono, monospace); color: var(--ob-color-muted, inherit); }
+ob-component-lab .ob-cl-check { display: flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; }
+ob-component-lab input[type="checkbox"] { width: 1.25rem; height: 1.25rem; accent-color: var(--ob-color-accent, currentColor); }
+ob-component-lab input[type="color"] { width: 100%; min-height: 2.75rem; padding: 0.2rem; background: transparent; border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor); border-radius: var(--ob-radius-sm, 4px); }
+ob-component-lab input[type="range"] { width: 100%; min-height: 2.75rem; accent-color: var(--ob-color-accent, currentColor); }
+ob-component-lab select {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.7rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 1rem var(--ob-font-mono, monospace);
+}
+ob-component-lab :is(input, select, pre):focus-visible { outline: var(--ob-focus-ring, 3px solid currentColor); outline-offset: 2px; }
+ob-component-lab .ob-cl-code {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem;
+  overflow-x: auto;
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 0.8rem/1.5 var(--ob-font-mono, monospace);
+}
+ob-component-lab :is(.ob-cl-slots, .ob-cl-notes) { margin: 0; padding-left: 1.25rem; font-size: 0.9em; }
+ob-component-lab .ob-cl-slots { font-family: var(--ob-font-mono, monospace); font-size: 0.85em; }
+ob-component-lab .ob-cl-notes li { margin-bottom: 0.4rem; }
+
+/* <ob-evolution-lab>, <ob-audio-lab>, <ob-native-lab>: embeddable versions of the series labs. */
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) {
+  display: block;
+  margin-block: var(--ob-space-5, 1.5rem);
+  padding: var(--ob-space-4, 1rem);
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius, 0.5rem);
+  background: var(--ob-color-surface, transparent);
+}
+
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) :is(.ob-evo-note, .ob-audio-note, .ob-native-note) {
+  margin: 0 0 1rem;
+  color: var(--ob-color-muted, inherit);
+  font-size: 0.85em;
+}
+
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) button {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.9rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-accent-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: transparent;
+  color: var(--ob-color-text, inherit);
+  font: inherit;
+  cursor: pointer;
+}
+
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) button:hover:not(:disabled),
+ob-evolution-lab .ob-evo-eras button[aria-pressed="true"] {
+  background: var(--ob-color-accent, currentColor);
+  color: var(--ob-color-accent-contrast, Canvas);
+}
+
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) :is(button, input, select, pre, summary, [tabindex]):focus-visible {
+  outline: var(--ob-focus-ring, 3px solid currentColor);
+  outline-offset: 2px;
+}
+
+:is(ob-evolution-lab, ob-audio-lab, ob-native-lab) :is(pre, code) {
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+}
+
+/* JavaScript evolution */
+ob-evolution-lab .ob-evo-eras { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+ob-evolution-lab .ob-evo-compare { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); margin-block: 1rem; }
+ob-evolution-lab .ob-evo-column { min-width: 0; }
+ob-evolution-lab .ob-evo-column :is(h3, h4) { margin: 0 0 0.5rem; font: 700 0.8rem/1.3 var(--ob-font-mono, monospace); letter-spacing: 0.04em; text-transform: uppercase; }
+ob-evolution-lab .ob-evo-code {
+  margin: 0 0 0.75rem;
+  padding: 0.75rem;
+  overflow-x: auto;
+  border-radius: var(--ob-radius-sm, 4px);
+  font: 0.8rem/1.5 var(--ob-font-mono, monospace);
+}
+ob-evolution-lab .ob-evo-input { margin-bottom: 1rem; }
+ob-evolution-lab .ob-evo-caveat { color: var(--ob-color-muted, inherit); font-size: 0.9em; }
+
+/* Web Audio */
+ob-audio-lab .ob-audio-state { display: inline-block; margin-bottom: 0.75rem; font: 700 0.8rem var(--ob-font-mono, monospace); letter-spacing: 0.05em; }
+ob-audio-lab .ob-audio-controls { display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); align-items: end; }
+ob-audio-lab .ob-audio-field { display: grid; gap: 0.25rem; min-width: 0; }
+ob-audio-lab .ob-audio-field label { font-size: 0.85em; }
+ob-audio-lab .ob-audio-field output { font: 0.8rem var(--ob-font-mono, monospace); color: var(--ob-color-muted, inherit); }
+ob-audio-lab select {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.7rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 1rem var(--ob-font-mono, monospace);
+}
+ob-audio-lab input[type="range"] { width: 100%; min-height: 2.75rem; accent-color: var(--ob-color-accent, currentColor); }
+ob-audio-lab .ob-audio-transport { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+ob-audio-lab .ob-audio-status { margin: 0.75rem 0; min-height: 1.5em; }
+ob-audio-lab .ob-audio-scope { display: block; width: 100%; max-height: 10rem; border-radius: var(--ob-radius-sm, 4px); background: var(--ob-color-code-bg, transparent); }
+ob-audio-lab .ob-audio-axis { fill: none; stroke: var(--ob-color-border, currentColor); stroke-width: 1; }
+ob-audio-lab .ob-audio-trace { fill: none; stroke: var(--ob-color-accent-soft, currentColor); stroke-width: 2; }
+ob-audio-lab .ob-audio-routing { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.75rem 0 0; padding: 0; list-style: none; font: 0.8rem var(--ob-font-mono, monospace); }
+ob-audio-lab .ob-audio-routing li { padding: 0.2rem 0.6rem; border: 1px dashed var(--ob-color-border, currentColor); border-radius: var(--ob-radius-sm, 4px); }
+ob-audio-lab .ob-audio-routing li + li::before { content: "→ "; }
+
+/* Native browser APIs */
+ob-native-lab .ob-native-section { margin-bottom: 1.25rem; padding-bottom: 1rem; border-bottom: 1px solid var(--ob-color-border, currentColor); }
+ob-native-lab .ob-native-section:last-child { margin-bottom: 0; border-bottom: 0; }
+ob-native-lab .ob-native-section h3 { margin: 0 0 0.5rem; font-size: 1rem; }
+ob-native-lab .ob-native-section h3 small { margin-left: 0.5rem; font: 0.75rem var(--ob-font-mono, monospace); color: var(--ob-color-muted, inherit); }
+ob-native-lab .ob-native-layout { margin: 0.75rem 0; }
+ob-native-lab .ob-native-card { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; border: 2px solid var(--ob-color-accent-border, currentColor); border-radius: var(--ob-radius, 0.5rem); }
+ob-native-lab .ob-native-card span:not(.ob-native-icon) { display: block; font-size: 0.85em; color: var(--ob-color-muted, inherit); }
+ob-native-lab .ob-native-icon { flex: none; width: 2rem; height: 2rem; border-radius: 50%; background: var(--ob-color-accent, currentColor); }
+ob-native-lab .ob-native-layout[data-layout="expanded"] .ob-native-card { flex-direction: column; align-items: flex-start; padding: 1.75rem; }
+ob-native-lab .ob-native-controls { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
+ob-native-lab .ob-native-status,
+ob-native-lab .ob-native-readout { margin: 0.5rem 0; font-size: 0.9em; min-height: 1.4em; }
+ob-native-lab .ob-native-api { font-size: 0.8em; }
+ob-native-lab .ob-native-popover { padding: 1rem; max-width: 20rem; border: 2px solid var(--ob-color-accent-border, currentColor); border-radius: var(--ob-radius, 0.5rem); background: var(--ob-color-surface, Canvas); color: var(--ob-color-text, CanvasText); }
+ob-native-lab .ob-native-root { height: 9rem; overflow: auto; border: 1px dashed var(--ob-color-border, currentColor); border-radius: var(--ob-radius-sm, 4px); }
+ob-native-lab .ob-native-spacer { height: 7rem; }
+ob-native-lab .ob-native-target { padding: 0.75rem; border: 2px solid var(--ob-color-border, currentColor); border-radius: var(--ob-radius-sm, 4px); text-align: center; }
+ob-native-lab .ob-native-target.ob-native-in-view { border-color: var(--ob-color-accent-soft, currentColor); border-style: double; border-width: 4px; }
+ob-native-lab .ob-native-field { display: grid; gap: 0.25rem; margin-top: 0.75rem; }
+ob-native-lab .ob-native-field label { font-size: 0.85em; }
+ob-native-lab input[type="range"] { width: 100%; min-height: 2.75rem; accent-color: var(--ob-color-accent, currentColor); }
+
+/* Reader highlights and private notes (ADR 0241): one column, native controls, visible focus. */
+
+ob-annotations {
+  display: block;
+  max-inline-size: 42rem;
+}
+
+/* Painted over the saved words with the CSS Custom Highlight API; the post's markup is never changed.
+   System colours keep the words legible in every theme and in forced-colours mode. */
+::highlight(ob-annotation) {
+  background-color: Mark;
+  color: MarkText;
+}
+
+.ob-annotations-make {
+  display: grid;
+  gap: 1rem;
+}
+
+.ob-annotations-make fieldset {
+  display: grid;
+  gap: .5rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: .75rem 1rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+}
+
+.ob-annotations-choice {
+  display: flex;
+  gap: .5rem;
+  align-items: baseline;
+}
+
+.ob-annotations-field {
+  display: grid;
+  gap: .35rem;
+}
+
+.ob-annotations textarea,
+.ob-annotations select {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  font: inherit;
+  padding: .65rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+  background: var(--ob-color-surface);
+  color: inherit;
+}
+
+.ob-annotations-lead,
+.ob-annotations-selection,
+.ob-annotations-hint,
+.ob-annotations-notice,
+.ob-annotations-status,
+.ob-annotations-error,
+.ob-annotations-quote,
+.ob-annotations-state,
+.ob-annotations-text,
+.ob-annotations-kind {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ob-annotations-hint,
+.ob-annotations-state,
+.ob-annotations-selection,
+.ob-annotations-kind {
+  color: var(--ob-color-muted);
+}
+
+.ob-annotations-notice,
+.ob-annotations-error {
+  font-weight: 600;
+}
+
+.ob-annotations-error::before {
+  content: "Error: ";
+}
+
+.ob-annotations-status:empty {
+  display: none;
+}
+
+.ob-annotations-text,
+.ob-annotations-quote {
+  white-space: pre-wrap;
+}
+
+blockquote.ob-annotations-quote {
+  margin-inline: 0;
+  padding-inline-start: .75rem;
+  border-inline-start: 3px solid var(--ob-color-border);
+}
+
+.ob-annotations-list {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-annotations-item {
+  display: grid;
+  gap: .5rem;
+  padding: .75rem 1rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+}
+
+.ob-annotations-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  align-items: center;
+}
+
+ob-annotations [hidden] {
+  display: none;
+}
+
+.ob-annotations :focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.ob-annotations [aria-invalid="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Reader interpretation history (ADR 0244): the same quiet controls. Two readings sit side by side where
+   there is room and one after the other where there is not; the order in the page is the same either way. */
+
+.ob-reflection-history {
+  max-inline-size: 60rem;
+}
+
+ob-reflection-history {
+  display: block;
+}
+
+ob-reflection-history [hidden] {
+  display: none;
+}
+
+.ob-reflection-history-make,
+.ob-reflection-history-body,
+.ob-reflection-history-line,
+.ob-reflection-history-compare,
+.ob-reflection-history-reading {
+  display: grid;
+  gap: 1rem;
+  min-inline-size: 0;
+}
+
+.ob-reflection-history-where {
+  display: grid;
+  gap: .5rem;
+}
+
+.ob-reflection-history-choice,
+.ob-reflection-history-field {
+  display: grid;
+  gap: .25rem;
+}
+
+.ob-reflection-history-choice {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+}
+
+.ob-reflection-history textarea,
+.ob-reflection-history select,
+.ob-reflection-history input[type="text"] {
+  inline-size: 100%;
+  max-inline-size: 100%;
+  box-sizing: border-box;
+  font: inherit;
+}
+
+.ob-reflection-history-meta,
+.ob-reflection-history-state,
+.ob-reflection-history-hint,
+.ob-reflection-history-position,
+.ob-reflection-history-empty,
+.ob-reflection-history-notice,
+.ob-reflection-history-status,
+.ob-reflection-history-error,
+.ob-reflection-history-lead,
+.ob-reflection-history-title {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ob-reflection-history-meta,
+.ob-reflection-history-state,
+.ob-reflection-history-hint,
+.ob-reflection-history-position {
+  font-size: .9em;
+}
+
+.ob-reflection-history-text {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ob-reflection-history-notice,
+.ob-reflection-history-error {
+  padding: .5rem .75rem;
+  border: 1px solid currentColor;
+  border-radius: .35rem;
+}
+
+.ob-reflection-history-status:empty {
+  display: none;
+}
+
+.ob-reflection-history-list {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-reflection-history-item,
+.ob-reflection-history-column {
+  display: grid;
+  gap: .5rem;
+  min-inline-size: 0;
+  padding: .75rem 1rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+}
+
+.ob-reflection-history-picks {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.ob-reflection-history-pair {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+}
+
+.ob-reflection-history-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  align-items: center;
+}
+
+.ob-reflection-history-confirm,
+.ob-reflection-history-send,
+.ob-reflection-history-sent,
+.ob-reflection-history-sent-now,
+.ob-reflection-history-remove,
+.ob-reflection-history-preview {
+  display: grid;
+  gap: .5rem;
+  min-inline-size: 0;
+  margin-block-start: .5rem;
+}
+
+.ob-reflection-history-send,
+.ob-reflection-history-confirm,
+.ob-reflection-history-sent-now {
+  padding: .75rem;
+  border: 1px solid currentColor;
+  border-radius: .25rem;
+}
+
+.ob-reflection-history-send textarea {
+  font-family: ui-monospace, monospace;
+  overflow-wrap: anywhere;
+}
+
+.ob-reflection-history :focus-visible,
+.ob-reflection-history [aria-invalid="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Reader saved sources and reading trails (ADR 0242): the same quiet, one-column controls. */
+
+.ob-reading-trail {
+  max-inline-size: 42rem;
+}
+
+ob-reading-trail {
+  display: block;
+}
+
+.ob-reading-trail [hidden] {
+  display: none !important;
+}
+
+.ob-reading-trail .ob-trail-body,
+.ob-reading-trail .ob-trail-section,
+.ob-reading-trail .ob-trail-form,
+.ob-reading-trail .ob-trail-field,
+.ob-reading-trail .ob-trail-item {
+  display: grid;
+  gap: .75rem;
+}
+
+.ob-reading-trail .ob-trail-section {
+  margin-block-start: 1.5rem;
+}
+
+.ob-reading-trail .ob-trail-heading {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.ob-reading-trail .ob-trail-lead,
+.ob-reading-trail .ob-trail-hint,
+.ob-reading-trail .ob-trail-meta,
+.ob-reading-trail .ob-trail-empty,
+.ob-reading-trail .ob-trail-status,
+.ob-reading-trail .ob-trail-notice,
+.ob-reading-trail .ob-trail-error,
+.ob-reading-trail .ob-trail-title {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.ob-reading-trail .ob-trail-hint,
+.ob-reading-trail .ob-trail-meta,
+.ob-reading-trail .ob-trail-empty {
+  color: var(--ob-color-muted);
+}
+
+.ob-reading-trail .ob-trail-notice,
+.ob-reading-trail .ob-trail-error {
+  font-weight: 600;
+}
+
+.ob-reading-trail .ob-trail-error::before {
+  content: "Error: ";
+}
+
+.ob-reading-trail .ob-trail-status:empty {
+  display: none;
+}
+
+.ob-reading-trail .ob-trail-title {
+  font-weight: 600;
+}
+
+.ob-reading-trail .ob-trail-list,
+.ob-reading-trail .ob-trail-steps {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ob-reading-trail .ob-trail-item {
+  padding: .75rem 1rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+}
+
+.ob-reading-trail .ob-trail-steps {
+  gap: .75rem;
+  counter-reset: ob-trail-step;
+}
+
+.ob-reading-trail .ob-trail-step {
+  display: grid;
+  gap: .35rem;
+  padding-inline-start: .75rem;
+  border-inline-start: 3px solid var(--ob-color-border);
+}
+
+.ob-reading-trail .ob-trail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1rem;
+  align-items: center;
+}
+
+.ob-reading-trail input[type="text"],
+.ob-reading-trail select {
+  box-sizing: border-box;
+  inline-size: 100%;
+  min-inline-size: 0;
+  font: inherit;
+  padding: .65rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+  background: var(--ob-color-surface);
+  color: inherit;
+}
+
+.ob-reading-trail :focus-visible,
+.ob-reading-trail [aria-invalid="true"] {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+/* Reader export, import and privacy controls (ADR 0243). */
+
+.ob-reading-trail .ob-trail-subheading {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.ob-reading-trail .ob-trail-kept {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.ob-reading-trail .ob-trail-preview,
+.ob-reading-trail .ob-trail-choice,
+.ob-reading-trail .ob-trail-details {
+  display: grid;
+  gap: .75rem;
+  min-inline-size: 0;
+  margin: 0;
+  padding: .75rem 1rem;
+  border: 1px solid var(--ob-color-border);
+  border-radius: .35rem;
+}
+
+.ob-reading-trail .ob-trail-details {
+  padding: .5rem 1rem;
+}
+
+.ob-reading-trail .ob-trail-file {
+  box-sizing: border-box;
+  max-block-size: 20rem;
+  max-inline-size: 100%;
+  margin: .5rem 0 0;
+  overflow: auto;
+  font-size: .85rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ob-reading-trail input[type="file"] {
+  max-inline-size: 100%;
+  font: inherit;
+}
+
+.ob-reading-trail .ob-trail-field:has(> input[type="checkbox"], > input[type="radio"]) {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.ob-reading-trail .ob-trail-body,
+.ob-reading-trail .ob-trail-section,
+.ob-reading-trail .ob-trail-form,
+.ob-reading-trail .ob-trail-preview,
+.ob-reading-trail .ob-trail-choice,
+.ob-reading-trail .ob-trail-details {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ob-reading-trail .ob-trail-field:has(> input[type="file"]) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.ob-reading-trail input[type="file"] {
+  box-sizing: border-box;
+  inline-size: 100%;
+}
+/* <ob-practice-lab>: guided Git practice terminal. Themed through --ob-* tokens. */
+ob-practice-lab {
+  display: block;
+  margin-block: var(--ob-space-5, 1.5rem);
+  padding: var(--ob-space-4, 1rem);
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius, 0.5rem);
+  background: var(--ob-color-surface, transparent);
+}
+ob-practice-lab .ob-practice-status { margin: 0 0 0.25rem; color: var(--ob-color-muted, inherit); font-size: 0.8em; letter-spacing: 0.06em; text-transform: uppercase; }
+ob-practice-lab .ob-practice-goal { margin: 0 0 0.75rem; font-weight: 700; }
+ob-practice-lab .ob-practice-log {
+  height: 14rem;
+  padding: 0.75rem;
+  overflow-y: auto;
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 0.85rem/1.5 var(--ob-font-mono, monospace);
+}
+ob-practice-lab .ob-practice-line { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+ob-practice-lab .ob-practice-line.is-cmd { font-weight: 700; }
+ob-practice-lab .ob-practice-line.is-why { margin-bottom: 0.5rem; font-style: italic; opacity: 0.85; }
+ob-practice-lab .ob-practice-line.is-err { border-left: 4px solid var(--ob-color-accent, currentColor); padding-left: 0.5rem; }
+ob-practice-lab .ob-practice-line.is-tip { color: var(--ob-color-muted, inherit); }
+ob-practice-lab .ob-practice-form { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-top: 0.75rem; }
+ob-practice-lab .ob-practice-form label { flex-basis: 100%; font-size: 0.8em; color: var(--ob-color-muted, inherit); }
+ob-practice-lab .ob-practice-input {
+  flex: 1 1 14rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.7rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 1rem var(--ob-font-mono, monospace);
+}
+ob-practice-lab button {
+  min-height: 2.75rem;
+  padding: 0.4rem 0.9rem;
+  border: var(--ob-border-width, 1px) solid var(--ob-color-accent-border, currentColor);
+  border-radius: var(--ob-radius-sm, 4px);
+  background: transparent;
+  color: var(--ob-color-text, inherit);
+  font: inherit;
+  cursor: pointer;
+}
+ob-practice-lab button:hover:not(:disabled) { background: var(--ob-color-accent, currentColor); color: var(--ob-color-accent-contrast, Canvas); }
+ob-practice-lab button:disabled { opacity: 0.5; cursor: not-allowed; }
+ob-practice-lab .ob-practice-restart { margin-top: 0.75rem; }
+ob-practice-lab button:focus-visible,
+ob-practice-lab .ob-practice-input:focus-visible,
+ob-practice-lab .ob-practice-log:focus-visible { outline: var(--ob-focus-ring, 3px solid currentColor); outline-offset: 2px; }
+ob-practice-lab .ob-practice-pager { padding: 0; }
+ob-practice-lab .ob-practice-pager:focus-visible { outline: var(--ob-focus-ring, 3px solid currentColor); outline-offset: 2px; }
+ob-practice-lab .ob-practice-pager-view {
+  height: 12.5em;
+  margin: 0;
+  padding: 0.75rem 0.75rem 0;
+  overflow: hidden;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  border-radius: var(--ob-radius-sm, 4px) var(--ob-radius-sm, 4px) 0 0;
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 0.85rem/1.5 var(--ob-font-mono, monospace);
+}
+ob-practice-lab .ob-practice-pager-prompt {
+  margin: 0;
+  padding: 0 0.75rem 0.5rem;
+  border-radius: 0 0 var(--ob-radius-sm, 4px) var(--ob-radius-sm, 4px);
+  background: var(--ob-color-code-bg, transparent);
+  color: var(--ob-color-code-text, inherit);
+  font: 700 0.85rem/1.5 var(--ob-font-mono, monospace);
+}
+ob-practice-lab .ob-practice-pager-keys,
+ob-practice-lab .ob-practice-pager-summary { margin: 0.5rem 0 0; color: var(--ob-color-muted, inherit); font-size: 0.8em; }
+ob-practice-lab .ob-practice-pager-controls { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+ob-practice-lab [hidden] { display: none; }

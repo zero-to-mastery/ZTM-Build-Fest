@@ -1,0 +1,25 @@
+From 45dcb14ce29b1e37876ef92a7e62513f426ccebc Mon Sep 17 00:00:00 2001
+From: s <s@e.invalid>
+Date: Wed, 30 Sep 2026 17:38:03 -0400
+Subject: [PATCH] fix(vde): unknown command reports on stderr and exits 2
+ instead of 0
+
+---
+ bin/vde | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/bin/vde b/bin/vde
+index 632de89..d7dbe40 100755
+--- a/bin/vde
++++ b/bin/vde
+@@ -273,3 +273,6 @@ case ${ACTION} in
+         ;;
+-    *) echo "Unknown command. Run 'vde help' for usage." ;;
++    *)
++        echo "Unknown command '${ACTION}'. Run 'vde help' for usage." >&2
++        exit ${VDE_ERR_INVALID_INPUT}
++        ;;
+ esac
+-- 
+2.43.0
+

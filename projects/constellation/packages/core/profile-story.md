@@ -1,0 +1,7 @@
+# Profile Story output
+
+Profile Story output, produced by Core and by the Action's `story` and `target-width` inputs, is always a bounded Projects, Technical Shape, or Journey candidate: the explicitly selected story, or the current recommendation. The Studio does not offer it since v5.0.0; its **Download an image** reflects the current custom view. Actual project names are the proof points; language and topic labels only orient the reader when available. Candidate project selection is capped at twelve and deterministic, and unsupported themes or temporal stories are omitted rather than invented. For a compact recruiter-oriented README presentation, use the existing `readmePresentation: "recruiter"` option. Profile Story uses the existing static SVG renderer and retain its accessible title and description and light/dark theme behavior.
+
+This output describes visible project evidence. It must not be presented as a skill score, seniority assessment, recruiter ranking, or claim about professional growth.
+
+Profile Story also offers compact 480px and wide 900px SVG exports. Both are composed from the same bounded candidate, with identical project identities and source evidence. Compact output emphasizes authored Featured and Supporting roles and reduces secondary label and relationship annotation density. It never removes selected projects. Story Clarity diagnostics are bounded estimates; browser checks cover actual rendered label and legend geometry.

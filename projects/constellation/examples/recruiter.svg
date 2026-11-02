@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="840" viewBox="0 0 1200 840" role="img" aria-labelledby="recruiter-title recruiter-description">
+  <title id="recruiter-title">alice · project constellation</title><desc id="recruiter-description">Alice Chen (@alice). JavaScript · Python · TypeScript. Repository topics: visualization. Size shows developer-curated presentation importance, not quality or skill: Featured, Supporting, then small Experimental/Historical projects; unassigned projects have a conservative default. Distance shows last repository push or observed work event: NOW under 30 days, RECENT under six months, EARLIER otherwise. Unknown recency is placed outside and identified in project titles. Repository activity is not necessarily the developer’s own activity. Color shows primary language; counts cover displayed repositories, not skill. Featured labels may show other loaded contributors, excluding this account; missing scans do not establish solo work. A + contributor count is a lower bound. Observed active months remain in project titles; partial history is a lower bound, not lifetime continuity or personal effort. Thin lines are explicitly curated project relationships. Other repositories counts cover loaded public repositories, including those outside current filters, not necessarily the whole account. No scores or engineering roles are inferred.</desc>
+  <style>svg{--sky-background:#0d1117;--sky-foreground:#e6edf3;--sky-line:#68768d;--sky-accent:#9ab9ff;--sky-star:#f6d99b;color:var(--sky-foreground);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}text{fill:currentColor;font-size:17px}.background{fill:var(--sky-background)}.guide{fill:none;stroke:var(--sky-line);stroke-width:1;opacity:.10}.band{font-size:14px;letter-spacing:1px;opacity:.8}.leader{fill:none;stroke:var(--sky-line);stroke-width:1;opacity:.22}.related{fill:none;stroke:var(--sky-accent);stroke-width:1;opacity:.16}.repository .planet{filter:none;fill:var(--planet);stroke:var(--sky-foreground);stroke-width:1}.repository.historical{opacity:.55}.repository.experimental{opacity:.75}.project-label .repo-label{font-size:20px;display:inline;font-weight:500}.project-label .repo-label.featured{font-weight:800;font-size:22px}.detail{font-size:16px}.muted{opacity:.8}.eyebrow{font-size:14px;font-weight:700;letter-spacing:2px}.overflow{font-size:14px}.key{fill:currentColor}.recent-pulse{fill:none;stroke:var(--sky-accent);opacity:.3}.sun{fill:var(--sky-star);opacity:.14;stroke:var(--sky-star);stroke-width:1.5}@keyframes recruiter-pulse{50%{opacity:.1}}.recent-pulse{animation:recruiter-pulse 10s ease-in-out infinite}@media(prefers-reduced-motion:reduce){.recent-pulse{animation:none}}</style>
+  <rect class="background" width="1200" height="840" rx="16"/>
+  <text x="32" y="35" class="eyebrow">PROJECT CONSTELLATION</text><text x="1168" y="35" class="detail muted" text-anchor="end">As of 2026-10-01</text>
+  <path class="guide" d="M388.5 303.05 A225 225 0 0 1 811.5 303.05 M811.5 456.95 A225 225 0 0 1 388.5 456.95"/><text x="600" y="146" class="band" text-anchor="middle">NOW</text><path class="guide" d="M341.5 285.95 A275 275 0 0 1 858.5 285.95 M858.5 474.05 A275 275 0 0 1 341.5 474.05"/><text x="600" y="96" class="band" text-anchor="middle">RECENT</text><path class="guide" d="M294.5 268.85 A325 325 0 0 1 905.5 268.85 M905.5 491.15 A325 325 0 0 1 294.5 491.15"/><text x="600" y="46" class="band" text-anchor="middle">EARLIER</text>
+  <path class="related" d="M725.0033024294105 192.91933723192733 Q600 380 860.405785611154 291.60414704163054"><title>alice/atlas ↔ alice/atlas-mobile · curated relationship</title></path><g class="repository featured" data-repo="alice/atlas"><title>alice/atlas · TypeScript · 30 observed active mo · 14 other contributors · account-owned repository · NOW repository activity · featured</title>
+      <path class="leader" d="M725.0033024294105 192.91933723192733 L930 192.91933723192733"/>
+      <circle cx="725.0033024294105" cy="192.91933723192733" r="35" class="recent-pulse"/>
+      <circle cx="725.0033024294105" cy="192.91933723192733" r="29" class="planet star" data-repo="alice/atlas" data-label="atlas" style="--planet:#3178c6"/>
+      <g class="project-label"><text class="repo-label featured" data-repo="alice/atlas" x="955" y="172.91933723192733">atlas</text><text x="955" y="198.91933723192733" class="detail">TypeScript</text><text x="955" y="222.91933723192733" class="detail muted">14 other contributors</text></g>
+    </g><g class="repository featured" data-repo="community/query-engine"><title>community/query-engine · Python · 8 observed active mo · 2 other contributors · confirmed external participation · RECENT repository activity · featured</title>
+      <path class="leader" d="M423.2334073362017 169.33777814228105 L270 169.33777814228105"/>
+
+      <circle cx="423.2334073362017" cy="169.33777814228105" r="29" class="planet star" data-repo="community/query-engine" data-label="query-engine" style="--planet:#3572a5"/>
+      <g class="project-label"><text class="repo-label featured" data-repo="community/query-engine" x="32" y="149.33777814228105">query-engine</text><text x="32" y="175.33777814228105" class="detail">Python · contributed</text><text x="32" y="199.33777814228105" class="detail muted">2 other contributors</text></g>
+    </g><g class="repository supporting" data-repo="alice/atlas-mobile"><title>alice/atlas-mobile · Python · 8 observed active mo · 2 other contributors · account-owned repository · RECENT repository activity · supporting</title>
+      <path class="leader" d="M860.405785611154 291.60414704163054 L930 291.60414704163054"/>
+
+      <circle cx="860.405785611154" cy="291.60414704163054" r="18" class="planet star" data-repo="alice/atlas-mobile" data-label="atlas-mobile" style="--planet:#3572a5"/>
+      <g class="project-label"><text class="repo-label" data-repo="alice/atlas-mobile" x="955" y="297.60414704163054">atlas-mobile</text></g>
+    </g><g class="repository historical" data-repo="alice/old-notebook"><title>alice/old-notebook · JavaScript · 8 observed active mo · 2 other contributors · account-owned repository · EARLIER repository activity · historical</title>
+      <path class="leader" d="M275 380 L270 380"/>
+
+      <circle cx="275" cy="380" r="11" class="planet star" data-repo="alice/old-notebook" data-label="old-notebook" style="--planet:#f1e05a"/>
+      <g class="project-label"><text class="repo-label" data-repo="alice/old-notebook" x="32" y="386">old-notebook</text></g>
+    </g><g class="repository unassigned" data-repo="alice/archive-reader"><title>alice/archive-reader · JavaScript · 8 observed active mo · 2 other contributors · account-owned repository · NOW repository activity · unassigned</title>
+      <path class="leader" d="M813.0592791363988 452.3238796932113 L930 452.3238796932113"/>
+
+      <circle cx="813.0592791363988" cy="452.3238796932113" r="14" class="planet star" data-repo="alice/archive-reader" data-label="archive-reader" style="--planet:#f1e05a"/>
+      <g class="project-label"><text class="repo-label" data-repo="alice/archive-reader" x="955" y="458.3238796932113">archive-reader</text></g>
+    </g><g class="repository unassigned" data-repo="alice/extra-three"><title>alice/extra-three · JavaScript · 8 observed active mo · 2 other contributors · account-owned repository · NOW repository activity · unassigned</title>
+      <path class="leader" d="M455.37278782052863 552.35999970177 L270 552.35999970177"/>
+
+      <circle cx="455.37278782052863" cy="552.35999970177" r="14" class="planet star" data-repo="alice/extra-three" data-label="extra-three" style="--planet:#f1e05a"/>
+      <g class="project-label"><text class="repo-label" data-repo="alice/extra-three" x="32" y="558.35999970177">extra-three</text></g>
+    </g><g class="repository unassigned" data-repo="alice/tiny-experiment"><title>alice/tiny-experiment · JavaScript · 1 observed active mo · 0 other contributors · account-owned repository · NOW repository activity · unassigned</title>
+      <path class="leader" d="M725.0033024294105 567.0806627680727 L930 567.0806627680727"/>
+
+      <circle cx="725.0033024294105" cy="567.0806627680727" r="14" class="planet star" data-repo="alice/tiny-experiment" data-label="tiny-experiment" style="--planet:#f1e05a"/>
+      <g class="project-label"><text class="repo-label" data-repo="alice/tiny-experiment" x="955" y="573.0806627680727">tiny-experiment</text></g>
+    </g>
+  <g class="developer" text-anchor="middle"><title>Alice Chen · @alice</title><circle cx="600" cy="380" r="113" class="sun"/><text x="600" y="350" font-weight="750" style="font-size:26px">Alice Chen</text><text x="600" y="381" style="font-size:18px">@alice</text><text x="600" y="419" class="detail technology-summary">JavaScript · Python · TypeScript</text><text x="600" y="447" class="detail muted topic-summary">visualization</text></g>
+  <text x="1168" y="818" class="detail muted" text-anchor="end">+8 other repositories</text>
+  <g transform="translate(32 738)"><circle cx="0" cy="-6" r="5" fill="#f1e05a"/><text x="13" y="0" class="detail">JavaScript ×4</text></g><g transform="translate(262 738)"><circle cx="0" cy="-6" r="5" fill="#3572a5"/><text x="13" y="0" class="detail">Python ×2</text></g><g transform="translate(492 738)"><circle cx="0" cy="-6" r="5" fill="#3178c6"/><text x="13" y="0" class="detail">TypeScript ×1</text></g>
+  <path d="M32 759H1168" class="guide"/><g class="key">
+    <text x="32" y="788" class="eyebrow">HOW TO READ</text>
+    <text x="220" y="788" >size · curated importance</text>
+    <text x="555" y="788" >distance · recency</text>
+    <text x="840" y="788" >color · primary language</text>
+    <text x="32" y="818" class="detail muted">line · related project</text>
+  </g></svg>

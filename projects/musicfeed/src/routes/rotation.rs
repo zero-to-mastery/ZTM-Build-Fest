@@ -1,6 +1,7 @@
 // src/routes/rotation.rs
 
-use crate::domain::RotationEntry;
+use crate::database::DatabaseError;
+use crate::domain::{NewRotationEntry, RotationEntry};
 use crate::metadata::AlbumQuery;
 use crate::state::AppState;
 use crate::utils::{compact_html, error_chain_fmt};
@@ -20,6 +21,8 @@ use tera::Context;
 pub enum RotationEntryError {
     #[error("rotation entry not found")]
     NotFound,
+    #[error("database operation failed")]
+    Database(#[from] DatabaseError),
     #[error("template rendering failed")]
     Template(#[from] tera::Error),
 }
@@ -35,7 +38,9 @@ impl IntoResponse for RotationEntryError {
         tracing::error!(error = ?self, "request failed");
         let status = match self {
             RotationEntryError::NotFound => StatusCode::NOT_FOUND,
-            RotationEntryError::Template(_) => StatusCode::INTERNAL_SERVER_ERROR,
+            RotationEntryError::Database(_) | RotationEntryError::Template(_) => {
+                StatusCode::INTERNAL_SERVER_ERROR
+            }
         };
         (status, "Something went wrong.").into_response()
     }
@@ -83,17 +88,9 @@ pub async fn post_rotation_entry_ds(
     let lookup_failed = looked_up.is_err();
     let metadata = looked_up.unwrap_or_default();
 
-    // Claim an id only once the entry is going to be saved, so a slow or failed
-    // lookup does not burn a number.
-    let id = {
-        let mut next = state.next_id.lock().await;
-        let id = *next;
-        *next += 1;
-        id
-    };
-
-    let entry = RotationEntry {
-        id,
+    // The store assigns the id — the database is the counter, so a slow or
+    // failed lookup burns nothing and a client cannot forge one.
+    let new_entry = NewRotationEntry {
         listened_date: Local::now().date_naive(),
         artist: raw_rotation_entry.artist,
         album: raw_rotation_entry.album,
@@ -101,11 +98,14 @@ pub async fn post_rotation_entry_ds(
         year: metadata.year,
         note: (!raw_rotation_entry.note.is_empty()).then_some(raw_rotation_entry.note),
     };
+    let entry = state.database.insert(new_entry).await?;
 
-    // Render before pushing: a template failure should not leave a half-added entry.
+    // Render after insert. The old in-memory code rendered before pushing so a
+    // template failure could not leave a half-added entry; with a store as the
+    // source of truth the risk inverts — a render failure after a successful
+    // insert leaves the entry saved but unpatched, recoverable on the next
+    // page load, which beats losing a logged album to a template hiccup.
     let rendered = render_rotation(&state, &entry)?;
-
-    state.rotation_entries.lock().await.push(entry);
 
     let patch = PatchElements::new(rendered)
         .selector("#rotation-list")
@@ -150,22 +150,13 @@ pub async fn get_rotation_entry(
 ) -> Result<Sse<impl tokio_stream::Stream<Item = Result<Event, Infallible>>>, RotationEntryError> {
     // Pick a random entry to hand back.
     //
-    // The emptiness check MUST come before the index is drawn: `rand::random_range`
-    // panics on an empty range, so asking for a random entry from nothing would
-    // take the request down instead of returning a 404. `entries.get(..)` returning
-    // `None` is therefore not sufficient on its own - `.ok_or(NotFound)` never
-    // gets the chance.
-    let entry = {
-        let entries = state.rotation_entries.lock().await;
-
-        if entries.is_empty() {
-            return Err(RotationEntryError::NotFound);
-        }
-
-        let index = rand::random_range(0..entries.len());
-        entries.get(index).cloned()
-    }
-    .ok_or(RotationEntryError::NotFound)?;
+    // The empty-rotation 404 contract lives in the store now: `LIMIT 1` over
+    // an empty table yields no row, and `random` answers `NotFound`. The
+    // route only translates that into the response the blog island expects.
+    let entry = state.database.random().await.map_err(|error| match error {
+        DatabaseError::NotFound => RotationEntryError::NotFound,
+        other => RotationEntryError::Database(other),
+    })?;
 
     let rendered = render_rotation(&state, &entry)?;
 

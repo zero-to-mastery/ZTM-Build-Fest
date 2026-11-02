@@ -1,0 +1,33 @@
+[package]
+name = "orb-tui"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+license.workspace = true
+description.workspace = true
+repository.workspace = true
+authors.workspace = true
+readme.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+orb-domain = { workspace = true }
+orb-term = { workspace = true }
+ratatui = { workspace = true }
+wherror = { workspace = true }
+error-stack = { workspace = true }
+jiff = { workspace = true }
+base64 = { workspace = true }
+kameo = { workspace = true }
+ratatui-which-key = { workspace = true }
+unicode-segmentation = { workspace = true }
+rustix = { workspace = true }
+
+[dev-dependencies]
+rstest = { workspace = true }
+tempfile = { workspace = true }
+tokio = { workspace = true }
+
+[lints]
+workspace = true

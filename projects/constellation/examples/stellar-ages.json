@@ -1,0 +1,9 @@
+{
+  "account": "example",
+  "visualTheme": "deep-space",
+  "referenceDate": "2026-09-27T12:00:00.000Z",
+  "includeRepos": ["newborn", "active", "mature", "quiet", "dormant", "archived"],
+  "stellarAges": { "enabled": true },
+  "nodeSize": "uniform",
+  "legend": true
+}

@@ -1,0 +1,1288 @@
+===== .nojekyll
+
+===== 404.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found · T</title>
+<meta name="description" content="A blog built with open.blog">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://example.test/404.html">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Page not found">
+<meta name="twitter:title" content="Page not found">
+<meta property="og:description" content="A blog built with open.blog">
+<meta name="twitter:description" content="A blog built with open.blog">
+<meta property="og:url" content="https://example.test/404.html">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container ob-container-reading"><section class="ob-section"><div class="ob-heading ob-section-heading"><h1 class="ob-title">Page not found</h1></div><p class="ob-lede">That page does not exist. Try the <a href="/">latest posts</a>, the <a href="/archive/">archive</a>, or <a href="/search/">search</a>.</p></section></div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== about/index.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About · T</title>
+<meta name="description" content="About [@plato-republic].">
+<link rel="canonical" href="https://example.test/about/">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About">
+<meta name="twitter:title" content="About">
+<meta property="og:description" content="About [@plato-republic].">
+<meta name="twitter:description" content="About [@plato-republic].">
+<meta property="og:url" content="https://example.test/about/">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container ob-container-reading">
+<article class="ob-page">
+<div class="ob-heading ob-post-title"><h1 class="ob-title">About</h1></div>
+<ob-code highlight line-numbers><div class="ob-prose"><p>About [@plato-republic].</p>
+</div></ob-code>
+</article>
+</div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== api/blog.json
+{
+  "posts": [
+    {
+      "date": "2026-09-04T00:00:00Z",
+      "link": "https://example.test/posts/soup/",
+      "title": "Soup"
+    },
+    {
+      "date": "2026-09-03T00:00:00Z",
+      "link": "https://example.test/posts/essay/",
+      "title": "Essay"
+    },
+    {
+      "date": "2026-09-02T00:00:00Z",
+      "link": "https://example.test/posts/study/",
+      "title": "Study"
+    }
+  ],
+  "schemaVersion": 1
+}
+===== archive/index.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Archive · T</title>
+<meta name="description" content="Every post, newest first.">
+<link rel="canonical" href="https://example.test/archive/">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Archive">
+<meta name="twitter:title" content="Archive">
+<meta property="og:description" content="Every post, newest first.">
+<meta name="twitter:description" content="Every post, newest first.">
+<meta property="og:url" content="https://example.test/archive/">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive" aria-current="page">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container">
+<section class="ob-section">
+<div class="ob-heading ob-section-heading"><h1 class="ob-title">Archive</h1></div><h2 class="ob-archive-year">2026</h2>
+<ul class="ob-archive">
+<li><a href="/posts/soup/">Soup</a> <span class="ob-meta"><time datetime="2026-09-04T00:00:00Z">Sep 4, 2026</time></span></li>
+<li><a href="/posts/essay/">Essay</a> <span class="ob-meta"><time datetime="2026-09-03T00:00:00Z">Sep 3, 2026</time></span></li>
+<li><a href="/posts/study/">Study</a> <span class="ob-meta"><time datetime="2026-09-02T00:00:00Z">Sep 2, 2026</time></span></li>
+</ul>
+</section>
+</div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== feed.json
+{
+  "authors": [
+    {
+      "name": "A"
+    }
+  ],
+  "description": "A blog built with open.blog",
+  "feed_url": "https://example.test/feed.json",
+  "home_page_url": "https://example.test/",
+  "items": [
+    {
+      "content_html": "<section class=\"ob-recipe-part ob-recipe-ingredients\">\n<h2 id=\"ingredients\">Ingredients<a class=\"ob-heading-anchor\" href=\"https://example.test/posts/soup/#ingredients\" aria-label=\"Link to this section\">#</a></h2>\n<ul class=\"ob-recipe-list ob-ingredients\">\n<li>Water [@plato-republic]</li>\n</ul>\n</section>\n<section class=\"ob-recipe-part ob-recipe-steps\">\n<h2 id=\"steps\">Steps<a class=\"ob-heading-anchor\" href=\"https://example.test/posts/soup/#steps\" aria-label=\"Link to this section\">#</a></h2>\n<ol class=\"ob-recipe-list ob-steps\">\n<li>Boil.</li>\n</ol>\n</section>\n",
+      "content_text": "Soup\nCanonical: https://example.test/posts/soup/\nIngredients\nWater [@plato-republic]\nSteps\nBoil.",
+      "date_published": "2026-09-04T00:00:00Z",
+      "id": "https://example.test/posts/soup/",
+      "summary": "Ingredients Water [@plato-republic] Steps Boil.",
+      "tags": [],
+      "title": "Soup",
+      "url": "https://example.test/posts/soup/"
+    },
+    {
+      "authors": [
+        {
+          "name": "Ada"
+        }
+      ],
+      "content_html": "<aside class=\"ob-contributions\" aria-labelledby=\"ob-contributions-title\">\n<h2 id=\"ob-contributions-title\" class=\"ob-contributions-title\">Contributions</h2>\n<ul>\n<li><div><span class=\"ob-contributor-name\">Ada</span><span class=\"ob-contributor-roles\">Author, Conceptualization</span></div><p class=\"ob-orcid\"><a href=\"https://orcid.org/0000-0002-1825-0097\" aria-label=\"View unauthenticated ORCID record – 0000-0002-1825-0097\">https://orcid.org/0000-0002-1825-0097</a> (unauthenticated)</p></li>\n<li><div><span class=\"ob-contributor-name\"><a href=\"https://grace.example/\">Grace</a></span><span class=\"ob-contributor-roles\">Editor</span></div></li>\n</ul>\n</aside>\n<p>A claim [@plato-republic, page 3].</p>\n<h2 id=\"notes\">Notes<a class=\"ob-heading-anchor\" href=\"https://example.test/posts/essay/#notes\" aria-label=\"Link to this section\">#</a></h2>\n<p>Mine.</p>\n",
+      "content_text": "Essay\nCanonical: https://example.test/posts/essay/\nA claim [@plato-republic, page 3].\nNotes\nMine.\nContributions\nAda — Author, Conceptualization; ORCID https://orcid.org/0000-0002-1825-0097 (unauthenticated)\nGrace (https://grace.example/) — Editor",
+      "date_published": "2026-09-03T00:00:00Z",
+      "id": "https://example.test/posts/essay/",
+      "summary": "A claim [@plato-republic, page 3]. Notes Mine.",
+      "tags": [
+        "a"
+      ],
+      "title": "Essay",
+      "url": "https://example.test/posts/essay/"
+    },
+    {
+      "authors": [
+        {
+          "name": "Ada"
+        }
+      ],
+      "content_html": "<aside class=\"ob-contributions\" aria-labelledby=\"ob-contributions-title\">\n<h2 id=\"ob-contributions-title\" class=\"ob-contributions-title\">Contributions</h2>\n<ul>\n<li><div><span class=\"ob-contributor-name\">Ada</span><span class=\"ob-contributor-roles\">Author, Conceptualization</span></div><p class=\"ob-orcid\"><a href=\"https://orcid.org/0000-0002-1825-0097\" aria-label=\"View unauthenticated ORCID record – 0000-0002-1825-0097\">https://orcid.org/0000-0002-1825-0097</a> (unauthenticated)</p></li>\n<li><div><span class=\"ob-contributor-name\"><a href=\"https://grace.example/\">Grace</a></span><span class=\"ob-contributor-roles\">Editor</span></div></li>\n</ul>\n</aside>\n<aside class=\"ob-work-meta\" aria-label=\"Research work details\"><dl><div><dt>DOI</dt><dd><a href=\"https://doi.org/10.1234/study\">10.1234/study</a></dd></div></dl></aside>\n<h2 id=\"abstract\">Abstract<a class=\"ob-heading-anchor\" href=\"https://example.test/posts/study/#abstract\" aria-label=\"Link to this section\">#</a></h2>\n<p>Summary [@plato-republic] and a note<sup class=\"footnote-reference\"><a href=\"https://example.test/posts/study/#1\">1</a></sup>.</p>\n<h2 id=\"references\">References<a class=\"ob-heading-anchor\" href=\"https://example.test/posts/study/#references\" aria-label=\"Link to this section\">#</a></h2>\n<ol>\n<li><a href=\"https://doi.org/10.1000/prior\">Prior work</a></li>\n</ol>\n<div class=\"footnote-definition\" id=\"1\"><sup class=\"footnote-definition-label\">1</sup>\n<p>A note [@inside].</p>\n</div>\n",
+      "content_text": "Study\nCanonical: https://example.test/posts/study/\nAbstract\nSummary [@plato-republic] and a note[1].\nReferences\nPrior work (https://doi.org/10.1000/prior)\n[1]: A note [@inside].\nContributions\nAda — Author, Conceptualization; ORCID https://orcid.org/0000-0002-1825-0097 (unauthenticated)\nGrace (https://grace.example/) — Editor\nWork details\nDOI: 10.1234/study (https://doi.org/10.1234/study)",
+      "date_published": "2026-09-02T00:00:00Z",
+      "id": "https://example.test/posts/study/",
+      "summary": "Abstract Summary [@plato-republic] and a note. References Prior work A note [@inside].",
+      "tags": [],
+      "title": "Study",
+      "url": "https://example.test/posts/study/"
+    }
+  ],
+  "language": "en",
+  "title": "T",
+  "version": "https://jsonfeed.org/version/1.1"
+}
+===== index.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T</title>
+<meta name="description" content="A blog built with open.blog">
+<link rel="canonical" href="https://example.test/">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="website">
+<meta property="og:title" content="T">
+<meta name="twitter:title" content="T">
+<meta property="og:description" content="A blog built with open.blog">
+<meta name="twitter:description" content="A blog built with open.blog">
+<meta property="og:url" content="https://example.test/">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","author":{"@id":"https://example.test/#author","@type":"Person","name":"A","url":"https://example.test/"},"description":"A blog built with open.blog","inLanguage":"en","name":"T","publisher":{"@id":"https://example.test/#author","@type":"Person","name":"A","url":"https://example.test/"},"url":"https://example.test/"}</script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home" aria-current="page">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container">
+<section class="ob-section" aria-labelledby="latest">
+<div class="ob-heading ob-section-heading"><h1 id="latest" class="ob-title">Latest posts</h1></div><ul class="ob-list ob-list-cards">
+<li class="ob-card"><a class="ob-card-link" href="/posts/soup/"><span class="ob-card-body"><span class="ob-meta"><time datetime="2026-09-04T00:00:00Z">Sep 4, 2026</time> · 1 min read</span><h3 class="ob-card-title">Soup</h3><span class="ob-card-summary">Ingredients Water [@plato-republic] Steps Boil.</span></span></a></li>
+<li class="ob-card"><a class="ob-card-link" href="/posts/essay/"><span class="ob-card-body"><span class="ob-meta"><time datetime="2026-09-03T00:00:00Z">Sep 3, 2026</time> · 1 min read</span><h3 class="ob-card-title">Essay</h3><span class="ob-card-summary">A claim [@plato-republic, page 3]. Notes Mine.</span></span></a></li>
+<li class="ob-card"><a class="ob-card-link" href="/posts/study/"><span class="ob-card-body"><span class="ob-meta"><time datetime="2026-09-02T00:00:00Z">Sep 2, 2026</time> · 1 min read</span><h3 class="ob-card-title">Study</h3><span class="ob-card-summary">Abstract Summary [@plato-republic] and a note. References Prior work A note [@inside].</span></span></a></li>
+</ul>
+</section>
+</div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== llms-full.txt
+# T
+
+> A blog built with open.blog
+
+---
+
+## Soup
+
+- URL: https://example.test/posts/soup/
+- Published: 2026-09-04
+
+Ingredients Water [@plato-republic] Steps Boil.
+
+---
+
+## Essay
+
+- URL: https://example.test/posts/essay/
+- Published: 2026-09-03
+- Topics: a
+
+A claim [@plato-republic, page 3]. Notes Mine.
+
+---
+
+## Study
+
+- URL: https://example.test/posts/study/
+- Published: 2026-09-02
+
+Abstract Summary [@plato-republic] and a note. References Prior work A note [@inside].
+
+===== llms.txt
+# T
+
+> A blog built with open.blog
+
+## Posts
+
+- [Soup](https://example.test/posts/soup/): Ingredients Water \[@plato-republic\] Steps Boil.
+- [Essay](https://example.test/posts/essay/): A claim \[@plato-republic, page 3\]. Notes Mine.
+- [Study](https://example.test/posts/study/): Abstract Summary \[@plato-republic\] and a note. References Prior work A note \[@inside\].
+
+## Pages
+
+- [About](https://example.test/about/): About \[@plato-republic\].
+
+## Feeds
+
+- [RSS](https://example.test/rss.xml)
+- [JSON Feed](https://example.test/feed.json)
+- [Sitemap](https://example.test/sitemap.xml)
+
+===== openblog-comments.json
+{"/posts/essay/":"hidden","/posts/soup/":"hidden","/posts/study/":"hidden"}
+===== posts/essay/index.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Essay · T</title>
+<meta name="description" content="A claim [@plato-republic, page 3]. Notes Mine.">
+<link rel="canonical" href="https://example.test/posts/essay/">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Essay">
+<meta name="twitter:title" content="Essay">
+<meta property="og:description" content="A claim [@plato-republic, page 3]. Notes Mine.">
+<meta name="twitter:description" content="A claim [@plato-republic, page 3]. Notes Mine.">
+<meta property="og:url" content="https://example.test/posts/essay/">
+<meta name="twitter:card" content="summary">
+<meta property="article:published_time" content="2026-09-03T00:00:00Z">
+<meta property="article:tag" content="a">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":[{"@id":"https://example.test/posts/essay/#contributor-ada","@type":"Person","identifier":"https://orcid.org/0000-0002-1825-0097","name":"Ada"}],"contributor":[{"@id":"https://grace.example#person","@type":"Person","name":"Grace","url":"https://grace.example/"}],"dateModified":"2026-09-03T00:00:00Z","datePublished":"2026-09-03T00:00:00Z","description":"A claim [@plato-republic, page 3]. Notes Mine.","headline":"Essay","image":null,"isPartOf":null,"keywords":"a","mainEntityOfPage":"https://example.test/posts/essay/","publisher":{"@id":"https://example.test/#author","@type":"Person","name":"A","url":"https://example.test/"},"url":"https://example.test/posts/essay/","wordCount":7}</script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container ob-container-reading">
+<article class="ob-post h-entry">
+<header class="ob-post-header">
+<div class="ob-heading ob-post-title"><h1 class="ob-title p-name">Essay</h1></div>
+<p class="ob-meta"><time class="dt-published" datetime="2026-09-03T00:00:00Z">September 3, 2026</time> · By <span class="p-author h-card">Ada</span> · 1 min read<ob-views path="/posts/essay/" endpoint=""></ob-views></p>
+<ul class="ob-tags" aria-label="Tags"><li><a class="p-category" href="/tags/a/">a</a></li></ul>
+</header>
+<aside class="ob-contributions" aria-labelledby="ob-contributions-title">
+<h2 id="ob-contributions-title" class="ob-contributions-title">Contributions</h2>
+<ul>
+<li><div><span class="ob-contributor-name">Ada</span><span class="ob-contributor-roles">Author, Conceptualization</span></div><p class="ob-orcid"><a href="https://orcid.org/0000-0002-1825-0097" aria-label="View unauthenticated ORCID record – 0000-0002-1825-0097"><span class="ob-orcid-icon" aria-hidden="true"><img src="/assets/orcid-unauthenticated-id-icons.png" alt="" loading="lazy" decoding="async"></span>https://orcid.org/0000-0002-1825-0097</a> (unauthenticated)</p></li>
+<li><div><span class="ob-contributor-name"><a href="https://grace.example/">Grace</a></span><span class="ob-contributor-roles">Editor</span></div></li>
+</ul>
+</aside>
+<ob-code highlight line-numbers><div class="ob-prose e-content"><p>A claim [@plato-republic, page 3].</p>
+<h2 id="notes">Notes<a class="ob-heading-anchor" href="#notes" aria-label="Link to this section">#</a></h2>
+<p>Mine.</p>
+</div></ob-code>
+<ob-share url="https://example.test/posts/essay/" title="Essay">
+<nav class="ob-share" aria-label="Share this post">
+<span class="ob-share-label">Share</span>
+<ul>
+<li><a href="https://twitter.com/intent/tweet?text=Essay&amp;url=https%3A%2F%2Fexample.test%2Fposts%2Fessay%2F" target="_blank" rel="noopener noreferrer">X</a></li>
+<li><a href="https://bsky.app/intent/compose?text=Essay%20https%3A%2F%2Fexample.test%2Fposts%2Fessay%2F" target="_blank" rel="noopener noreferrer">Bluesky</a></li>
+<li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fexample.test%2Fposts%2Fessay%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+<li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fexample.test%2Fposts%2Fessay%2F&amp;title=Essay" target="_blank" rel="noopener noreferrer">Reddit</a></li>
+<li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fexample.test%2Fposts%2Fessay%2F&amp;t=Essay" target="_blank" rel="noopener noreferrer">Hacker News</a></li>
+<li><a href="mailto:?subject=Essay&amp;body=https%3A%2F%2Fexample.test%2Fposts%2Fessay%2F">Email</a></li>
+</ul>
+</nav>
+</ob-share>
+<nav class="ob-pager ob-post-pager" aria-label="More posts"><a rel="prev" href="/posts/study/">← Study</a><a rel="next" href="/posts/soup/">Soup →</a></nav>
+</article>
+</div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== posts/soup/index.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soup · T</title>
+<meta name="description" content="Ingredients Water [@plato-republic] Steps Boil.">
+<link rel="canonical" href="https://example.test/posts/soup/">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Soup">
+<meta name="twitter:title" content="Soup">
+<meta property="og:description" content="Ingredients Water [@plato-republic] Steps Boil.">
+<meta name="twitter:description" content="Ingredients Water [@plato-republic] Steps Boil.">
+<meta property="og:url" content="https://example.test/posts/soup/">
+<meta name="twitter:card" content="summary">
+<meta property="article:published_time" content="2026-09-04T00:00:00Z">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"BlogPosting","author":{"@id":"https://example.test/#author","@type":"Person","name":"A","url":"https://example.test/"},"dateModified":"2026-09-04T00:00:00Z","datePublished":"2026-09-04T00:00:00Z","description":"Ingredients Water [@plato-republic] Steps Boil.","headline":"Soup","image":null,"isPartOf":null,"keywords":"","mainEntityOfPage":"https://example.test/posts/soup/","publisher":{"@id":"https://example.test/#author","@type":"Person","name":"A","url":"https://example.test/"},"url":"https://example.test/posts/soup/","wordCount":5},{"@type":"Recipe","author":{"@id":"https://example.test/#author","@type":"Person","name":"A","url":"https://example.test/"},"datePublished":"2026-09-04T00:00:00Z","description":"Ingredients Water [@plato-republic] Steps Boil.","keywords":"","mainEntityOfPage":"https://example.test/posts/soup/","name":"Soup","recipeIngredient":["Water [@plato-republic]"],"recipeInstructions":[{"@type":"HowToStep","position":1,"text":"Boil."}],"url":"https://example.test/posts/soup/"}]}</script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container ob-container-reading">
+<article class="ob-post h-entry">
+<header class="ob-post-header">
+<div class="ob-heading ob-post-title"><h1 class="ob-title p-name">Soup</h1></div>
+<p class="ob-meta"><time class="dt-published" datetime="2026-09-04T00:00:00Z">September 4, 2026</time> · By <span class="p-author h-card">A</span> · 1 min read<ob-views path="/posts/soup/" endpoint=""></ob-views></p>
+</header>
+<ob-recipe key="/posts/soup/" checklists timers cook-mode print>
+<section class="ob-recipe-card" aria-label="Recipe summary">
+<div class="ob-recipe-actions"><a class="ob-recipe-jump" href="#ingredients">Jump to recipe</a></div>
+</section>
+<ob-code highlight line-numbers><div class="ob-prose e-content"><section class="ob-recipe-part ob-recipe-ingredients">
+<h2 id="ingredients">Ingredients<a class="ob-heading-anchor" href="#ingredients" aria-label="Link to this section">#</a></h2>
+<ul class="ob-recipe-list ob-ingredients">
+<li>Water [@plato-republic]</li>
+</ul>
+</section>
+<section class="ob-recipe-part ob-recipe-steps">
+<h2 id="steps">Steps<a class="ob-heading-anchor" href="#steps" aria-label="Link to this section">#</a></h2>
+<ol class="ob-recipe-list ob-steps">
+<li>Boil.</li>
+</ol>
+</section>
+</div></ob-code>
+</ob-recipe>
+<ob-share url="https://example.test/posts/soup/" title="Soup">
+<nav class="ob-share" aria-label="Share this post">
+<span class="ob-share-label">Share</span>
+<ul>
+<li><a href="https://twitter.com/intent/tweet?text=Soup&amp;url=https%3A%2F%2Fexample.test%2Fposts%2Fsoup%2F" target="_blank" rel="noopener noreferrer">X</a></li>
+<li><a href="https://bsky.app/intent/compose?text=Soup%20https%3A%2F%2Fexample.test%2Fposts%2Fsoup%2F" target="_blank" rel="noopener noreferrer">Bluesky</a></li>
+<li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fexample.test%2Fposts%2Fsoup%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+<li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fexample.test%2Fposts%2Fsoup%2F&amp;title=Soup" target="_blank" rel="noopener noreferrer">Reddit</a></li>
+<li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fexample.test%2Fposts%2Fsoup%2F&amp;t=Soup" target="_blank" rel="noopener noreferrer">Hacker News</a></li>
+<li><a href="mailto:?subject=Soup&amp;body=https%3A%2F%2Fexample.test%2Fposts%2Fsoup%2F">Email</a></li>
+</ul>
+</nav>
+</ob-share>
+<nav class="ob-pager ob-post-pager" aria-label="More posts"><a rel="prev" href="/posts/essay/">← Essay</a><span></span></nav>
+</article>
+</div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== posts/study/index.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Study · T</title>
+<meta name="description" content="Abstract Summary [@plato-republic] and a note. References Prior work A note [@inside].">
+<link rel="canonical" href="https://example.test/posts/study/">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Study">
+<meta name="twitter:title" content="Study">
+<meta property="og:description" content="Abstract Summary [@plato-republic] and a note. References Prior work A note [@inside].">
+<meta name="twitter:description" content="Abstract Summary [@plato-republic] and a note. References Prior work A note [@inside].">
+<meta property="og:url" content="https://example.test/posts/study/">
+<meta name="twitter:card" content="summary">
+<meta property="article:published_time" content="2026-09-02T00:00:00Z">
+<meta name="citation_title" content="Study">
+<meta name="citation_author" content="Ada">
+<meta name="citation_publication_date" content="2026/9/2">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"ScholarlyArticle","author":[{"@id":"https://example.test/posts/study/#contributor-ada","@type":"Person","identifier":"https://orcid.org/0000-0002-1825-0097","name":"Ada"}],"citation":["https://doi.org/10.1000/prior"],"contributor":[{"@id":"https://grace.example#person","@type":"Person","name":"Grace","url":"https://grace.example/"}],"dateModified":"2026-09-02T00:00:00Z","datePublished":"2026-09-02T00:00:00Z","description":"Abstract Summary [@plato-republic] and a note. References Prior work A note [@inside].","headline":"Study","identifier":"https://doi.org/10.1234/study","image":null,"isPartOf":null,"keywords":"","mainEntityOfPage":"https://example.test/posts/study/","url":"https://example.test/posts/study/","wordCount":12}</script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container ob-container-reading">
+<article class="ob-post h-entry">
+<header class="ob-post-header">
+<div class="ob-heading ob-post-title"><h1 class="ob-title p-name">Study</h1></div>
+<p class="ob-meta"><time class="dt-published" datetime="2026-09-02T00:00:00Z">September 2, 2026</time> · By <span class="p-author h-card">Ada</span> · 1 min read<ob-views path="/posts/study/" endpoint=""></ob-views></p>
+</header>
+<aside class="ob-contributions" aria-labelledby="ob-contributions-title">
+<h2 id="ob-contributions-title" class="ob-contributions-title">Contributions</h2>
+<ul>
+<li><div><span class="ob-contributor-name">Ada</span><span class="ob-contributor-roles">Author, Conceptualization</span></div><p class="ob-orcid"><a href="https://orcid.org/0000-0002-1825-0097" aria-label="View unauthenticated ORCID record – 0000-0002-1825-0097"><span class="ob-orcid-icon" aria-hidden="true"><img src="/assets/orcid-unauthenticated-id-icons.png" alt="" loading="lazy" decoding="async"></span>https://orcid.org/0000-0002-1825-0097</a> (unauthenticated)</p></li>
+<li><div><span class="ob-contributor-name"><a href="https://grace.example/">Grace</a></span><span class="ob-contributor-roles">Editor</span></div></li>
+</ul>
+</aside>
+<aside class="ob-work-meta" aria-label="Research work details"><dl><div><dt>DOI</dt><dd><a href="https://doi.org/10.1234/study">10.1234/study</a></dd></div></dl></aside>
+<ob-code highlight line-numbers><div class="ob-prose e-content"><h2 id="abstract">Abstract<a class="ob-heading-anchor" href="#abstract" aria-label="Link to this section">#</a></h2>
+<p>Summary [@plato-republic] and a note<sup class="footnote-reference"><a href="#1">1</a></sup>.</p>
+<h2 id="references">References<a class="ob-heading-anchor" href="#references" aria-label="Link to this section">#</a></h2>
+<ol>
+<li><a href="https://doi.org/10.1000/prior">Prior work</a></li>
+</ol>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>A note [@inside].</p>
+</div>
+</div></ob-code>
+<ob-share url="https://example.test/posts/study/" title="Study">
+<nav class="ob-share" aria-label="Share this post">
+<span class="ob-share-label">Share</span>
+<ul>
+<li><a href="https://twitter.com/intent/tweet?text=Study&amp;url=https%3A%2F%2Fexample.test%2Fposts%2Fstudy%2F" target="_blank" rel="noopener noreferrer">X</a></li>
+<li><a href="https://bsky.app/intent/compose?text=Study%20https%3A%2F%2Fexample.test%2Fposts%2Fstudy%2F" target="_blank" rel="noopener noreferrer">Bluesky</a></li>
+<li><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fexample.test%2Fposts%2Fstudy%2F" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+<li><a href="https://www.reddit.com/submit?url=https%3A%2F%2Fexample.test%2Fposts%2Fstudy%2F&amp;title=Study" target="_blank" rel="noopener noreferrer">Reddit</a></li>
+<li><a href="https://news.ycombinator.com/submitlink?u=https%3A%2F%2Fexample.test%2Fposts%2Fstudy%2F&amp;t=Study" target="_blank" rel="noopener noreferrer">Hacker News</a></li>
+<li><a href="mailto:?subject=Study&amp;body=https%3A%2F%2Fexample.test%2Fposts%2Fstudy%2F">Email</a></li>
+</ul>
+</nav>
+</ob-share>
+<nav class="ob-pager ob-post-pager" aria-label="More posts"><span></span><a rel="next" href="/posts/essay/">Essay →</a></nav>
+</article>
+</div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== robots.txt
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: *
+Allow: /
+
+Sitemap: https://example.test/sitemap.xml
+
+===== rss.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+<title>T</title>
+<link>https://example.test/</link>
+<description>A blog built with open.blog</description>
+<language>en</language>
+<atom:link href="https://example.test/rss.xml" rel="self" type="application/rss+xml"/>
+<generator>open.blog</generator>
+<lastBuildDate>Fri, 04 Sep 2026 00:00:00 GMT</lastBuildDate>
+<item>
+<title>Soup</title>
+<link>https://example.test/posts/soup/</link>
+<guid isPermaLink="true">https://example.test/posts/soup/</guid>
+<pubDate>Fri, 04 Sep 2026 00:00:00 GMT</pubDate>
+<dc:creator>A</dc:creator>
+<description>Ingredients Water [@plato-republic] Steps Boil.</description>
+<content:encoded><![CDATA[<section class="ob-recipe-part ob-recipe-ingredients">
+<h2 id="ingredients">Ingredients<a class="ob-heading-anchor" href="https://example.test/posts/soup/#ingredients" aria-label="Link to this section">#</a></h2>
+<ul class="ob-recipe-list ob-ingredients">
+<li>Water [@plato-republic]</li>
+</ul>
+</section>
+<section class="ob-recipe-part ob-recipe-steps">
+<h2 id="steps">Steps<a class="ob-heading-anchor" href="https://example.test/posts/soup/#steps" aria-label="Link to this section">#</a></h2>
+<ol class="ob-recipe-list ob-steps">
+<li>Boil.</li>
+</ol>
+</section>
+]]></content:encoded>
+</item>
+<item>
+<title>Essay</title>
+<link>https://example.test/posts/essay/</link>
+<guid isPermaLink="true">https://example.test/posts/essay/</guid>
+<pubDate>Thu, 03 Sep 2026 00:00:00 GMT</pubDate>
+<dc:creator>Ada</dc:creator>
+<category>a</category>
+<description>A claim [@plato-republic, page 3]. Notes Mine.</description>
+<content:encoded><![CDATA[<aside class="ob-contributions" aria-labelledby="ob-contributions-title">
+<h2 id="ob-contributions-title" class="ob-contributions-title">Contributions</h2>
+<ul>
+<li><div><span class="ob-contributor-name">Ada</span><span class="ob-contributor-roles">Author, Conceptualization</span></div><p class="ob-orcid"><a href="https://orcid.org/0000-0002-1825-0097" aria-label="View unauthenticated ORCID record – 0000-0002-1825-0097">https://orcid.org/0000-0002-1825-0097</a> (unauthenticated)</p></li>
+<li><div><span class="ob-contributor-name"><a href="https://grace.example/">Grace</a></span><span class="ob-contributor-roles">Editor</span></div></li>
+</ul>
+</aside>
+<p>A claim [@plato-republic, page 3].</p>
+<h2 id="notes">Notes<a class="ob-heading-anchor" href="https://example.test/posts/essay/#notes" aria-label="Link to this section">#</a></h2>
+<p>Mine.</p>
+]]></content:encoded>
+</item>
+<item>
+<title>Study</title>
+<link>https://example.test/posts/study/</link>
+<guid isPermaLink="true">https://example.test/posts/study/</guid>
+<pubDate>Wed, 02 Sep 2026 00:00:00 GMT</pubDate>
+<dc:creator>Ada</dc:creator>
+<description>Abstract Summary [@plato-republic] and a note. References Prior work A note [@inside].</description>
+<content:encoded><![CDATA[<aside class="ob-contributions" aria-labelledby="ob-contributions-title">
+<h2 id="ob-contributions-title" class="ob-contributions-title">Contributions</h2>
+<ul>
+<li><div><span class="ob-contributor-name">Ada</span><span class="ob-contributor-roles">Author, Conceptualization</span></div><p class="ob-orcid"><a href="https://orcid.org/0000-0002-1825-0097" aria-label="View unauthenticated ORCID record – 0000-0002-1825-0097">https://orcid.org/0000-0002-1825-0097</a> (unauthenticated)</p></li>
+<li><div><span class="ob-contributor-name"><a href="https://grace.example/">Grace</a></span><span class="ob-contributor-roles">Editor</span></div></li>
+</ul>
+</aside>
+<aside class="ob-work-meta" aria-label="Research work details"><dl><div><dt>DOI</dt><dd><a href="https://doi.org/10.1234/study">10.1234/study</a></dd></div></dl></aside>
+<h2 id="abstract">Abstract<a class="ob-heading-anchor" href="https://example.test/posts/study/#abstract" aria-label="Link to this section">#</a></h2>
+<p>Summary [@plato-republic] and a note<sup class="footnote-reference"><a href="https://example.test/posts/study/#1">1</a></sup>.</p>
+<h2 id="references">References<a class="ob-heading-anchor" href="https://example.test/posts/study/#references" aria-label="Link to this section">#</a></h2>
+<ol>
+<li><a href="https://doi.org/10.1000/prior">Prior work</a></li>
+</ol>
+<div class="footnote-definition" id="1"><sup class="footnote-definition-label">1</sup>
+<p>A note [@inside].</p>
+</div>
+]]></content:encoded>
+</item>
+</channel>
+</rss>
+
+===== search.json
+{"version":1,"entries":[{"title":"Soup","url":"/posts/soup/","date":"2026-09-04","tags":[],"series":null,"description":"Ingredients Water [@plato-republic] Steps Boil.","text":"ingredients water [@plato-republic] steps boil."},{"title":"Essay","url":"/posts/essay/","date":"2026-09-03","tags":["a"],"series":null,"description":"A claim [@plato-republic, page 3]. Notes Mine.","text":"a claim [@plato-republic, page 3]. notes mine."},{"title":"Study","url":"/posts/study/","date":"2026-09-02","tags":[],"series":null,"description":"Abstract Summary [@plato-republic] and a note. References Prior work A note [@inside].","text":"abstract summary [@plato-republic] and a note. references prior work a note [@inside]."}]}
+===== search/index.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search · T</title>
+<meta name="description" content="Search every post.">
+<meta name="robots" content="noindex">
+<link rel="canonical" href="https://example.test/search/">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Search">
+<meta name="twitter:title" content="Search">
+<meta property="og:description" content="Search every post.">
+<meta name="twitter:description" content="Search every post.">
+<meta property="og:url" content="https://example.test/search/">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search" aria-current="page">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container">
+<section class="ob-section">
+<div class="ob-heading ob-section-heading"><h1 class="ob-title">Search</h1></div>
+<ob-search index="/search.json" wasm="/assets/wasm/openblog_wasm.js">
+<form class="ob-search-form" role="search" action="/search/" method="get"><label for="q">Search posts</label><input id="q" name="q" type="search" autocomplete="off" placeholder="Rust, web components, …"></form>
+<p class="ob-search-status" role="status" aria-live="polite"></p>
+<ol class="ob-search-results"></ol>
+</ob-search>
+<noscript><p>Search needs JavaScript. You can also browse the <a href="/archive/">archive</a> or <a href="/tags/">tags</a>.</p></noscript>
+</section>
+</div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== series/index.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Series · T</title>
+<meta name="description" content="Multi-part guides and tutorials.">
+<link rel="canonical" href="https://example.test/series/">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Series">
+<meta name="twitter:title" content="Series">
+<meta property="og:description" content="Multi-part guides and tutorials.">
+<meta name="twitter:description" content="Multi-part guides and tutorials.">
+<meta property="og:url" content="https://example.test/series/">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series" aria-current="page">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container">
+<section class="ob-section">
+<div class="ob-heading ob-section-heading"><h1 class="ob-title">Series</h1></div>
+<p class="ob-lede">Multi-part guides, in reading order.</p>
+<p class="ob-empty">No series yet. Add <code>series: my-series</code> to a post's front matter.</p>
+</section>
+</div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== sitemap.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url><loc>https://example.test/</loc><lastmod>2026-09-04</lastmod></url>
+<url><loc>https://example.test/posts/soup/</loc><lastmod>2026-09-04</lastmod></url>
+<url><loc>https://example.test/posts/essay/</loc><lastmod>2026-09-03</lastmod></url>
+<url><loc>https://example.test/posts/study/</loc><lastmod>2026-09-02</lastmod></url>
+<url><loc>https://example.test/tags/a/</loc></url>
+<url><loc>https://example.test/about/</loc></url>
+<url><loc>https://example.test/search/</loc></url>
+<url><loc>https://example.test/archive/</loc></url>
+</urlset>
+
+===== tags/a/index.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>a · T</title>
+<meta name="description" content="Posts tagged a.">
+<link rel="canonical" href="https://example.test/tags/a/">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="website">
+<meta property="og:title" content="a">
+<meta name="twitter:title" content="a">
+<meta property="og:description" content="Posts tagged a.">
+<meta name="twitter:description" content="Posts tagged a.">
+<meta property="og:url" content="https://example.test/tags/a/">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container">
+<section class="ob-section">
+<p class="ob-eyebrow"><a href="/tags/">Tag</a></p>
+<div class="ob-heading ob-section-heading"><h1 class="ob-title">a</h1></div>
+<ul class="ob-list ob-list-cards">
+<li class="ob-card"><a class="ob-card-link" href="/posts/essay/"><span class="ob-card-body"><span class="ob-meta"><time datetime="2026-09-03T00:00:00Z">Sep 3, 2026</time> · 1 min read</span><h3 class="ob-card-title">Essay</h3><span class="ob-card-summary">A claim [@plato-republic, page 3]. Notes Mine.</span></span></a></li>
+</ul>
+</section>
+</div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== tags/index.html
+<!doctype html>
+<html lang="en" data-ob-theme="base">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tags · T</title>
+<meta name="description" content="Browse posts by topic.">
+<link rel="canonical" href="https://example.test/tags/">
+<meta name="generator" content="open.blog">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1217" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="T">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tags">
+<meta name="twitter:title" content="Tags">
+<meta property="og:description" content="Browse posts by topic.">
+<meta name="twitter:description" content="Browse posts by topic.">
+<meta property="og:url" content="https://example.test/tags/">
+<meta name="twitter:card" content="summary">
+<link rel="alternate" type="application/rss+xml" title="T" href="/rss.xml">
+<link rel="alternate" type="application/feed+json" title="T" href="/feed.json">
+<link rel="alternate" type="text/plain" title="Content index for automated readers" href="/llms.txt">
+<script>try{var s=localStorage.getItem("ob-scheme");if(s==="light"||s==="dark")document.documentElement.dataset.theme=s}catch(e){}</script>
+<link rel="stylesheet" href="/assets/base.css">
+<link rel="stylesheet" href="/themes/base/tokens.css">
+<script type="module" src="/assets/openblog.js"></script>
+</head>
+<body>
+<a class="ob-skip" href="#main">Skip to content</a>
+<header class="ob-header">
+<div class="ob-header-inner">
+<a class="ob-brand" href="/" aria-label="T home"><span class="ob-brand-name">T</span></a>
+<nav class="ob-nav" aria-label="Main navigation">
+<ul>
+<li><a class="ob-nav-link" href="/" aria-label="Home">Home</a></li>
+<li><a class="ob-nav-link" href="/series/" aria-label="Series">Series</a></li>
+<li><a class="ob-nav-link" href="/archive/" aria-label="Archive">Archive</a></li>
+<li><a class="ob-nav-link" href="/search/" aria-label="Search">Search</a></li>
+</ul>
+</nav>
+<ob-theme-toggle hidden><button type="button" class="ob-icon-button" aria-label="Toggle light and dark mode"><span aria-hidden="true">◐</span></button></ob-theme-toggle>
+</div>
+</header>
+<main id="main" tabindex="-1">
+<div class="ob-container">
+<section class="ob-section">
+<div class="ob-heading ob-section-heading"><h1 class="ob-title">Tags</h1></div>
+<ul class="ob-tags ob-tag-cloud"><li><a href="/tags/a/">a <span class="ob-count">1</span></a></li></ul>
+</section>
+</div>
+</main>
+<footer class="ob-footer">
+<div class="ob-footer-inner">
+<p>© 2026 A</p>
+<nav aria-label="Elsewhere"><ul class="ob-footer-links">
+<li><a href="/rss.xml">RSS</a></li>
+</ul></nav>
+<p class="ob-powered">Powered by <a href="https://github.com/journey-to-code-org/open.blog" rel="noopener">open.blog</a></p>
+</div>
+</footer>
+<ob-back-to-top></ob-back-to-top>
+</body>
+</html>
+
+===== themes/base/resolved.json
+{"chain":["base"],"colorScheme":"light","colors":{"dark":{"accent":"#7aa2ff","accentBorder":"#3a4f85","accentContrast":"#0b0d11","accentSoft":"#7aa2ff","border":"#2c3340","calloutCaution":"#f85149","calloutImportant":"#ab7df8","calloutNote":"#4493f8","calloutTip":"#3fb950","calloutWarning":"#d29922","codeAttr":"#e06c75","codeBg":"#1d222b","codeComment":"#7f8794","codeConstant":"#d19a66","codeFunction":"#61afef","codeKeyword":"#c678dd","codeMeta":"#61afef","codeNumber":"#d19a66","codeOperator":"#56b6c2","codeProperty":"#e06c75","codePunctuation":"#abb2bf","codeRegex":"#56b6c2","codeString":"#98c379","codeTag":"#7aa2ff","codeText":"#eceff4","codeType":"#e5c07b","codeVariable":"#56b6c2","glow":"#1b2640","ink":"#0b0d11","link":"#8fb0ff","muted":"#b4bcc9","outer":"#0a0c10","page":"#0f1217","subtle":"#8b94a3","surface":"#161a21","surfaceRaised":"#1d222b","text":"#eceff4"},"light":{"accent":"#2457d6","accentBorder":"#9db4ee","accentContrast":"#ffffff","accentSoft":"#2457d6","border":"#d8dce3","calloutCaution":"#d1242f","calloutImportant":"#6f3fc4","calloutNote":"#0969da","calloutTip":"#116329","calloutWarning":"#7d5400","codeAttr":"#e45649","codeBg":"#f1f3f6","codeComment":"#8a909a","codeConstant":"#986801","codeFunction":"#4078f2","codeKeyword":"#a626a4","codeMeta":"#4078f2","codeNumber":"#986801","codeOperator":"#0184bc","codeProperty":"#e45649","codePunctuation":"#383a42","codeRegex":"#0184bc","codeString":"#50a14f","codeTag":"#2457d6","codeText":"#14171c","codeType":"#c18401","codeVariable":"#0184bc","glow":"#e6edfc","ink":"#0b0d11","link":"#1d4bc2","muted":"#4a5260","outer":"#f6f7f9","page":"#ffffff","subtle":"#6b7280","surface":"#ffffff","surfaceRaised":"#f1f3f6","text":"#14171c"}},"fonts":{"body":"system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif","heading":"system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif","mono":"ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace"},"label":"Base","name":"base","options":{"codeHighlighting":true,"codeLineNumbers":true,"colorSchemeToggle":true,"headingCodeLabels":false,"headingWrapper":null,"listStyle":"cards","navLabel":null,"postCovers":true},"scripts":[],"stylesheets":[],"tokens":{"bodyLeading":"1.75","bodySize":"1.0625rem","borderWidth":"1px","embedHeight":"30rem","focusRing":"3px solid var(--ob-color-accent)","gutter":"1rem","headingLeading":"1.2","headingTracking":"-0.01em","headingTransform":"none","headingWeight":"700","hoverBackground":"var(--ob-color-surface-raised)","hoverText":"var(--ob-color-text)","maxWidth":"70rem","motion":"160ms","radius":"12px","radiusSm":"6px","readingWidth":"clamp(42rem, 48vw, 50rem)","rowBorderWidth":"1px","rowTitleSize":"clamp(1.05rem, 2vw, 1.4rem)","sectionTitleSize":"clamp(1.4rem, 3vw, 2rem)","shadow":"0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.06)","titleSize":"clamp(1.9rem, 4.5vw, 3rem)"}}
+===== themes/base/tokens.css
+/* Generated by open.blog from theme.json. Edit the JSON, not this file. */
+:root {
+  color-scheme: light;
+  --ob-font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ob-font-heading: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --ob-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  --ob-body-leading: 1.75;
+  --ob-body-size: 1.0625rem;
+  --ob-border-width: 1px;
+  --ob-embed-height: 30rem;
+  --ob-focus-ring: 3px solid var(--ob-color-accent);
+  --ob-gutter: 1rem;
+  --ob-heading-leading: 1.2;
+  --ob-heading-tracking: -0.01em;
+  --ob-heading-transform: none;
+  --ob-heading-weight: 700;
+  --ob-hover-background: var(--ob-color-surface-raised);
+  --ob-hover-text: var(--ob-color-text);
+  --ob-max-width: 70rem;
+  --ob-motion: 160ms;
+  --ob-radius: 12px;
+  --ob-radius-sm: 6px;
+  --ob-reading-width: clamp(42rem, 48vw, 50rem);
+  --ob-row-border-width: 1px;
+  --ob-row-title-size: clamp(1.05rem, 2vw, 1.4rem);
+  --ob-section-title-size: clamp(1.4rem, 3vw, 2rem);
+  --ob-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 8px 24px rgb(0 0 0 / 0.06);
+  --ob-title-size: clamp(1.9rem, 4.5vw, 3rem);
+  --ob-color-accent: #2457d6;
+  --ob-color-accent-border: #9db4ee;
+  --ob-color-accent-contrast: #ffffff;
+  --ob-color-accent-soft: #2457d6;
+  --ob-color-border: #d8dce3;
+  --ob-color-callout-caution: #d1242f;
+  --ob-color-callout-important: #6f3fc4;
+  --ob-color-callout-note: #0969da;
+  --ob-color-callout-tip: #116329;
+  --ob-color-callout-warning: #7d5400;
+  --ob-color-code-attr: #e45649;
+  --ob-color-code-bg: #f1f3f6;
+  --ob-color-code-comment: #8a909a;
+  --ob-color-code-constant: #986801;
+  --ob-color-code-function: #4078f2;
+  --ob-color-code-keyword: #a626a4;
+  --ob-color-code-meta: #4078f2;
+  --ob-color-code-number: #986801;
+  --ob-color-code-operator: #0184bc;
+  --ob-color-code-property: #e45649;
+  --ob-color-code-punctuation: #383a42;
+  --ob-color-code-regex: #0184bc;
+  --ob-color-code-string: #50a14f;
+  --ob-color-code-tag: #2457d6;
+  --ob-color-code-text: #14171c;
+  --ob-color-code-type: #c18401;
+  --ob-color-code-variable: #0184bc;
+  --ob-color-glow: #e6edfc;
+  --ob-color-ink: #0b0d11;
+  --ob-color-link: #1d4bc2;
+  --ob-color-muted: #4a5260;
+  --ob-color-outer: #f6f7f9;
+  --ob-color-page: #ffffff;
+  --ob-color-subtle: #6b7280;
+  --ob-color-surface: #ffffff;
+  --ob-color-surface-raised: #f1f3f6;
+  --ob-color-text: #14171c;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ob-color-accent: #7aa2ff;
+    --ob-color-accent-border: #3a4f85;
+    --ob-color-accent-contrast: #0b0d11;
+    --ob-color-accent-soft: #7aa2ff;
+    --ob-color-border: #2c3340;
+    --ob-color-callout-caution: #f85149;
+    --ob-color-callout-important: #ab7df8;
+    --ob-color-callout-note: #4493f8;
+    --ob-color-callout-tip: #3fb950;
+    --ob-color-callout-warning: #d29922;
+    --ob-color-code-attr: #e06c75;
+    --ob-color-code-bg: #1d222b;
+    --ob-color-code-comment: #7f8794;
+    --ob-color-code-constant: #d19a66;
+    --ob-color-code-function: #61afef;
+    --ob-color-code-keyword: #c678dd;
+    --ob-color-code-meta: #61afef;
+    --ob-color-code-number: #d19a66;
+    --ob-color-code-operator: #56b6c2;
+    --ob-color-code-property: #e06c75;
+    --ob-color-code-punctuation: #abb2bf;
+    --ob-color-code-regex: #56b6c2;
+    --ob-color-code-string: #98c379;
+    --ob-color-code-tag: #7aa2ff;
+    --ob-color-code-text: #eceff4;
+    --ob-color-code-type: #e5c07b;
+    --ob-color-code-variable: #56b6c2;
+    --ob-color-glow: #1b2640;
+    --ob-color-ink: #0b0d11;
+    --ob-color-link: #8fb0ff;
+    --ob-color-muted: #b4bcc9;
+    --ob-color-outer: #0a0c10;
+    --ob-color-page: #0f1217;
+    --ob-color-subtle: #8b94a3;
+    --ob-color-surface: #161a21;
+    --ob-color-surface-raised: #1d222b;
+    --ob-color-text: #eceff4;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ob-color-accent: #7aa2ff;
+  --ob-color-accent-border: #3a4f85;
+  --ob-color-accent-contrast: #0b0d11;
+  --ob-color-accent-soft: #7aa2ff;
+  --ob-color-border: #2c3340;
+  --ob-color-callout-caution: #f85149;
+  --ob-color-callout-important: #ab7df8;
+  --ob-color-callout-note: #4493f8;
+  --ob-color-callout-tip: #3fb950;
+  --ob-color-callout-warning: #d29922;
+  --ob-color-code-attr: #e06c75;
+  --ob-color-code-bg: #1d222b;
+  --ob-color-code-comment: #7f8794;
+  --ob-color-code-constant: #d19a66;
+  --ob-color-code-function: #61afef;
+  --ob-color-code-keyword: #c678dd;
+  --ob-color-code-meta: #61afef;
+  --ob-color-code-number: #d19a66;
+  --ob-color-code-operator: #56b6c2;
+  --ob-color-code-property: #e06c75;
+  --ob-color-code-punctuation: #abb2bf;
+  --ob-color-code-regex: #56b6c2;
+  --ob-color-code-string: #98c379;
+  --ob-color-code-tag: #7aa2ff;
+  --ob-color-code-text: #eceff4;
+  --ob-color-code-type: #e5c07b;
+  --ob-color-code-variable: #56b6c2;
+  --ob-color-glow: #1b2640;
+  --ob-color-ink: #0b0d11;
+  --ob-color-link: #8fb0ff;
+  --ob-color-muted: #b4bcc9;
+  --ob-color-outer: #0a0c10;
+  --ob-color-page: #0f1217;
+  --ob-color-subtle: #8b94a3;
+  --ob-color-surface: #161a21;
+  --ob-color-surface-raised: #1d222b;
+  --ob-color-text: #eceff4;
+}
+@media print {
+  :root,
+  :root[data-theme] {
+    color-scheme: light;
+    --ob-color-accent: #2457d6;
+    --ob-color-accent-border: #9db4ee;
+    --ob-color-accent-contrast: #ffffff;
+    --ob-color-accent-soft: #2457d6;
+    --ob-color-border: #d8dce3;
+    --ob-color-callout-caution: #d1242f;
+    --ob-color-callout-important: #6f3fc4;
+    --ob-color-callout-note: #0969da;
+    --ob-color-callout-tip: #116329;
+    --ob-color-callout-warning: #7d5400;
+    --ob-color-code-attr: #e45649;
+    --ob-color-code-bg: #f1f3f6;
+    --ob-color-code-comment: #8a909a;
+    --ob-color-code-constant: #986801;
+    --ob-color-code-function: #4078f2;
+    --ob-color-code-keyword: #a626a4;
+    --ob-color-code-meta: #4078f2;
+    --ob-color-code-number: #986801;
+    --ob-color-code-operator: #0184bc;
+    --ob-color-code-property: #e45649;
+    --ob-color-code-punctuation: #383a42;
+    --ob-color-code-regex: #0184bc;
+    --ob-color-code-string: #50a14f;
+    --ob-color-code-tag: #2457d6;
+    --ob-color-code-text: #14171c;
+    --ob-color-code-type: #c18401;
+    --ob-color-code-variable: #0184bc;
+    --ob-color-glow: #e6edfc;
+    --ob-color-ink: #0b0d11;
+    --ob-color-link: #1d4bc2;
+    --ob-color-muted: #4a5260;
+    --ob-color-outer: #f6f7f9;
+    --ob-color-page: #ffffff;
+    --ob-color-subtle: #6b7280;
+    --ob-color-surface: #ffffff;
+    --ob-color-surface-raised: #f1f3f6;
+    --ob-color-text: #14171c;
+  }
+}
+

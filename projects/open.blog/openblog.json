@@ -1,0 +1,106 @@
+{
+  "title": "open.blog",
+  "description": "The example site for open.blog: Markdown files in, a fast static site out. This is the starter content every new blog begins with.",
+  "url": "https://open-blog-jtc.netlify.app",
+  "language": "en",
+  "author": {
+    "name": "open.blog",
+    "url": "https://github.com/journey-to-code-org/open.blog",
+    "email": "",
+    "sameAs": []
+  },
+  "contributors": {
+    "example-author": {
+      "name": "Example Author",
+      "url": "",
+      "sameAs": [],
+      "orcid": ""
+    },
+    "example-editor": {
+      "name": "Example Editor",
+      "url": "",
+      "sameAs": [],
+      "orcid": ""
+    }
+  },
+  "logo": "",
+  "favicon": "",
+  "ogImage": "/images/open-blog-og.png",
+  "theme": "base",
+  "postPath": "/posts/{slug}/",
+  "postsPerPage": 10,
+  "nav": [
+    { "label": "Home", "href": "/" },
+    { "label": "Series", "href": "/series/" },
+    { "label": "Archive", "href": "/archive/" },
+    { "label": "Search", "href": "/search/" }
+  ],
+  "social": [],
+  "footer": "© {year} {author}",
+  "poweredBy": true,
+  "share": {
+    "enabled": true,
+    "networks": ["x", "bluesky", "linkedin", "reddit", "hackernews", "email"]
+  },
+  "analytics": {
+    "builtin": true,
+    "showViews": true,
+    "retentionDays": 400
+  },
+  "engagement": {
+    "enabled": true,
+    "comments": true,
+    "analytics": true,
+    "endpoint": "https://open-blog-jtc.netlify.app/api"
+  },
+  "snippets": {
+    "head": "",
+    "postFooter": "",
+    "bodyEnd": ""
+  },
+  "relatedPosts": 3,
+  "cdn": {
+    "url": "",
+    "paths": ["/assets/", "/themes/", "/images/"],
+    "version": "",
+    "maxAge": 86400
+  },
+  "home": {
+    "heading": "Latest posts",
+    "intro": "",
+    "showSeries": true
+  },
+  "feeds": {
+    "rss": true,
+    "json": true,
+    "sitemap": true,
+    "llms": true,
+    "portfolioSnapshot": true,
+    "limit": 20,
+    "fullContent": true
+  },
+  "seo": {
+    "aiSearch": true,
+    "aiTraining": true
+  },
+  "markdown": {
+    "smartPunctuation": false,
+    "headingAnchors": true,
+    "tocDepth": 3,
+    "tocMinHeadings": 3
+  },
+  "paths": {
+    "content": "content",
+    "static": "static",
+    "output": "dist",
+    "themes": "themes",
+    "web": "web"
+  },
+  "admin": {
+    "usersFile": ".openblog/users.json",
+    "sessionHours": 12,
+    "secureCookies": false,
+    "maxUploadMb": 10,
+    "trustedProxies": []
+  }
+}

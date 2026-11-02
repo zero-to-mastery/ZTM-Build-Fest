@@ -1,0 +1,32 @@
+/* Fine-tune dialog. Shared components come from app.css; this only arranges them. */
+
+/* The search field stays fixed; only the settings below it scroll. */
+dialog.sheet[data-dialog="fine-tune"] .sheet-body { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; overflow: hidden; padding: 0; gap: 0; }
+.fine-tune-search { padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--border); }
+.fine-tune-scroll { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-6); align-content: start; padding: var(--space-5); }
+@media (max-width: 640px) {
+  .fine-tune-search { padding: var(--space-3) var(--space-4); }
+  .fine-tune-scroll { padding: var(--space-4); }
+}
+
+.setting-group > h3 + .fine-tune-blurb { margin: 0 0 var(--space-4); }
+.fine-tune-empty { align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.fine-tune-empty p { margin: 0; overflow-wrap: anywhere; }
+
+.fine-tune-advanced { display: grid; gap: var(--space-4); padding-top: var(--space-5); border-top: 1px solid var(--border); }
+.fine-tune-details summary {
+  display: flex; align-items: center; min-height: var(--target); padding: 0 var(--space-3);
+  border: 1px solid var(--border); border-radius: var(--radius-m); background: var(--surface-2);
+  font-weight: 600; cursor: pointer; list-style: none;
+}
+.fine-tune-details summary::-webkit-details-marker { display: none; }
+.fine-tune-details summary::before { content: "▸"; margin-right: var(--space-2); color: var(--text-3); }
+.fine-tune-details[open] summary::before { content: "▾"; }
+.fine-tune-details-body { display: grid; gap: var(--space-2); padding-top: var(--space-4); }
+.fine-tune-details-body .field-help { margin: 0; }
+.fine-tune-json { width: 100%; min-height: 240px; font: 12.5px/1.55 var(--mono); white-space: pre; overflow-wrap: normal; overflow: auto; }
+.fine-tune-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+/* Grid items default to min-width:auto and refuse to shrink below their
+   content (the JSON editor, long names). Let them fit the column. */
+.fine-tune-scroll > *, .fine-tune-scroll .setting-group, .fine-tune-json { min-width: 0; }

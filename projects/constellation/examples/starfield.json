@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "theme": "deep-space",
+  "seedMode": "custom",
+  "seed": "a-night-among-stars",
+  "arrangement": "galaxy",
+  "nodeSize": "stars",
+  "nodeColorMode": "language",
+  "identityRing": false,
+  "exportProfile": "hero",
+  "starfield": {
+    "mode": "milky-way",
+    "density": 75,
+    "brightness": 0.85,
+    "depth": 0.9,
+    "twinkle": true,
+    "seed": ""
+  }
+}

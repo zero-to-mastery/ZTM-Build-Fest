@@ -1,0 +1,52 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { createScene } from '../src/constellation.mjs';
+import { semanticGraphFromScene, serializeSemanticGraph } from '../src/semantic-graph.mjs';
+
+test('CLI imports canonical graph files offline and rejects ambiguous acquisition inputs', async () => {
+  const directory=await mkdtemp(join(tmpdir(),'constellation-graph-'));
+  try {
+    const file=join(directory,'alice.semantic-graph.json');
+    const graph=semanticGraphFromScene(createScene('alice',[{full_name:'alice/project',name:'Project',language:'Rust'}]));
+    const json=serializeSemanticGraph(graph);
+    await writeFile(file,json);
+    const run=args=>spawnSync(process.execPath,['src/cli.mjs',...args],{encoding:'utf8',cwd:process.cwd(),env:{...process.env,GITHUB_TOKEN:'',GH_TOKEN:'',CONSTELLATION_CONFIG:''}});
+    const output=run(['--semantic-graph',file,'--format','json']);
+    assert.equal(output.status,0,output.stderr);
+    assert.equal(output.stdout,json);
+    const markdown=run(['--semantic-graph',file,'--format','markdown']);
+    assert.equal(markdown.status,0,markdown.stderr);
+    assert.match(markdown.stdout,/alice/);
+    const missingBundleOutput=run(['--semantic-graph',file,'--format','bundle']);
+    assert.notEqual(missingBundleOutput.status,0);
+    assert.match(missingBundleOutput.stderr,/requires --output DIRECTORY/);
+    const bundleDir=join(directory,'bundle');
+    const bundle=run(['--semantic-graph',file,'--format','bundle','--output',bundleDir]);
+    assert.equal(bundle.status,0,bundle.stderr);
+    const { readFile: read, readdir } = await import('node:fs/promises');
+    const files=await readdir(bundleDir);
+    assert.deepEqual(files.sort(),['alice.semantic-graph.json','constellation.html','constellation.md','constellation.svg','manifest.json']);
+    assert.equal(await read(join(bundleDir,'alice.semantic-graph.json'),'utf8'),json);
+    assert.match(await read(join(bundleDir,'constellation.html'),'utf8'),/sg1:/);
+    assert.equal(JSON.parse(await read(join(bundleDir,'manifest.json'),'utf8')).fingerprint.startsWith('sg1:'),true);
+    const portfolioDir=join(directory,'portfolio');
+    const portfolio=run(['--semantic-graph',file,'--format','portfolio','--output',portfolioDir]);
+    assert.equal(portfolio.status,0,portfolio.stderr);
+    const portfolioManifest=JSON.parse(await read(join(portfolioDir,'manifest.json'),'utf8'));
+    assert.equal(portfolioManifest.version,1);
+    assert.equal(portfolioManifest.sceneVersion,1);
+    assert.equal(portfolioManifest.entryPoints.static,'constellation.svg');
+    assert.ok(portfolioManifest.artifacts['scene.json'].sha256);
+    await writeFile(join(portfolioDir,'untrusted.js'),'export default 1;');
+    const mixed=run(['--semantic-graph',file,'--format','portfolio','--output',portfolioDir]);
+    assert.notEqual(mixed.status,0);
+    assert.match(mixed.stderr,/must be empty/);
+    const ambiguous=run(['--semantic-graph',file,'--username','alice']);
+    assert.notEqual(ambiguous.status,0);
+    assert.match(ambiguous.stderr,/cannot be combined/);
+  } finally { await rm(directory,{recursive:true,force:true}); }
+});

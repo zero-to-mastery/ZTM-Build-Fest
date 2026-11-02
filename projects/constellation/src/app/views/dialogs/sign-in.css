@@ -1,0 +1,23 @@
+/* Sign-in dialog: the token disclosure and its form. */
+.sign-in-lede { color: var(--text-2); }
+.sign-in-token { border: 1px solid var(--border); border-radius: var(--radius-m); background: var(--surface); }
+.sign-in-token > summary {
+  display: flex; align-items: center; gap: var(--space-2); min-height: var(--target);
+  padding: 0 var(--space-4); cursor: pointer; font-weight: 600; border-radius: var(--radius-m);
+  list-style: none;
+}
+.sign-in-token > summary::-webkit-details-marker { display: none; }
+.sign-in-token > summary::before {
+  content: ""; flex: none; width: 8px; height: 8px; margin-right: var(--space-1);
+  border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg); transition: transform var(--fast) var(--ease);
+}
+.sign-in-token[open] > summary::before { transform: rotate(45deg); }
+.sign-in-token > summary:hover { background: var(--surface-2); }
+.sign-in-form { display: grid; gap: var(--space-4); padding: var(--space-2) var(--space-4) var(--space-4); }
+.sign-in-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); }
+.sign-in-actions a { color: var(--primary); font-weight: 560; min-height: 24px; display: inline-flex; align-items: center; }
+.sign-in-message:empty { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .sign-in-token > summary::before { transition: none; }
+}

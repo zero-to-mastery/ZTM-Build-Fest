@@ -1,0 +1,68 @@
+# VDE ARCHITECTURAL RECORD
+# @shared-law (Sovereign Law)
+# Template for language VMs
+# Variables: testport1, 2222, , zsh /vde/scripts/setup/testport1-init.zsh
+name: vde-testport1
+services:
+  vde-testport1:
+    build:
+      context: ../../../..
+      dockerfile: configs/docker/vde-lang.Dockerfile
+      args:
+        VM_NAME: testport1
+        PKGS_TO_INSTALL: ""
+        CUSTOM_BUILD_CMD: "zsh /vde/scripts/setup/testport1-init.zsh"
+        USERNAME: devuser
+        UID: 1000
+        GID: 1000
+    image: vde-testport1:latest
+    container_name: vde-testport1
+    hostname: vde-testport1
+    restart: unless-stopped
+
+    # Docker Socket Sovereignty, cont'd (Issue #457): grant devuser access to
+    # the bind-mounted host docker.sock via a launch-time supplementary GID
+    # instead of the container ever chown'ing the host socket. Supplied
+    # fresh by bin/vde on every ignition -- nothing GID-related is baked
+    # into the image itself.
+    group_add:
+      - "${VDE_DOCKER_SOCK_GID:-1000}"
+    labels:
+      - "vde.managed=true"
+      - "vde.type=lang"
+      - "vde.name=testport1"
+
+    ports:
+      - "2222:2222"
+
+    volumes:
+      - ../../../../:/vde:ro
+      - ../../../../projects/testport1:/home/devuser/workspace
+      - ../../../../logs/testport1:/logs
+      # Docker Socket Sovereignty (Physical Verification Law)
+      - /var/run/docker.sock:/var/run/docker.sock
+      # macOS Canonical Bridge (Hardened to use explicit host socket)
+      - ${VDE_HOST_SSH_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/host-services/ssh-auth.sock
+      # VDE 2026 Sovereign Bridge
+      - ${VDE_HOST_SSH_AUTH_SOCK:-/run/host-services/ssh-auth.sock}:/run/vde-ssh.sock
+
+    environment:
+      - SSH_AUTH_SOCK=/run/vde-ssh.sock
+
+    env_file:
+      - ../../../../.env
+      - ../../../../env-files/testport1.env
+
+    networks:
+      vde-net:
+        aliases:
+          - "testport1"
+          - "vde-testport1"
+
+    extra_hosts:
+      - "vde-host:host-gateway"
+      - "host:host-gateway"
+
+networks:
+  vde-net:
+    external: true

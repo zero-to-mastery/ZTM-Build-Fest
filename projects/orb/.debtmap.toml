@@ -1,0 +1,16 @@
+# Debtmap Configuration
+
+[thresholds]
+complexity = 10
+duplication = 50
+max_file_length = 500
+max_function_length = 50
+
+[languages]
+enabled = ["rust"]
+
+[ignore]
+patterns = ["target/**"]
+
+[output]
+default_format = "terminal"

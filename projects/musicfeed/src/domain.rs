@@ -19,3 +19,16 @@ pub struct RotationEntry {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub note: Option<String>,
 }
+
+/// What a caller supplies to store a new entry. `id` and any derived fields
+/// are deliberately absent: the store assigns the id — the database is the
+/// counter now — so a caller cannot forge or collide with one.
+#[derive(Clone, Debug)]
+pub struct NewRotationEntry {
+    pub listened_date: NaiveDate,
+    pub artist: String,
+    pub album: String,
+    pub cover: Option<String>,
+    pub year: Option<i32>,
+    pub note: Option<String>,
+}

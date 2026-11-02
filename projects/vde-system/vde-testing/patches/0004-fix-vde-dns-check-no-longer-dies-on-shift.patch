@@ -1,0 +1,25 @@
+From 635083d8a186de4ea5d872062a340527c6af31d4 Mon Sep 17 00:00:00 2001
+From: scratch <scratch@example.invalid>
+Date: Wed, 30 Sep 2026 17:08:51 -0400
+Subject: [PATCH 1/2] fix(vde): dns-check no longer dies on 'shift' and
+ receives its arguments
+
+---
+ bin/vde | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/bin/vde b/bin/vde
+index c1cec39..f237a4a 100755
+--- a/bin/vde
++++ b/bin/vde
+@@ -460,4 +460,5 @@ case ${ACTION} in
+     dns-check)
+-        shift
+-        "${VDE_ROOT_DIR}/bin/vde-dns-check.zsh" "$@"
++        # The flag loop above has already consumed "$@" into input_targets, so a
++        # `shift` here always failed ("shift count must be <= $#"). Pass the words as typed.
++        "${VDE_ROOT_DIR}/bin/vde-dns-check.zsh" "${input_targets[@]}"
+         ;;
+-- 
+2.43.0
+

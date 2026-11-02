@@ -1,0 +1,47 @@
+{
+ "args": [
+  "start",
+  "python"
+ ],
+ "docker_calls": [
+  "docker network inspect vde-net",
+  "docker ps --format \\{\\{.Names\\}\\}",
+  "docker ps --filter label=vde.managed=true --format \\{\\{.Names\\}\\}",
+  "docker ps --format \\{\\{.Names\\}\\}",
+  "docker image inspect vde-python:latest",
+  "docker image inspect vde-base:latest"
+ ],
+ "env": {},
+ "exit_code": 1,
+ "final_fake_state": {
+  "containers": [],
+  "images": [],
+  "running": []
+ },
+ "home_changes": {
+  "added": [],
+  "modified": [],
+  "removed": []
+ },
+ "id": "start.python.empty",
+ "mode": "real",
+ "repo_changes": {
+  "added": [],
+  "modified": [],
+  "removed": []
+ },
+ "scenario": "empty",
+ "stderr": [
+  "<TS> [INFO ] [vde       ] VM types loaded from cache",
+  "<TS> [INFO ] [vde       ] Initializing VDE security environment...",
+  "<TS> [INFO ] [vde       ] Enforcing strict directory permissions...",
+  "<TS> [INFO ] [vde       ] Directory permissions enforced",
+  "<TS> [INFO ] [vde       ] Enforcing container network isolation...",
+  "<TS> [WARN ] [docker    ] Image for vde-python not found. Checking foundations...",
+  "<TS> [ERROR] [docker    ] Foundational image 'vde-base' is missing. Run 'vde init' to restore."
+ ],
+ "stdout": [
+  " Igniting vde-python (SSH: 2217)...",
+  "\u2717 Base image missing"
+ ]
+}

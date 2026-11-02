@@ -1,0 +1,179 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE Spoke Access - SSH Connector
+# Provides direct SSH access to VDE Spoke containers
+
+# 1. ENVIRONMENT & CONTEXT
+# Use zsh-native relative path detection
+typeset VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+# Parse flags early for quiet mode (Mandate 3)
+for arg in "$@"; do
+    if [[ "${arg}" == "-q" || "${arg}" == "--quiet" ]]; then
+        export VDE_QUIET=1
+        break
+    fi
+done
+
+# Source dependencies
+source "${VDE_ROOT_DIR}/lib/vde-shell-compat"
+source "${VDE_ROOT_DIR}/lib/vde-constants"
+source "${VDE_ROOT_DIR}/lib/vde-core"
+source "${VDE_ROOT_DIR}/lib/vm-common"
+
+# Ensure technical integrity (Project 1 foundations)
+if [[ "${VDE_QUIET:-0}" != "1" ]]; then
+    [[ -f "${VDE_ROOT_DIR}/bin/vde-check-tetrad.zsh" ]] && "${VDE_ROOT_DIR}/bin/vde-check-tetrad.zsh"
+else
+    [[ -f "${VDE_ROOT_DIR}/bin/vde-check-tetrad.zsh" ]] && "${VDE_ROOT_DIR}/bin/vde-check-tetrad.zsh" --quiet
+fi
+
+# Default configuration
+typeset target_user="${VDE_SSH_USER:-vde_student}"
+typeset target_identity="${VDE_SSH_IDENTITY:-$HOME/.ssh/vde/vde_student}"
+typeset SHOW_COMMAND=false
+typeset -a EXTRA_ARGS=()
+typeset VM_ALIAS=""
+
+# SSH Options for high-fidelity technical proof
+typeset -a SSH_OPTS=(
+    "-o StrictHostKeyChecking=no"
+    "-o UserKnownHostsFile=/dev/null"
+    "-o IdentitiesOnly=yes"
+    "-o LogLevel=ERROR"
+    "-o ConnectTimeout=5"
+)
+
+# =============================================================================
+# Usage
+# =============================================================================
+usage() {
+    echo "Usage: $(basename "$0") [options] <vm-alias> [command]"
+    echo ""
+    echo "Options:"
+    echo "  -u, --user <user>      Connect as specified user (default: devuser)"
+    echo "  -i, --identity <path>  Use specified SSH identity key"
+    echo "  -q, --quiet            Suppress output (except for remote command)"
+    echo "  --show-command         Display the raw SSH command instead of executing"
+    echo "  -h, --help             Show this help message"
+}
+
+# =============================================================================
+# Argument Parsing
+# =============================================================================
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -u|--user)
+            target_user="$2"
+            shift 2
+            ;;
+        -i|--identity)
+            target_identity="$2"
+            shift 2
+            ;;
+        -q|--quiet)
+            export VDE_QUIET=1
+            shift
+            ;;
+        --show-command)
+            SHOW_COMMAND=true
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit ${VDE_SUCCESS}
+            ;;
+        -*)
+            vde_log_error "Unknown option: $1" "ssh-vm"
+            usage
+            exit ${VDE_ERR_INVALID_INPUT}
+            ;;
+        *)
+            if [[ -z "$VM_ALIAS" ]]; then
+                VM_ALIAS="$1"
+                shift
+            else
+                EXTRA_ARGS=("$@")
+                set --
+            fi
+            ;;
+    esac
+done
+
+if [[ -z "${VM_ALIAS}" ]]; then
+    if [[ "${VDE_QUIET:-0}" != "1" ]]; then
+        vde_log_error "Missing VM alias" "ssh-vm"
+        usage
+    fi
+    exit ${VDE_ERR_INVALID_INPUT}
+fi
+
+# =============================================================================
+# Execution
+# =============================================================================
+
+# Load VM types (required for name resolution)
+load_vm_types >/dev/null 2>&1
+
+# Get VM Details
+VM_NAME=$(resolve_vm_name "$VM_ALIAS")
+# If VM_NAME is empty, it might be that VM_ALIAS is already the canonical name
+if [[ -z "${VM_NAME}" ]]; then
+    if [[ "${VM_ALIAS}" == vde-* ]]; then
+        VM_NAME="${VM_ALIAS}"
+    else
+        vde_log_error "VM alias '${VM_ALIAS}' is not registered." "ssh-vm"
+        exit "${VDE_ERR_NOT_FOUND}"
+    fi
+fi
+
+SSH_PORT=$(get_vm_ssh_port "$VM_NAME")
+
+# Check if Spoke is running
+if [[ "${SHOW_COMMAND}" != "true" ]]; then
+    CONTAINER_ID=$(docker ps -q -f "name=${VM_NAME}")
+    if [[ -z "${CONTAINER_ID}" ]]; then
+        vde_log_error "Spoke '${VM_ALIAS}' (${VM_NAME}) is not running." "ssh-vm"
+        vde_log_info "Run 'vde start ${VM_ALIAS}' to ignite the Spoke." "ssh-vm"
+        exit 1
+    fi
+fi
+
+# Resolve SSH Host (handle Hub-to-Spoke DNS)
+typeset SSH_HOST="127.0.0.1"
+
+# Assemble Command
+typeset -a SSH_CMD=(
+    ssh
+    -A  # Enable Agent Forwarding (Rule 15)
+)
+
+# Only request pseudo-terminal if no remote command is provided
+if [[ ${#EXTRA_ARGS[@]} -eq 0 ]]; then
+    SSH_CMD+=("-tt")
+fi
+
+SSH_CMD+=(
+    "${SSH_OPTS[@]}"
+    -i "${target_identity}"
+    -p "${SSH_PORT}"
+    "${target_user}@${SSH_HOST}"
+)
+
+# Append command if provided
+if [[ ${#EXTRA_ARGS[@]} -gt 0 ]]; then
+    SSH_CMD+=("${EXTRA_ARGS[@]}")
+fi
+
+if [[ "${SHOW_COMMAND}" = true ]] ; then
+    echo "${SSH_CMD[@]}"
+    exit ${VDE_SUCCESS}
+else
+    # Only log "Connecting..." if it's an interactive shell
+    if [[ ${#EXTRA_ARGS[@]} -eq 0 ]] ; then
+        vde_log_info "Connecting to ${VM_ALIAS}..." "ssh-vm"
+    fi
+    exec "${SSH_CMD[@]}"
+fi

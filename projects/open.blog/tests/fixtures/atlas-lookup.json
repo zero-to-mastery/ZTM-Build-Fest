@@ -1,0 +1,47 @@
+{
+  "about": "Shared atlas lookup fixtures (ADR 0171), read by crates/openblog-core/tests/atlas_query.rs and tests/web/atlas-terms.test.mjs. A term is its text split on Unicode White_Space (code points U+0009-000D, 0020, 0085, 00A0, 1680, 2000-200A, 2028, 2029, 202F, 205F, 3000), joined with one space and lowercased with the default Unicode case conversion; there is no normalization form, so a composed and a decomposed spelling are different terms.",
+  "normalize": [
+    { "name": "plain", "input": "Plato", "expected": "plato" },
+    { "name": "outer and repeated spaces", "input": "  The   Republic ", "expected": "the republic" },
+    { "name": "tabs and newlines", "input": "a\tb\nc\r\nd", "expected": "a b c d" },
+    { "name": "no-break space is white space", "input": "a\u00a0b", "expected": "a b" },
+    { "name": "next line U+0085 is white space", "input": "a\u0085b", "expected": "a b" },
+    { "name": "line and paragraph separators", "input": "a\u2028b\u2029c", "expected": "a b c" },
+    { "name": "ideographic space", "input": "a\u3000b", "expected": "a b" },
+    { "name": "byte order mark U+FEFF is not white space", "input": "a\ufeffb", "expected": "a\ufeffb" },
+    { "name": "a leading U+FEFF stays", "input": "\ufeffPlato", "expected": "\ufeffplato" },
+    { "name": "zero width space is not white space", "input": "a\u200bb", "expected": "a\u200bb" },
+    { "name": "sharp s is not folded", "input": "Stra\u00dfe", "expected": "stra\u00dfe" },
+    { "name": "capital sharp s lowercases to sharp s", "input": "STRA\u00dfE", "expected": "stra\u00dfe" },
+    { "name": "ss is not sharp s", "input": "STRASSE", "expected": "strasse" },
+    { "name": "composed e acute", "input": "Caf\u00e9", "expected": "caf\u00e9" },
+    { "name": "decomposed e acute stays decomposed", "input": "Cafe\u0301", "expected": "cafe\u0301" },
+    { "name": "final sigma", "input": "\u039f\u0394\u039f\u03a3 \u03a3\u039f\u03a6\u039f\u03a3", "expected": "\u03bf\u03b4\u03bf\u03c2 \u03c3\u03bf\u03c6\u03bf\u03c2" },
+    { "name": "dotted capital I", "input": "\u0130stanbul", "expected": "i\u0307stanbul" },
+    { "name": "empty", "input": "", "expected": "" },
+    { "name": "only white space", "input": " \t\u0085\u00a0 ", "expected": "" }
+  ],
+  "lookup": {
+    "entries": [
+      { "id": "strasse", "label": "Stra\u00dfe", "aliases": ["Road"] },
+      { "id": "cafe", "label": "Caf\u00e9" },
+      { "id": "republic", "label": "The Republic", "aliases": ["Politeia"] },
+      { "id": "plato", "label": "Plato" },
+      { "id": "plato-dialogue", "label": "plato" }
+    ],
+    "cases": [
+      { "query": "STRA\u00dfE", "ids": ["strasse"] },
+      { "query": "  stra\u00dfe\u00a0", "ids": ["strasse"] },
+      { "query": "STRASSE", "ids": [] },
+      { "query": "Caf\u00e9", "ids": ["cafe"] },
+      { "query": "CAF\u00c9", "ids": ["cafe"] },
+      { "query": "Cafe\u0301", "ids": [] },
+      { "query": "The\u0085Republic", "ids": ["republic"] },
+      { "query": "the\ufeffrepublic", "ids": [] },
+      { "query": "\ufeffPlato", "ids": [] },
+      { "query": "politeia", "ids": ["republic"] },
+      { "query": " PLATO ", "ids": ["plato", "plato-dialogue"] },
+      { "query": "", "ids": [] }
+    ]
+  }
+}

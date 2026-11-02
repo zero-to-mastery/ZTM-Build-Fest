@@ -1,0 +1,27 @@
+{
+  "name": "Constellation Agent & Maintainer Kit",
+  "generated": "2026-10-03",
+  "repository": "mnichols08/constellation",
+  "files": [
+    ".github/ISSUE_TEMPLATE/ai-story.md",
+    ".github/ISSUE_TEMPLATE/architecture-change.md",
+    ".github/pull_request_template.md",
+    "AGENTS.md",
+    "README.md",
+    "SOURCE-NOTES.md",
+    "docs/PROJECT-PRINCIPLES.md",
+    "docs/REVIEW-CHECKLIST.md",
+    "docs/ROADMAP.md",
+    "docs/ai/AI-CONSTELLATION-SPEC.md",
+    "docs/ai/AI-IMPLEMENTATION-PLAYBOOK.md",
+    "docs/architecture/ARCHITECTURE.md",
+    "docs/architecture/RUST-WASM-BOUNDARY.md",
+    "docs/architecture/decisions/ADR-0001-AI-SEMANTIC-BOUNDARY.md",
+    "docs/architecture/decisions/ADR-TEMPLATE.md",
+    "docs/engineering/AGENT-WORKFLOW.md",
+    "docs/engineering/PERFORMANCE-BUDGETS.md",
+    "docs/engineering/SECURITY-AND-TRUST.md",
+    "docs/engineering/TESTING-AND-QUALITY.md",
+    "install.sh"
+  ]
+}

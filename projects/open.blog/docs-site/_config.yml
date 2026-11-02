@@ -1,0 +1,21 @@
+title: open.blog Documentation
+description: Technical documentation for open.blog CLI, Admin Panel, and Markdown authoring.
+remote_theme: just-the-docs/just-the-docs
+plugins:
+  - jekyll-remote-theme
+color_scheme: light
+url: ""
+aux_links:
+  "open.blog Repository": "https://github.com/journey-to-code-org/open.blog"
+  "Issue Tracker": "https://github.com/journey-to-code-org/open.blog/issues"
+search_enabled: true
+back_to_top: true
+heading_anchors: true
+footer_content: "open.blog documentation suite for GitHub Pages."
+
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: default

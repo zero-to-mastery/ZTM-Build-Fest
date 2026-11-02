@@ -1,0 +1,344 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# list-vms - List all predefined VM types
+# Enhanced with --name-only flag and improved formatting
+
+# Reset all zsh options to defaults to avoid local var printing issues
+emulate zsh
+set -e
+
+# Determine VDE root directory
+if [[ -z "${VDE_ROOT_DIR}" ]]; then
+    export VDE_ROOT_DIR="${0:h:h}"
+fi
+
+# Source shared library
+source "${VDE_ROOT_DIR}/lib/vm-common"
+if [[ -f "${VDE_ROOT_DIR}/lib/vde-docker-state" ]]; then
+    source "${VDE_ROOT_DIR}/lib/vde-docker-state"
+fi
+
+# Source UX libraries
+if [[ -f "${VDE_ROOT_DIR}/lib/vde-naming" ]]; then
+    source "${VDE_ROOT_DIR}/lib/vde-naming"
+fi
+
+# Parse arguments
+LIST_TYPE=""
+FILTER=""
+NAME_ONLY=false
+SHOW_CREATED=false
+
+while [[ ${#} -gt 0 ]]; do
+    case ${1} in
+        --lang|--languages)
+            LIST_TYPE="lang"
+            shift
+            ;;
+        --svc|--services)
+            LIST_TYPE="service"
+            shift
+            ;;
+        --name-only)
+            NAME_ONLY=true
+            shift
+            ;;
+        -a|--all)
+            SHOW_CREATED=true
+            shift
+            ;;
+        --no-cache)
+            # Handled by load_vm_types in library
+            shift
+            ;;
+        --verify)
+            verify_port_registry
+            shift
+            ;;
+        --help|-h)
+            echo "Usage: list-vms [OPTIONS] [filter]"
+            echo ""
+            echo "List all predefined VM types (languages and services)."
+            echo ""
+            echo "Options:"
+            echo "  --lang, --languages    List only language VMs"
+            echo "  --svc, --services      List only service VMs"
+            echo "  --name-only            Show only VM names (hostnames)"
+            echo "  -a, --all              Show all VMs including created status"
+            echo "  --help, -h             Show this help message"
+            echo ""
+            echo "Arguments:"
+            echo "  filter                 Optional text filter (searches name, aliases, display)"
+            echo ""
+            echo "Examples:"
+            echo "  list-vms                    # List all VMs"
+            echo "  list-vms --lang             # List only language VMs"
+            echo "  list-vms --svc              # List only service VMs"
+            echo "  list-vms --name-only        # Show only names/hostnames"
+            echo "  list-vms python             # Search for 'python'"
+            echo "  list-vms --lang script      # Search for script in languages"
+            exit ${VDE_SUCCESS}
+            ;;
+        *)
+            FILTER="${1}"
+            shift
+            ;;
+    esac
+done
+
+# =============================================================================
+# Functions
+# =============================================================================
+
+# display_vm - Display a created VM with its status
+display_vm() {
+    local name=${1}
+    local type=${2}
+    local display=${3}
+    local vm_aliases=${4}
+
+    # Apply filter if specified
+    if [[ -n "${FILTER}" ]]; then
+        if [[ "${name}" != *"${FILTER}"* ]] && [[ "${display}" != *"${FILTER}"* ]] && [[ "${vm_aliases}" != *"${FILTER}"* ]]; then
+            return
+        fi
+    fi
+    if [[ "${NAME_ONLY}" == "true" ]]; then
+        # Show hostname (for language VMs: name-dev, for services: name)
+        local hostname
+        hostname=$(vde_get_hostname "${name}")
+        printf "%s\n" "${hostname}"
+    else
+        local marker=""
+
+        # Check if VM exists: has config file OR has Docker container
+        local container_name
+        container_name=$(vde_get_container_name "${name}")
+        
+        if vm_is_created "${name}" || vm_container_exists "${name}"; then
+            # Query real-time status
+            local vm_status
+            vm_status=$(vm_container_status "${name}")
+            
+            if [[ -n "${vm_status}" ]]; then
+                if [[ "${vm_status}" == "running" ]]; then
+                    marker=" [RUNNING]"
+                elif [[ "${vm_status}" == "exited" || "${vm_status}" == "stopped" ]]; then
+                    marker=" [STOPPED]"
+                else
+                    # This captures Docker's native 'created' state among others
+                    marker=" [${(U)vm_status}]"
+                fi
+            else
+                # No container, but VDE config trio exists
+                # Check if Docker image has been built yet
+                local image_name="vde-${name#vde-}"
+                if [[ -n "$(docker images -q "${image_name}" 2>/dev/null)" ]]; then
+                    marker=" [IMAGE]"
+                else
+                    marker=" [CONFIGURED]"
+                fi
+            fi
+        else
+            # VM not created - skip (don't show undefined VMs)
+            return
+        fi
+
+        printf "  %-20s %s%s\n" "${name}" "${display}" "${marker}"
+
+        if [[ -n "${vm_aliases}" ]]; then
+            printf "    Aliases: %s\n" "${vm_aliases}"
+        fi
+
+        if [[ "${type}" == "service" ]]; then
+            local svc_port
+            svc_port=$(_assoc_get "VM_SVC_PORT" "${name}" 2>/dev/null) || svc_port=""
+            if [[ -n "${svc_port}" ]]; then
+                printf "    Service Port: %s\n" "${svc_port}"
+            fi
+        fi
+    fi
+}
+
+# display_vm_type - Display an available VM type (for -a flag)
+display_vm_type() {
+    local name=${1}
+    local type=${2}
+    local display=${3}
+    local vm_aliases=${4}
+
+    # Apply filter if specified
+    if [[ -n "${FILTER}" ]]; then
+        if [[ "${name}" != *"${FILTER}"* ]] && [[ "${display}" != *"${FILTER}"* ]] && [[ "${vm_aliases}" != *"${FILTER}"* ]]; then
+            return
+        fi
+    fi
+    if [[ "${NAME_ONLY}" == "true" ]]; then
+        printf "%s\n" "${name}"
+    else
+        printf "  %-20s %s\n" "${name}" "${display}"
+
+        if [[ -n "${vm_aliases}" ]]; then
+            printf "    Aliases: %s\n" "${vm_aliases}"
+        fi
+
+        if [[ "${type}" == "service" ]]; then
+            local svc_port
+            svc_port=$(_assoc_get "VM_SVC_PORT" "${name}" 2>/dev/null) || svc_port=""
+            if [[ -n "${svc_port}" ]]; then
+                printf "    Service Port: %s\n" "${svc_port}"
+            fi
+        fi
+    fi
+}
+
+# get_created_vms - Get list of created VMs from docker-state directory
+get_created_vms() {
+    local state_dir
+    state_dir=$(get_docker_state_dir)
+    
+    if [[ -d "${state_dir}" ]] && [[ -n "$(ls -A "${state_dir}" 2>/dev/null)" ]]; then
+        for f in "${state_dir}"/*.json(N); do
+            [[ -f "${f}" ]] && basename "${f}" .json
+        done
+    fi
+}
+
+# get_docker_vms - Get list of all VDE containers from Docker
+get_docker_vms() {
+    docker ps -a --filter "label=vde.managed=true" --format '{{.Names}}' || true
+}
+
+# =============================================================================
+# Main Logic
+# =============================================================================
+
+# Get lists
+created_vms=$(get_created_vms)
+docker_vms=$(get_docker_vms)
+
+# If filter is provided, check if it's a specific known VM but not created
+if [[ -n "${FILTER}" ]]; then
+    # If the filter matches a known VM exactly but it hasn't been created yet
+    # and we are not showing all VMs, we should still show it as "available" 
+    # or report it as not found if it's not even a known type
+    if ! is_known_vm "${FILTER}"; then
+        # Check if any created/docker VM matches the filter
+        local match_found=false
+        if [[ -n "${created_vms}" ]] && echo "${created_vms}" | grep -q "${FILTER}"; then match_found=true; fi
+        if [[ -n "${docker_vms}" ]] && echo "${docker_vms}" | grep -q "${FILTER}"; then match_found=true; fi
+        
+        if [[ "${match_found}" == "false" ]] && [[ "${SHOW_CREATED}" == "false" ]]; then
+            vde_error_simple "VM not found: ${FILTER}" "list-vms"
+            exit ${VDE_ERR_NOT_FOUND}
+        fi
+    fi
+fi
+
+# Combine both lists, removing duplicates
+typeset -a all_vms
+if [[ -n "${created_vms}" ]] || [[ -n "${docker_vms}" ]]; then
+    # Convert docker container names to VM names and combine
+    docker_vm_names=$(echo "${docker_vms}" | sed 's/-dev$//' | sed 's/^vde-//')
+    # Use array expansion to correctly handle multi-line strings as separate elements
+    all_vms=(${(f)"$(echo "${created_vms}\n${docker_vm_names}" | grep -v '^$' | sort -u)"})
+fi
+
+if [[ ${#all_vms} -eq 0 ]] && [[ "${SHOW_CREATED}" == "false" ]]; then
+    if [[ "${NAME_ONLY}" == "false" ]]; then
+        echo "No VMs created yet."
+        echo ""
+        echo "Run 'vde create <name>' to create one."
+    fi
+    exit ${VDE_SUCCESS}
+fi
+
+# Separate VMs by type for categorized display
+typeset -a lang_created service_created
+for name in "${all_vms[@]}"; do
+    _vm_type=$(get_vm_type "${name}")
+    # Apply type filter if specified
+    if [[ -n "${LIST_TYPE}" ]] && [[ "${_vm_type}" != "${LIST_TYPE}" ]]; then
+        continue
+    fi
+    if [[ "${_vm_type}" == "lang" ]]; then
+        lang_created+=("${name}")
+    elif [[ "${_vm_type}" == "service" ]]; then
+        service_created+=("${name}")
+    fi
+done
+
+# Show created VMs categorized by type
+if [[ "${NAME_ONLY}" == "false" ]]; then
+    echo "Created VMs:"
+    echo ""
+fi
+
+# Show Language VMs
+if [[ ${#lang_created} -gt 0 ]] && [[ "${LIST_TYPE}" != "service" ]]; then
+    if [[ "${NAME_ONLY}" == "false" ]]; then
+        echo "Language VMs:"
+    fi
+    for name in "${lang_created[@]}"; do
+        _vm_display=$(get_vm_display "${name}")
+        _vm_aliases=$(_assoc_get "VM_ALIASES" "${name}" 2>/dev/null) || _vm_aliases=""
+        display_vm "${name}" "lang" "${_vm_display}" "${_vm_aliases}"
+
+    done
+    if [[ "${NAME_ONLY}" == "false" ]]; then
+        echo ""
+    fi
+fi
+
+# Show Service VMs
+if [[ ${#service_created} -gt 0 ]] && [[ "${LIST_TYPE}" != "lang" ]]; then
+    if [[ "${NAME_ONLY}" == "false" ]]; then
+        echo "Service VMs:"
+    fi
+    for name in "${service_created[@]}"; do
+        _vm_display=$(get_vm_display "${name}")
+        _vm_aliases=$(_assoc_get "VM_ALIASES" "${name}" 2>/dev/null) || _vm_aliases=""
+        display_vm "${name}" "service" "${_vm_display}" "${_vm_aliases}"
+    done
+    if [[ "${NAME_ONLY}" == "false" ]]; then
+        echo ""
+    fi
+fi
+
+
+# Show available VM types if --all flag is set
+if [[ "${SHOW_CREATED}" == "true" ]]; then
+    if [[ "${NAME_ONLY}" == "false" ]]; then
+        echo ""
+        echo "Available VM Types:"
+        echo ""
+    fi
+
+    if [[ "${LIST_TYPE}" == "lang" ]] || [[ -z "${LIST_TYPE}" ]]; then
+        if [[ "${NAME_ONLY}" == "false" ]]; then
+            echo "Language VMs:"
+        fi
+        for name in $(get_lang_vms); do
+            local vm_display=$(_assoc_get "VM_DISPLAY" "${name}" 2>/dev/null) || vm_display="${name}"
+            local vm_aliases=$(_assoc_get "VM_ALIASES" "${name}" 2>/dev/null) || vm_aliases=""
+            display_vm_type "${name}" "lang" "${vm_display}" "${vm_aliases}"
+        done
+    fi
+
+    if [[ "${LIST_TYPE}" == "service" ]] || [[ -z "${LIST_TYPE}" ]]; then
+        if [[ "${NAME_ONLY}" == "false" ]]; then
+            echo ""
+            echo "Service VMs:"
+        fi
+        for name in $(get_service_vms); do
+            local vm_display=$(_assoc_get "VM_DISPLAY" "${name}" 2>/dev/null) || vm_display="${name}"
+            local vm_aliases=$(_assoc_get "VM_ALIASES" "${name}" 2>/dev/null) || vm_aliases=""
+            display_vm_type "${name}" "service" "${vm_display}" "${vm_aliases}"
+        done
+    fi
+fi
+
+if [[ "${NAME_ONLY}" == "false" ]]; then
+    echo ""
+    echo "To create a VM, run: vde create <name>"
+fi

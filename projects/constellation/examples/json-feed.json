@@ -1,0 +1,11 @@
+{
+  "maxRepos": 45,
+  "showOther": true,
+  "animate": false,
+  "plugins": {
+    "sources": [{ "id": "portfolio", "source": "json-feed", "options": {
+      "items": [{ "id": "design-notes", "name": "Design notes", "language": "Writing", "topics": ["documentation"] }]
+    } }]
+  },
+  "themePack": { "id": "deep-space", "version": "1.0.0" }
+}

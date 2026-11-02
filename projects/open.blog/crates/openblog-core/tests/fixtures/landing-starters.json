@@ -1,0 +1,205 @@
+{
+  "welcome": [
+    {
+      "id": "sample-note",
+      "type": "callout",
+      "tone": "info",
+      "title": "Sample layout",
+      "body": "This is a sample layout. Every sentence marked as a sample is a stand-in: replace it with your own words, then choose Save. Delete this note when you are done."
+    },
+    {
+      "id": "welcome",
+      "type": "welcome",
+      "heading": "Welcome to my blog",
+      "subheading": "Sample: a short line about what you write and who it is for.",
+      "button": {
+        "label": "Read the blog",
+        "href": "/archive/",
+        "style": "primary"
+      }
+    },
+    {
+      "id": "about",
+      "type": "rich-text",
+      "markdown": "Sample: Hello, I am glad you are here. Write two or three sentences about yourself and why you write."
+    },
+    {
+      "id": "latest",
+      "type": "latest-posts",
+      "heading": "Latest posts"
+    }
+  ],
+  "small-business": [
+    {
+      "id": "sample-note",
+      "type": "callout",
+      "tone": "info",
+      "title": "Sample layout",
+      "body": "This is a sample layout. Every sentence marked as a sample is a stand-in: replace it with your own words, then choose Save. Delete this note when you are done."
+    },
+    {
+      "id": "welcome",
+      "type": "welcome",
+      "heading": "Welcome to Sample Shop",
+      "subheading": "Sample: one line about what you sell or do."
+    },
+    {
+      "id": "hours",
+      "type": "opening-hours",
+      "rows": [
+        {
+          "days": "Monday to Friday",
+          "hours": "9am to 5pm"
+        },
+        {
+          "days": "Saturday",
+          "hours": "10am to 2pm"
+        },
+        {
+          "days": "Sunday",
+          "hours": "Closed"
+        }
+      ],
+      "note": "Sample times: change them to your own."
+    },
+    {
+      "id": "contact",
+      "type": "contact",
+      "email": "you@example.com",
+      "phone": "+1 555 010 0100",
+      "address": "Sample: 12 High Street"
+    },
+    {
+      "id": "map",
+      "type": "map",
+      "provider": "openstreetmap",
+      "label": "Sample: 12 High Street",
+      "lat": 51.5072,
+      "lon": -0.1276
+    }
+  ],
+  "portfolio": [
+    {
+      "id": "sample-note",
+      "type": "callout",
+      "tone": "info",
+      "title": "Sample layout",
+      "body": "This is a sample layout. Every sentence marked as a sample is a stand-in: replace it with your own words, then choose Save. Delete this note when you are done."
+    },
+    {
+      "id": "welcome",
+      "type": "welcome",
+      "heading": "Hello, I am Sample Name",
+      "subheading": "Sample: what you make, in one line."
+    },
+    {
+      "id": "latest",
+      "type": "latest-posts",
+      "heading": "My latest work",
+      "count": 3
+    },
+    {
+      "id": "links",
+      "type": "buttons",
+      "items": [
+        {
+          "label": "See all my work",
+          "href": "/archive/",
+          "style": "primary"
+        },
+        {
+          "label": "Email me",
+          "href": "mailto:you@example.com",
+          "style": "secondary"
+        }
+      ]
+    },
+    {
+      "id": "social",
+      "type": "social-links",
+      "items": [
+        {
+          "label": "Sample profile",
+          "href": "https://example.com/you"
+        }
+      ]
+    }
+  ],
+  "newsletter": [
+    {
+      "id": "sample-note",
+      "type": "callout",
+      "tone": "info",
+      "title": "Sample layout",
+      "body": "This is a sample layout. Every sentence marked as a sample is a stand-in: replace it with your own words, then choose Save. Delete this note when you are done."
+    },
+    {
+      "id": "welcome",
+      "type": "welcome",
+      "heading": "Get every new post",
+      "subheading": "Sample: say what readers will get and how often.",
+      "button": {
+        "label": "Follow along",
+        "href": "/rss.xml",
+        "style": "primary"
+      }
+    },
+    {
+      "id": "about",
+      "type": "rich-text",
+      "markdown": "Sample: Tell people what each issue holds. Keep it short and kind."
+    },
+    {
+      "id": "latest",
+      "type": "latest-posts",
+      "heading": "Recent issues"
+    }
+  ],
+  "portfolio-with-post": [
+    {
+      "id": "sample-note",
+      "type": "callout",
+      "tone": "info",
+      "title": "Sample layout",
+      "body": "This is a sample layout. Every sentence marked as a sample is a stand-in: replace it with your own words, then choose Save. Delete this note when you are done."
+    },
+    {
+      "id": "welcome",
+      "type": "welcome",
+      "heading": "Hello, I am Sample Name",
+      "subheading": "Sample: what you make, in one line."
+    },
+    {
+      "id": "featured",
+      "type": "featured-post",
+      "post": "one",
+      "heading": "Start here"
+    },
+    {
+      "id": "links",
+      "type": "buttons",
+      "items": [
+        {
+          "label": "See all my work",
+          "href": "/archive/",
+          "style": "primary"
+        },
+        {
+          "label": "Email me",
+          "href": "mailto:you@example.com",
+          "style": "secondary"
+        }
+      ]
+    },
+    {
+      "id": "social",
+      "type": "social-links",
+      "items": [
+        {
+          "label": "Sample profile",
+          "href": "https://example.com/you"
+        }
+      ]
+    }
+  ]
+}

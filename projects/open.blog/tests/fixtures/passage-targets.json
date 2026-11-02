@@ -1,0 +1,1317 @@
+{
+  "about": "Shared passage-target fixtures (ADRs 0076 and 0077), read by crates/openblog-core/tests/passage_targets.rs and tests/web/passage-target.test.mjs. Offsets count Unicode scalar values.",
+  "documents": {
+    "original": {
+      "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+      "sections": [
+        {
+          "text": "Tides rise and fall twice a day.",
+          "digest": "af9a9ac9eb4e290b852cf5afa81ada54"
+        },
+        {
+          "anchor": "the-claim",
+          "text": "The claim The moon causes the tides. The sun matters too. The moon causes the tides, sailors say.",
+          "digest": "3e6b7346c464ce15a2d89849497c0dc5"
+        },
+        {
+          "anchor": "notes",
+          "text": "Notes First field notes.",
+          "digest": "5ee1ae8a5cc001ab7720bddf0a843e42"
+        },
+        {
+          "anchor": "notes-2",
+          "text": "Notes Second field notes.",
+          "digest": "82a21cdd8f982fdd442243071be99fce"
+        },
+        {
+          "anchor": "unicode",
+          "text": "Unicode Le cafe\u0301 est ferm\u00e9. Une famille \ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc67 attend. \u65e5\u672c\u8a9e\u306e\u6587\u7ae0\u3067\u3059\u3002",
+          "digest": "5020266e3a830e8a664c4eedffdf6d5b"
+        }
+      ]
+    },
+    "edited": {
+      "revision": "p1:f5eb322ef5f37679eea328cb77edfcdf",
+      "sections": [
+        {
+          "text": "Tides rise and fall twice a day.",
+          "digest": "af9a9ac9eb4e290b852cf5afa81ada54"
+        },
+        {
+          "anchor": "background",
+          "text": "Background Long before us, sailors watched the water.",
+          "digest": "2312fe1f96730e282ca821a75d85b8f7"
+        },
+        {
+          "anchor": "the-claim",
+          "text": "The claim Most people agree: the moon causes the tides. The sun matters too. The moon causes the tides, sailors say.",
+          "digest": "2fbadfd3bfb6fd0321994844dc182b09"
+        },
+        {
+          "anchor": "notes",
+          "text": "Notes Added notes.",
+          "digest": "0a0a569270c9aebe35539095a36e1b01"
+        },
+        {
+          "anchor": "notes-2",
+          "text": "Notes First field notes.",
+          "digest": "5ee1ae8a5cc001ab7720bddf0a843e42"
+        },
+        {
+          "anchor": "notes-3",
+          "text": "Notes Second field notes.",
+          "digest": "82a21cdd8f982fdd442243071be99fce"
+        },
+        {
+          "anchor": "unicode",
+          "text": "Unicode Le cafe\u0301 est ferm\u00e9. Une famille \ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc67 attend. \u65e5\u672c\u8a9e\u306e\u6587\u7ae0\u3067\u3059\u3002",
+          "digest": "5020266e3a830e8a664c4eedffdf6d5b"
+        }
+      ]
+    },
+    "moved": {
+      "revision": "p1:bbe55e7fe3480d2bb8400a1f83ebae45",
+      "sections": [
+        {
+          "text": "Tides rise and fall twice a day.",
+          "digest": "af9a9ac9eb4e290b852cf5afa81ada54"
+        },
+        {
+          "anchor": "the-claim",
+          "text": "The claim The sun matters too.",
+          "digest": "1feec1bb0d325e4786529f3d1913a7f5"
+        },
+        {
+          "anchor": "history",
+          "text": "History The moon causes the tides. The sun matters too. The moon causes the tides, sailors say.",
+          "digest": "65e73264c13152ad9864adbd827d9421"
+        }
+      ]
+    },
+    "rewritten": {
+      "revision": "p1:0f80ad249bf8729b32b006a6ddaba2ab",
+      "sections": [
+        {
+          "text": "Tides rise and fall twice a day.",
+          "digest": "af9a9ac9eb4e290b852cf5afa81ada54"
+        },
+        {
+          "anchor": "the-claim",
+          "text": "The claim Gravity from the moon and the sun raises the sea.",
+          "digest": "67fdf607d03b0469940c01d4abe46076"
+        },
+        {
+          "anchor": "methods",
+          "text": "Methods The sun matters too.",
+          "digest": "3358d4131635e9e22ecd29c1a779c421"
+        }
+      ]
+    },
+    "twins": {
+      "revision": "p1:84a8599ce74eb964d3d39a2317b2cd17",
+      "sections": [
+        {
+          "anchor": "first",
+          "text": "First Intro: Same words here.",
+          "digest": "64029282ab7c0dfc1fe6b9e0daafaf76"
+        },
+        {
+          "anchor": "second",
+          "text": "Second Intro: Same words here.",
+          "digest": "3131a5cfa8f469e0384df28eb677d281"
+        }
+      ]
+    },
+    "graphemes": {
+      "revision": "p1:a7b3ed83699a575ae88838120c126947",
+      "sections": [
+        {
+          "anchor": "accents",
+          "text": "Accents e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301 target word",
+          "digest": "f95bf6ce256653749ca2f7b1fb6e55dd"
+        }
+      ]
+    },
+    "shared-anchor": {
+      "revision": "p1:00dab1f646462c233980e1a8f3a5859a",
+      "sections": [
+        {
+          "anchor": "intro",
+          "text": "Intro The tide is a long wave.",
+          "digest": "97863d08f35cd9f66ed9f1aae81ffa71"
+        },
+        {
+          "anchor": "intro",
+          "text": "Other Moonlight was the sailors' clock.",
+          "digest": "1c85c435921220c3cf729ac5975cbd57"
+        }
+      ]
+    }
+  },
+  "resolve": [
+    {
+      "name": "a quotation seen at this revision is current",
+      "document": "original",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "the-claim",
+        "exact": "The moon causes the tides",
+        "prefix": "The claim The moon causes the tides. The sun matters too. ",
+        "suffix": ", sailors say.",
+        "start": 58
+      },
+      "expect": {
+        "state": "current",
+        "section": "the-claim",
+        "start": 58,
+        "end": 83,
+        "index": 1
+      }
+    },
+    {
+      "name": "duplicate text: the occurrence whose context agrees is chosen after an edit",
+      "document": "edited",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "the-claim",
+        "exact": "The moon causes the tides",
+        "prefix": "The claim The moon causes the tides. The sun matters too. ",
+        "suffix": ", sailors say.",
+        "start": 58
+      },
+      "expect": {
+        "state": "reanchored",
+        "section": "the-claim",
+        "start": 77,
+        "end": 102,
+        "index": 2
+      }
+    },
+    {
+      "name": "duplicate text: a changed first occurrence never jumps to the other one",
+      "document": "edited",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "the-claim",
+        "exact": "The moon causes the tides",
+        "prefix": "The claim ",
+        "suffix": ". The sun matters too. The moon causes the tides, sailors say.",
+        "start": 10
+      },
+      "expect": {
+        "state": "stale",
+        "reason": "contextChanged",
+        "sectionPresent": true
+      }
+    },
+    {
+      "name": "an unknown revision is never current",
+      "document": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "the-claim",
+        "exact": "The moon causes the tides",
+        "prefix": "The claim The moon causes the tides. The sun matters too. ",
+        "suffix": ", sailors say.",
+        "start": 58
+      },
+      "expect": {
+        "state": "reanchored",
+        "section": "the-claim",
+        "start": 58,
+        "end": 83,
+        "index": 1
+      }
+    },
+    {
+      "name": "a revision of another text model is not this revision",
+      "document": "original",
+      "seenRevision": "p2:00000000000000000000000000000000",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "the-claim",
+        "exact": "The moon causes the tides",
+        "prefix": "The claim The moon causes the tides. The sun matters too. ",
+        "suffix": ", sailors say.",
+        "start": 58
+      },
+      "expect": {
+        "state": "reanchored",
+        "section": "the-claim",
+        "start": 58,
+        "end": 83,
+        "index": 1
+      }
+    },
+    {
+      "name": "a passage moved to another section is found with its context",
+      "document": "moved",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "the-claim",
+        "exact": "The moon causes the tides",
+        "prefix": "The claim The moon causes the tides. The sun matters too. ",
+        "suffix": ", sailors say.",
+        "start": 58
+      },
+      "expect": {
+        "state": "reanchored",
+        "section": "history",
+        "start": 56,
+        "end": 81,
+        "index": 2
+      }
+    },
+    {
+      "name": "a deleted passage is stale",
+      "document": "rewritten",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "the-claim",
+        "exact": "The moon causes the tides",
+        "prefix": "The claim The moon causes the tides. The sun matters too. ",
+        "suffix": ", sailors say.",
+        "start": 58
+      },
+      "expect": {
+        "state": "stale",
+        "reason": "quoteNotFound",
+        "sectionPresent": true
+      }
+    },
+    {
+      "name": "the same words in a new context are not the same passage",
+      "document": "rewritten",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "the-claim",
+        "exact": "The sun matters too.",
+        "prefix": "The claim The moon causes the tides. ",
+        "suffix": " The moon causes the tides, sailors say.",
+        "start": 37
+      },
+      "expect": {
+        "state": "stale",
+        "reason": "contextChanged",
+        "sectionPresent": true
+      }
+    },
+    {
+      "name": "equally good matches are ambiguous, never guessed",
+      "document": "twins",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "gone",
+        "exact": "Same words here.",
+        "prefix": "Intro: ",
+        "suffix": "",
+        "start": 13
+      },
+      "expect": {
+        "state": "stale",
+        "reason": "ambiguous",
+        "sectionPresent": false
+      }
+    },
+    {
+      "name": "the target's section breaks a tie",
+      "document": "twins",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "second",
+        "exact": "Same words here.",
+        "prefix": "Intro: ",
+        "suffix": "",
+        "start": 13
+      },
+      "expect": {
+        "state": "reanchored",
+        "section": "second",
+        "start": 14,
+        "end": 30,
+        "index": 1
+      }
+    },
+    {
+      "name": "a quotation never matches part of a combined character",
+      "document": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "unicode",
+        "exact": "Le cafe",
+        "prefix": "Unicode ",
+        "suffix": "",
+        "start": 8
+      },
+      "expect": {
+        "state": "stale",
+        "reason": "quoteNotFound",
+        "sectionPresent": true
+      }
+    },
+    {
+      "name": "a quotation never matches part of an emoji sequence",
+      "document": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "unicode",
+        "exact": "Une famille \ud83d\udc69",
+        "prefix": "",
+        "suffix": "",
+        "start": 0
+      },
+      "expect": {
+        "state": "stale",
+        "reason": "quoteNotFound",
+        "sectionPresent": true
+      }
+    },
+    {
+      "name": "a whole emoji sequence and CJK context resolve",
+      "document": "edited",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "unicode",
+        "exact": "Une famille \ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc67 attend.",
+        "prefix": "Unicode Le cafe\u0301 est ferm\u00e9. ",
+        "suffix": " \u65e5\u672c\u8a9e\u306e\u6587\u7ae0\u3067\u3059\u3002",
+        "start": 28
+      },
+      "expect": {
+        "state": "reanchored",
+        "section": "unicode",
+        "start": 28,
+        "end": 53,
+        "index": 6
+      }
+    },
+    {
+      "name": "text before the first heading has no section",
+      "document": "edited",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "exact": "twice a day",
+        "prefix": "Tides rise and fall ",
+        "suffix": ".",
+        "start": 20
+      },
+      "expect": {
+        "state": "reanchored",
+        "start": 20,
+        "end": 31,
+        "index": 0
+      }
+    },
+    {
+      "name": "a section target seen at this revision is current",
+      "document": "original",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "the-claim",
+        "digest": "3e6b7346c464ce15a2d89849497c0dc5"
+      },
+      "expect": {
+        "state": "current",
+        "section": "the-claim",
+        "start": 0,
+        "end": 97,
+        "index": 1
+      }
+    },
+    {
+      "name": "a renumbered section is found by its unchanged text",
+      "document": "edited",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "notes-2",
+        "digest": "82a21cdd8f982fdd442243071be99fce"
+      },
+      "expect": {
+        "state": "reanchored",
+        "section": "notes-3",
+        "start": 0,
+        "end": 25,
+        "index": 5
+      }
+    },
+    {
+      "name": "an edited section is stale, not silently retargeted",
+      "document": "edited",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "the-claim",
+        "digest": "3e6b7346c464ce15a2d89849497c0dc5"
+      },
+      "expect": {
+        "state": "stale",
+        "reason": "sectionChanged",
+        "sectionPresent": true
+      }
+    },
+    {
+      "name": "a removed section is stale",
+      "document": "rewritten",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "notes",
+        "digest": "5ee1ae8a5cc001ab7720bddf0a843e42"
+      },
+      "expect": {
+        "state": "stale",
+        "reason": "sectionRemoved",
+        "sectionPresent": false
+      }
+    },
+    {
+      "name": "a section target without a digest is current at its revision",
+      "document": "original",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "notes"
+      },
+      "expect": {
+        "state": "current",
+        "section": "notes",
+        "start": 0,
+        "end": 24,
+        "index": 2
+      }
+    },
+    {
+      "name": "a section target without a digest is unverified at another revision",
+      "document": "edited",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "notes"
+      },
+      "expect": {
+        "state": "stale",
+        "reason": "unverified",
+        "sectionPresent": true
+      }
+    },
+    {
+      "name": "a quotation in the second of two sections sharing an anchor resolves to that section",
+      "document": "shared-anchor",
+      "seenDocument": "shared-anchor",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "intro",
+        "exact": "sailors' clock",
+        "prefix": "Other Moonlight was the ",
+        "suffix": ".",
+        "start": 24
+      },
+      "expect": {
+        "state": "current",
+        "section": "intro",
+        "index": 1,
+        "start": 24,
+        "end": 38
+      }
+    },
+    {
+      "name": "a quotation seen elsewhere re-anchors to the section that holds it, not the first with its anchor",
+      "document": "shared-anchor",
+      "seenRevision": "p1:00000000000000000000000000000000",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "intro",
+        "exact": "sailors' clock",
+        "prefix": "Moonlight was the ",
+        "suffix": ".",
+        "start": 0
+      },
+      "expect": {
+        "state": "reanchored",
+        "section": "intro",
+        "index": 1,
+        "start": 24,
+        "end": 38
+      }
+    },
+    {
+      "name": "a section target without a digest is ambiguous when two sections share its anchor",
+      "document": "shared-anchor",
+      "seenDocument": "shared-anchor",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "intro"
+      },
+      "expect": {
+        "state": "stale",
+        "reason": "ambiguous",
+        "sectionPresent": true
+      }
+    },
+    {
+      "name": "a work target is current at the revision seen",
+      "document": "original",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "work"
+      },
+      "expect": {
+        "state": "current",
+        "start": 0,
+        "end": 0
+      }
+    },
+    {
+      "name": "a work target is current at any other revision, and with none seen",
+      "document": "edited",
+      "seenDocument": "original",
+      "target": {
+        "version": 1,
+        "kind": "work"
+      },
+      "expect": {
+        "state": "current",
+        "start": 0,
+        "end": 0
+      }
+    }
+  ],
+  "create": [
+    {
+      "name": "a selection becomes a quotation with bounded context",
+      "document": "original",
+      "section": 1,
+      "start": 58,
+      "end": 83,
+      "expect": {
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "the-claim",
+          "exact": "The moon causes the tides",
+          "prefix": "The claim The moon causes the tides. The sun matters too. ",
+          "suffix": ", sailors say.",
+          "start": 58
+        }
+      }
+    },
+    {
+      "name": "spaces at either end of a selection are left out",
+      "document": "original",
+      "section": 1,
+      "start": 57,
+      "end": 83,
+      "expect": {
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "the-claim",
+          "exact": "The moon causes the tides",
+          "prefix": "The claim The moon causes the tides. The sun matters too. ",
+          "suffix": ", sailors say.",
+          "start": 58
+        }
+      }
+    },
+    {
+      "name": "an emoji sequence is quoted whole",
+      "document": "original",
+      "section": 4,
+      "start": 28,
+      "end": 53,
+      "expect": {
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "unicode",
+          "exact": "Une famille \ud83d\udc69\u200d\ud83d\udc69\u200d\ud83d\udc67 attend.",
+          "prefix": "Unicode Le cafe\u0301 est ferm\u00e9. ",
+          "suffix": " \u65e5\u672c\u8a9e\u306e\u6587\u7ae0\u3067\u3059\u3002",
+          "start": 28
+        }
+      }
+    },
+    {
+      "name": "context is cut at a character boundary",
+      "document": "graphemes",
+      "section": 0,
+      "start": 89,
+      "end": 95,
+      "expect": {
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "accents",
+          "exact": "target",
+          "prefix": "e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301e\u0301 ",
+          "suffix": " word",
+          "start": 89
+        }
+      }
+    },
+    {
+      "name": "a selection ending inside a character is refused",
+      "document": "original",
+      "section": 4,
+      "start": 8,
+      "end": 15,
+      "expect": {
+        "error": "splitCharacter"
+      }
+    },
+    {
+      "name": "a selection of only spaces is refused",
+      "document": "original",
+      "section": 0,
+      "start": 5,
+      "end": 6,
+      "expect": {
+        "error": "emptyQuote"
+      }
+    },
+    {
+      "name": "a selection outside the section is refused",
+      "document": "original",
+      "section": 0,
+      "start": 5,
+      "end": 500,
+      "expect": {
+        "error": "invalidRange"
+      }
+    },
+    {
+      "name": "a missing section is refused",
+      "document": "original",
+      "section": 99,
+      "start": 0,
+      "end": 1,
+      "expect": {
+        "error": "invalidRange"
+      }
+    }
+  ],
+  "invalid": [
+    {
+      "name": "not an object",
+      "target": [
+        "version",
+        1
+      ],
+      "error": "malformed"
+    },
+    {
+      "name": "no version",
+      "target": {
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a version written as text",
+      "target": {
+        "version": "1",
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a newer version",
+      "target": {
+        "version": 2,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "unsupportedVersion"
+    },
+    {
+      "name": "an unknown field",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7,
+        "note": "hello"
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "an unknown kind",
+      "target": {
+        "version": 1,
+        "kind": "range",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a quote without its start",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after"
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a quote without its context",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a quote with a digest",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7,
+        "digest": "00000000000000000000000000000000"
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a section target with a quotation",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "s",
+        "exact": "x"
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a field of the wrong type",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": 5,
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a fractional start",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 1.5
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a negative start",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": -1
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a start beyond any section",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 1000001
+      },
+      "error": "invalidRange"
+    },
+    {
+      "name": "an uppercase digest",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "s",
+        "digest": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      },
+      "error": "invalidDigest"
+    },
+    {
+      "name": "a short digest",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "s",
+        "digest": "ab"
+      },
+      "error": "invalidDigest"
+    },
+    {
+      "name": "an anchor with a space",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "two words",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "invalidAnchor"
+    },
+    {
+      "name": "an empty anchor",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "invalidAnchor"
+    },
+    {
+      "name": "an over-long anchor",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "invalidAnchor"
+    },
+    {
+      "name": "an anchor with a control character",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "a\u0000b",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "invalidAnchor"
+    },
+    {
+      "name": "an empty quotation",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "emptyQuote"
+    },
+    {
+      "name": "an over-long quotation",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "quoteTooLong"
+    },
+    {
+      "name": "a quotation of the longest length",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9\u00e9",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": null
+    },
+    {
+      "name": "over-long context",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "contextTooLong"
+    },
+    {
+      "name": "a control character",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "ring\u0007bell",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "forbiddenCharacter"
+    },
+    {
+      "name": "a text-direction override",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "abc\u202edef",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "forbiddenCharacter"
+    },
+    {
+      "name": "a direction isolate in context",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " \u2066x",
+        "start": 7
+      },
+      "error": "forbiddenCharacter"
+    },
+    {
+      "name": "double spaces",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "two  spaces",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "notNormalized"
+    },
+    {
+      "name": "a tab",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "tab\there",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "forbiddenCharacter"
+    },
+    {
+      "name": "a non-breaking space",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "a\u00a0",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "notNormalized"
+    },
+    {
+      "name": "a quotation starting with a space",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": " lead",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "notNormalized"
+    },
+    {
+      "name": "a quotation starting with a combining mark",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "\u0301tude",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "splitCharacter"
+    },
+    {
+      "name": "a quotation ending in a joiner",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "\ud83d\udc69\u200d",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "splitCharacter"
+    },
+    {
+      "name": "context that splits the quotation's first character",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": "\u0301 after",
+        "start": 7
+      },
+      "error": "splitCharacter"
+    },
+    {
+      "name": "context that joins the quotation",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before \u200d",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": "splitCharacter"
+    },
+    {
+      "name": "a lone surrogate",
+      "raw": "{\"version\":1,\"kind\":\"quote\",\"exact\":\"\\ud800\",\"prefix\":\"\",\"suffix\":\"\",\"start\":0}",
+      "error": "malformed"
+    },
+    {
+      "name": "not JSON",
+      "raw": "{\"version\":1,",
+      "error": "malformed"
+    },
+    {
+      "name": "a valid quote target",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": "s",
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": null
+    },
+    {
+      "name": "a valid lead quote target with a null section",
+      "target": {
+        "version": 1,
+        "kind": "quote",
+        "section": null,
+        "exact": "Quoted text",
+        "prefix": "before ",
+        "suffix": " after",
+        "start": 7
+      },
+      "error": null
+    },
+    {
+      "name": "a valid section target without a digest",
+      "target": {
+        "version": 1,
+        "kind": "section",
+        "section": "s"
+      },
+      "error": null
+    },
+    {
+      "name": "a work target",
+      "target": {
+        "version": 1,
+        "kind": "work"
+      },
+      "error": null
+    },
+    {
+      "name": "a work target with a section",
+      "target": {
+        "version": 1,
+        "kind": "work",
+        "section": "s"
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a work target with a digest",
+      "target": {
+        "version": 1,
+        "kind": "work",
+        "digest": "0123456789abcdef0123456789abcdef"
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a work target with a quotation",
+      "target": {
+        "version": 1,
+        "kind": "work",
+        "exact": "x",
+        "prefix": "",
+        "suffix": "",
+        "start": 0
+      },
+      "error": "malformed"
+    },
+    {
+      "name": "a version written 1.0",
+      "raw": "{\"version\":1.0,\"kind\":\"work\"}",
+      "error": "malformed"
+    },
+    {
+      "name": "a version written 1e0",
+      "raw": "{\"version\":1e0,\"kind\":\"work\"}",
+      "error": "malformed"
+    },
+    {
+      "name": "a version written -0",
+      "raw": "{\"version\":-0,\"kind\":\"work\"}",
+      "error": "malformed"
+    },
+    {
+      "name": "a newer version written 7e0",
+      "raw": "{\"version\":7e0,\"kind\":\"work\"}",
+      "error": "malformed"
+    },
+    {
+      "name": "a version above 2^53 but inside 64 bits",
+      "raw": "{\"version\":9007199254740993,\"kind\":\"work\"}",
+      "error": "unsupportedVersion"
+    },
+    {
+      "name": "the largest 64-bit version",
+      "raw": "{\"version\":18446744073709551615,\"kind\":\"work\"}",
+      "error": "unsupportedVersion"
+    },
+    {
+      "name": "a version past 64 bits",
+      "raw": "{\"version\":18446744073709551616,\"kind\":\"work\"}",
+      "error": "malformed"
+    },
+    {
+      "name": "a start written 7.0",
+      "raw": "{\"version\":1,\"kind\":\"quote\",\"exact\":\"x\",\"prefix\":\"\",\"suffix\":\"\",\"start\":7.0}",
+      "error": "malformed"
+    },
+    {
+      "name": "a start written 7e0",
+      "raw": "{\"version\":1,\"kind\":\"quote\",\"exact\":\"x\",\"prefix\":\"\",\"suffix\":\"\",\"start\":7e0}",
+      "error": "malformed"
+    },
+    {
+      "name": "a start written -0",
+      "raw": "{\"version\":1,\"kind\":\"quote\",\"exact\":\"x\",\"prefix\":\"\",\"suffix\":\"\",\"start\":-0}",
+      "error": "malformed"
+    },
+    {
+      "name": "a start above 2^53 but inside 64 bits",
+      "raw": "{\"version\":1,\"kind\":\"quote\",\"exact\":\"x\",\"prefix\":\"\",\"suffix\":\"\",\"start\":9007199254740993}",
+      "error": "invalidRange"
+    },
+    {
+      "name": "a start past 64 bits",
+      "raw": "{\"version\":1,\"kind\":\"quote\",\"exact\":\"x\",\"prefix\":\"\",\"suffix\":\"\",\"start\":18446744073709551616}",
+      "error": "malformed"
+    },
+    {
+      "name": "a start in a string that looks like a number key",
+      "raw": "{\"version\":1,\"kind\":\"quote\",\"exact\":\"\\\"start\\\":1.0\",\"prefix\":\"\",\"suffix\":\"\",\"start\":7}",
+      "error": null
+    }
+  ]
+}

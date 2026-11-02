@@ -1,0 +1,3 @@
+# the ingested book is the author's; keep it out of any repo this folder becomes
+source/
+.claude/settings.local.json

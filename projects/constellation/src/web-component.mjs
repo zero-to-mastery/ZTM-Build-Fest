@@ -1,0 +1,412 @@
+import { createScene, parseScene, serializeScene, parseConfig, normalizeConfig, renderSceneSVG, createDataPipeline, createLayoutHost, buildSemanticHierarchy, projectSemanticLevel, parseSemanticGraph, serializeSemanticGraph, projectSemanticGraphToScene, semanticGraphFingerprint, projectDeveloperAtlasScene } from '@constellation/core';
+import { mountInteractive, mountTimeline, mountHierarchy, mountStory, storyArtifacts, hierarchyArtifacts, replaceInteractiveSVG, transitionCamera, interactiveStyles, interactiveMarkup, interactiveEngine, installFocusAPI, createSemanticZoomState, resolveSemanticZoomMode, SEMANTIC_ZOOM_MODES } from '@constellation/core/browser-runtime';
+import { AtlasNavigation, renderAtlasChrome, installAtlasAPI } from './web-component-atlas.mjs';
+
+export const WEB_COMPONENT_API_VERSION = 1;
+export class ConstellationView extends HTMLElement {
+  static observedAttributes = ['src', 'semantic-graph', 'config', 'account', 'loading'];
+  #config = null;
+  #records = [];
+  #scene = null;
+  #semanticGraph = null;
+  #runtime = null;
+  #request = null;
+  #pipeline = createDataPipeline();
+  #layouts = createLayoutHost();
+  #initialized = false;
+  #intersection = null;
+  #visible = true;
+  #semanticMode = null;
+  #semanticHierarchy = null;
+  #expandedGroups = new Set();
+  #semanticState = createSemanticZoomState('groups');
+  #semanticFocus = null;
+  #viewScene = null;
+  #semanticTimer = null;
+  #semanticEpoch = 0;
+  #restoringSelection = false;
+  #sourceMode = true;
+  #sourceCache = new Map();
+  constructor() {
+    super(); this._atlasNavigation = new AtlasNavigation(); this.attachShadow({ mode: 'open' });
+    this.addEventListener('camera-change', this.#scheduleSemanticZoom);
+    this.addEventListener('node-select', this.#semanticSelectionChanged);
+  }
+  get config() { return this.#config && structuredClone(this.#config); }
+  set config(value) { this.setConfig(value); }
+  get records() { return structuredClone(this.#records); }
+  set records(value) {
+    if (!Array.isArray(value)) throw new Error('records must be an array.');
+    const records = structuredClone(value);
+    if (JSON.stringify(records) === JSON.stringify(this.#records)) return;
+    this.#records = records;
+    if (this.#semanticGraph) return;
+    this.#resetSemanticNavigation();
+    this.#refresh(false);
+  }
+  get scene() { return this.#scene && structuredClone(this.#scene); }
+  set scene(value) { this.loadScene(value); }
+  get semanticGraph() { return this.#semanticGraph && structuredClone(this.#semanticGraph); }
+  set semanticGraph(value) { this.loadSemanticGraph(value); }
+  get semanticFingerprint() { return this.#semanticGraph ? semanticGraphFingerprint(this.#semanticGraph) : null; }
+  _atlasHandlers() { return{render:()=>{this.#semanticHierarchy=null;this.#expandedGroups.clear();this.#semanticFocus=null;return this.#render()},focus:()=>{const root=this.shadowRoot;root.querySelector('[aria-current=location]')?.focus();root.querySelector('[role=status]').textContent='Developer Atlas: '+this.atlasBreadcrumbs.at(-1).label},changed:detail=>this.dispatchEvent(new CustomEvent('atlas-change',{detail,bubbles:true,composed:true}))}; }
+  loadSemanticGraph(value) {
+    if (value === null) return this.#clearSemanticGraphMode();
+    let previous;
+    try {
+      const graph = parseSemanticGraph(typeof value === 'string' ? value : serializeSemanticGraph(value));
+      const scene = projectSemanticGraphToScene(graph);
+      previous = { graph: this.#semanticGraph, scene: this.#scene, atlas: this._atlasNavigation };
+      this.#request?.abort(); this.#semanticGraph = graph; this.#scene = scene;
+      this._atlasNavigation.setGraph(graph);
+      this.#semanticMode = null; this.#resetSemanticNavigation();
+      const rendered = !this.isConnected || !this.#visible || this.#render();
+      if (!rendered) throw new Error('Unable to render Semantic Graph.');
+      const detail = { subject: structuredClone(graph.subject), version: graph.version, fingerprint: semanticGraphFingerprint(graph), privateSource: graph.project?.provenance?.visibility === 'private' };
+      this.dispatchEvent(new CustomEvent('semantic-graph-load', { detail, bubbles: true, composed: true }));
+      return true;
+    } catch (error) {
+      if (previous) { this.#semanticGraph = previous.graph; this.#scene = previous.scene; this._atlasNavigation = previous.atlas; this.#resetSemanticNavigation(); if (this.isConnected && this.#visible && previous.scene) this.#render(); }
+      this.#error(error, 'semantic-graph-error'); return false;
+    }
+  }
+  #clearSemanticGraphMode() {
+    if (!this.#semanticGraph) return false;
+    this.#request?.abort(); this.#semanticGraph = null; this.#scene = null; this._atlasNavigation = new AtlasNavigation(); this.#semanticMode = null; this.#resetSemanticNavigation();
+    this.#runtime?.destroy(); this.#runtime = null; this.shadowRoot.replaceChildren();
+    return this.isConnected && this.#visible ? this.#refresh() : true;
+  }
+  get semanticLevel() { return this.#semanticMode || resolveSemanticZoomMode(this.#config?.options?.semanticZoom, 'projects'); }
+  set semanticLevel(value) {
+    if (!SEMANTIC_ZOOM_MODES.includes(value)) throw new Error('semanticLevel must be auto, groups or projects.');
+    const previous = this.#effectiveLevel();
+    const modeChanged = this.semanticLevel !== value;
+    if (!modeChanged) {
+      if (value === 'auto') this.#evaluateSemanticZoom({ reason: 'user', previousLevel: previous });
+      return;
+    }
+    this.#semanticMode = value;
+    clearTimeout(this.#semanticTimer); this.#semanticTimer = null;
+    this.#semanticEpoch++;
+    if (value === 'auto') this.#semanticState.set('groups');
+    else { this.#expandedGroups.clear(); this.#semanticState.set(value); }
+    if (this.#scene) {
+      this.#semanticHierarchy ||= buildSemanticHierarchy(this.#scene);
+      if (value === 'auto') this.#evaluateSemanticZoom({ reason: 'user', previousLevel: previous });
+      else {
+        this.#render();
+        this.#emitSemanticChange(previous, this.#effectiveLevel(), 'user');
+      }
+    }
+  }
+  expandGroup(id) {
+    if (!this.#semanticHierarchy) throw new Error('Set semanticLevel to groups before expanding a group.');
+    if (!this.#semanticHierarchy.groups.some(group => group.id === id)) throw new Error(`Unknown semantic group: ${id}`);
+    const previous = this.#effectiveLevel();
+    this.#expandedGroups.add(id); this.#semanticFocus = id;
+    const rendered = this.#render();
+    this.#emitSemanticChange(previous, this.#effectiveLevel(), 'group-expand');
+    return rendered;
+  }
+  collapseGroup(id) {
+    if (!this.#semanticHierarchy) throw new Error('Set semanticLevel to groups before collapsing a group.');
+    if (!this.#semanticHierarchy.groups.some(group => group.id === id)) throw new Error(`Unknown semantic group: ${id}`);
+    const previous = this.#effectiveLevel();
+    this.#expandedGroups.delete(id); this.#semanticFocus = id;
+    const rendered = this.#render();
+    this.#emitSemanticChange(previous, this.#effectiveLevel(), 'group-collapse');
+    return rendered;
+  }
+  setConfig(value) {
+    try {
+      const config = parseConfig(value); normalizeConfig(config.options);
+      this.#request?.abort(); this.#semanticGraph = null; this._atlasNavigation = new AtlasNavigation(); this.#sourceMode = false; this.#config = config; this.#scene = null; this.#semanticMode = null; this.#resetSemanticNavigation(); return this.#refresh(false);
+    } catch (error) { this.#error(error); return Promise.resolve(false); }
+  }
+  loadScene(value) {
+    try {
+      const scene = parseScene(typeof value === 'string' ? value : serializeScene(value));
+      this.#request?.abort(); const previous = this.#scene;
+      this.#sourceMode = false; this.#semanticGraph = null; this._atlasNavigation = new AtlasNavigation(); this.#scene = scene; this.#config = null; this.#semanticMode = null; this.#resetSemanticNavigation();
+      const rendered = this.#render();
+      if (!rendered && this.isConnected && this.#visible) this.#scene = previous;
+      return rendered;
+    } catch (error) { this.#error(error); return false; }
+  }
+  #active() { if (!this.#runtime) throw new Error('Constellation view is not ready.'); return this.#runtime; }
+  selectNode(id, options) { return this.#active().selectNode(id, options); }
+  clearSelection() { return this.#active().clearSelection(); }
+  fit() { return this.#active().fit(); }
+  reset() { return this.#active().reset(); }
+  setFilter(value) { return this.#active().setFilter(value); }
+  setTheme(value) { return this.#active().setTheme(value); }
+  focusLayer(value) { const runtime = this.#active(); if (!runtime.focusLayer) throw new Error('This scene has no universe.'); return runtime.focusLayer(value); }
+  setFrame(value) { const runtime = this.#active(); if (!runtime.setFrame) throw new Error('This scene has no timeline.'); return runtime.setFrame(value); }
+  setTemporalView(value) { return this.#active().setTemporalView(value); }
+  focusYear(value) { return this.#active().focusYear(value); }
+  focusTemporalNode(value) { return this.#active().focusTemporalNode(value); }
+  resetTemporalView() { return this.#active().resetTemporalView(); }
+  setDate(value) { const runtime = this.#active(); if (!runtime.setDate) throw new Error('This scene has no timeline.'); return runtime.setDate(value); }
+  compareWithNow(value) { const runtime = this.#active(); if (!runtime.compareWithNow) throw new Error('This scene has no timeline.'); return runtime.compareWithNow(value); }
+  openChild(id) { const runtime = this.#active(); if (!runtime.openChild) throw new Error('This scene has no hierarchy.'); return runtime.openChild(id); }
+  back() { return this.#active().back?.(); }
+  home() { return this.#active().home?.(); }
+  shareURL() { return this.#active().shareURL?.() || this.ownerDocument.URL; }
+  get scenePath() { return this.#runtime?.scenePath || []; }
+  setChapter(value) { const runtime = this.#active(); if (!runtime.setChapter) throw new Error('This scene has no story.'); return runtime.setChapter(value); }
+  get chapterIndex() { return this.#runtime?.chapterIndex; }
+  get selection() { return this.#runtime?.selectionState || { start: null, end: null, path: [] }; }
+  #effectiveLevel() { return this.semanticLevel === 'auto' ? this.#semanticState.level : this.semanticLevel; }
+  #groupForSelection(id) { return this.#semanticHierarchy?.groups.find(group => group.id === id) || this.#semanticHierarchy?.groups.find(group => group.members.includes(id)) || null; }
+  #resetSemanticNavigation() {
+    clearTimeout(this.#semanticTimer); this.#semanticTimer = null; this.#semanticEpoch++;
+    this.#semanticHierarchy = null; this.#expandedGroups.clear(); this.#semanticFocus = null; this.#viewScene = null;
+    const mode = this.semanticLevel;
+    this.#semanticState.set(mode === 'auto' ? 'groups' : mode);
+  }
+  #emitSemanticChange(previous, current, reason) {
+    if (previous === current && !['group-expand', 'group-collapse'].includes(reason)) return;
+    this.dispatchEvent(new CustomEvent('semantic-level-change', { detail: { previous, current, reason }, bubbles: true, composed: true }));
+  }
+  #semanticSelectionChanged = event => {
+    if (this.#restoringSelection) return;
+    const id = event.detail?.id;
+    if (!id) {
+      const hadFocus = this.#semanticFocus !== null;
+      this.#semanticFocus = null;
+      if (hadFocus && this.semanticLevel === 'auto' && this.#semanticState.level === 'projects') this.#evaluateSemanticZoom({ reason: 'focus' });
+      return;
+    }
+    const group = this.#groupForSelection(id);
+    if (!group) {
+      const hadFocus = this.#semanticFocus !== null;
+      this.#semanticFocus = null;
+      if (hadFocus && this.semanticLevel === 'auto' && this.#semanticState.level === 'projects') this.#evaluateSemanticZoom({ reason: 'focus' });
+      return;
+    }
+    const focusChanged = this.#semanticFocus !== group.id;
+    this.#semanticFocus = group.id;
+    if (focusChanged && this.semanticLevel === 'auto' && this.#semanticState.level === 'projects') {
+      this.#evaluateSemanticZoom({ reason: 'focus' });
+    }
+  };
+  #scheduleSemanticZoom = () => {
+    if (this.semanticLevel !== 'auto' || !this.#runtime || !this.#scene) return;
+    clearTimeout(this.#semanticTimer);
+    const epoch = this.#semanticEpoch;
+    this.#semanticTimer = setTimeout(() => {
+      this.#semanticTimer = null;
+      if (epoch !== this.#semanticEpoch) return;
+      this.#evaluateSemanticZoom({ reason: 'camera' });
+    }, 140);
+  };
+  #evaluateSemanticZoom({ reason = 'camera', previousLevel = this.#effectiveLevel() } = {}) {
+    if (this.semanticLevel !== 'auto' || !this.#runtime || !this.#scene) return false;
+    this.#semanticHierarchy ||= buildSemanticHierarchy(this.#scene);
+    const camera = this.#runtime.camera, base = this.#scene.viewport.viewBox;
+    const scale = base[2] / camera[2];
+    const selected = this.#runtime.selectionState.start;
+    const selectedGroup = this.#groupForSelection(selected)
+      || this.#semanticHierarchy.groups.find(group => group.id === this.#semanticFocus)
+      || null;
+    const canExpand = selectedGroup
+      ? selectedGroup.members.length <= 128
+      : this.#scene.nodes.length <= 256;
+    this.#semanticState.update(scale, { allowProjects: canExpand });
+    let current = this.#semanticState.level;
+    if (current === 'projects' && !canExpand) {
+      this.#semanticState.set('groups');
+      current = 'groups';
+    }
+
+    const nextExpanded = current === 'projects' && selectedGroup && canExpand
+      ? new Set([selectedGroup.id])
+      : new Set();
+    const expandedChanged = nextExpanded.size !== this.#expandedGroups.size
+      || [...nextExpanded].some(id => !this.#expandedGroups.has(id));
+    this.#expandedGroups = nextExpanded;
+    this.#semanticFocus = selectedGroup?.id || null;
+
+    const projectionChanged = (previousLevel === 'projects') !== (current === 'projects');
+    if (projectionChanged || expandedChanged) this.#render();
+    if (previousLevel !== current) {
+      this.#runtime?.announceSemanticLevel(current);
+      this.#emitSemanticChange(previousLevel, current, reason);
+    }
+    return projectionChanged || expandedChanged || previousLevel !== current;
+  }
+  connectedCallback() { this.#observe(); }
+  disconnectedCallback() {
+    clearTimeout(this.#semanticTimer);
+    this.#request?.abort(); this.#intersection?.disconnect(); this.#intersection = null;
+    this.#runtime?.destroy(); this.#runtime = null; this.#initialized = false;
+    this.#pipeline.clear(); this.#layouts.clearCache();
+  }
+  #observe() {
+    this.#intersection?.disconnect(); this.#intersection = null;
+    this.#visible = this.getAttribute('loading') !== 'lazy' || typeof IntersectionObserver !== 'function';
+    if (this.#visible) { const graphUrl = this.getAttribute('semantic-graph'); if (graphUrl) this.#refreshSemanticGraphURL(graphUrl); else this.#refresh(); return; }
+    this.#intersection = new IntersectionObserver(entries => {
+      if (!entries.some(entry => entry.isIntersecting)) return;
+      this.#visible = true; this.#intersection.disconnect(); this.#intersection = null;
+      const graphUrl = this.getAttribute('semantic-graph'); if (graphUrl) this.#refreshSemanticGraphURL(graphUrl); else this.#refresh();
+    }, { rootMargin: '200px' });
+    this.#intersection.observe(this);
+  }
+  reload() { this.#sourceCache.clear(); this.#sourceMode = true; this.#resetSemanticNavigation(); return this.#refresh(); }
+  get cacheStatistics() { return { sources: this.#sourceCache.size, sourceLimit: 4, pipeline: this.#pipeline.cacheStatistics, layout: this.#layouts.cacheStatistics }; }
+  attributeChangedCallback(name, previous, value) {
+    if (previous === value) return;
+    if (name === 'src') {
+      this.#sourceMode = true;
+      if (!this.#semanticGraph && !this.hasAttribute('semantic-graph')) { this.#request?.abort(); this.#resetSemanticNavigation(); }
+    }
+    if (name === 'semantic-graph') {
+      this.#request?.abort();
+      if (this.isConnected && value) this.#refreshSemanticGraphURL(value);
+      else if (value === null && this.#semanticGraph) this.#clearSemanticGraphMode();
+      else if (value === null && this.isConnected) this.#refresh();
+      return;
+    }
+    if (name === 'loading') { if (this.isConnected) this.#observe(); return; }
+    if (name === 'config') {
+      try { this.#config = value === null ? null : parseConfig(value); if (!this.#semanticGraph && !this.hasAttribute('semantic-graph')) { this.#sourceMode = false; this.#semanticMode = null; this.#resetSemanticNavigation(); } }
+      catch (error) { this.#error(error); return; }
+    }
+    if (this.isConnected && !this.hasAttribute('semantic-graph')) this.#refresh();
+  }
+  #error(error, type = 'error') {
+    this.dispatchEvent(new CustomEvent(type, { detail: { message: error.message }, bubbles: true, composed: true }));
+    if (!this.#runtime) { const message = document.createElement('p'); message.setAttribute('role', 'alert'); message.textContent = error.message; this.shadowRoot.replaceChildren(message); }
+    else { const main = this.shadowRoot.querySelector('main'); main?.setAttribute('aria-description', [main?.getAttribute('aria-description'), error.message].filter(Boolean).join(' ')); }
+  }
+  async #refreshSemanticGraphURL(source) {
+    this.#request?.abort(); const request = new AbortController(); this.#request = request;
+    try {
+      const url = new URL(source, this.ownerDocument.baseURI);
+      if (!['http:', 'https:'].includes(url.protocol)) throw new Error('semantic-graph must be an HTTP(S) JSON URL.');
+      const response = await fetch(url, { signal: request.signal });
+      if (!response.ok) throw new Error(`Unable to load Semantic Graph (${response.status}).`);
+      const declared = Number(response.headers.get('content-length'));
+      if (Number.isFinite(declared) && declared > 16 * 1024 * 1024) throw new Error('Semantic Graph exceeds 16 MiB.');
+      if (!response.body) throw new Error('Unable to read Semantic Graph response.');
+      const reader = response.body.getReader(); const chunks = []; let total = 0;
+      try { while (true) { const { done, value } = await reader.read(); if (done) break; total += value.byteLength; if (total > 16 * 1024 * 1024) { await reader.cancel(); throw new Error('Semantic Graph exceeds 16 MiB.'); } chunks.push(value); } }
+      finally { reader.releaseLock(); }
+      request.signal.throwIfAborted();
+      const json = new TextDecoder('utf-8', { fatal: true }).decode(await new Blob(chunks).arrayBuffer());
+      const graph = parseSemanticGraph(json);
+      request.signal.throwIfAborted(); this.loadSemanticGraph(graph);
+    } catch (error) { if (!request.signal.aborted) this.#error(error, 'semantic-graph-error'); }
+  }
+  async #refresh(loadSource = true) {
+    if (!this.isConnected || !this.#visible) return false;
+    if (this.#semanticGraph) return this.#render();
+    this.#request?.abort(); const request = new AbortController(); this.#request = request;
+    try {
+      const src = loadSource && this.#sourceMode && this.getAttribute('src');
+      if (src) {
+        const url = new URL(src, this.ownerDocument.baseURI);
+        if (!['http:', 'https:'].includes(url.protocol)) throw new Error('src must be an HTTP(S) JSON URL.');
+        let text = this.#sourceCache.get(url.href);
+        if (text === undefined) {
+          const response = await fetch(url, { signal: request.signal });
+          if (!response.ok) throw new Error(`Unable to load visualization (${response.status}).`);
+          text = await response.text();
+        }
+        request.signal.throwIfAborted();
+        if (text.length > 32 * 1024 * 1024) throw new Error('Visualization JSON exceeds 32 MiB.');
+        const data = JSON.parse(text);
+        if (['scene', 'time-lapse'].includes(data.kind)) { this.#semanticGraph = null; this.#scene = parseScene(text); this.#config = null; }
+        else { this.#semanticGraph = null; this.#config = parseConfig(data.config || data); if (data.records !== undefined) { if (!Array.isArray(data.records)) throw new Error('records must be an array.'); this.#records = data.records; } }
+        if (text.length <= 1024 * 1024) {
+          this.#sourceCache.delete(url.href); this.#sourceCache.set(url.href, text);
+          while (this.#sourceCache.size > 4) this.#sourceCache.delete(this.#sourceCache.keys().next().value);
+        }
+      }
+      if (this.#config || !this.#scene) {
+        const config = this.#config || parseConfig({ account: this.getAttribute('account') || 'your-universe', options: {}, version: 7 });
+        // Browser embedding uses the strict imported-CSS boundary, including v6 inputs.
+        const options = normalizeConfig(config.options);
+        this.#scene = createScene(config.account, this.#records, options, { pipeline: this.#pipeline, layoutHost: this.#layouts, signal: request.signal }); this.#semanticHierarchy = null; this.#expandedGroups.clear();
+      }
+      request.signal.throwIfAborted(); return this.#render();
+    } catch (error) { if (!request.signal.aborted) this.#error(error); return false; }
+  }
+  #render() {
+    if (!this.isConnected || !this.#visible || !this.#scene) return false;
+    try {
+      const previousSelection = this.#runtime?.selectionState, previousCamera = this.#runtime?.camera;
+      const effectiveLevel = this.#effectiveLevel();
+      const atlasScene = this.#semanticGraph?.subject.kind === 'developer' && this._atlasNavigation.state
+        ? projectDeveloperAtlasScene(this.#semanticGraph, this._atlasNavigation.state, {}, this._atlasNavigation.projectGraph)
+        : this.#scene;
+      if ((this.semanticLevel !== 'projects' || this.#expandedGroups.size) && !this.#semanticHierarchy) this.#semanticHierarchy = buildSemanticHierarchy(atlasScene);
+      const viewScene = (effectiveLevel !== 'projects' || this.#expandedGroups.size) && this.#semanticHierarchy
+        ? projectSemanticLevel(atlasScene, 'groups', { hierarchy: this.#semanticHierarchy, expanded: [...this.#expandedGroups] })
+        : atlasScene;
+      this.#viewScene = viewScene;
+      // Validate custom styling before inserting renderer-owned SVG markup.
+      const chapterScenes = [this.#scene, ...this.#scene.story?.chapters.map(chapter => chapter.scene) || []];
+      const roots = chapterScenes.flatMap(scene => [scene, ...scene.hierarchy?.scenes.map(entry => entry.scene) || []]);
+      const scenes = roots.flatMap(scene => scene.kind === 'time-lapse' ? [scene, scene.latest, ...scene.frames.map(frame => frame.scene)] : [scene, ...(scene.temporalStack?.frames || scene.timeline?.frames || []).map(frame => frame.scene)]);
+      for (const scene of scenes) for (const key of ['css', 'customCSS']) {
+        const css = scene.presentation.options[key];
+        if (css && /(?:@import|url\s*\(|expression\s*\(|\\)/i.test(css.replace(/\/\*[\s\S]*?\*\//g, ''))) throw new Error('Embedded scene CSS must be self-contained.');
+      }
+      const markup = interactiveMarkup(renderSceneSVG(viewScene));
+      this.#runtime?.destroy();
+      this.shadowRoot.innerHTML = `<style>:host{display:block;min-width:0}${interactiveStyles}</style>${markup}`;
+      const main = this.shadowRoot.querySelector('main');
+      if (this.#semanticGraph) {
+        const graph = this.#semanticGraph;
+        const label = graph.subject.kind === 'developer' ? 'Developer' : 'Project';
+        main.setAttribute('aria-label', `${label}: ${graph.subject.id} · Semantic Graph v${graph.version} · ${semanticGraphFingerprint(graph)}`);
+        const notes = [graph.statistics.truncated && 'Source coverage is incomplete.', graph.project?.provenance?.visibility === 'private' && 'Source visibility is private; this graph may disclose repository names, paths, and structure.'].filter(Boolean);
+        if (notes.length) main.setAttribute('aria-description', notes.join(' '));
+      }
+      if (this._atlasNavigation.state && this.#semanticGraph?.subject.kind === 'developer') {
+        const chrome = renderAtlasChrome(this.ownerDocument, this._atlasNavigation, {
+          back: () => this.atlasBack(),
+          focus: () => this._atlasHandlers().focus(),
+          group: id => this.navigateAtlasGroup(id), project: id => this.navigateAtlasProject(id),
+          structure: id => this.navigateAtlasStructure(this._atlasNavigation.projectGraph, id),
+          crumb: crumbs => { const handlers = this._atlasHandlers(); return this._atlasNavigation.navigateBreadcrumbs(crumbs, handlers.render, handlers.changed); },
+        });
+        main.prepend(chrome.panel, chrome.nav);
+        const announcement = main.querySelector('[data-status]');
+        if (announcement) announcement.textContent = `Developer Atlas: ${this.atlasBreadcrumbs.map(crumb => crumb.label).join(' › ')}`;
+      }
+      this.#runtime = mountStory(this.shadowRoot.querySelector('main'), viewScene, { engine: interactiveEngine, replaceSVG: replaceInteractiveSVG, transitionCamera, emitReady: false, history: this.hasAttribute('history') && Boolean(this.id), historyKey: `constellation.${this.id}`, hierarchyArtifacts: hierarchyArtifacts(viewScene), storyArtifacts: storyArtifacts(viewScene), frameSVGs: viewScene.timeline?.frames.map(frame => renderSceneSVG(frame.scene)) || [] }, (root, scene, options) => mountHierarchy(root, scene, options, (root, scene, options) => mountTimeline(root, scene, options, mountInteractive)));
+      if (previousCamera) this.#runtime.setCamera?.(previousCamera);
+      if (previousSelection?.start) {
+        let selection = previousSelection.start;
+        if (!viewScene.nodes.some(node => node.id === selection)) {
+          const parent = this.#groupForSelection(selection);
+          selection = parent && viewScene.nodes.some(node => node.id === parent.id) ? parent.id : null;
+        }
+        this.#restoringSelection = true;
+        try { if (selection) { this.#runtime.selectNode(selection, { focus: false }); if (previousSelection.end && viewScene.nodes.some(node => node.id === previousSelection.end)) this.#runtime.selectNode(previousSelection.end, { focus: false, extend: true }); } }
+        catch {} finally { this.#restoringSelection = false; }
+      }
+      const focusGroup = this.#semanticFocus && this.#semanticHierarchy?.groups.find(group => group.id === this.#semanticFocus);
+      if (focusGroup && viewScene.semanticGroups) this.#runtime.showSemanticContext?.(focusGroup, { expanded: viewScene.semanticGroups.expanded.includes(focusGroup.id) });
+      main.addEventListener('semantic-group-expand', event => this.expandGroup(event.detail.id));
+      main.addEventListener('semantic-group-collapse', event => this.collapseGroup(event.detail.id));
+      const first = !this.#initialized; this.#initialized = true;
+      this.dispatchEvent(new CustomEvent(first ? 'scene-ready' : 'scene-change', { detail: { scene: this.scene }, bubbles: true, composed: true }));
+      return true;
+    } catch (error) { this.#error(error); return false; }
+  }
+}
+
+installAtlasAPI(ConstellationView);
+installFocusAPI(ConstellationView);
+
+export function defineConstellationView(name = 'constellation-view', registry = customElements) {
+  if (registry.get(name)) return registry.get(name);
+  registry.define(name, class extends ConstellationView {});
+  return registry.get(name);
+}
+
+defineConstellationView();

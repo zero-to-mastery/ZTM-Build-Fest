@@ -1,0 +1,10 @@
+import { createPluginHost } from '../src/plugin-host.mjs';
+if (!globalThis.gc) throw new Error('Run with node --expose-gc scripts/profile-source-cache.mjs');
+const host = createPluginHost().registerSource({ id: 'profile', apiVersion: 1, load: async ({ options }) => Array.from({ length: 2048 }, (_, i) => ({ id: String(i), name: `Snapshot ${options.view}, node ${i}`, description: `${options.view}:${i}:` + 'x'.repeat(1536) })) });
+globalThis.gc();
+const before = process.memoryUsage().heapUsed;
+for (let view = 0; view < 12; view++) await host.load({ plugins: { sources: [{ id: 'profile', source: 'profile', options: { view } }] } });
+globalThis.gc();
+console.log(JSON.stringify({ snapshots: 12, nodesPerSnapshot: 2048, retainedHeapMiB: +((process.memoryUsage().heapUsed - before) / 1048576).toFixed(2), cache: host.cacheStatistics || null }));
+host.clearCache(); globalThis.gc();
+console.log(JSON.stringify({ afterClearHeapMiB: +((process.memoryUsage().heapUsed - before) / 1048576).toFixed(2) }));

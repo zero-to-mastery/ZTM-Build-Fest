@@ -1,0 +1,35 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# Purpose: ensure VDE_ROOT_DIR is defined and points to the repository root.
+# This script is intended to be sourced by other VDE scripts.
+
+set -e
+
+# If VDE_ROOT_DIR is already set and valid, keep it as authoritative.
+if [[ -n "$VDE_ROOT_DIR" ]] && [[ -d "$VDE_ROOT_DIR" ]] && { [[ -f "$VDE_ROOT_DIR/bin/vde" ]] || [[ -f "$VDE_ROOT_DIR/lib/vde-core" ]]; }; then
+  return 0
+fi
+
+# Attempt to auto-detect root by locating the VDE project within the current
+# working directory by walking up the directory tree looking for a sentinel
+# that indicates the VDE root (presence of bin/vde, lib/vde-core, or a .git dir).
+ROOT_FOUND=""
+CUR_DIR="${PWD}"
+while [[ "$CUR_DIR" != "/" ]]; do
+  if [[ -f "$CUR_DIR/bin/vde" ]] || [[ -d "$CUR_DIR/.git" ]] || [[ -f "$CUR_DIR/lib/vde-core" ]]; then
+    ROOT_FOUND="$CUR_DIR"; break
+  fi
+  CUR_DIR=$(dirname "$CUR_DIR")
+done
+
+if [[ -n "$ROOT_FOUND" ]]; then
+  export VDE_ROOT_DIR="$ROOT_FOUND"
+  return 0
+fi
+
+# Fallback: derive root from script location
+if [[ -z "${VDE_ROOT_DIR:-}" ]]; then
+    VDE_ROOT_DIR="${(%):-%x}"
+    VDE_ROOT_DIR="${VDE_ROOT_DIR:h:h}"
+    export VDE_ROOT_DIR
+fi

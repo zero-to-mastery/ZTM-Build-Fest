@@ -1,0 +1,25 @@
+name: Production smoke checks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 */6 * * *"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check public site and Admin routing without writing data
+        env:
+          SITE_ORIGIN: ${{ vars.SMOKE_SITE_ORIGIN || 'https://open-blog-jtc.netlify.app' }}
+          ADMIN_ORIGIN: ${{ vars.SMOKE_ADMIN_ORIGIN || 'https://openblog-o0o5.onrender.com' }}
+          POST_PATH: ${{ vars.SMOKE_POST_PATH || '/posts/welcome-to-your-blog/' }}
+        run: node scripts/deployment-smoke.mjs "$SITE_ORIGIN" "$ADMIN_ORIGIN" "$POST_PATH"

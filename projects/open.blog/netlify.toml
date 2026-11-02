@@ -1,0 +1,131 @@
+# Netlify settings for a blog that lives in a clone of the open.blog repository.
+# Connect the repository in Netlify and it builds from this file: the engine is
+# compiled, then `openblog build` writes dist/. Netlify installs the Rust
+# toolchain named in rust-toolchain.toml.
+#
+# Scheduled posts publish on the first build after their date. Add a build hook
+# in Netlify (Site configuration > Build & deploy > Build hooks) and put its URL
+# in a repository secret named NETLIFY_BUILD_HOOK; the included GitHub workflow
+# then triggers a rebuild once a day.
+#
+# Caching: Netlify's default (revalidate with an ETag) is kept on purpose.
+# Pages reference stylesheets and scripts with a content-derived ?v= so they
+# change URL when they change, but modules imported by other scripts are not
+# versioned, so long path-based cache rules would serve stale code after a deploy.
+
+[build]
+  command = "cargo build --release -p openblog-cli --locked && ./target/release/openblog build"
+  publish = "dist"
+  # Netlify build minutes are limited. A production build is skipped when the
+  # change since the last deploy touches only tests, docs, top-level Markdown
+  # files (never posts under content/) or GitHub workflows. The ignore command
+  # exits 0 to skip and 1 to build; the first build, with no cached commit,
+  # always builds.
+  ignore = "test -n \"$CACHED_COMMIT_REF\" && git diff --quiet $CACHED_COMMIT_REF $COMMIT_REF -- . ':(exclude)tests' ':(exclude)docs' ':(exclude,glob)*.md' ':(exclude).github'"
+
+# Pull request previews and branch deploys (including `develop`) are not built:
+# GitHub CI tests every change, and only `main` is deployed.
+[context.deploy-preview]
+  ignore = "exit 0"
+
+[context.branch-deploy]
+  ignore = "exit 0"
+
+[build.environment]
+  CARGO_TERM_COLOR = "always"
+
+[functions]
+  directory = "netlify/functions"
+
+# Bundle the engagement function into one file, so it can import the shared
+# feedback validator from web/components (ADR 0081). Other functions keep
+# Netlify's default bundler.
+[functions."engagement"]
+  node_bundler = "esbuild"
+
+# Optional social publishing (ADR 0460). Off unless OPENBLOG_SOCIAL_ENABLED is set.
+[functions."social"]
+  node_bundler = "esbuild"
+
+# The delivery worker, called by pg_cron through pg_net with the worker key (ADR 0481).
+[functions."social-worker"]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/social-worker"
+  to = "/.netlify/functions/social-worker"
+  status = 200
+
+[[redirects]]
+  from = "/api/social/*"
+  to = "/.netlify/functions/social/:splat"
+  status = 200
+
+# Keep authenticated Admin requests on Render, outside Netlify's proxy timeout.
+[[redirects]]
+  from = "/admin"
+  to = "https://openblog-o0o5.onrender.com/admin/"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/admin/*"
+  to = "https://openblog-o0o5.onrender.com/admin/:splat"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/api/hit"
+  to = "/.netlify/functions/engagement/hit"
+  status = 200
+
+[[redirects]]
+  from = "/api/views"
+  to = "/.netlify/functions/engagement/views"
+  status = 200
+
+[[redirects]]
+  from = "/api/comments"
+  to = "/.netlify/functions/engagement/comments"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/comments"
+  to = "/.netlify/functions/engagement/admin/comments"
+  status = 200
+
+[[redirects]]
+  from = "/api/feedback"
+  to = "/.netlify/functions/engagement/feedback"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/feedback"
+  to = "/.netlify/functions/engagement/admin/feedback"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin/analytics"
+  to = "/.netlify/functions/engagement/admin/analytics"
+  status = 200
+
+# The latest-posts JSON and the feeds may be read by scripts on other sites.
+[[headers]]
+  for = "/api/blog.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/api/views.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/feed.json"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/rss.xml"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"

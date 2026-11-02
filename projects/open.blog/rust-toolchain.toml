@@ -1,0 +1,5 @@
+# Hosts such as Netlify read this to install Rust before building. Locally it
+# means "use stable", which is what the project needs anyway.
+[toolchain]
+channel = "stable"
+targets = ["wasm32-unknown-unknown"]

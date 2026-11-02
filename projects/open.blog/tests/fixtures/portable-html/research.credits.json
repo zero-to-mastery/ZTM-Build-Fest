@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "credits": [
+    {
+      "contributor": "mira",
+      "roles": [
+        { "vocabulary": "crossref", "role": "author" },
+        { "vocabulary": "credit", "role": "investigation" }
+      ]
+    },
+    {
+      "contributor": "lantern",
+      "roles": [{ "vocabulary": "crossref", "role": "author" }]
+    },
+    {
+      "contributor": "jose",
+      "roles": [{ "vocabulary": "crossref", "role": "translator" }]
+    }
+  ]
+}

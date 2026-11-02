@@ -1,0 +1,11 @@
+{
+  "theme": "auto",
+  "visualTheme": "mnix",
+  "nodeColorMode": "custom",
+  "exportProfile": "transparent",
+  "arrangement": "rings",
+  "nodeMode": "combined",
+  "identityRing": true,
+  "animate": true,
+  "maxRepos": 45
+}

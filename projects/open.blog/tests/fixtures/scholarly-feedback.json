@@ -1,0 +1,1803 @@
+{
+  "about": "Shared typed-feedback fixtures (ADRs 0079 to 0081), read by crates/openblog-core/tests/scholarly_feedback.rs and tests/web/passage-feedback.test.mjs. A case's JSON text is its `text`, or its `submission` written compactly. `storedRow` is a row as the hosted database returns it and `hostedItem` the moderation item the hosted function makes of it.",
+  "receivedAt": "2026-10-26T10:00:00Z",
+  "accepted": [
+    {
+      "name": "a question about a quotation",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "record": {
+        "version": 1,
+        "kind": "question",
+        "body": "Which sources say so?",
+        "details": {},
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "quote",
+            "section": "tides",
+            "exact": "The sun matters too.",
+            "prefix": "The moon causes the tides. ",
+            "suffix": "",
+            "start": 27
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        }
+      }
+    },
+    {
+      "name": "a suggested source for the whole post, with a published name and the time it was seen",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "  This survey covers it.\n",
+        "details": {
+          "sourceUrl": "HTTPS://Example.ORG/paper?id=1#p2"
+        },
+        "seenAt": "2026-10-26T09:58:00Z",
+        "attribution": {
+          "name": "  Ada \n  Lovelace ",
+          "publishName": true
+        }
+      },
+      "record": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "body": "This survey covers it.",
+        "details": {
+          "sourceUrl": "https://example.org/paper?id=1#p2"
+        },
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:58:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Ada Lovelace",
+            "publishName": true
+          }
+        }
+      }
+    },
+    {
+      "name": "a suggested correction of a section, with wording, evidence on an international host, and a reader clock running ahead",
+      "submission": {
+        "version": 1,
+        "kind": "correction-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "tides",
+          "digest": "0123456789abcdef0123456789abcdef"
+        },
+        "body": "Line one.\n\tLine two.",
+        "details": {
+          "sourceUrl": "https://bücher.example/a",
+          "suggestedText": "  The sun matters less.  "
+        },
+        "seenAt": "2026-10-26T10:05:00Z"
+      },
+      "record": {
+        "version": 1,
+        "kind": "correction-suggestion",
+        "body": "Line one.\n\tLine two.",
+        "details": {
+          "sourceUrl": "https://xn--bcher-kva.example/a",
+          "suggestedText": "The sun matters less."
+        },
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        }
+      }
+    },
+    {
+      "name": "another interpretation with a private name and null optional fields",
+      "submission": {
+        "version": 1,
+        "kind": "alternative-interpretation",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": " Read it as irony.　",
+        "details": null,
+        "seenAt": null,
+        "attribution": {
+          "name": "Grace",
+          "publishName": false
+        }
+      },
+      "record": {
+        "version": 1,
+        "kind": "alternative-interpretation",
+        "body": "Read it as irony.",
+        "details": {},
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "quote",
+            "section": "tides",
+            "exact": "The sun matters too.",
+            "prefix": "The moon causes the tides. ",
+            "suffix": "",
+            "start": 27
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Grace",
+            "publishName": false
+          }
+        }
+      }
+    },
+    {
+      "name": "a blank name is anonymous, and a byte-order mark is text, not whitespace",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "﻿Why?",
+        "attribution": {
+          "name": "   ",
+          "publishName": false
+        }
+      },
+      "record": {
+        "version": 1,
+        "kind": "question",
+        "body": "﻿Why?",
+        "details": {},
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "quote",
+            "section": "tides",
+            "exact": "The sun matters too.",
+            "prefix": "The moon causes the tides. ",
+            "suffix": "",
+            "start": 27
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        }
+      }
+    },
+    {
+      "name": "the longest body",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"body\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}",
+      "record": {
+        "version": 1,
+        "kind": "question",
+        "body": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "details": {},
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "quote",
+            "section": "tides",
+            "exact": "The sun matters too.",
+            "prefix": "The moon causes the tides. ",
+            "suffix": "",
+            "start": 27
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        }
+      }
+    },
+    {
+      "name": "a repeated key keeps its last value, as both JSON readers do",
+      "text": "{\"version\":1,\"kind\":\"comment\",\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"body\":\"Which sources say so?\"}",
+      "record": {
+        "version": 1,
+        "kind": "question",
+        "body": "Which sources say so?",
+        "details": {},
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "quote",
+            "section": "tides",
+            "exact": "The sun matters too.",
+            "prefix": "The moon causes the tides. ",
+            "suffix": "",
+            "start": 27
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        }
+      }
+    },
+    {
+      "name": "a work target for a question",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "http://example.org"
+        }
+      },
+      "record": {
+        "version": 1,
+        "kind": "question",
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "http://example.org/"
+        },
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        }
+      }
+    }
+  ],
+  "refused": [
+    {
+      "name": "not JSON",
+      "text": "{",
+      "code": "malformed"
+    },
+    {
+      "name": "an array",
+      "text": "[]",
+      "code": "malformed"
+    },
+    {
+      "name": "a missing version",
+      "submission": {
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "a version written as text",
+      "submission": {
+        "version": "1",
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "a version with a fraction",
+      "text": "{\"version\":1.0,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"body\":\"Which sources say so?\"}",
+      "code": "malformed"
+    },
+    {
+      "name": "a newer version",
+      "submission": {
+        "version": 2,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "unsupportedVersion"
+    },
+    {
+      "name": "the largest 64-bit version",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"version\":18446744073709551615,\"body\":\"Which sources say so?\"}",
+      "code": "unsupportedVersion"
+    },
+    {
+      "name": "a version beyond 64 bits",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"version\":18446744073709551616,\"body\":\"Which sources say so?\"}",
+      "code": "malformed"
+    },
+    {
+      "name": "an unknown field (no e-mail rides along)",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "email": "ada@example.org"
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "an unknown detail",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "https://example.org/",
+          "doi": "10.1/x"
+        }
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "details as an array",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": [
+          "https://example.org/"
+        ]
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "attribution as an array",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "attribution": [
+          "Ada",
+          true
+        ]
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "a null agreement",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "attribution": {
+          "name": "Ada",
+          "publishName": null
+        }
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "an unknown attribution field",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "attribution": {
+          "name": "Ada",
+          "contact": "x"
+        }
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "a body that is not text",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": 7
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "a missing target",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "body": "Which sources say so?"
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "a missing body",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        }
+      },
+      "code": "malformed"
+    },
+    {
+      "name": "a number too large to hold",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":1e400},\"body\":\"Which sources say so?\"}",
+      "code": "malformed"
+    },
+    {
+      "name": "nesting deeper than the build reads",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"deep\":[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"body\":\"Which sources say so?\"}",
+      "code": "malformed"
+    },
+    {
+      "name": "the deepest nesting the build reads, in a target",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"deep\":[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"body\":\"Which sources say so?\"}",
+      "code": "invalidTarget",
+      "target": "malformed"
+    },
+    {
+      "name": "one level deeper than the build reads",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"deep\":[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]],\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"body\":\"Which sources say so?\"}",
+      "code": "malformed"
+    },
+    {
+      "name": "a lone surrogate",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"body\":\"Which \\ud800 so?\"}",
+      "code": "malformed"
+    },
+    {
+      "name": "a comment is not passage feedback",
+      "submission": {
+        "version": 1,
+        "kind": "comment",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "unknownKind"
+    },
+    {
+      "name": "kinds are case-sensitive",
+      "submission": {
+        "version": 1,
+        "kind": "Question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "unknownKind"
+    },
+    {
+      "name": "an inherited property is not a kind",
+      "submission": {
+        "version": 1,
+        "kind": "constructor",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "unknownKind"
+    },
+    {
+      "name": "a prototype key is not a kind",
+      "submission": {
+        "version": 1,
+        "kind": "__proto__",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "unknownKind"
+    },
+    {
+      "name": "a relative work",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidWork"
+    },
+    {
+      "name": "a work with traversal",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/../admin/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidWork"
+    },
+    {
+      "name": "a protocol-relative work",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "//evil.example/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidWork"
+    },
+    {
+      "name": "a work with a query",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/?x=1/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidWork"
+    },
+    {
+      "name": "a work with a space",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/the tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidWork"
+    },
+    {
+      "name": "a revision of model zero",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p0:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidRevision"
+    },
+    {
+      "name": "an uppercase revision",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4A264DBCFBE9D0A56591FF04CBF12CA4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidRevision"
+    },
+    {
+      "name": "a null target",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": null,
+        "body": "Which sources say so?"
+      },
+      "code": "invalidTarget",
+      "target": "malformed"
+    },
+    {
+      "name": "a target position with a fraction",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27.0},\"body\":\"Which sources say so?\"}",
+      "code": "invalidTarget",
+      "target": "malformed"
+    },
+    {
+      "name": "a target position with an exponent",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27e0},\"body\":\"Which sources say so?\"}",
+      "code": "invalidTarget",
+      "target": "malformed"
+    },
+    {
+      "name": "a negative zero target position",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":-0},\"body\":\"Which sources say so?\"}",
+      "code": "invalidTarget",
+      "target": "malformed"
+    },
+    {
+      "name": "a target version with a fraction",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"version\":1.0,\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"body\":\"Which sources say so?\"}",
+      "code": "invalidTarget",
+      "target": "malformed"
+    },
+    {
+      "name": "a newer target",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 2,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidTarget",
+      "target": "unsupportedVersion"
+    },
+    {
+      "name": "a target position beyond its bound",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 1000001
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidTarget",
+      "target": "invalidRange"
+    },
+    {
+      "name": "a quotation that is not passage text",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The  sun",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidTarget",
+      "target": "notNormalized"
+    },
+    {
+      "name": "a quotation with a text-direction override",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The ‮sun",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidTarget",
+      "target": "forbiddenCharacter"
+    },
+    {
+      "name": "a work target with a section",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "work",
+          "section": "tides"
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "invalidTarget",
+      "target": "malformed"
+    },
+    {
+      "name": "a suggested correction of the whole post",
+      "submission": {
+        "version": 1,
+        "kind": "correction-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "targetNotAllowed"
+    },
+    {
+      "name": "an empty body",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": " \n\t "
+      },
+      "code": "invalidBody"
+    },
+    {
+      "name": "a body one character too long",
+      "text": "{\"version\":1,\"kind\":\"question\",\"work\":\"/posts/tides/\",\"revision\":\"p1:4a264dbcfbe9d0a56591ff04cbf12ca4\",\"target\":{\"version\":1,\"kind\":\"quote\",\"section\":\"tides\",\"exact\":\"The sun matters too.\",\"prefix\":\"The moon causes the tides. \",\"suffix\":\"\",\"start\":27},\"body\":\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}",
+      "code": "invalidBody"
+    },
+    {
+      "name": "a body with a control character",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Ring \u0007 bell"
+      },
+      "code": "invalidBody"
+    },
+    {
+      "name": "a body with a text-direction override",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "evil ‮ txt"
+      },
+      "code": "invalidBody"
+    },
+    {
+      "name": "a body with a C1 control",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "next line"
+      },
+      "code": "invalidBody"
+    },
+    {
+      "name": "suggested wording on a question",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "suggestedText": "Better words."
+        }
+      },
+      "code": "detailNotAllowed"
+    },
+    {
+      "name": "a suggested source without a link",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?"
+      },
+      "code": "missingSource"
+    },
+    {
+      "name": "a suggested source with a null link",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": null
+        }
+      },
+      "code": "missingSource"
+    },
+    {
+      "name": "the source link \"javascript:alert(1)\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "javascript:alert(1)"
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "the source link \"https://user:secret@example.org/\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "https://user:secret@example.org/"
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "the source link \"https://user@example.org/\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "https://user@example.org/"
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "the source link \"ftp://example.org/file\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "ftp://example.org/file"
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "the source link \" https://example.org/\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": " https://example.org/"
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "the source link \"https://exa mple.org/\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "https://exa mple.org/"
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "the source link \"https://example.org/‮\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "https://example.org/‮"
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "the source link \"/relative/path\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "/relative/path"
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "the source link \"\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": ""
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "the source link \"data:text/html,hi\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "data:text/html,hi"
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "the source link \"file:///etc/passwd\"",
+      "submission": {
+        "version": 1,
+        "kind": "source-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "sourceUrl": "file:///etc/passwd"
+        }
+      },
+      "code": "invalidSourceUrl"
+    },
+    {
+      "name": "blank suggested wording",
+      "submission": {
+        "version": 1,
+        "kind": "correction-suggestion",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "details": {
+          "suggestedText": "   "
+        }
+      },
+      "code": "invalidSuggestedText"
+    },
+    {
+      "name": "the reader time 2026-10-26T10:00:00.000Z",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "seenAt": "2026-10-26T10:00:00.000Z"
+      },
+      "code": "invalidTime"
+    },
+    {
+      "name": "the reader time 2026-02-30T10:00:00Z",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "seenAt": "2026-02-30T10:00:00Z"
+      },
+      "code": "invalidTime"
+    },
+    {
+      "name": "the reader time 0000-01-01T00:00:00Z",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "seenAt": "0000-01-01T00:00:00Z"
+      },
+      "code": "invalidTime"
+    },
+    {
+      "name": "the reader time -001-01-01T00:00:00Z",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "seenAt": "-001-01-01T00:00:00Z"
+      },
+      "code": "invalidTime"
+    },
+    {
+      "name": "the reader time 2026-10-26T10:00:60Z",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "seenAt": "2026-10-26T10:00:60Z"
+      },
+      "code": "invalidTime"
+    },
+    {
+      "name": "the reader time 2026-10-26 10:00:00Z",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "seenAt": "2026-10-26 10:00:00Z"
+      },
+      "code": "invalidTime"
+    },
+    {
+      "name": "the reader time 2026-10-26T10:00:00+00:00",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "seenAt": "2026-10-26T10:00:00+00:00"
+      },
+      "code": "invalidTime"
+    },
+    {
+      "name": "the reader time 2026-10-26",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "seenAt": "2026-10-26"
+      },
+      "code": "invalidTime"
+    },
+    {
+      "name": "the reader time 2026-10-26t10:00:00z",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "seenAt": "2026-10-26t10:00:00z"
+      },
+      "code": "invalidTime"
+    },
+    {
+      "name": "a name one character too long",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "attribution": {
+          "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "publishName": false
+        }
+      },
+      "code": "invalidName"
+    },
+    {
+      "name": "a name with a text-direction override",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "attribution": {
+          "name": "Ada ‮ecalovel",
+          "publishName": true
+        }
+      },
+      "code": "invalidName"
+    },
+    {
+      "name": "a name with a control character",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "attribution": {
+          "name": "Ada\u0000",
+          "publishName": false
+        }
+      },
+      "code": "invalidName"
+    },
+    {
+      "name": "agreement without a name",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "attribution": {
+          "publishName": true
+        }
+      },
+      "code": "consentWithoutName"
+    },
+    {
+      "name": "agreement with a blank name",
+      "submission": {
+        "version": 1,
+        "kind": "question",
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "tides",
+          "exact": "The sun matters too.",
+          "prefix": "The moon causes the tides. ",
+          "suffix": "",
+          "start": 27
+        },
+        "body": "Which sources say so?",
+        "attribution": {
+          "name": "  ",
+          "publishName": true
+        }
+      },
+      "code": "consentWithoutName"
+    }
+  ],
+  "storedRow": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "status": "pending",
+    "version": 1,
+    "moderated_at": null,
+    "moderation_reason": null,
+    "format_version": 1,
+    "kind": "source-suggestion",
+    "work": "/posts/tides/",
+    "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+    "target": {
+      "version": 1,
+      "kind": "work"
+    },
+    "body": "This survey covers it.",
+    "details": {
+      "sourceUrl": "https://example.org/paper?id=1#p2"
+    },
+    "seen_at": "2026-10-26T09:58:00+00:00",
+    "received_at": "2026-10-26T10:00:00+00:00",
+    "channel": "hosted",
+    "reader_name": "Ada Lovelace",
+    "publish_name": true
+  },
+  "hostedItem": {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "status": "pending",
+    "version": 1,
+    "moderatedAt": null,
+    "reason": null,
+    "feedback": {
+      "version": 1,
+      "kind": "source-suggestion",
+      "body": "This survey covers it.",
+      "details": {
+        "sourceUrl": "https://example.org/paper?id=1#p2"
+      },
+      "provenance": {
+        "version": 1,
+        "work": "/posts/tides/",
+        "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "seenAt": "2026-10-26T09:58:00Z",
+        "receivedAt": "2026-10-26T10:00:00Z",
+        "channel": "hosted",
+        "attribution": {
+          "name": "Ada Lovelace",
+          "publishName": true
+        }
+      }
+    }
+  }
+}

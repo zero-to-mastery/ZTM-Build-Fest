@@ -1,0 +1,429 @@
+{
+  "cases": [
+    {
+      "problem": null,
+      "url": "https://example.org/"
+    },
+    {
+      "problem": null,
+      "url": "https://example.org/a/b?c=d#e"
+    },
+    {
+      "problem": null,
+      "url": "http://example.org:8080/x"
+    },
+    {
+      "problem": null,
+      "url": "https://EXAMPLE.org/Path"
+    },
+    {
+      "problem": null,
+      "url": "https://sub.example.co.uk/x"
+    },
+    {
+      "problem": null,
+      "url": "https://münchen.example/x"
+    },
+    {
+      "problem": null,
+      "url": "https://example.org./x"
+    },
+    {
+      "problem": null,
+      "url": "https://doi.org/10.1234/abc"
+    },
+    {
+      "problem": null,
+      "url": "http://198.20.0.1/x"
+    },
+    {
+      "problem": null,
+      "url": "http://8.8.8.8/"
+    },
+    {
+      "problem": null,
+      "url": "http://[::8.8.8.8]/x"
+    },
+    {
+      "problem": null,
+      "url": "http://[2002:808:808::1]/x"
+    },
+    {
+      "problem": null,
+      "url": "http://[2606:4700:4700::1111]/"
+    },
+    {
+      "problem": null,
+      "url": "http://192.0.2.1/x"
+    },
+    {
+      "problem": null,
+      "url": "http://203.0.113.9/x"
+    },
+    {
+      "problem": null,
+      "url": "http://[2001:db8::1]/x"
+    },
+    {
+      "problem": null,
+      "url": "https://example.org/x?author=ada&keyword=tides"
+    },
+    {
+      "problem": null,
+      "url": "https://example.org/x?sid=google&genre=book"
+    },
+    {
+      "problem": null,
+      "url": "https://example.org/x#Authorship"
+    },
+    {
+      "problem": null,
+      "url": "https://example.org/x#section-2"
+    },
+    {
+      "problem": null,
+      "url": "https://example.org/list?sortKey=title"
+    },
+    {
+      "problem": null,
+      "url": "https://example.org/mss?siglum=A"
+    },
+    {
+      "problem": "it is not a web address",
+      "url": ""
+    },
+    {
+      "problem": "it is not a web address",
+      "url": "example.org/x"
+    },
+    {
+      "problem": "it is not a web address",
+      "url": "//example.org/x"
+    },
+    {
+      "problem": "it is not a web address",
+      "url": "not a url"
+    },
+    {
+      "problem": "only http and https addresses are published",
+      "url": "javascript:alert(1)"
+    },
+    {
+      "problem": "only http and https addresses are published",
+      "url": "data:text/html,x"
+    },
+    {
+      "problem": "only http and https addresses are published",
+      "url": "file:///etc/passwd"
+    },
+    {
+      "problem": "only http and https addresses are published",
+      "url": "ftp://example.org/x"
+    },
+    {
+      "problem": "it carries a user name or password",
+      "url": "https://user:pw@example.org/x"
+    },
+    {
+      "problem": "it carries a user name or password",
+      "url": "https://user@example.org/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "https://localhost/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://localhost.localdomain/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://localhost.localdomain./x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://app.localhost/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://intranet/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://printer.local/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://service.internal/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://box.lan/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://router.home.arpa/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://wiki.corp/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://build.test/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://nas.home/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://nas.localdomain/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://site.intranet/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://127.0.0.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://127.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://2130706433/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://0x7f.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://017700000001/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://10.0.0.5/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://172.16.0.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://172.31.255.255/x"
+    },
+    {
+      "problem": null,
+      "url": "http://172.32.0.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://192.168.1.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://169.254.169.254/latest"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://100.64.0.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://100.127.255.255/x"
+    },
+    {
+      "problem": null,
+      "url": "http://100.128.0.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://198.18.0.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://198.19.255.254/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://224.0.0.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://239.255.255.250/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://240.0.0.1/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://255.255.255.255/"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://0.0.0.0/"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://0.1.2.3/"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[::1]/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[::]/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[::127.0.0.1]/"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[::10.0.0.1]/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[::ffff:127.0.0.1]/"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[::ffff:10.0.0.1]/"
+    },
+    {
+      "problem": null,
+      "url": "http://[::ffff:8.8.8.8]/"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[2002:7f00:1::]/"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[2002:c0a8:104::1]/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[64:ff9b::7f00:1]/"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[64:ff9b::808:808]/"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[fec0::1]/"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[fd00::1]/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[fc00::1]/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[fe80::1]/x"
+    },
+    {
+      "problem": "it names a private or local network address readers cannot reach",
+      "url": "http://[ff02::1]/x"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?access_token=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?apiKey=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?X-Amz-Signature=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?authorization=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?client_secret=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?user_pass=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?sig=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?key=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?API_KEY=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?apikey=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?oauth_token=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?auth=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?userPass=abc"
+    },
+    {
+      "problem": null,
+      "url": "https://example.org/x?sortKey=title&monkey=1&passage=2"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://example.org/x?session_id=1"
+    },
+    {
+      "problem": "it carries a fragment parameter named like a key, token or signature",
+      "url": "https://example.org/x#access_token=abc&state=1"
+    },
+    {
+      "problem": "it carries a fragment parameter named like a key, token or signature",
+      "url": "https://example.org/x#token=abc"
+    },
+    {
+      "problem": "it carries a fragment parameter named like a key, token or signature",
+      "url": "https://example.org/x#a=1&secret=2"
+    },
+    {
+      "problem": "it carries a fragment parameter named like a key, token or signature",
+      "url": "https://example.org/x#/route?token=abc"
+    },
+    {
+      "problem": null,
+      "url": "https://example.org/x#Passwords-and-secrets"
+    },
+    {
+      "problem": "it carries a fragment parameter named like a key, token or signature",
+      "url": "https://example.org/x?a=1#/route?token=abc"
+    },
+    {
+      "problem": "it carries a query parameter named like a key, token or signature",
+      "url": "https://books.google.com/books?id=abc&sig=ACfU3U"
+    }
+  ],
+  "description": "Web addresses and why each may not be reached as public, or null when it may: read by crates/openblog-core/src/citations.rs (public_url_problem) and web/components/public-url.js, which must agree on every address and every reason. Regenerate with OPENBLOG_BLESS=1 cargo test -p openblog-core --test future_suggestion_contract."
+}

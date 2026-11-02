@@ -1,0 +1,615 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# uninstall-vde - Remove VDE completely
+#
+# This is the "nuclear option" - deletes ALL VMs, ALL images, ALL configs.
+#
+# Features:
+# - Optional backup of data/ and/or projects/ directories
+# - Deletes all VMs, images, docker networks, volumes
+# - Allows safe removal so user can rm -rf the project directory
+#
+# Usage: uninstall-vde [--skip-confirm] [--no-backup] [--dry-run]
+#===============================================================================
+
+# Note: set -e is intentionally disabled to avoid false exits from array operations
+# The script has proper error handling via return codes
+# set -e
+
+# Use zsh-native absolute path detection (Rule 1)
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+# Source shared library
+source "${VDE_ROOT_DIR}/lib/vde-shell-compat"
+source "${VDE_ROOT_DIR}/lib/vde-constants"
+source "${VDE_ROOT_DIR}/lib/vde-errors"
+source "${VDE_ROOT_DIR}/lib/vde-log"
+source "${VDE_ROOT_DIR}/lib/vde-naming"
+source "${VDE_ROOT_DIR}/lib/vde-core"
+source "${VDE_ROOT_DIR}/lib/vm-common"
+
+# Initialize logging
+vde_log_init 2>/dev/null || true
+
+#===============================================================================
+# Variables
+#===============================================================================
+
+SKIP_CONFIRM=false
+SKIP_BACKUP=false
+DRY_RUN=false
+BACKUP_LOCATION="${HOME}/Desktop"
+BACKUP_TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+UNINSTALL_BACKUP_DIR="vde-backup-${BACKUP_TIMESTAMP}"
+
+# Colors (if terminal supports it)
+if [[ -t 1 ]]; then
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    NC='\033[0m' # No Color
+else
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    NC=''
+fi
+
+#===============================================================================
+# Helper Functions
+#===============================================================================
+
+# Print colored warning
+print_warning() {
+    echo "${YELLOW}WARNING: ${1}${NC}"
+}
+
+# Print colored error
+print_error() {
+    echo "${RED}ERROR: ${1}${NC}"
+}
+
+# Print colored success
+print_success() {
+    echo "${GREEN}SUCCESS: ${1}${NC}"
+}
+
+# Print colored info
+print_info() {
+    echo "${BLUE}INFO: ${1}${NC}"
+}
+
+# Print dry-run banner
+print_dry_run() {
+    echo ""
+    echo "============================================================================="
+    echo "${YELLOW}DRY RUN MODE${NC} - No changes will be made"
+    echo "============================================================================="
+    echo ""
+}
+
+# Ask yes/no question
+ask_yes_no() {
+    local prompt="${1}"
+    local default="${2:-n}"
+
+    if [[ "${SKIP_CONFIRM}" = "true" ]] || [[ "${DRY_RUN}" = "true" ]]; then
+        return 0
+    fi
+
+    local yn
+    if [[ "${default}" = "y" ]]; then
+        prompt="${prompt} [Y/n]"
+    else
+        prompt="${prompt} [y/N]"
+    fi
+
+    while true; do
+        echo -n "${prompt} "
+        read -r yn
+        yn=${yn:-${default}}
+
+        case "${yn}" in
+            [Yy]|[Yy][Ee][Ss]) return 0 ;;
+            [Nn]|[Nn][Oo]) return ${VDE_ERR_GENERAL} ;;
+            *) echo "Please answer yes or no." ;;
+        esac
+    done
+}
+
+#===============================================================================
+# Backup Functions
+#===============================================================================
+
+# Backup a directory to a zip file
+backup_directory() {
+    local dir_name="${1}"
+    local source_dir="${VDE_ROOT_DIR}/${dir_name}"
+
+    if [[ ! -d "${source_dir}" ]]; then
+        print_info "Directory ${dir_name}/ does not exist, skipping backup"
+        return 0
+    fi
+
+    # Check if directory is empty
+    if [[ -z "$(ls -A "${source_dir}" 2>/dev/null)" ]]; then
+        print_info "Directory ${dir_name}/ is empty, skipping backup"
+        return 0
+    fi
+
+    local backup_file="${BACKUP_LOCATION}/${UNINSTALL_BACKUP_DIR}/${dir_name}.zip"
+
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_info "[DRY RUN] Would create backup: ${backup_file}"
+        return 0
+    fi
+
+    print_info "Creating backup of ${dir_name}/..."
+    mkdir -p "${BACKUP_LOCATION}/${UNINSTALL_BACKUP_DIR}"
+
+    # Create zip archive
+    (cd "${VDE_ROOT_DIR}" && zip -rq "${backup_file}" "${dir_name}")
+
+    if [[ ${?} -eq 0 ]]; then
+        print_success "Backed up ${dir_name}/ to ${backup_file}"
+        print_info "Size: $(du -h "${backup_file}" | cut -f1)"
+        return 0
+    else
+        print_error "Failed to backup ${dir_name}/"
+        return ${VDE_ERR_GENERAL}
+    fi
+}
+
+# Offer to backup data and projects
+offer_backup() {
+    # In dry-run mode, skip backup prompts
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        echo ""
+        print_info "[DRY RUN] Skipping backup prompts"
+        return 0
+    fi
+
+    echo ""
+    print_warning "Would you like to backup any data before deletion?"
+    echo ""
+
+    local backup_data=false
+    local backup_projects=false
+
+    # Check if data/ exists and has content
+    if [[ -d "${VDE_ROOT_DIR}/data" && -n "$(ls -A "${VDE_ROOT_DIR}/data" 2>/dev/null)" ]]; then
+        echo "Found data/ directory with:"
+        ls -1 "${VDE_ROOT_DIR}/data" 2>/dev/null | sed 's/^/  - /'
+        echo ""
+
+        if ask_yes_no "Backup the data/ directory?"; then
+            backup_data=true
+        fi
+    fi
+
+    # Check if projects/ exists and has content
+    if [[ -d "${VDE_ROOT_DIR}/projects" && -n "$(ls -A "${VDE_ROOT_DIR}/projects" 2>/dev/null)" ]]; then
+        echo ""
+        echo "Found projects/ directory with:"
+        ls -1 "${VDE_ROOT_DIR}/projects" 2>/dev/null | sed 's/^/  - /'
+        echo ""
+
+        if ask_yes_no "Backup the projects/ directory?"; then
+            backup_projects=true
+        fi
+    fi
+
+    if [[ "${backup_data}" = "false" && "${backup_projects}" = "false" ]]; then
+        echo ""
+        print_info "No backups selected"
+        return 0
+    fi
+
+    echo ""
+    print_info "Backup location: ${BACKUP_LOCATION}/${UNINSTALL_BACKUP_DIR}"
+
+    # Perform backups
+    local backup_failed=false
+
+    if [[ "${backup_data}" = "true" ]]; then
+        if ! backup_directory "data"; then
+            backup_failed=true
+        fi
+    fi
+
+    if [[ "${backup_projects}" = "true" ]]; then
+        if ! backup_directory "projects"; then
+            backup_failed=true
+        fi
+    fi
+
+    if [[ "${backup_failed}" = "true" ]]; then
+        print_error "Some backups failed. Continue with uninstall?"
+        if ! ask_yes_no "" "n"; then
+            print_info "Uninstall cancelled by user"
+            exit ${VDE_SUCCESS}
+        fi
+    else
+        print_success "All backups completed successfully"
+    fi
+
+    return 0
+}
+
+#===============================================================================
+# Uninstall Functions
+#===============================================================================
+
+# Shutdown all VMs
+shutdown_all_vms() {
+    echo ""
+    print_info "Step 1: Shutting down all VMs..."
+
+    local vms
+    vms=$(get_all_vms 2>/dev/null || echo "")
+
+    if [[ -z "${vms}" ]]; then
+        print_info "No VMs found to shut down"
+        return 0
+    fi
+
+    local vm
+    local stopped_count=0
+
+    for vm in "${(@f)vms}"; do
+        if [[ -n "${vm}" ]]; then
+            if is_vm_running "${vm}" 2>/dev/null; then
+                if [[ "${DRY_RUN}" = "true" ]]; then
+                    print_info "[DRY RUN] Would stop VM: ${vm}"
+                else
+                    print_info "Stopping VM: ${vm}"
+                    stop_vm "${vm}" 2>/dev/null || true
+                fi
+                ((stopped_count++))
+            fi
+        fi
+    done
+
+    if [[ ${stopped_count} -gt 0 ]]; then
+        if [[ "${DRY_RUN}" = "true" ]]; then
+            print_info "[DRY RUN] Would stop ${stopped_count} VM(s)"
+        else
+            print_success "Stopped ${stopped_count} VM(s)"
+        fi
+    else
+        print_info "No VMs were running"
+    fi
+}
+
+# Remove all VMs
+remove_all_vms() {
+    echo ""
+    print_info "Step 2: Removing all VM configurations..."
+
+    # Ensure types are loaded
+    load_vm_types
+
+    local removed_count=0
+    local -a all_vms
+    all_vms=("${lang_vms[@]}" "${service_vms[@]}")
+
+    for vm_name in "${all_vms[@]}"; do
+        local short_name="${vm_name#vde-}"
+        local type
+        type=$(get_vm_type "${vm_name}" 2>/dev/null || echo "service")
+        
+        local category="services"
+        if [[ "${type}" == "language" ]]; then
+            category="languages"
+        fi
+        
+        local config_dir="${VDE_ROOT_DIR}/configs/docker/${category}/${short_name}"
+        local env_file="${VDE_ROOT_DIR}/env-files/${short_name}.env"
+
+        if [[ "${DRY_RUN}" = "true" ]]; then
+            [[ -d "${config_dir}" ]] && print_info "[DRY RUN] Would remove config dir: ${config_dir#${VDE_ROOT_DIR}/}"
+            [[ -f "${env_file}" ]] && print_info "[DRY RUN] Would remove env file: ${env_file#${VDE_ROOT_DIR}/}"
+        else
+            if [[ -d "${config_dir}" ]]; then
+                rm -rf "${config_dir}"
+                print_success "Removed config dir: ${short_name}"
+            fi
+            if [[ -f "${env_file}" ]]; then
+                rm -f "${env_file}"
+                print_success "Removed env file: ${short_name}.env"
+            fi
+        fi
+        ((removed_count++))
+    done
+
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_info "[DRY RUN] Would process ${removed_count} VM(s)"
+    else
+        print_success "Processed ${removed_count} VM(s)"
+    fi
+}
+
+# Remove all VDE Docker images
+remove_docker_images() {
+    echo ""
+    print_info "Step 3: Removing VDE Docker images..."
+
+    local images
+    images=$(docker images --format "{{.Repository}}:{{.Tag}}" 2>/dev/null | grep "^vde-" || echo "")
+
+    if [[ -z "${images}" ]]; then
+        print_info "No VDE images found"
+        return 0
+    fi
+
+    local image_count=$(echo "${images}" | wc -l | tr -d ' ')
+
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_info "[DRY RUN] Would remove ${image_count} VDE image(s)..."
+        echo "${images}" | while read -r image; do
+            [[ -n "${image}" ]] && print_info "[DRY RUN]   Would remove image: ${image}"
+        done
+        return 0
+    fi
+
+    print_info "Removing ${image_count} VDE image(s)..."
+
+    echo "${images}" | while read -r image; do
+        [[ -n "${image}" ]] && print_info "Removing image: ${image}"
+    done
+
+    echo "${images}" | xargs docker rmi -f >/dev/null 2>&1 || true
+
+    print_success "VDE images removed"
+}
+
+# Remove Docker network and volumes
+remove_docker_resources() {
+    echo ""
+    print_info "Step 4: Removing Docker network and volumes..."
+
+    # Remove VDE network if it exists
+    local network_exists
+    network_exists=$(docker network ls --format "{{.Name}}" 2>/dev/null | grep "^vde-network$" || echo "")
+
+    if [[ -n "${network_exists}" ]]; then
+        if [[ "${DRY_RUN}" = "true" ]]; then
+            print_info "[DRY RUN] Would remove Docker network: vde-network"
+        else
+            print_info "Removing Docker network: vde-network"
+            docker network rm vde-network >/dev/null 2>&1 || true
+            print_success "Removed vde-network"
+        fi
+    else
+        print_info "No vde-network found"
+    fi
+
+    # Remove VDE volumes if they exist
+    local volumes
+    volumes=$(docker volume ls --format "{{.Name}}" 2>/dev/null | grep "^vde-" || echo "")
+
+    if [[ -n "${volumes}" ]]; then
+        if [[ "${DRY_RUN}" = "true" ]]; then
+            print_info "[DRY RUN] Would remove VDE volumes:"
+            echo "${volumes}" | while read -r vol; do
+                [[ -n "${vol}" ]] && print_info "[DRY RUN]   Would remove volume: ${vol}"
+            done
+        else
+            print_info "Removing VDE volumes..."
+            echo "${volumes}" | while read -r vol; do
+                [[ -n "${vol}" ]] && docker volume rm "${vol}" >/dev/null 2>&1 || true
+            done
+            print_success "Removed VDE volumes"
+        fi
+    else
+        print_info "No VDE volumes found"
+    fi
+}
+
+# Remove SSH directory (The SSH Pillar)
+remove_ssh_config_entries() {
+    echo ""
+    print_info "Step 5: Decommissioning VDE SSH Pillar..."
+
+    if [[ -d "${VDE_SSH_DIR}" ]]; then
+        if [[ "${DRY_RUN}" = "true" ]]; then
+            print_info "[DRY RUN] Would remove entire SSH directory: ${VDE_SSH_DIR}"
+            return 0
+        fi
+        print_info "Removing VDE SSH directory: ${VDE_SSH_DIR}"
+        rm -rf "${VDE_SSH_DIR}"
+        print_success "VDE SSH directory removed"
+    else
+        print_info "VDE SSH directory already absent: ${VDE_SSH_DIR}"
+    fi
+}
+
+# Remove VDE directories (Total Erasure)
+remove_vde_directories() {
+    echo ""
+    print_info "Step 6: Purging VDE operational directories..."
+
+    local dirs_to_remove=(
+        "data"
+        "logs"
+        "env-files"
+        ".cache"
+        ".locks"
+    )
+
+    for dir in "${dirs_to_remove[@]}"; do
+        local dir_path="${VDE_ROOT_DIR}/${dir}"
+        if [[ -d "${dir_path}" ]]; then
+            if [[ "${DRY_RUN}" = "true" ]]; then
+                print_info "[DRY RUN] Would remove directory: ${dir}/"
+            else
+                print_info "Removing: ${dir}/"
+                rm -rf "${dir_path}"
+                print_success "Removed ${dir}/"
+            fi
+        fi
+    done
+}
+
+#===============================================================================
+# Main
+#===============================================================================
+
+main() {
+    # Parse arguments
+    while [[ ${#} -gt 0 ]]; do
+        case "${1}" in
+            --skip-confirm)
+                SKIP_CONFIRM=true
+                shift
+                ;;
+            --no-backup)
+                SKIP_BACKUP=true
+                shift
+                ;;
+            --dry-run)
+                DRY_RUN=true
+                shift
+                ;;
+            -h|--help)
+                echo "Usage: ${0} [options]"
+                echo ""
+                echo "Options:"
+                echo "  --skip-confirm    Skip confirmation prompts (dangerous!)"
+                echo "  --no-backup       Skip backup offer"
+                echo "  --dry-run         Show what would be done without making changes"
+                echo "  -h, --help        Show this help message"
+                echo ""
+                echo "This script will:"
+                echo "  1. Optionally backup data/ and projects/ directories"
+                echo "  2. Shutdown all VMs"
+                echo "  3. Remove all VM configurations"
+                echo "  4. Remove all VDE Docker images"
+                echo "  5. Remove Docker network and volumes"
+                echo "  6. Remove SSH config entries"
+                echo "  7. Remove VDE directories (data, logs, env-files)"
+                echo ""
+                echo "After running this script, you can safely:"
+                echo "  cd .. && rm -rf $(basename "${VDE_ROOT_DIR}")"
+                exit ${VDE_SUCCESS}
+                ;;
+            *)
+                echo "Unknown option: ${1}"
+                echo "Use --help for usage information"
+                exit ${VDE_ERR_GENERAL}
+                ;;
+        esac
+    done
+
+    #===========================================================================
+    # Confirmation
+    #===========================================================================
+
+    echo ""
+    echo "============================================================================="
+    echo "                    VDE COMPLETE UNINSTALL"
+    echo "============================================================================="
+    echo ""
+    print_warning "This will remove:"
+    echo "  - All VMs and their configurations"
+    echo "  - All VDE Docker images"
+    echo "  - Docker network and volumes"
+    echo "  - SSH config entries for VDE"
+    echo "  - data/, logs/, env-files/ directories"
+    echo ""
+    print_warning "This action is NOT reversible!"
+    echo "  All VDE configuration will be permanently deleted."
+    echo "  (You can re-install VDE, but it will be a fresh install)"
+    echo ""
+    print_info "VDE project: ${VDE_ROOT_DIR}"
+    echo ""
+
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_dry_run
+    fi
+
+    # First mandatory confirmation
+    if ! ask_yes_no "Are you sure you want to completely remove VDE?" "n"; then
+        print_info "Uninstall cancelled"
+        exit ${VDE_SUCCESS}
+    fi
+
+    # Second mandatory confirmation (unless --skip-confirm is used)
+    if [[ "${SKIP_CONFIRM}" != "true" ]]; then
+        if ! ask_yes_no "This is your last chance - are you REALLY sure?" "n"; then
+            print_info "Uninstall cancelled"
+            exit ${VDE_SUCCESS}
+        fi
+    fi
+
+    #===========================================================================
+    # Backup (if requested)
+    #===========================================================================
+
+    if [[ "${SKIP_BACKUP}" != "true" ]]; then
+        offer_backup
+    fi
+
+    #===========================================================================
+    # Execute uninstall steps
+    #===========================================================================
+
+    echo ""
+    echo "============================================================================="
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_info "DRY RUN - Showing what would be done..."
+    else
+        print_info "Starting VDE uninstall..."
+    fi
+    echo "============================================================================="
+
+    shutdown_all_vms
+    remove_all_vms
+    remove_docker_images
+    remove_docker_resources
+    remove_ssh_config_entries
+    remove_vde_directories
+
+    #===========================================================================
+    # Final message
+    #===========================================================================
+
+    echo ""
+    echo "============================================================================="
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_success "DRY RUN COMPLETE - No changes were made"
+    else
+        print_success "VDE uninstall complete!"
+    fi
+    echo "============================================================================="
+    echo ""
+
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_info "To run the actual uninstall, run:"
+        echo "  vde nuke"
+        echo ""
+        print_info "Or with backup:"
+        echo "  vde nuke --no-backup"
+        echo ""
+    else
+        if [[ -d "${BACKUP_LOCATION}/${UNINSTALL_BACKUP_DIR}" ]]; then
+            print_info "Your backups are saved in:"
+            echo "  ${BACKUP_LOCATION}/${UNINSTALL_BACKUP_DIR}/"
+            echo ""
+        fi
+
+        print_info "To remove the VDE project directory, run:"
+        echo "  cd .."
+        echo "  rm -rf $(basename "${VDE_ROOT_DIR}")"
+        echo ""
+    fi
+
+    print_success "Thanks for using VDE!"
+    echo ""
+}
+
+main "${@}"

@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "theme": "deep-space",
+  "seedMode": "custom",
+  "seed": "active-developer-v1",
+  "arrangement": "galaxy",
+  "nodeSize": "stars",
+  "nodeColorMode": "language",
+  "activityEffect": "comet",
+  "activityWindow": "7d",
+  "activityDetail": "simple",
+  "activityConnections": false,
+  "activityMetricDate": "2026-01-08T12:00:00Z",
+  "legend": true,
+  "starfield": {
+    "mode": "space",
+    "density": 40,
+    "brightness": 0.7,
+    "depth": 0.8,
+    "twinkle": true
+  }
+}

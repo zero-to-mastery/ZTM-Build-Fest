@@ -1,0 +1,36 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE-BOOTSTRAP (Version-Agnostic)
+set -e
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+# Determine VDE root directory
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+VDE_SSH_DIR="$HOME/.ssh/vde"
+VDE_KEY="$VDE_SSH_DIR/vde_student"
+
+echo "==> VDE: Initiating The Sovereign Baseline Bootstrap..."
+
+if [[ ! -d "$VDE_SSH_DIR" ]]; then
+    mkdir -p "$VDE_SSH_DIR"
+    chmod 700 "$VDE_SSH_DIR"
+fi
+
+if [[ ! -f "$VDE_KEY" ]]; then
+    ssh-keygen -t ed25519 -f "$VDE_KEY" -N "" -q
+    chmod 600 "$VDE_KEY"
+    echo "  [+] Generated new VDE Identity: vde_student"
+else
+    echo "  [-] VDE Identity (vde_student) already exists."
+fi
+
+# Refresh the Passport in the project root
+mkdir -p "${VDE_ROOT_DIR}/public-ssh-keys"
+cp "${VDE_KEY}.pub" "${VDE_ROOT_DIR}/public-ssh-keys/vde_student.pub"
+
+echo "==> VDE: Bootstrap Complete."
+

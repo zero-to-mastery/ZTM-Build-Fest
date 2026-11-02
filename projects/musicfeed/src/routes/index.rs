@@ -1,6 +1,7 @@
 // src/routes/index.rs
 
 use crate::AppState;
+use crate::database::DatabaseError;
 use crate::utils::error_chain_fmt;
 use axum::{
     extract::State,
@@ -12,8 +13,8 @@ use tera::Context;
 
 #[derive(thiserror::Error)]
 pub enum IndexError {
-    #[error("shared state lock poisoned")]
-    StateLock,
+    #[error("database operation failed")]
+    Database(#[from] DatabaseError),
     #[error("template rendering failed")]
     Template(#[from] tera::Error),
 }
@@ -33,9 +34,9 @@ impl IntoResponse for IndexError {
 
 #[debug_handler]
 pub async fn get_index_page(State(state): State<AppState>) -> Result<Html<String>, IndexError> {
-    let rotation_entries = state.rotation_entries.lock().await;
+    let rotation_entries = state.database.list().await?;
     let mut context = Context::new();
-    context.insert("rotation_entries", &*rotation_entries);
+    context.insert("rotation_entries", &rotation_entries);
 
     let body = Html(state.templates.render("index.html", &context)?);
 

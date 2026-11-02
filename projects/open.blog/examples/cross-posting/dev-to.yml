@@ -1,0 +1,36 @@
+# Copy this file to .github/workflows/cross-post-dev.yml.
+# Change "Deploy" below to the exact name of your successful deployment workflow.
+name: Cross-post latest article to DEV
+
+on:
+  workflow_run:
+    workflows: ["Deploy"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      post_url:
+        description: Optional canonical URL to process instead of the newest feed item
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  create-or-update-draft:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Create or update the DEV article
+        run: node examples/cross-posting/dev-to.mjs
+        env:
+          SITE_URL: https://your-domain.example
+          DEVTO_API_KEY: ${{ secrets.DEVTO_API_KEY }}
+          POST_URL: ${{ inputs.post_url }}

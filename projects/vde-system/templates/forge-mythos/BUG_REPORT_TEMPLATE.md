@@ -1,0 +1,16 @@
+# BUG REPORT TEMPLATE
+<!-- @shared-law (Sovereign Law) -->
+## Heartbeat Status
+Paste health check / smoke test output here.
+
+## Steps to Reproduce
+1. ...
+2. ...
+3. ...
+
+## Expected vs. Actual
+Expected: ...
+Actual: ...
+
+## Environment
+OS, versions, relevant details.

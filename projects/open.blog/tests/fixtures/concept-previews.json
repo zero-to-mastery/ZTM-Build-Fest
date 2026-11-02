@@ -1,0 +1,445 @@
+{
+  "about": "Shared concept preview fixtures (ADR 0174). `query` is a small atlas-query.json in the shape crates/openblog-core writes (checked against a real projection by crates/openblog-core/tests/concept_links.rs); `cases` are what web/components/ob-concept-previews.js `previewModel` must say for each id, read by tests/web/concept-previews.test.mjs. `contract` lists the fields the component reads, which the Rust test checks the real projection writes.",
+  "contract": {
+    "top": [
+      "format",
+      "formatVersion",
+      "entries",
+      "edges",
+      "sources"
+    ],
+    "entry": [
+      "id",
+      "kindLabel",
+      "label",
+      "url",
+      "preview",
+      "previewClipped",
+      "source",
+      "out",
+      "in",
+      "moreOut",
+      "moreIn"
+    ],
+    "edge": [
+      "id",
+      "from",
+      "to",
+      "label",
+      "inverseLabel",
+      "assertedByText",
+      "confidenceText",
+      "standingText",
+      "uncertainty",
+      "uncertaintyClipped",
+      "evidence"
+    ],
+    "evidence": [
+      "text"
+    ],
+    "source": [
+      "id",
+      "text"
+    ]
+  },
+  "query": {
+    "format": "openblog-atlas-query",
+    "formatVersion": 1,
+    "limits": {
+      "maxTextChars": 240,
+      "maxListedEdges": 50,
+      "maxTrailDepth": 3,
+      "maxTrailSteps": 50
+    },
+    "entries": [
+      {
+        "id": "plato",
+        "kind": "person",
+        "kindLabel": "Person",
+        "label": "Plato",
+        "url": "/atlas/plato/",
+        "preview": "An Athenian philosopher.",
+        "previewClipped": true,
+        "out": [
+          "r-authored"
+        ]
+      },
+      {
+        "id": "republic",
+        "kind": "work",
+        "kindLabel": "Work",
+        "label": "Republic",
+        "url": "/atlas/republic/",
+        "source": "plato-republic",
+        "in": [
+          "r-authored"
+        ]
+      },
+      {
+        "id": "cave",
+        "kind": "concept",
+        "kindLabel": "Concept",
+        "label": "Allegory of the cave",
+        "url": "/atlas/cave/",
+        "preview": "Prisoners and shadows."
+      },
+      {
+        "id": "ethics",
+        "kind": "concept",
+        "kindLabel": "Concept",
+        "label": "Éthique — 倫理",
+        "url": "/atlas/ethics/",
+        "preview": "Über die Sitten 🏛️.",
+        "aliases": [
+          "倫理"
+        ]
+      },
+      {
+        "id": "hub",
+        "kind": "concept",
+        "kindLabel": "Concept",
+        "label": "Hub",
+        "url": "/atlas/hub/",
+        "out": [
+          "h1",
+          "h2",
+          "h3",
+          "h4",
+          "gone"
+        ],
+        "moreOut": 3
+      },
+      {
+        "id": "stray",
+        "kind": "concept",
+        "kindLabel": "Concept",
+        "label": "Stray",
+        "url": "/atlas/stray/",
+        "out": [
+          "r-authored"
+        ]
+      },
+      {
+        "id": "Bad Id",
+        "kind": "concept",
+        "kindLabel": "Concept",
+        "label": "Bad",
+        "url": "/atlas/bad/"
+      },
+      {
+        "id": "offsite",
+        "kind": "concept",
+        "kindLabel": "Concept",
+        "label": "Offsite",
+        "url": "https://evil.test/atlas/offsite/"
+      }
+    ],
+    "edges": [
+      {
+        "id": "r-authored",
+        "kind": "authored",
+        "from": "plato",
+        "to": "republic",
+        "label": "authored",
+        "inverseLabel": "authored by",
+        "assertedBy": {
+          "kind": "author"
+        },
+        "assertedByText": "Site Author (the site author)",
+        "confidence": "plausible",
+        "confidenceText": "Plausible",
+        "standing": "contested",
+        "standingText": "Contested: 1 recorded dissent.",
+        "dissents": 1,
+        "evidence": [
+          {
+            "source": "plato-republic",
+            "evidence": {
+              "source": "plato-republic"
+            },
+            "text": "Politeia, p. 514-520"
+          }
+        ],
+        "url": "/atlas/plato/#r-authored",
+        "uncertainty": "The dating is unsettled.",
+        "uncertaintyClipped": false
+      },
+      {
+        "id": "h1",
+        "kind": "authored",
+        "from": "hub",
+        "to": "cave",
+        "label": "authored",
+        "inverseLabel": "authored by",
+        "assertedBy": {
+          "kind": "author"
+        },
+        "assertedByText": "Site Author (the site author)",
+        "confidence": "plausible",
+        "confidenceText": "Plausible",
+        "standing": "asserted",
+        "standingText": "Asserted. No disagreement is recorded here; that is not a claim that it is agreed.",
+        "dissents": 0,
+        "evidence": [
+          {
+            "source": "plato-republic",
+            "evidence": {
+              "source": "plato-republic"
+            },
+            "text": "Politeia, p. 514-520"
+          }
+        ],
+        "url": "/atlas/hub/#h1"
+      },
+      {
+        "id": "h2",
+        "kind": "authored",
+        "from": "hub",
+        "to": "cave",
+        "label": "authored",
+        "inverseLabel": "authored by",
+        "assertedBy": {
+          "kind": "author"
+        },
+        "assertedByText": "Site Author (the site author)",
+        "confidence": "plausible",
+        "confidenceText": "Plausible",
+        "standing": "asserted",
+        "standingText": "Asserted. No disagreement is recorded here; that is not a claim that it is agreed.",
+        "dissents": 0,
+        "evidence": [
+          {
+            "source": "plato-republic",
+            "evidence": {
+              "source": "plato-republic"
+            },
+            "text": "Politeia, p. 514-520"
+          }
+        ],
+        "url": "/atlas/hub/#h2"
+      },
+      {
+        "id": "h3",
+        "kind": "authored",
+        "from": "hub",
+        "to": "cave",
+        "label": "authored",
+        "inverseLabel": "authored by",
+        "assertedBy": {
+          "kind": "author"
+        },
+        "assertedByText": "Site Author (the site author)",
+        "confidence": "plausible",
+        "confidenceText": "Plausible",
+        "standing": "asserted",
+        "standingText": "Asserted. No disagreement is recorded here; that is not a claim that it is agreed.",
+        "dissents": 0,
+        "evidence": [
+          {
+            "source": "plato-republic",
+            "evidence": {
+              "source": "plato-republic"
+            },
+            "text": "Politeia, p. 514-520"
+          }
+        ],
+        "url": "/atlas/hub/#h3"
+      },
+      {
+        "id": "h4",
+        "kind": "authored",
+        "from": "hub",
+        "to": "cave",
+        "label": "authored",
+        "inverseLabel": "authored by",
+        "assertedBy": {
+          "kind": "author"
+        },
+        "assertedByText": "Site Author (the site author)",
+        "confidence": "plausible",
+        "confidenceText": "Plausible",
+        "standing": "asserted",
+        "standingText": "Asserted. No disagreement is recorded here; that is not a claim that it is agreed.",
+        "dissents": 0,
+        "evidence": [
+          {
+            "source": "plato-republic",
+            "evidence": {
+              "source": "plato-republic"
+            },
+            "text": "Politeia, p. 514-520"
+          }
+        ],
+        "url": "/atlas/hub/#h4"
+      }
+    ],
+    "sources": [
+      {
+        "id": "plato-republic",
+        "text": "Politeia"
+      }
+    ],
+    "terms": [
+      {
+        "term": "plato",
+        "entries": [
+          "plato"
+        ]
+      }
+    ]
+  },
+  "cases": [
+    {
+      "name": "a person with a clipped summary and a contested, uncertain relationship",
+      "id": "plato",
+      "expected": {
+        "id": "plato",
+        "url": "/atlas/plato/",
+        "label": "Plato",
+        "kindLabel": "Person",
+        "summary": "An Athenian philosopher.",
+        "clipped": true,
+        "source": null,
+        "relationships": [
+          {
+            "assertedBy": "Site Author (the site author)",
+            "confidence": "Plausible",
+            "standing": "Contested: 1 recorded dissent.",
+            "uncertainty": "The dating is unsettled.",
+            "uncertaintyClipped": false,
+            "evidence": [
+              "Politeia, p. 514-520"
+            ],
+            "text": "Plato authored Republic"
+          }
+        ],
+        "more": 0
+      }
+    },
+    {
+      "name": "a work says what it stands for, and its relationship reads from its own side",
+      "id": "republic",
+      "expected": {
+        "id": "republic",
+        "url": "/atlas/republic/",
+        "label": "Republic",
+        "kindLabel": "Work",
+        "summary": null,
+        "clipped": false,
+        "source": "Politeia",
+        "relationships": [
+          {
+            "assertedBy": "Site Author (the site author)",
+            "confidence": "Plausible",
+            "standing": "Contested: 1 recorded dissent.",
+            "uncertainty": "The dating is unsettled.",
+            "uncertaintyClipped": false,
+            "evidence": [
+              "Politeia, p. 514-520"
+            ],
+            "text": "Republic authored by Plato"
+          }
+        ],
+        "more": 0
+      }
+    },
+    {
+      "name": "an entry with no relationships",
+      "id": "cave",
+      "expected": {
+        "id": "cave",
+        "url": "/atlas/cave/",
+        "label": "Allegory of the cave",
+        "kindLabel": "Concept",
+        "summary": "Prisoners and shadows.",
+        "clipped": false,
+        "source": null,
+        "relationships": [],
+        "more": 0
+      }
+    },
+    {
+      "name": "non-ASCII and multibyte text is kept whole",
+      "id": "ethics",
+      "expected": {
+        "id": "ethics",
+        "url": "/atlas/ethics/",
+        "label": "Éthique — 倫理",
+        "kindLabel": "Concept",
+        "summary": "Über die Sitten 🏛️.",
+        "clipped": false,
+        "source": null,
+        "relationships": [],
+        "more": 0
+      }
+    },
+    {
+      "name": "only two relationships are listed, the rest counted, a missing one never counted",
+      "id": "hub",
+      "expected": {
+        "id": "hub",
+        "url": "/atlas/hub/",
+        "label": "Hub",
+        "kindLabel": "Concept",
+        "summary": null,
+        "clipped": false,
+        "source": null,
+        "relationships": [
+          {
+            "assertedBy": "Site Author (the site author)",
+            "confidence": "Plausible",
+            "standing": "Asserted. No disagreement is recorded here; that is not a claim that it is agreed.",
+            "uncertainty": "",
+            "uncertaintyClipped": false,
+            "evidence": [
+              "Politeia, p. 514-520"
+            ],
+            "text": "Hub authored Allegory of the cave"
+          },
+          {
+            "assertedBy": "Site Author (the site author)",
+            "confidence": "Plausible",
+            "standing": "Asserted. No disagreement is recorded here; that is not a claim that it is agreed.",
+            "uncertainty": "",
+            "uncertaintyClipped": false,
+            "evidence": [
+              "Politeia, p. 514-520"
+            ],
+            "text": "Hub authored Allegory of the cave"
+          }
+        ],
+        "more": 5
+      }
+    },
+    {
+      "name": "a listed relationship that does not touch the entry is ignored",
+      "id": "stray",
+      "expected": {
+        "id": "stray",
+        "url": "/atlas/stray/",
+        "label": "Stray",
+        "kindLabel": "Concept",
+        "summary": null,
+        "clipped": false,
+        "source": null,
+        "relationships": [],
+        "more": 0
+      }
+    },
+    {
+      "name": "an entry the file does not have",
+      "id": "nobody",
+      "expected": null
+    },
+    {
+      "name": "an id that is not a slug is not an entry",
+      "id": "Bad Id",
+      "expected": null
+    },
+    {
+      "name": "an address off the site is not an entry",
+      "id": "offsite",
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+diff --git a/tests/unit/bootstrap.test.zsh b/tests/unit/bootstrap.test.zsh
+index 53a294a..da150a1 100644
+--- a/tests/unit/bootstrap.test.zsh
++++ b/tests/unit/bootstrap.test.zsh
+@@ -487,19 +487,19 @@ test_fresh_install_clones_stable() {
+     git_log="$(mktemp)"
+ 
+     rm -f "${MOCK_BIN}/git"
+-    cat > "${MOCK_BIN}/git" <<'MOCK'
++    # Unquoted heredoc: ${git_log} and ${fake_home} expand now; the mock's own
++    # positional parameters are escaped (\$@, \$1) so they expand when it runs.
++    # (Avoids `sed -i ''`, which is BSD-only and fails on GNU sed / Linux.)
++    cat > "${MOCK_BIN}/git" <<MOCK
+ #!/usr/bin/env bash
+-echo "git $@" >> "MOCK_LOG_PLACEHOLDER"
+-if [[ "$1" == "clone" ]]; then
+-    mkdir -p "MOCK_HOME_PLACEHOLDER/VDE/.git"
++echo "git \$@" >> "${git_log}"
++if [[ "\$1" == "clone" ]]; then
++    mkdir -p "${fake_home}/VDE/.git"
+     echo "Cloned"
+     exit 0
+ fi
+ exit 0
+ MOCK
+-    # Replace placeholders (can't use them inside a quoted heredoc)
+-    sed -i '' "s|MOCK_LOG_PLACEHOLDER|${git_log}|g" "${MOCK_BIN}/git"
+-    sed -i '' "s|MOCK_HOME_PLACEHOLDER|${fake_home}|g" "${MOCK_BIN}/git"
+     chmod +x "${MOCK_BIN}/git"
+ 
+     # uname needed for platform detection

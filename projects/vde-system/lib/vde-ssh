@@ -1,0 +1,849 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE SSH Library
+# SSH key management and configuration for VDE
+# Source this library with: source ./lib/vde-ssh
+#
+# This library provides:
+# - SSH key detection, generation, and validation
+# - SSH config management for VM-to-VM communication
+# - SSH known_hosts management
+# - SSH agent integration
+#
+# Dependencies:
+#   - vde-core (sets VDE_ROOT_DIR and core constants)
+#   - vde-errors (error handling)
+
+# =============================================================================
+# SOURCE GUARD
+# =============================================================================
+
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+if [[ "${_VDE_SSH_LOADED:-}" = "1" ]] ; then
+    return 0 2>/dev/null || exit 0
+fi
+_VDE_SSH_LOADED=1
+
+# =============================================================================
+# DEPENDENCIES - VDE_ROOT_DIR MUST BE SET FIRST
+# =============================================================================
+
+# vde-core is the source of truth for VDE_ROOT_DIR
+# Always source vde-core first to establish VDE_ROOT_DIR
+. "${VDE_ROOT_DIR}/lib/vde-core"
+
+# Now VDE_ROOT_DIR is guaranteed to be set from vde-core
+# Source remaining dependencies
+. "${VDE_ROOT_DIR}/lib/vde-shell-compat"
+. "${VDE_ROOT_DIR}/lib/vde-constants"
+. "${VDE_ROOT_DIR}/lib/vde-errors"
+. "${VDE_ROOT_DIR}/lib/vde-log"
+. "${VDE_ROOT_DIR}/lib/vde-naming"
+. "${VDE_ROOT_DIR}/lib/vde-security"
+
+# =============================================================================
+# SSH CONFIGURATION
+# =============================================================================
+
+# SSH keys directory for public keys (allow override for tests)
+VDE_SSH_KEYS_DIR="${VDE_SSH_KEYS_DIR:-${VDE_ROOT_DIR}/public-ssh-keys}"
+
+# Lock files for atomic operations
+SSH_CONFIG_LOCK="${VDE_CACHE_DIR:-${VDE_ROOT_DIR}/.cache}/.ssh_config.lock"
+
+# =============================================================================
+# SSH KEY SECURITY FUNCTIONS
+# =============================================================================
+
+# Validate that a file is actually a public key (not a private key)
+# Args: <filepath>
+# Returns: VDE_SUCCESS (0) if valid public key, VDE_ERR_INVALID_INPUT (2) otherwise
+validate_public_key_file() {
+    local filepath="${1}"
+
+    # Must end with .pub
+    case "${filepath}" in
+        *.pub) ;;
+        *)
+            _error "SECURITY: File does not have .pub extension: ${filepath}"
+            return ${VDE_ERR_INVALID_INPUT}
+            ;;
+    esac
+
+    # Must exist and be readable
+    if [[ ! -f "${filepath}" ]] || [[ ! -r "${filepath}" ]] ; then
+        _error "SECURITY: File not readable: ${filepath}"
+        return ${VDE_ERR_INVALID_INPUT:-2}
+    fi
+
+    # Check file content - public keys start with key type
+    local first_line
+    first_line=$(head -1 "${filepath}" 2>/dev/null)
+
+    case "${first_line}" in
+        ssh-rsa*|ssh-ed25519*|ssh-ecdsa*|ecdsa-sha2-*|sk-ssh-ed25519*|sk-ecdsa-sha2-*)
+            ;;
+        *)
+            _error "SECURITY: File does not appear to be a valid public key: ${filepath}"
+            return ${VDE_ERR_INVALID_INPUT}
+            ;;
+    esac
+
+    # Ensure it's NOT a private key
+    if grep -q "PRIVATE KEY" "${filepath}" 2>/dev/null; then
+        _error "SECURITY: CRITICAL - File contains private key data: ${filepath}"
+        return ${VDE_ERR_INVALID_INPUT}
+    fi
+
+    return ${VDE_SUCCESS}
+}
+
+# Check for private keys in public directory
+# Args: <directory>
+# Returns: VDE_SUCCESS (0) if clean, VDE_ERR_PERMISSION (4) if private keys found
+check_for_private_keys_in_public_dir() {
+    local dir="${1}"
+    local found_private=false
+
+    if [[ ! -d "${dir}" ]] ; then
+        return ${VDE_SUCCESS}
+    fi
+
+    _enable_nullglob
+    local file
+    for file in "${dir}"/*; do
+        [[ -f "${file}" ]] || continue
+
+        local basename
+        basename=$(basename "${file}")
+
+        case "${basename}" in
+            .keep|.gitignore) continue ;;
+        esac
+
+        case "${basename}" in
+            vde_student.pub) ;;
+            *)
+                _error "SECURITY BLOCKADE: Unauthorized file in public keys directory: ${basename}"
+                found_private=true
+                ;;
+        esac
+
+        if grep -q "PRIVATE KEY" "${file}" 2>/dev/null; then
+            _error "SECURITY CRITICAL: Private key detected in public directory: ${basename}"
+            found_private=true
+        fi
+    done
+    _disable_nullglob
+
+    if [[ "${found_private}" = "true" ]] ; then
+        _error "SECURITY: Private keys should NEVER be in the public-ssh-keys directory!"
+        return ${VDE_ERR_PERMISSION}
+    fi
+
+    return ${VDE_SUCCESS}
+}
+
+# =============================================================================
+# SSH KEY MANAGEMENT FUNCTIONS
+# =============================================================================
+
+# Detect available SSH private keys
+# Returns: Outputs key filepath to stdout, VDE_SUCCESS (0) if found
+detect_ssh_keys() {
+    if [[ -f "${VDE_SSH_IDENTITY}" ]] && [[ -f "${VDE_SSH_IDENTITY_PUB}" ]] ; then
+        echo "${VDE_SSH_IDENTITY}"
+        return ${VDE_SUCCESS}
+    fi
+    return ${VDE_ERR_NOT_FOUND}
+}
+
+# Get primary SSH key filepath
+# Returns: Outputs key filepath to stdout
+get_primary_ssh_key() {
+    if [[ -f "${VDE_SSH_IDENTITY}" ]] ; then
+        echo "${VDE_SSH_IDENTITY}"
+        return ${VDE_SUCCESS}
+    fi
+    return ${VDE_ERR_NOT_FOUND}
+}
+
+# Get public key filepath for a private key
+# Args: <private_key>
+# Returns: Outputs public key filepath to stdout
+get_ssh_pubkey() {
+    local private_key="${1}"
+
+    if [[ -f "${private_key}.pub" ]] ; then
+        echo "${private_key}.pub"
+        return ${VDE_SUCCESS}
+    fi
+    return ${VDE_ERR_NOT_FOUND}
+}
+
+# Get SSH identity file path
+get_ssh_identity_file() {
+    echo "${VDE_SSH_IDENTITY}"
+}
+
+# Sync SSH public keys to VDE's build context
+# Returns: VDE_SUCCESS (0) on success
+sync_ssh_keys_to_vde() {
+    mkdir -p "${VDE_SSH_KEYS_DIR}"
+
+    if [[ ! -f "${VDE_SSH_IDENTITY_PUB}" ]] ; then
+        _error "VDE SSH public key not found"
+        return ${VDE_ERR_NOT_FOUND}
+    fi
+
+    local dest_path="${VDE_SSH_KEYS_DIR}/vde_student.pub"
+
+    if ! validate_public_key_file "${VDE_SSH_IDENTITY_PUB}"; then
+        _error "SECURITY: Invalid VDE public key file"
+        return ${VDE_ERR_INVALID_INPUT}
+    fi
+
+    cp "${VDE_SSH_IDENTITY_PUB}" "${dest_path}"
+    chmod 644 "${dest_path}"
+
+    # Inject the key into the global .env file (Option B)
+    local env_file="${VDE_ROOT_DIR}/.env"
+    if [[ -f "${env_file}" ]]; then
+        local pub_key="$(cat "${dest_path}")"
+        # Clean existing entry to prevent duplicates
+        if [[ "$(uname)" == "Darwin" ]]; then
+            sed -i '' '/^VDE_AUTHORIZED_KEY=/d' "${env_file}"
+        else
+            sed -i '/^VDE_AUTHORIZED_KEY=/d' "${env_file}"
+        fi
+        echo "VDE_AUTHORIZED_KEY=\"${pub_key}\"" >> "${env_file}"
+    fi
+
+    check_for_private_keys_in_public_dir "${VDE_SSH_KEYS_DIR}"
+
+    if [[ ! -f "${VDE_SSH_KEYS_DIR}/.keep" ]] ; then
+        touch "${VDE_SSH_KEYS_DIR}/.keep"
+    fi
+
+    # VDE-CASCADE-01: Smelt Guard
+    # Trigger a base image rebuild to incorporate the refreshed key state.
+    # The VDE_IN_REBUILD guard prevents an infinite recursion loop:
+    #   vde ssh-sync → rebuild base → sync_ssh_keys_to_vde → rebuild base → …
+    # When VDE_IN_REBUILD=1 (set by bin/vde-rebuild at startup), the trigger
+    # is skipped because we are already inside a rebuild cycle.
+    if [[ -z "${VDE_IN_REBUILD}" ]] && [[ "${VDE_TEST_MODE:-0}" != "1" ]]; then
+        log_info "Key synced. Triggering base image rebuild (VDE-CASCADE-01)..."
+        "${VDE_ROOT_DIR}/bin/vde" rebuild base 2>/dev/null || \
+            _warn "Base image rebuild failed after key sync — manual 'vde rebuild base' may be required."
+    fi
+
+    return ${VDE_SUCCESS}
+}
+
+# Regenerate VDE SSH keys (force new keys)
+# Returns: VDE_SUCCESS (0) on success
+vde_ssh_regenerate_keys() {
+    log_info "Forcing regeneration of VDE SSH keys..."
+    
+    # Backup old keys just in case
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    if [[ -f "${VDE_SSH_IDENTITY}" ]] ; then
+        cp "${VDE_SSH_IDENTITY}" "${VDE_SSH_IDENTITY}.bak.${timestamp}"
+        cp "${VDE_SSH_IDENTITY_PUB}" "${VDE_SSH_IDENTITY_PUB}.bak.${timestamp}"
+    fi
+    
+    # Remove old keys
+    rm -f "${VDE_SSH_IDENTITY}" "${VDE_SSH_IDENTITY_PUB}"
+    
+    # Generate new ones
+    if validate_or_create_ssh_key; then
+        # If agent is running, we need to add the new key
+        if ssh_agent_is_running; then
+            ssh-add "${VDE_SSH_IDENTITY}" 2>/dev/null
+        fi
+        return ${VDE_SUCCESS}
+    fi
+    
+    return ${VDE_ERR_GENERAL}
+}
+
+# Validate or create SSH key
+# Returns: VDE_SUCCESS (0) on success
+validate_or_create_ssh_key() {
+    # Check if VDE SSH key exists
+    if [[ -f "${VDE_SSH_IDENTITY}" ]] && [[ -f "${VDE_SSH_IDENTITY_PUB}" ]] ; then
+        # Validate the key
+        if ssh-keygen -l -f "${VDE_SSH_IDENTITY}" >/dev/null 2>&1; then
+            return ${VDE_SUCCESS}
+        fi
+    fi
+
+    # Generate new key
+    mkdir -p "${VDE_SSH_DIR}"
+    chmod 700 "${VDE_SSH_DIR}"
+
+    log_info "Generating new VDE SSH key..."
+
+    if ssh-keygen -t ed25519 -f "${VDE_SSH_IDENTITY}" -N "" -C "vde@$(hostname)" 2>/dev/null; then
+        chmod 600 "${VDE_SSH_IDENTITY}"
+        chmod 644 "${VDE_SSH_IDENTITY_PUB}"
+        sync_ssh_keys_to_vde
+        return ${VDE_SUCCESS}
+    fi
+
+    log_error "Failed to generate SSH key"
+    return ${VDE_ERR_GENERAL}
+}
+
+# =============================================================================
+# SSH CONFIG MANAGEMENT
+# =============================================================================
+
+# Check if SSH config entry exists
+# Args: <host_alias>
+# Returns: VDE_SUCCESS (0) if exists
+ssh_config_has_entry() {
+    local host_alias="${1}"
+    local ssh_config="${VDE_SSH_CONFIG}"
+
+    if [[ ! -f "${ssh_config}" ]] ; then
+        return ${VDE_ERR_NOT_FOUND}
+    fi
+
+    if grep -q "^Host ${host_alias}$" "${ssh_config}" 2>/dev/null; then
+        return ${VDE_SUCCESS}
+    fi
+    return ${VDE_ERR_NOT_FOUND}
+}
+
+# Backup SSH config
+backup_ssh_config() {
+    local ssh_config="${VDE_SSH_CONFIG}"
+    local backup_file="${ssh_config}.vde-backup-$(date +%Y%m%d-%H%M%S)"
+
+    if [[ -f "${ssh_config}" ]] ; then
+        cp "${ssh_config}" "${backup_file}"
+    fi
+}
+
+# Merge SSH config entry
+merge_ssh_config_entry() {
+    local host_alias="${1}"
+    local ssh_port="${2}"
+    local display="${3}"
+    local identity_file="${4:-${VDE_SSH_IDENTITY}}"  # Default to VDE_SSH_IDENTITY if not provided
+
+    local ssh_config="${VDE_SSH_CONFIG}"
+    local temp_file
+    temp_file=$(mktemp "${ssh_config}.tmp.XXXXXX")
+
+    if [[ -z "${temp_file}" ]] ; then
+        _error "Failed to create temporary file"
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Remove the entire Host block for this alias (header + all indented body lines)
+    if [[ -f "${ssh_config}" ]] ; then
+        awk -v host="Host ${host_alias}" '
+            /^Host / { skip = (${0} == host) }
+            !skip { print }
+        ' "${ssh_config}" > "${temp_file}" 2>/dev/null || cp "${ssh_config}" "${temp_file}"
+    fi
+
+    local entry="
+Host ${host_alias}
+    HostName localhost
+    Port ${ssh_port}
+    User devuser
+    IdentityFile ${identity_file}
+    StrictHostKeyChecking no
+    UserKnownHostsFile ${VDE_SSH_KNOWN_HOSTS}
+    ForwardAgent yes
+    LogLevel ERROR"
+
+    mkdir -p "$(dirname "${ssh_config}")"
+
+    echo "${entry}" >> "${temp_file}"
+    chmod 600 "${temp_file}"
+
+    if ! mv "${temp_file}" "${ssh_config}"; then
+        _error "CRITICAL: Failed to update ${ssh_config} from ${temp_file}"
+        rm -f "${temp_file}" 2>/dev/null
+        return ${VDE_ERR_GENERAL}
+    fi
+    return ${VDE_SUCCESS}
+}
+
+# Add SSH config entry
+add_ssh_config_entry() {
+    local host_alias="${1}"
+    local ssh_port="${2}"
+    local display="${3}"
+    local identity_file="${4:-${VDE_SSH_IDENTITY}}"
+
+    local ssh_config="${VDE_SSH_CONFIG}"
+    local temp_file
+    temp_file=$(mktemp "${ssh_config}.tmp.XXXXXX")
+
+    if [[ -z "${temp_file}" ]] ; then
+        _error "Failed to create temporary file"
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Always copy existing content to maintain previous entries and the header
+    if [[ -f "${ssh_config}" ]] ; then
+        cp "${ssh_config}" "${temp_file}"
+    fi
+
+    local entry="
+Host ${host_alias}
+    HostName localhost
+    Port ${ssh_port}
+    User devuser
+    IdentityFile ${identity_file}
+    StrictHostKeyChecking no
+    UserKnownHostsFile ${VDE_SSH_KNOWN_HOSTS}
+    ForwardAgent yes
+    LogLevel ERROR"
+
+    echo "${entry}" >> "${temp_file}"
+    chmod 600 "${temp_file}"
+
+    if ! mv "${temp_file}" "${ssh_config}"; then
+        _error "CRITICAL: Failed to update ${ssh_config} from ${temp_file}"
+        rm -f "${temp_file}" 2>/dev/null
+        return ${VDE_ERR_GENERAL}
+    fi
+    return ${VDE_SUCCESS}
+}
+
+# Remove SSH config entry
+# Args: <host_alias>
+# Returns: VDE_SUCCESS (0) on success
+remove_ssh_config_entry() {
+    local host_alias="${1}"
+    local ssh_config="${VDE_SSH_CONFIG}"
+
+    if [[ ! -f "${ssh_config}" ]] ; then
+        _error "VDE SSH config file does not exist"
+        return ${VDE_ERR_NOT_FOUND}
+    fi
+
+    if ! ssh_config_has_entry "${host_alias}"; then
+        _error "VDE SSH config entry for '${host_alias}' does not exist"
+        return ${VDE_ERR_NOT_FOUND}
+    fi
+
+    backup_ssh_config
+
+    local temp_file
+    temp_file=$(mktemp "${ssh_config}.tmp.XXXXXX")
+
+    awk -v host="${host_alias}" '
+        /^Host / && ${2} == host { in_block=1; next }
+        in_block && /^[A-Za-z]/ { in_block=0 }
+        !in_block { print }
+    ' "${ssh_config}" > "${temp_file}"
+
+    chmod 600 "${temp_file}"
+
+    if ! mv "${temp_file}" "${ssh_config}"; then
+        _error "CRITICAL: Failed to update ${ssh_config} from ${temp_file}"
+        rm -f "${temp_file}" 2>/dev/null
+        return ${VDE_ERR_GENERAL}
+    fi
+    return ${VDE_SUCCESS}
+}
+
+# =============================================================================
+# SSH KNOWN HOSTS MANAGEMENT
+# =============================================================================
+
+# Remove known_hosts entries for a VM
+# Args: <vm_name> [<ssh_port>]
+# Returns: VDE_SUCCESS (0) on success
+remove_known_hosts_entry() {
+    local vm_name="${1}"
+    local ssh_port="${2}"
+    local known_hosts="${VDE_SSH_KNOWN_HOSTS}"
+    local removed=false
+
+    if [[ -z "${ssh_port}" ]] ; then
+        return ${VDE_ERR_INVALID_INPUT}
+    fi
+
+    if [[ ! -f "${known_hosts}" ]] ; then
+        return ${VDE_SUCCESS}
+    fi
+
+    local patterns=(
+        "[localhost]:${ssh_port}"
+        "[::1]:${ssh_port}"
+        "localhost:${ssh_port}"
+    )
+
+    if [[ -n "${vm_name}" ]] ; then
+        patterns+=("${vm_name}")
+    fi
+
+    for pattern in "${patterns[@]}"; do
+        if ssh-keygen -f "${known_hosts}" -R "${pattern}" 2>/dev/null; then
+            removed=true
+        fi
+    done
+
+    if [[ -f "${known_hosts}" ]] ; then
+        local temp_file
+        temp_file=$(mktemp "${known_hosts}.tmp.XXXXXX")
+        grep -v ":${ssh_port}" "${known_hosts}" > "${temp_file}" 2>/dev/null || true
+
+        if [[ -s "${temp_file}" ]] ; then
+            mv "${temp_file}" "${known_hosts}"
+            chmod 600 "${known_hosts}"
+        else
+            rm -f "${temp_file}"
+        fi
+    fi
+
+    return ${VDE_SUCCESS}
+}
+
+# =============================================================================
+# SSH AGENT FUNCTIONS
+# =============================================================================
+
+# Check if SSH agent is running
+# Returns: 0 if running, 1 otherwise
+ssh_agent_is_running() {
+    # 1. Clear any inherited SSH variables to ensure total isolation
+    # This prevents VDE from accidentally using your personal agent.
+    unset SSH_AUTH_SOCK SSH_AGENT_PID
+
+    # 2. Load from VDE-specific environment file
+    if [[ -f "${VDE_SSH_AGENT_ENV}" ]] ; then
+        source "${VDE_SSH_AGENT_ENV}" >/dev/null 2>&1
+    fi
+
+    # 3. Check if the VDE-specific agent is valid
+    if [[ -n "${SSH_AUTH_SOCK:-}" ]] && [[ -S "${SSH_AUTH_SOCK}" ]] ; then
+        # If we have a PID, check if it's still alive
+        if [[ -n "${SSH_AGENT_PID:-}" ]] ; then
+            if ! ps -p "${SSH_AGENT_PID}" >/dev/null 2>&1; then
+                return 1
+            fi
+        fi
+        
+        # Verify socket is actually responding
+        if ssh-add -l >/dev/null 2>&1 || [[ ${?} -eq 1 ]] ; then
+            return 0
+        fi
+    fi
+
+    # Discovery fallback removed for total isolation
+    return 1
+}
+
+# Start SSH agent and add keys
+# Returns: VDE_SUCCESS (0) on success
+ensure_ssh_agent() {
+    local started_new=0
+    
+    if ! ssh_agent_is_running; then
+        # Ensure VDE_SSH_DIR exists
+        mkdir -p "${VDE_SSH_DIR}"
+        chmod 700 "${VDE_SSH_DIR}"
+
+        # Start new agent and save to environment file
+        (umask 077; ssh-agent -s > "${VDE_SSH_AGENT_ENV}")
+        source "${VDE_SSH_AGENT_ENV}" >/dev/null 2>&1
+        
+        export SSH_AUTH_SOCK
+        export SSH_AGENT_PID
+        started_new=1
+    fi
+
+    # Ensure VDE SSH keys exist (generates if missing)
+    if ! validate_or_create_ssh_key; then
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Ensure keys are loaded into the agent
+    local keys
+    keys=$(detect_ssh_keys)
+    local keys_added=0
+    
+    # Get currently loaded fingerprints to avoid redundant additions
+    local loaded_fingerprints
+    loaded_fingerprints=$(ssh-add -l 2>/dev/null || echo "")
+
+    local key
+    for key in ${keys}; do
+        [[ -n "${key}" ]] || continue
+        
+        # Only add if not already loaded (or if we just started a fresh agent)
+        if [[ "${started_new}" == "1" ]] || ! echo "${loaded_fingerprints}" | grep -q "$(ssh-keygen -lf "${key}" | awk '{print $2}')"; then
+            ssh-add "${key}" 2>/dev/null
+            keys_added=$((keys_added + 1))
+        fi
+    done
+
+    if [[ "${started_new}" == "1" ]] ; then
+        log_info "SSH agent started with ${keys_added} key(s)"
+    elif [[ ${keys_added} -gt 0 ]] ; then
+        log_info "Added ${keys_added} missing key(s) to existing SSH agent"
+    fi
+
+    return ${VDE_SUCCESS}
+}
+
+# Stop SSH agent and clean up environment
+# Returns: VDE_SUCCESS (0) on success
+stop_ssh_agent() {
+    # 1. Load from VDE-specific environment file
+    if [[ -f "${VDE_SSH_AGENT_ENV}" ]] ; then
+        source "${VDE_SSH_AGENT_ENV}" >/dev/null 2>&1
+    else
+        log_debug "No VDE SSH agent environment file found at ${VDE_SSH_AGENT_ENV}"
+        return ${VDE_SUCCESS}
+    fi
+
+    # 2. Kill the agent process if it exists
+    if [[ -n "${SSH_AGENT_PID:-}" ]] ; then
+        if ps -p "${SSH_AGENT_PID}" >/dev/null 2>&1; then
+            log_info "Stopping VDE SSH agent (PID: ${SSH_AGENT_PID})..."
+            kill "${SSH_AGENT_PID}" 2>/dev/null || kill -9 "${SSH_AGENT_PID}" 2>/dev/null
+        fi
+    fi
+
+    # 3. Clean up the socket if it exists
+    if [[ -n "${SSH_AUTH_SOCK:-}" ]] && [[ -S "${SSH_AUTH_SOCK}" ]] ; then
+        rm -f "${SSH_AUTH_SOCK}" 2>/dev/null
+    fi
+
+    # 4. Remove the environment file
+    rm -f "${VDE_SSH_AGENT_ENV}" 2>/dev/null
+
+    # 5. Unset environment variables in current shell
+    unset SSH_AUTH_SOCK
+    unset SSH_AGENT_PID
+
+    return ${VDE_SUCCESS}
+}
+
+# =============================================================================
+# SSH SETUP AND VERIFICATION
+# =============================================================================
+
+# Verify SSH configuration for a VM
+# Args: <vm_name> <ssh_port>
+# Returns: VDE_SUCCESS (0) if configured, error code otherwise
+verify_ssh_config() {
+    local vm_name="${1}"
+    local ssh_port="${2}"
+
+    if ! ssh_config_has_entry "${vm_name}"; then
+        _error "SSH config entry for '${vm_name}' not found"
+        return ${VDE_ERR_NOT_FOUND}
+    fi
+
+    local known_hosts_file="${VDE_SSH_KNOWN_HOSTS}"
+    if [[ ! -f "${known_hosts_file}" ]] ; then
+        _warn "Known hosts file not found: ${known_hosts_file}"
+        return ${VDE_ERR_NOT_FOUND}
+    fi
+
+    return ${VDE_SUCCESS}
+}
+
+# Setup SSH for VM-to-VM communication
+# Args: <vm_name> <ssh_port> [<display>]
+# Returns: VDE_SUCCESS (0) on success
+setup_ssh_for_vm() {
+    local vm_name="${1}"
+    local ssh_port="${2}"
+    local display="${3:-${vm_name}}"
+
+    # Generate or validate SSH key
+    if ! validate_or_create_ssh_key; then
+        _error "Failed to setup SSH key for VDE"
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Add SSH config entry - use vde- prefix for SSH host
+    local ssh_host
+    ssh_host=$(vde_get_ssh_host "${vm_name}")
+    if ! add_ssh_config_entry "${ssh_host}" "${ssh_port}" "${display}" "${VDE_SSH_IDENTITY}"; then
+        _error "Failed to add SSH config entry for '${ssh_host}'"
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Sync public key to VDE
+    if ! sync_ssh_keys_to_vde; then
+        _warn "Failed to sync SSH keys to VDE"
+    fi
+
+    log_success "SSH configured for VM: ${vm_name} (port: ${ssh_port})"
+    return ${VDE_SUCCESS}
+}
+
+# Ensure VDE SSH environment is properly configured
+# Returns: VDE_SUCCESS (0) if configured
+ensure_vde_ssh_environment() {
+    # Initialize security environment (network, permissions)
+    vde_security_init
+
+    # Create SSH directory
+    mkdir -p "${VDE_SSH_DIR}"
+    chmod 700 "${VDE_SSH_DIR}"
+
+    # Validate or create SSH key
+    if ! validate_or_create_ssh_key; then
+        _error "Failed to create VDE SSH key"
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Create SSH config directory if needed
+    mkdir -p "$(dirname "${VDE_SSH_CONFIG}")"
+    chmod 700 "$(dirname "${VDE_SSH_CONFIG}")"
+
+    # Create known_hosts file if needed
+    touch "${VDE_SSH_KNOWN_HOSTS}"
+    chmod 600 "${VDE_SSH_KNOWN_HOSTS}"
+
+    # Ensure SSH agent if needed
+    if [[ -z "${SSH_AUTH_SOCK:-}" ]] || [[ ! -S "${SSH_AUTH_SOCK}" ]] ; then
+        ensure_ssh_agent
+    fi
+
+    return ${VDE_SUCCESS}
+}
+
+# Alias for ensure_vde_ssh_environment (used by scripts)
+ensure_ssh_environment() {
+    ensure_vde_ssh_environment "${@}"
+}
+
+# generate_vm_ssh_config - Regenerate SSH config entries for all known VMs
+# Returns: VDE_SUCCESS (0) on success
+generate_vm_ssh_config() {
+    # Ensure SSH directory exists
+    mkdir -p "${VDE_SSH_DIR}"
+
+    # Truncate existing config and write header — this is a full regeneration, not an incremental merge
+    cat <<EOF > "${VDE_SSH_CONFIG}"
+# VDE (Virtual Development Environment) SSH Configuration
+# Sovereign Baseline: 1.5.6
+#
+# This file contains SSH config entries for all known language and service VMs.
+# Each VM type has a fixed SSH port assignment:
+# - Languages: 2200-2299
+# - Services: 2400-2499
+#
+# Do not edit this file manually - it is managed by vde ssh-setup generate
+EOF
+    chmod 600 "${VDE_SSH_CONFIG}"
+
+    log_info "Generating VM-to-VM SSH config..."
+
+    # Suppress incidental stdout from subshell calls inside the loop
+    exec 9>&1 >/dev/null
+
+    # Ensure VM types are loaded
+    if command -v load_vm_types >/dev/null 2>&1; then
+        load_vm_types
+    fi
+
+    if ! command -v get_all_vms >/dev/null 2>&1; then
+        _error "Dependency error: get_all_vms function not found"
+        exec 1>&9 9>&-
+        return ${VDE_ERR_DEPENDENCY}
+    fi
+
+    local vms
+    vms=($(get_all_vms))
+
+    local count=0
+    for vm in "${vms[@]}"; do
+        local port
+        port=$(get_vm_ssh_port "${vm}")
+        [[ -z "${port}" ]] && continue
+
+        local display
+        display=$(get_vm_info display "${vm}" 2>/dev/null || echo "${vm}")
+
+        # Use vde- prefix for SSH host alias
+        local ssh_host
+        ssh_host=$(vde_get_ssh_host "${vm}")
+
+        if add_ssh_config_entry "${ssh_host}" "${port}" "${display}" "${VDE_SSH_IDENTITY}" >/dev/null 2>&1; then
+            count=$((count + 1))
+        fi
+    done
+
+    exec 1>&9 9>&-
+    log_success "Generated SSH config for ${count} VMs"
+    return ${VDE_SUCCESS}
+}
+
+# Get SSH directory
+get_ssh_dir() {
+    echo "${VDE_SSH_DIR}"
+}
+
+# vde_get_host_ssh_sock - Discover the authoritative host SSH agent socket
+# Priority: 1. Live environment, 2. VDE agent environment file
+# Returns: Outputs socket path to stdout, VDE_SUCCESS (0) if found
+vde_get_host_ssh_sock() {
+    local host_sock="${SSH_AUTH_SOCK:-}"
+
+    # 1. Check live environment (and resolve symlinks to absolute paths)
+    if [[ -S "${host_sock}" ]]; then
+        # Use zsh expansion to resolve absolute path
+        echo "${host_sock:a}"
+        return ${VDE_SUCCESS}
+    fi
+
+    # 2. Attempt discovery from VDE agent environment file
+    if [[ -f "${VDE_SSH_AGENT_ENV}" ]]; then
+        local parsed_sock
+        parsed_sock=$(grep "^SSH_AUTH_SOCK=" "${VDE_SSH_AGENT_ENV}" | head -1 | sed 's/^SSH_AUTH_SOCK=\([^;]*\);.*/\1/')
+        if [[ -S "${parsed_sock}" ]]; then
+            echo "${parsed_sock:a}"
+            return ${VDE_SUCCESS}
+        fi
+    fi
+
+    return ${VDE_ERR_NOT_FOUND}
+}
+
+# vde_verify_agent_forwarding - Verify that SSH agent forwarding is active in a VM
+# Args: <vm_name>
+# Returns: VDE_SUCCESS (0) if active, VDE_ERR_SSH (7) otherwise
+vde_verify_agent_forwarding() {
+    local vm_name="${1}"
+    [[ -z "${vm_name}" ]] && return ${VDE_ERR_INVALID_INPUT}
+
+    local canonical_name=$(resolve_vm_name "${vm_name}" 2>/dev/null)
+    [[ -z "${canonical_name}" ]] && return ${VDE_ERR_NOT_FOUND}
+
+    # Perform physical verification via vde exec
+    # We check if SSH_AUTH_SOCK is set AND if ssh-add -l can communicate with it
+    local output
+    output=$(./bin/vde exec "${canonical_name}" "ssh-add -l" 2>&1)
+    local rc=$?
+
+    if [[ ${rc} -eq 0 ]]; then
+        vde_log_success "SSH Agent Forwarding active in ${canonical_name}" "ssh"
+        return ${VDE_SUCCESS}
+    elif [[ ${rc} -eq 1 ]]; then
+        # rc 1 means agent is reachable but has no identities
+        vde_log_warning "SSH Agent reachable in ${canonical_name} but has no identities" "ssh"
+        return ${VDE_SUCCESS}
+    else
+        vde_log_error "SSH Agent Forwarding failed in ${canonical_name}: ${output}" "ssh"
+        return ${VDE_ERR_SSH}
+    fi
+}

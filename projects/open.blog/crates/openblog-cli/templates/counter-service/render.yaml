@@ -1,0 +1,21 @@
+# Render blueprint for the open.blog view counter. Written by `openblog analytics service`.
+# Push this folder to a repository, then in Render choose "New > Blueprint" and point it here,
+# or create a Web Service by hand with the same settings.
+services:
+  - type: web
+    name: openblog-counter
+    runtime: node
+    plan: free
+    rootDir: .
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: MONGODB_URI
+        sync: false        # paste your MongoDB connection string in the Render dashboard
+      - key: EXPORT_SECRET
+        generateValue: true # Render makes a random secret; copy it for `openblog analytics pull`
+      - key: SITE_ORIGIN
+        value: SITE_URL
+      - key: MONGODB_DB
+        value: openblog

@@ -1,0 +1,744 @@
+{
+  "edges": [
+    {
+      "from": "fixture/project-0",
+      "geometry": {
+        "distance": 11185.37767072362
+      },
+      "id": "[\"fixture/project-0\",\"fixture/project-2\"]",
+      "metadata": {
+        "key": "0:2",
+        "shared": [
+          "HTML",
+          "Rust"
+        ],
+        "sharedLanguages": [
+          "HTML",
+          "Rust"
+        ],
+        "sharedRepositories": [],
+        "sharedTopics": []
+      },
+      "style": {
+        "primary": false
+      },
+      "to": "fixture/project-2"
+    },
+    {
+      "from": "fixture/project-0",
+      "geometry": {
+        "distance": 29458.29070243375
+      },
+      "id": "[\"fixture/project-0\",\"fixture/project-1\"]",
+      "metadata": {
+        "key": "0:3",
+        "shared": [
+          "HTML"
+        ],
+        "sharedLanguages": [
+          "HTML"
+        ],
+        "sharedRepositories": [],
+        "sharedTopics": []
+      },
+      "style": {
+        "primary": false
+      },
+      "to": "fixture/project-1"
+    },
+    {
+      "from": "fixture/project-3",
+      "geometry": {
+        "distance": 12082.445001735006
+      },
+      "id": "[\"fixture/project-3\",\"fixture/project-1\"]",
+      "metadata": {
+        "key": "1:3",
+        "shared": [
+          "HTML"
+        ],
+        "sharedLanguages": [
+          "HTML"
+        ],
+        "sharedRepositories": [],
+        "sharedTopics": []
+      },
+      "style": {
+        "primary": false
+      },
+      "to": "fixture/project-1"
+    },
+    {
+      "from": "fixture/project-0",
+      "geometry": {
+        "distance": 3816.285977830172
+      },
+      "id": "[\"fixture/project-0\",\"fixture/project-3\"]",
+      "metadata": {
+        "key": "0:1",
+        "shared": [
+          "HTML"
+        ],
+        "sharedLanguages": [
+          "HTML"
+        ],
+        "sharedRepositories": [],
+        "sharedTopics": []
+      },
+      "style": {
+        "primary": true
+      },
+      "to": "fixture/project-3"
+    },
+    {
+      "from": "fixture/project-3",
+      "geometry": {
+        "distance": 1938.4000750416426
+      },
+      "id": "[\"fixture/project-3\",\"fixture/project-2\"]",
+      "metadata": {
+        "key": "1:2",
+        "shared": [
+          "HTML"
+        ],
+        "sharedLanguages": [
+          "HTML"
+        ],
+        "sharedRepositories": [],
+        "sharedTopics": []
+      },
+      "style": {
+        "primary": true
+      },
+      "to": "fixture/project-2"
+    },
+    {
+      "from": "fixture/project-2",
+      "geometry": {
+        "distance": 4404.136878944306
+      },
+      "id": "[\"fixture/project-2\",\"fixture/project-1\"]",
+      "metadata": {
+        "key": "2:3",
+        "shared": [
+          "HTML"
+        ],
+        "sharedLanguages": [
+          "HTML"
+        ],
+        "sharedRepositories": [],
+        "sharedTopics": []
+      },
+      "style": {
+        "primary": true
+      },
+      "to": "fixture/project-1"
+    }
+  ],
+  "evidence": {
+    "facts": [
+      {
+        "id": "fact:0",
+        "kind": "primary-language",
+        "provenance": "source",
+        "source": "github",
+        "value": "Rust"
+      },
+      {
+        "id": "fact:1",
+        "kind": "language-bytes:HTML",
+        "provenance": "source",
+        "source": "github",
+        "value": 20
+      },
+      {
+        "id": "fact:2",
+        "kind": "language-bytes:Rust",
+        "provenance": "source",
+        "source": "github",
+        "value": 100
+      },
+      {
+        "id": "fact:3",
+        "kind": "topic",
+        "provenance": "source",
+        "source": "github",
+        "value": "stars"
+      },
+      {
+        "id": "fact:4",
+        "kind": "topic",
+        "provenance": "source",
+        "source": "github",
+        "value": "art"
+      },
+      {
+        "id": "fact:5",
+        "kind": "stars",
+        "provenance": "source",
+        "source": "github",
+        "value": 0
+      },
+      {
+        "id": "fact:6",
+        "kind": "created-date",
+        "provenance": "source",
+        "source": "github",
+        "value": "2019-01-01"
+      },
+      {
+        "id": "fact:7",
+        "kind": "primary-language",
+        "provenance": "source",
+        "source": "github",
+        "value": "Python"
+      },
+      {
+        "id": "fact:8",
+        "kind": "language-bytes:Python",
+        "provenance": "source",
+        "source": "github",
+        "value": 100
+      },
+      {
+        "id": "fact:9",
+        "kind": "topic",
+        "provenance": "source",
+        "source": "github",
+        "value": "tools"
+      },
+      {
+        "id": "fact:a",
+        "kind": "stars",
+        "provenance": "source",
+        "source": "github",
+        "value": 51
+      },
+      {
+        "id": "fact:b",
+        "kind": "created-date",
+        "provenance": "source",
+        "source": "github",
+        "value": "2022-01-01"
+      },
+      {
+        "id": "fact:c",
+        "kind": "stars",
+        "provenance": "source",
+        "source": "github",
+        "value": 34
+      },
+      {
+        "id": "fact:d",
+        "kind": "created-date",
+        "provenance": "source",
+        "source": "github",
+        "value": "2021-01-01"
+      },
+      {
+        "id": "fact:e",
+        "kind": "primary-language",
+        "provenance": "source",
+        "source": "github",
+        "value": "JavaScript"
+      },
+      {
+        "id": "fact:f",
+        "kind": "language-bytes:JavaScript",
+        "provenance": "source",
+        "source": "github",
+        "value": 100
+      },
+      {
+        "id": "fact:g",
+        "kind": "stars",
+        "provenance": "source",
+        "source": "github",
+        "value": 17
+      },
+      {
+        "id": "fact:h",
+        "kind": "created-date",
+        "provenance": "source",
+        "source": "github",
+        "value": "2020-01-01"
+      }
+    ],
+    "subjects": [
+      {
+        "facts": [
+          "fact:0",
+          "fact:1",
+          "fact:2",
+          "fact:3",
+          "fact:4",
+          "fact:5",
+          "fact:6"
+        ],
+        "id": "fixture/project-0",
+        "kind": "node"
+      },
+      {
+        "facts": [
+          "fact:7",
+          "fact:1",
+          "fact:8",
+          "fact:3",
+          "fact:9",
+          "fact:a",
+          "fact:b"
+        ],
+        "id": "fixture/project-3",
+        "kind": "node"
+      },
+      {
+        "facts": [
+          "fact:0",
+          "fact:1",
+          "fact:2",
+          "fact:3",
+          "fact:4",
+          "fact:c",
+          "fact:d"
+        ],
+        "id": "fixture/project-2",
+        "kind": "node"
+      },
+      {
+        "facts": [
+          "fact:e",
+          "fact:1",
+          "fact:f",
+          "fact:3",
+          "fact:9",
+          "fact:g",
+          "fact:h"
+        ],
+        "id": "fixture/project-1",
+        "kind": "node"
+      }
+    ],
+    "version": 1
+  },
+  "geometry": {
+    "identity": [
+      1,
+      3674142486,
+      72.039,
+      265.955,
+      320.05,
+      452.634,
+      303.737,
+      273.574,
+      4.07,
+      237.041,
+      311.978,
+      3.022,
+      180.678,
+      280.871,
+      3.723,
+      173.461,
+      212.393,
+      3.91,
+      226.713,
+      169.197,
+      2.886,
+      302.829,
+      204.755,
+      3.686,
+      107.732,
+      281.219,
+      457.467,
+      676.9,
+      328.828,
+      300.958,
+      4.241,
+      238.546,
+      347.722,
+      4.28,
+      168.086,
+      320.216,
+      2.7,
+      137.376,
+      207.219,
+      4.788,
+      220.357,
+      134.074,
+      2.559,
+      334.434,
+      188.151,
+      3.146,
+      134.342,
+      25.277,
+      551.367,
+      844.096,
+      346.096,
+      322.41,
+      2.934,
+      245.266,
+      374.239,
+      3.606,
+      151.675,
+      341.225,
+      4.46,
+      138.385,
+      152.124,
+      4.305,
+      234.251,
+      105.781,
+      3.385,
+      354.365,
+      169.513,
+      4.37,
+      170.776,
+      63.751,
+      930.37,
+      1073.017,
+      374.827,
+      344.814,
+      2.697,
+      224.512,
+      410.072,
+      2.511,
+      80.562,
+      301.187,
+      3.731,
+      72.709,
+      205.675,
+      4.214,
+      185.109,
+      78.286,
+      4.43,
+      372.343,
+      132.066,
+      3.809
+    ],
+    "ringPoints": [
+      303.737,
+      273.574,
+      4.07,
+      328.828,
+      300.958,
+      4.241,
+      346.096,
+      322.41,
+      2.934,
+      374.827,
+      344.814,
+      2.697
+    ]
+  },
+  "kind": "scene",
+  "labels": [
+    {
+      "focal": false,
+      "hidden": false,
+      "id": "fixture/project-0",
+      "text": "one",
+      "x": 586.367534883721,
+      "y": 324.4779534883721
+    },
+    {
+      "focal": false,
+      "hidden": false,
+      "id": "fixture/project-3",
+      "text": "<four>",
+      "x": 640.0506046511628,
+      "y": 355.04613953488376
+    },
+    {
+      "focal": false,
+      "hidden": false,
+      "id": "fixture/project-2",
+      "text": "three",
+      "x": 676.9960930232558,
+      "y": 378.99255813953494
+    },
+    {
+      "focal": false,
+      "hidden": false,
+      "id": "fixture/project-1",
+      "text": "two",
+      "x": 738.4670697674419,
+      "y": 404.0016744186047
+    }
+  ],
+  "layers": [
+    {
+      "id": "background",
+      "opacity": 1,
+      "order": 0,
+      "phases": [
+        "backdrop"
+      ],
+      "type": "background",
+      "visible": true
+    },
+    {
+      "id": "effects",
+      "opacity": 1,
+      "order": 1,
+      "phases": [
+        "backdrop"
+      ],
+      "type": "effects",
+      "visible": true
+    },
+    {
+      "id": "rings",
+      "opacity": 1,
+      "order": 2,
+      "phases": [
+        "world"
+      ],
+      "type": "rings",
+      "visible": true
+    },
+    {
+      "id": "starfield",
+      "opacity": 1,
+      "order": 3,
+      "phases": [
+        "backdrop",
+        "world"
+      ],
+      "type": "starfield",
+      "visible": true
+    },
+    {
+      "id": "annotations",
+      "opacity": 1,
+      "order": 4,
+      "phases": [
+        "underlay",
+        "overlay"
+      ],
+      "type": "annotations",
+      "visible": true
+    },
+    {
+      "id": "connections",
+      "opacity": 1,
+      "order": 5,
+      "phases": [
+        "world"
+      ],
+      "type": "connections",
+      "visible": true
+    },
+    {
+      "id": "nodes",
+      "opacity": 1,
+      "order": 6,
+      "phases": [
+        "world"
+      ],
+      "type": "nodes",
+      "visible": true
+    },
+    {
+      "id": "labels",
+      "opacity": 1,
+      "order": 7,
+      "phases": [
+        "world"
+      ],
+      "type": "labels",
+      "visible": true
+    },
+    {
+      "id": "selection",
+      "opacity": 1,
+      "order": 8,
+      "phases": [
+        "interaction"
+      ],
+      "type": "selection",
+      "visible": true
+    }
+  ],
+  "metadata": {
+    "account": "fixture",
+    "referenceDate": "2026-09-01T00:00:00.000Z",
+    "seed": "fixture"
+  },
+  "nodes": [
+    {
+      "geometry": {
+        "radius": 2.7,
+        "x": 586.367534883721,
+        "y": 307.4779534883721
+      },
+      "icon": null,
+      "id": "fixture/project-0",
+      "interaction": {
+        "hidden": false,
+        "labelHidden": false
+      },
+      "metadata": {
+        "created_at": "2019-01-01T00:00:00Z",
+        "full_name": "fixture/project-0",
+        "language": "Rust",
+        "languages": {
+          "HTML": 20,
+          "Rust": 100
+        },
+        "name": "one",
+        "pushed_at": "2026-01-01T00:00:00Z",
+        "stargazers_count": 0,
+        "topics": [
+          "stars",
+          "art"
+        ]
+      },
+      "style": {
+        "color": null,
+        "glow": null,
+        "opacity": 1,
+        "shape": "circle"
+      }
+    },
+    {
+      "geometry": {
+        "radius": 5.5502198590705465,
+        "x": 640.0506046511628,
+        "y": 338.04613953488376
+      },
+      "icon": null,
+      "id": "fixture/project-3",
+      "interaction": {
+        "hidden": false,
+        "labelHidden": false
+      },
+      "metadata": {
+        "created_at": "2022-01-01T00:00:00Z",
+        "full_name": "fixture/project-3",
+        "language": "Python",
+        "languages": {
+          "HTML": 20,
+          "Python": 100
+        },
+        "name": "<four>",
+        "pushed_at": "2026-01-01T00:00:00Z",
+        "stargazers_count": 51,
+        "topics": [
+          "stars",
+          "tools"
+        ]
+      },
+      "style": {
+        "color": null,
+        "glow": null,
+        "opacity": 1,
+        "shape": "circle"
+      }
+    },
+    {
+      "geometry": {
+        "radius": 5.264641508472483,
+        "x": 676.9960930232558,
+        "y": 361.99255813953494
+      },
+      "icon": null,
+      "id": "fixture/project-2",
+      "interaction": {
+        "hidden": false,
+        "labelHidden": false
+      },
+      "metadata": {
+        "created_at": "2021-01-01T00:00:00Z",
+        "full_name": "fixture/project-2",
+        "language": "Rust",
+        "languages": {
+          "HTML": 20,
+          "Rust": 100
+        },
+        "name": "three",
+        "pushed_at": "2026-01-01T00:00:00Z",
+        "stargazers_count": 34,
+        "topics": [
+          "stars",
+          "art"
+        ]
+      },
+      "style": {
+        "color": null,
+        "glow": null,
+        "opacity": 1,
+        "shape": "circle"
+      }
+    },
+    {
+      "geometry": {
+        "radius": 4.784962500721156,
+        "x": 738.4670697674419,
+        "y": 387.0016744186047
+      },
+      "icon": null,
+      "id": "fixture/project-1",
+      "interaction": {
+        "hidden": false,
+        "labelHidden": false
+      },
+      "metadata": {
+        "created_at": "2020-01-01T00:00:00Z",
+        "full_name": "fixture/project-1",
+        "language": "JavaScript",
+        "languages": {
+          "HTML": 20,
+          "JavaScript": 100
+        },
+        "name": "two",
+        "pushed_at": "2026-01-01T00:00:00Z",
+        "stargazers_count": 17,
+        "topics": [
+          "stars",
+          "tools"
+        ]
+      },
+      "style": {
+        "color": null,
+        "glow": null,
+        "opacity": 1,
+        "shape": "circle"
+      }
+    }
+  ],
+  "presentation": {
+    "graph": {
+      "nodeCount": 4,
+      "repositoryCount": 4,
+      "total": 4
+    },
+    "hasHistory": false,
+    "historyRepositories": [],
+    "nodeMode": "repositories",
+    "options": {
+      "exportProfile": "custom",
+      "referenceDate": "2026-09-01T00:00:00.000Z"
+    },
+    "pipeline": {
+      "filtered": 0,
+      "graphNodes": 4,
+      "loaded": 4,
+      "normalized": 4,
+      "rejected": 0,
+      "sceneNodes": 4,
+      "transformed": 4,
+      "transforms": []
+    },
+    "sourceHasRepositories": true,
+    "totalConnections": 6
+  },
+  "version": 1,
+  "viewport": {
+    "height": 560,
+    "viewBox": [
+      556.855093,
+      290.206661,
+      211.1244186046511,
+      131.36630490956068
+    ],
+    "width": 900
+  }
+}

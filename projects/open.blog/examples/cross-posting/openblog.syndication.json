@@ -1,0 +1,33 @@
+{
+  "syndication": {
+    "stateFile": ".openblog/syndication.json",
+    "targets": {
+      "dev": { "provider": "dev", "enabled": true, "allowPublish": false },
+      "hashnode": {
+        "provider": "hashnode",
+        "enabled": false,
+        "allowPublish": false,
+        "publicationId": "replace-with-publication-id"
+      },
+      "ghost": {
+        "provider": "ghost",
+        "enabled": false,
+        "allowPublish": false,
+        "endpoint": "https://replace-with-your-ghost.example"
+      },
+      "wordpress-com": {
+        "provider": "wordpress",
+        "enabled": false,
+        "allowPublish": false,
+        "publicationId": "replace-with-numeric-site-id"
+      },
+      "wordpress-self-hosted": {
+        "provider": "wordpress",
+        "enabled": false,
+        "allowPublish": false,
+        "endpoint": "https://replace.example/wp-json/wp/v2"
+      },
+      "medium": { "provider": "medium", "enabled": true, "allowPublish": false }
+    }
+  }
+}

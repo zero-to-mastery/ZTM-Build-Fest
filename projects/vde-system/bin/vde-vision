@@ -1,0 +1,58 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-vision - Observability Dashboard for VDE
+# Provides a real-time Markdown-based status grid of the Sovereign environment.
+#===============================================================================
+
+set -e
+
+# Source dependencies
+VDE_ROOT_DIR="${0:h:h}"
+
+# Enforce Universal Agent Protocol (The Rule Spine)
+"${VDE_ROOT_DIR}/bin/vde-enforce-uap.zsh" --quiet || exit 1
+
+source "${VDE_ROOT_DIR}/lib/vm-common"
+source "${VDE_ROOT_DIR}/lib/vde-docker"
+
+# Data Extraction & Table Generation
+vde_vision_dashboard() {
+    # Header
+    echo "| Spoke | Status | Uptime | Port |"
+    echo "| :--- | :--- | :--- | :--- |"
+
+    # Get running containers with vde.managed=true label
+    local running_containers_str
+    running_containers_str=$(docker_get_running)
+    
+    # Split into array
+    local -a running_containers
+    running_containers=(${(s: :)running_containers_str})
+
+    if [[ ${#running_containers[@]} -eq 0 ]]; then
+        return 0
+    fi
+
+    for container in "${running_containers[@]}"; do
+        [[ -z "${container}" ]] && continue
+        
+        local v_status v_uptime v_port
+        
+        # Status
+        v_status=$(docker inspect -f '{{.State.Status}}' "${container}" 2>/dev/null || echo "unknown")
+        
+        # Uptime (human-readable from docker ps)
+        v_uptime=$(docker ps --filter "name=${container}" --format "{{.Status}}" 2>/dev/null || echo "unknown")
+        
+        # Port (Primary host port)
+        # We extract all mapped host ports and take the first one
+        v_port=$(docker inspect -f '{{range $p, $conf := .NetworkSettings.Ports}}{{range $conf}}{{.HostPort}} {{end}}{{end}}' "${container}" 2>/dev/null | awk '{print $1}')
+        [[ -z "${v_port}" ]] && v_port="N/A"
+        
+        echo "| ${container} | ${v_status} | ${v_uptime} | ${v_port} |"
+    done
+}
+
+# Main
+vde_vision_dashboard

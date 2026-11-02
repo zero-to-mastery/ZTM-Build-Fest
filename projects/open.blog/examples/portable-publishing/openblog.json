@@ -1,0 +1,38 @@
+{
+  "title": "Portable publishing example",
+  "url": "https://portable.example.org",
+  "postPath": "/{slug}/",
+  "author": { "name": "Alex Example", "url": "https://author.example.org" },
+  "contributors": {
+    "alex": { "name": "Alex Example", "url": "https://author.example.org" }
+  },
+  "engagement": {
+    "enabled": true,
+    "endpoint": "https://discussion.example.org/api"
+  },
+  "codeRunner": {
+    "endpoint": "https://runner.example.org/execute",
+    "languages": ["python"]
+  },
+  "syndication": {
+    "targets": {
+      "dev": { "provider": "dev", "enabled": true },
+      "hashnode": {
+        "provider": "hashnode",
+        "enabled": true,
+        "publicationId": "example-publication"
+      },
+      "ghost": {
+        "provider": "ghost",
+        "enabled": true,
+        "endpoint": "https://ghost.example.org"
+      },
+      "wordpress": {
+        "provider": "wordpress",
+        "enabled": true,
+        "endpoint": "https://wordpress.example.org/wp-json/wp/v2"
+      },
+      "medium": { "provider": "medium", "enabled": true }
+    }
+  }
+}

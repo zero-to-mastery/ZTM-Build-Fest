@@ -1,0 +1,14 @@
+[
+  { "authored": " Python ", "normalized": "python" },
+  { "authored": "\tGO\r\n", "normalized": "go" },
+  { "authored": "c++", "normalized": "c++" },
+  { "authored": "F#", "normalized": "f#" },
+  { "authored": "objective-c", "normalized": "objective-c" },
+  { "authored": "Kotlin", "normalized": null },
+  { "authored": " python ", "normalized": null },
+  { "authored": "shell script", "normalized": null },
+  { "authored": "9python", "normalized": null },
+  { "authored": "python!", "normalized": null },
+  { "authored": "", "normalized": null },
+  { "authored": "abcdefghijklmnopqrstuvwxyzabcdefg", "normalized": null }
+]

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calm Reader settings</title>
+  <link rel="stylesheet" href="ui.css">
+  <style>body { max-width: 560px; margin: 0 auto; padding: 24px 16px; }</style>
+</head>
+<body>
+  <h1>Calm Reader settings</h1>
+  <p>Reading profiles work without a key. Simplify needs your own API key.</p>
+  <label class="field">Provider
+    <select id="provider"></select>
+  </label>
+  <label class="field">API key
+    <input type="password" id="key" autocomplete="off" spellcheck="false">
+  </label>
+  <label class="field">Model (optional)
+    <input type="text" id="model" autocomplete="off" spellcheck="false">
+  </label>
+  <div class="row">
+    <button type="button" id="save">Save</button>
+    <button type="button" id="test" class="secondary">Save and test key</button>
+  </div>
+  <p id="status" aria-live="polite"></p>
+  <h2>Privacy</h2>
+  <p class="hint">Your key is stored only in this browser. There is no Calm Reader server, no account and no analytics. Page text is sent to your chosen provider only when you press Simplify.</p>
+  <script src="options.js"></script>
+</body>
+</html>

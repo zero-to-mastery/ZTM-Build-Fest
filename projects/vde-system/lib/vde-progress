@@ -1,0 +1,479 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE Progress Indicators Library
+# Provides progress bars, spinners, and timing feedback for long operations
+# Source this library with: source ./lib/vde-progress
+#
+# Features:
+# - Spinner for indeterminate operations (Docker builds, package installs)
+# - Progress bar for determinate operations (file copies, VM creation steps)
+# - Elapsed time display for long operations
+# - Quiet mode support (--quiet flag to disable)
+#
+# Shell Compatibility: zsh
+#
+# Usage:
+#   source ./lib/vde-progress
+#   
+#   # For indeterminate operations:
+#   vde_progress_spinner_start "Building Docker image..."
+#   # ... do work ...
+#   vde_progress_spinner_stop "Image built successfully"
+#   
+#   # For determinate operations:
+#   vde_progress_bar_start "Copying files" 10
+#   for i in 1 2 3 4 5 6 7 8 9 10; do
+#       vde_progress_bar_update ${i}
+#       zmodload zsh/zselect 2>/dev/null && zselect -t 10
+#   done
+#   vde_progress_bar_stop
+
+# =============================================================================
+# SOURCE GUARD
+# =============================================================================
+
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+if [[ "${_VDE_PROGRESS_LOADED:-}" = "1" ]] ; then
+    return 0 2>/dev/null || exit 0
+fi
+_VDE_PROGRESS_LOADED=1
+
+# =============================================================================
+# CONFIGURATION
+# =============================================================================
+
+# Quiet mode - set to 1 to disable all progress output
+VDE_PROGRESS_QUIET="${VDE_PROGRESS_QUIET:-0}"
+export VDE_PROGRESS_QUIET
+
+# Progress bar width
+VDE_PROGRESS_BAR_WIDTH="${VDE_PROGRESS_BAR_WIDTH:-40}"
+
+# Spinner animation speed (seconds between frames)
+VDE_PROGRESS_SPINNER_INTERVAL="${VDE_PROGRESS_SPINNER_INTERVAL:-0.1}"
+
+# Threshold for showing time (operations longer than this show elapsed time)
+VDE_PROGRESS_TIME_THRESHOLD="${VDE_PROGRESS_TIME_THRESHOLD:-2}"
+
+# =============================================================================
+# COLOR SUPPORT
+# =============================================================================
+
+# Check if terminal supports colors
+_vde_progress_has_colors() {
+    if [[ -t 1 ]] ; then
+        return 0
+    fi
+    # Check for common color environment variables
+    if [[ -n "${TERM:-}" ]] && [[ "${TERM:-}" != "dumb" ]] ; then
+        return 0
+    fi
+    return ${VDE_ERR_GENERAL}
+}
+
+# Color codes (disable if not a terminal)
+if _vde_progress_has_colors; then
+    VDE_PROGRESS_COLOR_RESET='\033[0m'
+    VDE_PROGRESS_COLOR_SUCCESS='\033[1;32m'  # Green
+    VDE_PROGRESS_COLOR_ERROR='\033[1;31m'    # Red
+    VDE_PROGRESS_COLOR_INFO='\033[1;34m'     # Blue
+    VDE_PROGRESS_COLOR_DIM='\033[2m'         # Dim
+    VDE_PROGRESS_COLOR_BAR='\033[1;36m'      # Cyan
+else
+    VDE_PROGRESS_COLOR_RESET=''
+    VDE_PROGRESS_COLOR_SUCCESS=''
+    VDE_PROGRESS_COLOR_ERROR=''
+    VDE_PROGRESS_COLOR_INFO=''
+    VDE_PROGRESS_COLOR_DIM=''
+    VDE_PROGRESS_COLOR_BAR=''
+fi
+
+# =============================================================================
+# TIME UTILITIES
+# =============================================================================
+
+# _vde_progress_get_epoch - Get current epoch time in seconds
+_vde_progress_get_epoch() {
+    if command -v date >/dev/null 2>&1; then
+        date +%s 2>/dev/null || echo "0"
+    else
+        echo "0"
+    fi
+}
+
+# _vde_progress_format_time - Format seconds into human-readable duration
+_vde_progress_format_time() {
+    local seconds="${1}"
+    
+    if [[ "${seconds}" -lt 60 ]] ; then
+        echo "${seconds}s"
+    elif [[ "${seconds}" -lt 3600 ]] ; then
+        local mins=$((seconds / 60))
+        local secs=$((seconds % 60))
+        echo "${mins}m ${secs}s"
+    else
+        local hours=$((seconds / 3600))
+        local mins=$(((seconds % 3600) / 60))
+        echo "${hours}h ${mins}m"
+    fi
+}
+
+# =============================================================================
+# SPINNER FUNCTIONS (Indeterminate Operations)
+# =============================================================================
+
+# Spinner frames for animation
+_VDE_SPINNER_FRAMES=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
+
+# vde_progress_spinner_start - Start an indeterminate spinner
+# Args: <message>
+# Example: vde_progress_spinner_start "Building Docker image..."
+vde_progress_spinner_start() {
+    local message="${1}"
+    
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    # Store start time for potential elapsed display
+    _VDE_PROGRESS_SPINNER_START=$(_vde_progress_get_epoch)
+    _VDE_PROGRESS_SPINNER_MSG="${message}"
+    _VDE_PROGRESS_SPINNER_FRAME=1
+    
+    # Print initial message without newline
+    printf "%s" "${VDE_PROGRESS_COLOR_INFO}${_VDE_SPINNER_FRAMES[1]}${VDE_PROGRESS_COLOR_RESET} ${message}... "
+}
+
+# vde_progress_spinner_update - Update spinner frame (call in loop)
+# Example: while [[ ! done ]] ; do vde_progress_spinner_update; done
+vde_progress_spinner_update() {
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    # Move cursor back, clear, and redraw
+    printf "\r%s" "$(printf ' %.0s' {1..200})"
+    printf "\r"
+    
+    # Calculate frame
+    _VDE_PROGRESS_SPINNER_FRAME=$(( (_VDE_PROGRESS_SPINNER_FRAME % ${#_VDE_SPINNER_FRAMES[@]}) + 1 ))
+    
+    # Print spinner with message
+    printf "%s" "${VDE_PROGRESS_COLOR_INFO}${_VDE_SPINNER_FRAMES[${_VDE_PROGRESS_SPINNER_FRAME}]}${VDE_PROGRESS_COLOR_RESET} ${_VDE_PROGRESS_SPINNER_MSG}... "
+}
+
+# vde_progress_spinner_stop - Stop the spinner with a completion message
+# Args: <success_message> [error_message]
+# Example: vde_progress_spinner_stop "Image built successfully" "Build failed"
+vde_progress_spinner_stop() {
+    local success_msg="${1}"
+    local error_msg="${2:-Operation failed}"
+    local is_error="${3:-0}"
+    
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    # Clear the spinner line
+    printf "\r%s" "$(printf ' %.0s' {1..200})"
+    printf "\r"
+    
+    # Calculate elapsed time
+    local end_time=$(_vde_progress_get_epoch)
+    local elapsed=$((end_time - _VDE_PROGRESS_SPINNER_START))
+    
+    # Show elapsed time if operation took longer than threshold
+    local time_str=""
+    if [[ "${elapsed}" -ge "${VDE_PROGRESS_TIME_THRESHOLD}" ]] ; then
+        time_str=" (${VDE_PROGRESS_COLOR_DIM}$(_vde_progress_format_time "${elapsed}")${VDE_PROGRESS_COLOR_RESET})"
+    fi
+    
+    # Print completion message
+    if [[ "${is_error}" = "1" ]] ; then
+        printf "%s%s%s\n" "${VDE_PROGRESS_COLOR_ERROR}✗${VDE_PROGRESS_COLOR_RESET} " "${error_msg}" "${time_str}"
+    else
+        printf "%s%s%s\n" "${VDE_PROGRESS_COLOR_SUCCESS}✓${VDE_PROGRESS_COLOR_RESET} " "${success_msg}" "${time_str}"
+    fi
+    
+    # Cleanup
+    unset _VDE_PROGRESS_SPINNER_START
+    unset _VDE_PROGRESS_SPINNER_MSG
+    unset _VDE_PROGRESS_SPINNER_FRAME
+}
+
+# =============================================================================
+# PROGRESS BAR FUNCTIONS (Determinate Operations)
+# =============================================================================
+
+# vde_progress_bar_start - Start a determinate progress bar
+# Args: <message> <total_items>
+# Example: vde_progress_bar_start "Copying files" 100
+vde_progress_bar_start() {
+    local message="${1}"
+    local total="${2}"
+    
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    _VDE_PROGRESS_BAR_MSG="${message}"
+    _VDE_PROGRESS_BAR_TOTAL="${total}"
+    _VDE_PROGRESS_BAR_CURRENT=0
+    _VDE_PROGRESS_BAR_START=$(_vde_progress_get_epoch)
+    
+    # Print initial bar
+    vde_progress_bar_update 0
+}
+
+# vde_progress_bar_update - Update progress bar position
+# Args: <current_items>
+# Example: vde_progress_bar_update 50
+vde_progress_bar_update() {
+    local current="${1}"
+    
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    _VDE_PROGRESS_BAR_CURRENT="${current}"
+    
+    # Calculate percentage
+    local percent=0
+    if [[ "${_VDE_PROGRESS_BAR_TOTAL}" -gt 0 ]] ; then
+        percent=$((current * 100 / _VDE_PROGRESS_BAR_TOTAL))
+    fi
+    
+    # Calculate bar width
+    local filled=$((percent * VDE_PROGRESS_BAR_WIDTH / 100))
+    local empty=$((VDE_PROGRESS_BAR_WIDTH - filled))
+    
+    # Build bar string
+    local bar=""
+    local i=0
+    while [[ ${i} -lt "${filled}" ]] ; do
+        bar="${bar}█"
+        i=$((i + 1))
+    done
+    while [[ ${i} -lt "${VDE_PROGRESS_BAR_WIDTH}" ]] ; do
+        bar="${bar}░"
+        i=$((i + 1))
+    done
+    
+    # Move to line start and clear
+    printf "\r%s" "$(printf ' %.0s' {1..200})"
+    printf "\r"
+    
+    # Print progress bar
+    printf "%s[%s] %3d%% %s" "${VDE_PROGRESS_COLOR_BAR}" "${bar}" "${percent}" "${VDE_PROGRESS_COLOR_RESET}"
+    printf " %s" "${_VDE_PROGRESS_BAR_MSG}"
+}
+
+# vde_progress_bar_stop - Stop the progress bar
+# Args: [success_message]
+# Example: vde_progress_bar_stop "Files copied"
+vde_progress_bar_stop() {
+    local message="${1:-Done}"
+    
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    # Ensure bar shows 100%
+    vde_progress_bar_update "${_VDE_PROGRESS_BAR_TOTAL}"
+    
+    # Clear the progress line
+    printf "\r%s" "$(printf ' %.0s' {1..200})"
+    printf "\r"
+    
+    # Calculate elapsed time
+    local end_time=$(_vde_progress_get_epoch)
+    local elapsed=$((end_time - _VDE_PROGRESS_BAR_START))
+    
+    # Show elapsed time if operation took longer than threshold
+    local time_str=""
+    if [[ "${elapsed}" -ge "${VDE_PROGRESS_TIME_THRESHOLD}" ]] ; then
+        time_str=" ${VDE_PROGRESS_COLOR_DIM}($(_vde_progress_format_time "${elapsed}"))${VDE_PROGRESS_COLOR_RESET}"
+    fi
+    
+    # Print completion
+    printf "%s%s%s\n" "${VDE_PROGRESS_COLOR_SUCCESS}✓${VDE_PROGRESS_COLOR_RESET} " "${message}" "${time_str}"
+    
+    # Cleanup
+    unset _VDE_PROGRESS_BAR_MSG
+    unset _VDE_PROGRESS_BAR_TOTAL
+    unset _VDE_PROGRESS_BAR_CURRENT
+    unset _VDE_PROGRESS_BAR_START
+}
+
+# =============================================================================
+# ELAPSED TIME FUNCTIONS
+# =============================================================================
+
+# vde_progress_show_time - Display elapsed time for an operation
+# Args: <operation_name> <start_epoch>
+# Example: start=$(_vde_progress_get_epoch); zmodload zsh/zselect 2>/dev/null && zselect -t 300; vde_progress_show_time "Sleep" ${start}
+vde_progress_show_time() {
+    local operation="${1}"
+    local start="${2}"
+    
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    local end=$(_vde_progress_get_epoch)
+    local elapsed=$((end - start))
+    
+    if [[ "${elapsed}" -ge 1 ]] ; then
+        printf "%s%s: %s\n" "${VDE_PROGRESS_COLOR_DIM}" "${operation}" "${VDE_PROGRESS_COLOR_RESET}$(_vde_progress_format_time "${elapsed}")"
+    fi
+}
+
+# vde_progress_time_start - Start timing (store in variable)
+# Args: <var_name>
+# Example: vde_progress_time_start MY_TIMER
+vde_progress_time_start() {
+    local var_name="${1}"
+    eval "${var_name}=$(_vde_progress_get_epoch)"
+}
+
+# vde_progress_time_end - Show elapsed time from stored variable
+# Args: <var_name> <operation_name>
+# Example: vde_progress_time_end MY_TIMER "Operation"
+vde_progress_time_end() {
+    local var_name="${1}"
+    local operation="${2}"
+    
+    local start
+    eval "start=\"\${$var_name:-0}\""
+    
+    if [[ "${start}" -gt 0 ]] ; then
+        vde_progress_show_time "${operation}" "${start}"
+    fi
+}
+
+# =============================================================================
+# DONE/COMPLETION FUNCTIONS
+# =============================================================================
+
+# vde_progress_done - Show a simple completion message
+# Args: <message>
+# Example: vde_progress_done "Operation completed successfully"
+vde_progress_done() {
+    local message="${1}"
+    
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    printf "%s%s\n" "${VDE_PROGRESS_COLOR_SUCCESS}✓${VDE_PROGRESS_COLOR_RESET} " "${message}"
+}
+
+# vde_progress_info - Show an informational message with consistent formatting
+# Args: <message>
+# Example: vde_progress_info "Starting Docker build..."
+vde_progress_info() {
+    local message="${1}"
+    
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    printf "%s%s\n" "${VDE_PROGRESS_COLOR_INFO}ℹ${VDE_PROGRESS_COLOR_RESET} " "${message}"
+}
+
+# vde_progress_warn - Show a warning message
+# Args: <message>
+# Example: vde_progress_warn "Deprecated feature"
+vde_progress_warn() {
+    local message="${1}"
+    
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    printf "%s%s\n" "${VDE_PROGRESS_COLOR_ERROR}⚠${VDE_PROGRESS_COLOR_RESET} " "${message}"
+}
+
+# vde_progress_error - Show an error message
+# Args: <message>
+# Example: vde_progress_error "Failed to start container"
+vde_progress_error() {
+    local message="${1}"
+    
+    printf "%s%s\n" "${VDE_PROGRESS_COLOR_ERROR}✗${VDE_PROGRESS_COLOR_RESET} " "${message}" >&2
+}
+
+# vde_progress_wait_for_lock - Show a waiting message for lock contention
+# Args: <lock_name> <attempt> [owner_info]
+vde_progress_wait_for_lock() {
+    local lock_name="${1}"
+    local attempt="${2}"
+    local owner="${3:-}"
+    
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]] && return
+    
+    local owner_str=""
+    [[ -n "${owner}" ]] && owner_str=" (Held by: ${owner})"
+    
+    # In a TTY, we use \r to keep it on one line. 
+    # Otherwise, we just print a new line.
+    if [[ -t 1 ]]; then
+        printf "\r%s" "$(printf ' %.0s' {1..200})"
+        printf "\r%s⏳ Waiting for lock: %s%s (Attempt: %s)... " "${VDE_PROGRESS_COLOR_INFO}" "${lock_name}" "${owner_str}" "${attempt}${VDE_PROGRESS_COLOR_RESET}"
+    else
+        # Use stdout and newline to ensure flush
+        printf "⏳ Waiting for lock: %s%s (Attempt: %s)...\n" "${lock_name}" "${owner_str}" "${attempt}" >&1
+    fi
+}
+
+# =============================================================================
+# QUIET MODE UTILITIES
+# =============================================================================
+
+# vde_progress_set_quiet - Set quiet mode
+# Args: [1|0]
+vde_progress_set_quiet() {
+    VDE_PROGRESS_QUIET="${1:-1}"
+}
+
+# vde_progress_is_quiet - Check if quiet mode is enabled
+# Returns: 0 if quiet, 1 otherwise
+vde_progress_is_quiet() {
+    [[ "${VDE_PROGRESS_QUIET}" = "1" ]]
+}
+
+# =============================================================================
+# CONVENIENCE WRAPPERS FOR COMMON PATTERNS
+# =============================================================================
+
+# vde_progress_with_docker - Run a command with progress indicator
+# Args: <message> <success_message> <command>
+# Example: vde_progress_with_docker "Building image..." "Build complete" "docker build -t myimage ."
+vde_progress_with_docker() {
+    local message="${1}"
+    local success_msg="${2}"
+    local cmd="${3}"
+    
+    if vde_progress_is_quiet; then
+        eval "${cmd}"
+        return ${?}
+    fi
+    
+    vde_progress_spinner_start "${message}"
+    local result=0
+    eval "${cmd}" >/dev/null 2>&1 || result=${?}
+    
+    if [[ "${result}" -eq 0 ]] ; then
+        vde_progress_spinner_stop "${success_msg}"
+    else
+        vde_progress_spinner_stop "" "Command failed (exit code: ${result})" 1
+    fi
+    
+    return "${result}"
+}
+
+# vde_progress_with_timer - Run a command and show elapsed time
+# Args: <message> <command>
+# Example: vde_progress_with_timer "Installing packages" "apt-get install -y pkg1 pkg2"
+vde_progress_with_timer() {
+    local message="${1}"
+    local cmd="${2}"
+    
+    if vde_progress_is_quiet; then
+        eval "${cmd}"
+        return ${?}
+    fi
+    
+    vde_progress_info "${message}..."
+    local start=$(_vde_progress_get_epoch)
+    
+    eval "${cmd}"
+    local result=${?}
+    
+    vde_progress_show_time "Duration" "${start}"
+    
+    return "${result}"
+}
