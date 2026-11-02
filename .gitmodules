@@ -1,3 +1,4 @@
 [submodule "projects/ztm-desktop-app"]
 	path = projects/ztm-desktop-app
 	url = https://github.com/ztm-desktop-application/ztm-desktop.git
+	branch = main
