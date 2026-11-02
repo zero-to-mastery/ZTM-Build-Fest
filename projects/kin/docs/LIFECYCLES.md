@@ -43,7 +43,7 @@ unacknowledged -- HANDOFF_ACKNOWLEDGED --> acknowledged
                       archived
 ```
 
-A handoff is created as unacknowledged. Acknowledgement is a receipt signal, not approval. Archival removes it from the active handoff view while preserving history. Unknown handoff references and transitions from archived are invalid. Handoff is implemented in v0.3.0. Repeated acknowledgement is a valid no-op; distinct addition of an existing Handoff ID fails. See [V0.3.0](V0.3.0.md) for the full matrix.
+A handoff is created as unacknowledged. Acknowledgement is a receipt signal, not approval. Archival removes it from the active handoff view while preserving history. Unknown handoff references and transitions from archived are invalid. Handoff is implemented in v0.3.0. Repeated acknowledgement is a valid no-op; distinct addition of an existing Handoff ID fails. See [V0.3.0](planning/V0.3.0.md) for the full matrix.
 
 ## Talk
 
@@ -82,12 +82,12 @@ Agreements, Household membership, credentials, and trusted devices need explicit
 
 ## v0.5.0 Pulse
 
-SET replaces its actor’s context; CLEAR removes it (absent clear is valid). Expiry derives from as_of >= expires_at, never an event. Latest expired records remain projected until replaced/cleared; no history UI. See [V0.5.0](V0.5.0.md).
+SET replaces its actor’s context; CLEAR removes it (absent clear is valid). Expiry derives from as_of >= expires_at, never an event. Latest expired records remain projected until replaced/cleared; no history UI. See [V0.5.0](planning/V0.5.0.md).
 
 ## v0.6.0 Since You Last Looked
 
-No household entity lifecycle or domain event is added. The summary describes existing Item, Handoff and Talk lifecycle events. The local installation cursor is view metadata, not a household lifecycle or acknowledgement event. See [V0.6.0](V0.6.0.md).
+No household entity lifecycle or domain event is added. The summary describes existing Item, Handoff and Talk lifecycle events. The local installation cursor is view metadata, not a household lifecycle or acknowledgement event. See [V0.6.0](planning/V0.6.0.md).
 
 ## v0.7.0 Routines
 
-Create Routine → complete/reopen current occurrence → terminal archive. Repeated completion/reopen is a valid state no-op; distinct actions after archive are invalid. Exact duplicate event delivery is ignored before transition checks. Advancing time derives a new period without an event. See [V0.7.0](V0.7.0.md).
+Create Routine → complete/reopen current occurrence → terminal archive. Repeated completion/reopen is a valid state no-op; distinct actions after archive are invalid. Exact duplicate event delivery is ignored before transition checks. Advancing time derives a new period without an event. See [V0.7.0](planning/V0.7.0.md).

@@ -4,8 +4,9 @@ use crate::command::{
 };
 use crate::error::KinError;
 use crate::event::*;
-use crate::protocol::{decode_event, DecodedRequest};
+use crate::event_decode::decode_event;
 use crate::recurrence::{Cadence, CivilDate};
+use crate::request::DecodedRequest;
 use crate::state::ItemStatus;
 
 fn day() -> CivilDate {
@@ -23,11 +24,10 @@ fn context(sequence: u8) -> CommandContext {
 }
 fn request(events: Vec<EventEnvelope>) -> DecodedRequest {
     DecodedRequest {
-        protocol_version: 7,
         events,
-        as_of: Some(1234),
+        as_of: 1234,
         summary_cursor: None,
-        civil_date: Some(day()),
+        civil_date: day(),
         target_household_id: None,
         identity_bindings: vec![],
     }
@@ -62,6 +62,58 @@ fn commands_emit_canonical_events_and_project_full_lifecycle() {
         events.push(result.event);
     }
     assert!(execute(&C::ReopenItem(ItemId([4; 16])), context(5), request(events)).is_err());
+}
+
+#[test]
+fn item_completion_and_reopening_must_change_status() {
+    let id = ItemId([4; 16]);
+    let added = execute(&add(), context(1), request(vec![])).unwrap().event;
+    // Reopening an open Item is a stale intent.
+    assert_eq!(
+        execute(&C::ReopenItem(id), context(2), request(vec![added.clone()])).err(),
+        Some(KinError::InvalidEvent)
+    );
+    let completed = execute(
+        &C::CompleteItem(id),
+        context(2),
+        request(vec![added.clone()]),
+    )
+    .unwrap()
+    .event;
+    // A second completion (another tab, a repeated bulk action) is rejected.
+    assert_eq!(
+        execute(
+            &C::CompleteItem(id),
+            context(3),
+            request(vec![added.clone(), completed.clone()])
+        )
+        .err(),
+        Some(KinError::InvalidEvent)
+    );
+    let reopened = execute(
+        &C::ReopenItem(id),
+        context(3),
+        request(vec![added.clone(), completed.clone()]),
+    )
+    .unwrap();
+    assert_eq!(reopened.projection.items[0].status, ItemStatus::Active);
+    assert_eq!(
+        execute(
+            &C::ReopenItem(id),
+            context(4),
+            request(vec![
+                added.clone(),
+                completed.clone(),
+                reopened.event.clone()
+            ])
+        )
+        .err(),
+        Some(KinError::InvalidEvent)
+    );
+    // Historical duplicate facts from older clients still replay as no-ops.
+    let duplicate = create_event(&C::CompleteItem(id), context(4)).unwrap();
+    let replayed = crate::core::project(&request(vec![added, completed, duplicate])).unwrap();
+    assert_eq!(replayed.items[0].status, ItemStatus::Completed);
 }
 
 #[test]
@@ -107,7 +159,7 @@ fn every_command_has_a_lossless_canonical_roundtrip() {
     ];
     for command in commands {
         let event = create_event(&command, context(1)).unwrap();
-        let decoded = decode_event(&event.canonical_bytes, 8).unwrap();
+        let decoded = decode_event(&event.canonical_bytes).unwrap();
         assert_eq!(event, decoded);
         assert_eq!(encode_event(&decoded).unwrap(), event.canonical_bytes);
         for end in 0..event.canonical_bytes.len() {
@@ -117,21 +169,102 @@ fn every_command_has_a_lossless_canonical_roundtrip() {
 }
 
 #[test]
-fn codec_preserves_legacy_schema_one_and_rejects_lossy_schema() {
+fn every_cadence_and_classification_projects_under_protocol_24() {
+    for (n, cadence) in [
+        Cadence::Daily,
+        Cadence::Weekly,
+        Cadence::Biweekly,
+        Cadence::Monthly,
+        Cadence::Weekdays,
+    ]
+    .into_iter()
+    .enumerate()
+    {
+        let command = C::CreateRoutine {
+            id: RoutineId([9 + n as u8; 16]),
+            text: "Replace water filter".into(),
+            cadence,
+            created_on: day(),
+        };
+        let result = execute(&command, context(1), request(vec![])).unwrap();
+        assert_eq!(result.projection.routines[0].cadence, cadence);
+        assert_eq!(&result.encoded_projection[..6], b"KINS\x18\0");
+    }
+    for classification in [
+        ItemClassification::Today,
+        ItemClassification::Need,
+        ItemClassification::Shopping,
+        ItemClassification::Staple,
+    ] {
+        let command = C::AddItem {
+            id: ItemId([9; 16]),
+            text: "Buy wipes".into(),
+            classification,
+        };
+        let result = execute(&command, context(1), request(vec![])).unwrap();
+        assert_eq!(result.projection.items[0].classification, classification);
+    }
+}
+
+#[test]
+fn item_planning_dates_can_be_set_and_cleared() {
+    let created = execute(&add(), context(1), request(vec![])).unwrap().event;
+    let command = C::SetItemPlanningDate {
+        item_id: ItemId([4; 16]),
+        planning_date: Some(CivilDate::from_encoded(20261004).unwrap()),
+    };
+    let changed = execute(&command, context(2), request(vec![created.clone()])).unwrap();
+    assert_eq!(
+        changed.projection.items[0].planning_date,
+        Some(CivilDate::from_encoded(20261004).unwrap())
+    );
+    assert_eq!(changed.event.canonical_bytes[2..4], [30, 0]);
+    assert_eq!(
+        decode_event(&changed.event.canonical_bytes).unwrap().kind,
+        EventKind::ItemPlanningDateChanged {
+            item_id: ItemId([4; 16]),
+            planning_date: Some(CivilDate::from_encoded(20261004).unwrap()),
+        }
+    );
+    let clear = C::SetItemPlanningDate {
+        item_id: ItemId([4; 16]),
+        planning_date: None,
+    };
+    let cleared = execute(&clear, context(3), request(vec![created, changed.event])).unwrap();
+    assert_eq!(cleared.projection.items[0].planning_date, None);
+}
+
+#[test]
+fn item_added_schema_one_is_no_longer_encoded_or_decoded() {
+    // Protocol 24 writes ITEM_ADDED only as schema 2; the v0.1 schema-1 payload
+    // was a legacy format and is refused in both directions.
     let mut event = create_event(&add(), context(1)).unwrap();
     event.event_version = 1;
     assert_eq!(encode_event(&event), Err(KinError::UnsupportedVersion));
-    if let EventKind::ItemAdded { classification, .. } = &mut event.kind {
-        *classification = ItemClassification::Today;
-    }
-    let bytes = encode_event(&event).unwrap();
-    assert_eq!(&bytes[..4], &[1, 0, 1, 0]);
-    assert_eq!(bytes.len(), 108 + "Milk 🥛".len());
-    for protocol in 1..=8 {
-        let decoded = decode_event(&bytes, protocol).unwrap();
-        assert_eq!(encode_event(&decoded).unwrap(), bytes);
-    }
-    assert!(decode_event(&bytes, 9).is_err());
+    let mut legacy = Vec::new();
+    legacy.extend_from_slice(&[1, 0, 1, 0]);
+    legacy.extend_from_slice(&event.canonical_bytes[4..84]);
+    let text = "Milk".as_bytes();
+    legacy.extend_from_slice(&(20 + text.len() as u32).to_le_bytes());
+    legacy.extend_from_slice(&[4; 16]);
+    legacy.extend_from_slice(&(text.len() as u32).to_le_bytes());
+    legacy.extend_from_slice(text);
+    assert_eq!(decode_event(&legacy), Err(KinError::UnsupportedVersion));
+    let area = create_event(
+        &C::CreateArea {
+            id: crate::event::AreaId([7; 16]),
+            name: "Kitchen".into(),
+        },
+        context(2),
+    )
+    .unwrap();
+    assert_eq!(
+        decode_event(&area.canonical_bytes).unwrap().kind,
+        EventKind::AreaCreated {
+            area_id: crate::event::AreaId([7; 16]),
+            name: "Kitchen".into(),
+        }
+    );
 }
 
 #[test]

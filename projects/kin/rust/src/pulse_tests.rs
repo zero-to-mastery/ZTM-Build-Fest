@@ -1,7 +1,17 @@
 use crate::error::KinError;
 use crate::event::PulseValue;
-use crate::protocol::{decode_request, encode_state};
-use crate::state::{rebuild, rebuild_at, HouseholdState, PulseStatus};
+use crate::request::decode_request;
+use crate::state::{rebuild, CatchUpSummary, HouseholdState, PulseStatus};
+use crate::state_encode::encode_state;
+use crate::test_support::{header_u32, kine, BODY, TEST_DATE};
+
+fn no_summary() -> CatchUpSummary {
+    CatchUpSummary {
+        entries: Vec::new(),
+        total_count: 0,
+        through_event_id: None,
+    }
+}
 
 fn record(sequence: u64, actor: u8, value: Option<u8>, expiry: i64) -> Vec<u8> {
     let mut bytes = vec![0; if value.is_some() { 104 } else { 88 }];
@@ -21,23 +31,35 @@ fn record(sequence: u64, actor: u8, value: Option<u8>, expiry: i64) -> Vec<u8> {
     bytes
 }
 
-fn request(records: &[Vec<u8>], version: u16, as_of: i64) -> Vec<u8> {
-    let mut bytes = b"KINE".to_vec();
-    bytes.extend_from_slice(&version.to_le_bytes());
-    bytes.extend_from_slice(&[0; 2]);
-    bytes.extend_from_slice(&(records.len() as u32).to_le_bytes());
-    if version == 5 {
-        bytes.extend_from_slice(&as_of.to_le_bytes());
-    }
-    for record in records {
-        bytes.extend_from_slice(record);
-    }
+fn request(records: &[Vec<u8>], as_of: i64) -> Vec<u8> {
+    kine(records, as_of, TEST_DATE, None)
+}
+
+/// A schema-2 Item (kind 1), Handoff (5) or Talk (8) with one-byte text.
+fn entity(sequence: u64, kind: u16) -> Vec<u8> {
+    let mut bytes = record(sequence, 1, Some(0), 2000);
+    bytes[2..4].copy_from_slice(&kind.to_le_bytes());
+    let payload: Vec<u8> = if kind == 1 {
+        bytes[0] = 2;
+        let mut payload = sequence.to_le_bytes().to_vec();
+        payload.resize(16, 0);
+        payload.extend_from_slice(&[0, 0, 0, 0, 1, 0, 0, 0, b'x']);
+        payload
+    } else {
+        let mut payload = sequence.to_le_bytes().to_vec();
+        payload.resize(16, 0);
+        payload.extend_from_slice(&[1, 0, 0, 0, b'x']);
+        payload
+    };
+    bytes.truncate(88);
+    bytes[84..88].copy_from_slice(&(payload.len() as u32).to_le_bytes());
+    bytes.extend_from_slice(&payload);
     bytes
 }
 
 fn project(records: &[Vec<u8>], as_of: i64) -> Result<HouseholdState, KinError> {
-    let (_, events, time) = decode_request(&request(records, 5, as_of))?;
-    rebuild_at(&events, time.unwrap())
+    let request = decode_request(&request(records, as_of))?;
+    rebuild(&request.events, request.as_of, request.civil_date)
 }
 
 #[test]
@@ -78,50 +100,34 @@ fn pulse_actor_replacement_clear_and_repeated_intent() {
 }
 
 #[test]
-fn pulse_legacy_protocols_fail_closed_and_identity_is_idempotent() {
-    for kind in [Some(0), None] {
-        for version in 1..=4 {
-            assert_eq!(
-                decode_request(&request(&[record(1, 1, kind, 2000)], version, 0)),
-                Err(KinError::UnsupportedVersion)
-            );
-        }
-    }
+fn pulse_identity_is_idempotent_and_conflicts_fail() {
     let a = record(1, 1, Some(0), 2000);
     assert_eq!(
         project(&[a.clone(), a.clone()], 1500).unwrap().pulses.len(),
         1
     );
     assert_eq!(
-        project(&[a.clone(), record(1, 1, Some(2), 2000)], 1500),
+        project(&[a, record(1, 1, Some(2), 2000)], 1500),
         Err(KinError::InvalidEvent)
     );
-    let (_, events, _) = decode_request(&request(&[a], 5, 1500)).unwrap();
-    assert_eq!(rebuild(&events), Err(KinError::UnsupportedVersion));
-    let state = rebuild_at(&events, 1500).unwrap();
-    for version in 1..=4 {
-        assert_eq!(
-            encode_state(&state, version),
-            Err(KinError::UnsupportedVersion)
-        );
-    }
 }
 
 #[test]
-fn pulse_v5_exact_result_and_empty_layout() {
+fn pulse_exact_result_record_and_empty_layout() {
     let state = project(&[record(1, 7, Some(3), 2000)], 2000).unwrap();
-    let result = encode_state(&state, 5).unwrap();
-    let mut expected = vec![75, 73, 78, 83, 5, 0, 0, 0];
-    expected.extend_from_slice(&[0; 12]);
-    expected.extend_from_slice(&1u32.to_le_bytes());
+    let result = encode_state(&state, &no_summary()).unwrap();
+    assert_eq!(header_u32(&result, 20), 1, "pulse count");
+    let mut expected = Vec::new();
     expected.extend_from_slice(&[7; 16]);
     expected.extend_from_slice(&1000i64.to_le_bytes());
     expected.extend_from_slice(&2000i64.to_le_bytes());
     expected.extend_from_slice(&[3, 1, 0, 0, 0, 0, 0, 0]);
-    assert_eq!(result, expected);
+    assert_eq!(&result[BODY..BODY + 40], expected.as_slice());
     assert_eq!(
-        encode_state(&project(&[], 0).unwrap(), 5).unwrap().len(),
-        24
+        encode_state(&project(&[], 0).unwrap(), &no_summary())
+            .unwrap()
+            .len(),
+        BODY
     );
 }
 
@@ -205,12 +211,12 @@ fn pulse_timestamp_ranges_and_projection_rejection() {
 }
 
 #[test]
-fn v5_headers_trailing_bytes_versions_and_combined_counts() {
-    let valid = request(&[record(1, 1, Some(0), 2000)], 5, 1500);
+fn request_headers_trailing_bytes_versions_and_combined_counts() {
+    let valid = request(&[record(1, 1, Some(0), 2000)], 1500);
     let mut trailing = valid.clone();
     trailing.push(0);
     assert_eq!(decode_request(&trailing), Err(KinError::MalformedProtocol));
-    for version in [0u16, 9, u16::MAX] {
+    for version in [0u16, 5, 23, 25, u16::MAX] {
         let mut bad = valid.clone();
         bad[4..6].copy_from_slice(&version.to_le_bytes());
         assert_eq!(decode_request(&bad), Err(KinError::UnsupportedVersion));
@@ -232,34 +238,37 @@ fn v5_headers_trailing_bytes_versions_and_combined_counts() {
         text: "x".into(),
         created_by: crate::event::ActorId([1; 16]),
         created_at: 0,
+        last_changed_at: 0,
         classification: crate::event::ItemClassification::Today,
+        planning_date: None,
         status: crate::state::ItemStatus::Active,
+        area_id: None,
+        steps: Vec::new(),
     });
-    assert_eq!(encode_state(&state, 5), Err(KinError::SizeLimit));
+    assert_eq!(
+        encode_state(&state, &no_summary()),
+        Err(KinError::SizeLimit)
+    );
 }
 
 #[test]
-fn explicit_time_does_not_change_legacy_entities() {
-    let mut item = record(1, 1, Some(0), 2000);
-    item.resize(109, 0);
-    item[2] = 1;
-    item[84] = 21;
-    item[88..104].fill(7);
-    item[104] = 1;
-    item[108] = b'x';
-    let (_, events, _) = decode_request(&request(&[item.clone()], 4, 0)).unwrap();
-    let legacy = rebuild(&events).unwrap();
+fn explicit_time_does_not_change_other_entities() {
+    let item = entity(1, 1);
+    let baseline = project(std::slice::from_ref(&item), 0).unwrap();
     for time in [-1000, 0, 1000, 2000, 3000] {
-        assert_eq!(project(&[item.clone()], time).unwrap(), legacy);
+        assert_eq!(
+            project(std::slice::from_ref(&item), time).unwrap(),
+            baseline
+        );
         let mixed = project(&[item.clone(), record(2, 1, Some(0), 2000)], time).unwrap();
-        assert_eq!(mixed.items, legacy.items);
+        assert_eq!(mixed.items, baseline.items);
     }
 }
 
 #[test]
-fn v5_every_truncated_request_header_envelope_and_pulse_payload() {
+fn every_truncated_request_header_envelope_and_pulse_payload() {
     for kind in [Some(4), None] {
-        let valid = request(&[record(1, 1, kind, 2000)], 5, 1000);
+        let valid = request(&[record(1, 1, kind, 2000)], 1000);
         for length in 0..valid.len() {
             assert_eq!(
                 decode_request(&valid[..length]),
@@ -268,32 +277,22 @@ fn v5_every_truncated_request_header_envelope_and_pulse_payload() {
             );
         }
         let mut extreme = valid.clone();
-        extreme[104..108].copy_from_slice(&u32::MAX.to_le_bytes());
+        extreme[148..152].copy_from_slice(&u32::MAX.to_le_bytes());
         assert_eq!(decode_request(&extreme), Err(KinError::MalformedProtocol));
     }
 }
 
 #[test]
-fn v5_maximum_mixed_replay_is_deterministic_and_time_isolated() {
+fn maximum_mixed_replay_is_deterministic_and_time_isolated() {
     let mut records = Vec::new();
     for sequence in 1..=10000u64 {
-        let mut bytes = record(sequence, 1, Some((sequence % 5) as u8), 2000);
-        if sequence % 4 == 0 {
+        records.push(if sequence % 4 == 0 {
+            let mut bytes = record(sequence, 1, Some((sequence % 5) as u8), 2000);
             bytes[36..44].copy_from_slice(&sequence.to_le_bytes());
+            bytes
         } else {
-            bytes[2] = match sequence % 4 {
-                1 => 1,
-                2 => 5,
-                _ => 8,
-            };
-            bytes.resize(109, 0);
-            bytes[84..88].copy_from_slice(&21u32.to_le_bytes());
-            bytes[88..104].fill(0);
-            bytes[88..96].copy_from_slice(&sequence.to_le_bytes());
-            bytes[104] = 1;
-            bytes[108] = b'x';
-        }
-        records.push(bytes);
+            entity(sequence, [1, 5, 8][(sequence % 4) as usize - 1])
+        });
     }
     let active = project(&records, 1999).unwrap();
     let expired = project(&records, 2000).unwrap();
@@ -317,10 +316,10 @@ fn v5_maximum_mixed_replay_is_deterministic_and_time_isolated() {
         .pulses
         .iter()
         .all(|p| p.status == PulseStatus::Expired));
-    let bytes = encode_state(&active, 5).unwrap();
-    assert!(bytes.len() < crate::protocol::MAX_PROTOCOL_BYTES);
+    let bytes = encode_state(&active, &no_summary()).unwrap();
+    assert!(bytes.len() < crate::wire::MAX_PROTOCOL_BYTES);
     assert_eq!(
         bytes,
-        encode_state(&project(&records, 1999).unwrap(), 5).unwrap()
+        encode_state(&project(&records, 1999).unwrap(), &no_summary()).unwrap()
     );
 }

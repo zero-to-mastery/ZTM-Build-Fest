@@ -1,0 +1,6 @@
+{
+  "theme": "auto",
+  "animate": true,
+  "maxRepos": 45,
+  "includeForks": true
+}

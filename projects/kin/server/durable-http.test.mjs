@@ -7,6 +7,7 @@ import { DurableStore } from "./durable-store.mjs";
 import { PairingService } from "./pairing-service.mjs";
 import { EncryptedSyncService } from "./sync-service.mjs";
 import { createKinServer } from "./server.mjs";
+import { encodeEnvelopeBatch } from "../web/sync/envelope-wire.js";
 
 test("HTTP stale-writer conflict returns 409 and permits a fresh durable retry", async () => {
   const directory = mkdtempSync(join(tmpdir(), "kin-conflict-http-"));
@@ -58,9 +59,9 @@ test("HTTP stale-writer conflict returns 409 and permits a fresh durable retry",
         method: "POST",
         headers: {
           Cookie: `kin_session=${identity.sessionToken}`,
-          "Content-Type": "application/json",
+          "Content-Type": "application/octet-stream",
         },
-        body: JSON.stringify({ events: [event] }),
+        body: encodeEnvelopeBatch([event]),
       });
     const conflict = await push(envelope("b".repeat(32), 1));
     assert.equal(conflict.status, 409);
@@ -80,8 +81,8 @@ test("HTTP stale-writer conflict returns 409 and permits a fresh durable retry",
     const fatal = await fetch(`${origin}/api/sync/events`, {
       headers: { Cookie: `kin_session=${identity.sessionToken}` },
     });
-    assert.equal(fatal.status, 503);
-    assert.equal((await fatal.json()).error, "durable_store_unavailable");
+    assert.equal(fatal.status, 500);
+    assert.equal((await fatal.json()).error, "sync_store_invalid");
     assert.equal(store.failed, true);
     assert.equal((await fetch(`${origin}/readiness`)).status, 503);
   } finally {

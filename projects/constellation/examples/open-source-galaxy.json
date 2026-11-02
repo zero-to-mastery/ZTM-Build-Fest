@@ -1,0 +1,11 @@
+{
+  "account": "example",
+  "visualTheme": "deep-space",
+  "arrangement": "galaxy",
+  "referenceDate": "2026-09-27T12:00:00.000Z",
+  "foreignGalaxies": { "enabled": true, "minimumContribution": "pr", "limit": 8 },
+  "connectionBasis": "languages",
+  "activityEffect": "comet",
+  "activityMetricDate": "2026-09-27T12:00:00.000Z",
+  "nodeColorMode": "language"
+}

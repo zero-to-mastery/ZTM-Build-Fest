@@ -1,3 +1,5 @@
+import { CLASSIFICATION_LABELS } from "./kin-compose.js";
+
 class KinCatchUp extends HTMLElement {
   connectedCallback() {
     if (this.initialized) return;
@@ -6,7 +8,7 @@ class KinCatchUp extends HTMLElement {
     this.section = document.createElement("section");
     this.section.className = "catch-up-section today-section";
     this.heading = document.createElement("h2");
-    this.heading.textContent = "Since you last checked";
+    this.heading.textContent = "Catch up";
     this.heading.tabIndex = -1;
     this.since = document.createElement("p");
     this.since.className = "catch-up-since";
@@ -44,11 +46,13 @@ class KinCatchUp extends HTMLElement {
   }
 
   set summary(value) {
+    if (value === this.value) return; // unchanged projection section
     this.value = value;
     this.render();
   }
 
   set lastLookedAt(value) {
+    if (value === this.lookedAt) return;
     this.lookedAt = value;
     this.render();
   }
@@ -89,33 +93,34 @@ class KinCatchUp extends HTMLElement {
 }
 
 function entryCopy(entry) {
+  const list = CLASSIFICATION_LABELS[entry.classification] ?? "your lists";
   switch (entry.kind) {
     case "routine-created": return `${entry.text} added to Routines`;
     case "routine-occurrence-completed": return `${entry.text} occurrence completed`;
     case "routine-occurrence-reopened": return `${entry.text} occurrence reopened`;
     case "routine-archived": return `${entry.text} archived`;
     case "item-added":
-      return `${entry.text} added to ${entry.classification === "today" ? "Today" : "Needs"}`;
+      return `${entry.text} added to ${list}`;
     case "item-completed":
-      return `${entry.text} handled`;
+      return `${entry.text} handled in ${list}`;
     case "item-reopened":
-      return `${entry.text} reopened`;
+      return `${entry.text} reopened in ${list}`;
     case "item-archived":
-      return `${entry.text} archived`;
+      return `${entry.text} archived from ${list}`;
     case "handoff-added":
       return `${entry.text} added to Handoff`;
     case "handoff-acknowledged":
-      return `${entry.text} acknowledged`;
+      return `${entry.text} acknowledged in Handoff`;
     case "handoff-archived":
-      return `${entry.text} archived`;
+      return `${entry.text} archived from Handoff`;
     case "talk-added":
       return `${entry.text} added to Talk`;
     case "talk-resolved":
-      return `${entry.text} resolved`;
+      return `${entry.text} resolved in Talk`;
     case "talk-reopened":
-      return `${entry.text} reopened`;
+      return `${entry.text} reopened in Talk`;
     case "talk-archived":
-      return `${entry.text} archived`;
+      return `${entry.text} archived from Talk`;
     default:
       return "A household change was recorded";
   }

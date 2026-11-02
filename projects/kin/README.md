@@ -1,224 +1,250 @@
 # Kin
 
-> A private, lightweight household coordination app for the little things families need to know, remember, hand off, or discuss.
+> A private, lightweight household coordination app for the little things families need to know, remember, hand off or talk about.
 
-**Last published release: `v0.10.3` — Bounded Storage/Archive Hardening & Architecture Closure.** The `v0.11.7` durable-service implementation candidate is tagged `kin-v0.11.7` for human review; it is not a published release. Household events, metadata and private sync keys remain encrypted in browser storage. Startup remains locked until a verified recovery secret or supported passkey PRF unwraps the local root. Recovery protection can be replaced with a new random root and a newly confirmed recovery key. Protected reads use bounded batches, and KARC v1 archives avoid redundant ciphertext copies. Rust owns commands, canonical event codecs, replay and archive framing; browser APIs own cryptography, storage and authentication. Opt-in encrypted relay sync preserves canonical identity and exact retry envelopes.
+**Current implementation line: `v1.6.0` — Kin for Everyone**, released
+2026-10-21 as `kin-v1.6.0`. A hosted instance runs at
+<https://kin.journeytocode.io>, and you can [run your own](#run-kin-on-your-own-server).
+Kin is an entry in the ZTM Build Fest and lives in this repository under
+`projects/kin/`; treat that folder as the project root.
 
-The [v0.10 release record](docs/V0.10.0.md) describes recovery, migration, compatibility, measurements and validation. Root replacement preserves canonical history and sync keys, resumes after interruption using the new recovery key, and requires adding passkey unlock again afterward. Archives are intentionally local-only history recovery and do not restore sync authority. Maximum-history memory and latency remain desktop measurements; mobile readiness is not claimed. This line stops for human review. The v0.11 durable-service candidate awaits review; v0.12–v0.45 and eventual v1.0 remain planned. See the [roadmap](docs/ROADMAP.md). Upgrading v0.9.3 requires security setup and verified migration before the old plaintext dataset gains this protection.
+- [What Kin is](#what-kin-is)
+- [What it does today](#what-it-does-today)
+- [Run Kin locally](#run-kin-locally)
+- [Run Kin on your own server](#run-kin-on-your-own-server)
+- [Check a change](#check-a-change)
+- [Repository layout](#repository-layout)
+- [Documentation](#documentation)
+- [Privacy and security](#privacy-and-security)
+- [AI usage](#ai-usage)
+- [Contributing and community](#contributing-and-community)
+- [License](#license)
+- [Release history](#release-history)
 
-## The problem
+## What Kin is
 
-Household information gets scattered across memory, messages, calendars, sticky notes, verbal conversations, and assumptions. That makes small handoffs easy to miss and everyday coordination harder than it needs to be. The gaps can lead to "I thought you knew," "Why didn't you tell me?", "I thought you were doing that," or conversations happening at the wrong time.
+Household information gets scattered across memory, messages, calendars,
+sticky notes and assumptions. Small handoffs get missed, and everyday
+coordination turns into "I thought you knew" and "I thought you were doing
+that". Kin gives a household one calm place for what matters today, what
+changed since you last looked, and what someone needs from someone else.
 
-Kin aims to make useful household context easier to share and find. It is not a promise to prevent conflict or fix relationships, and it will not decide who is right or measure anyone's contribution.
+It is built for the tired parent holding a child: add something in a tap and a
+few words, see what needs doing, hand something off, and leave. Kin
+coordinates; it does not judge. There are no streaks, scores, contribution
+percentages or rankings, and nothing watches anyone.
 
-## Intended direction
+Technically, Kin is a local-first web app. Each device keeps the household's
+history as an encrypted event log in the browser, a Rust engine compiled to
+WebAssembly replays that log into what you see, and a small Node.js service
+relays encrypted events between a household's devices without ever being able
+to read them. There are no frameworks and no npm runtime dependencies: native
+Web Components, vanilla JavaScript, browser APIs, Rust and SQLite.
 
-Kin is intended as a private, lightweight shared household operating layer. Today and Needs views, lightweight classification, capture, completion, reopening, and archival are implemented locally. Handoff capture, acknowledgement, and recent context are implemented locally. Talk captures short topics for later, with Open/Resolved lists, resolve, reopen, and archive. Resolved is workflow state only, not agreement or an objective solution. Pulse adds fixed current capacity, set/replace/clear and explicit expiry, introduced in Rust protocol v5. Since You Last Looked shows at most eight recent meaningful household changes with an omitted-change count; Pulse is excluded. The user explicitly marks the displayed snapshot caught up. Values are context only, never scores or diagnoses. Routines support Daily/Weekly coordination without reminders, streaks, assignments or calendar UI.
+## What it does today
 
-The intended technical direction is Rust compiled to WebAssembly, native Web Components, vanilla JavaScript, and browser APIs, with a local-first start and no external framework unless a demonstrated requirement justifies one.
+- **Today, Lists, Routines, Updates, Household.** Five destinations on every
+  screen size: what matters today; To do, Shopping, Staples and Meals; routines
+  that repeat daily, weekly, fortnightly or monthly, with turns; handoffs,
+  things to talk about later and one household chat room; and everything about
+  the household itself.
+- **The family hub.** A shared calendar (with outside calendars synced in),
+  This week, a kitchen display for a wall tablet, a chore chart with rewards, a
+  family photo album and photo frame, a fridge door to draw on, and fuller meal
+  plans with recipes.
+- **A private space for each member.** A journal, a Just for me list, reminders
+  and settings that follow you between devices, and a private export.
+- **Accounts and devices.** A username and password, an optional passkey and a
+  backup code; adding your own phone or computer, inviting another person by QR
+  code, and trusted devices an admin can revoke. Up to four adults, plus Limited
+  (children) and Temporary (sitters, guests) members.
+- **For everyone.** Easy mode with bigger text and fewer things on screen, a
+  Simple view, Help on every screen, setting Kin up for someone else with a
+  printed sheet, and reporting a problem from inside the app.
+- **Works offline and installs.** A progressive web app with an offline shell,
+  push notifications, keyboard shortcuts and a command palette, undo and redo,
+  bulk actions, search, share-into-Kin and list import. An Android app for
+  Google Play is in `android/` (built in CI; not yet published).
 
-## October Build Fest plan
+Everything above is implemented and covered by the verification gate. Work
+after v1.0 is tracked as GitHub issues rather than dated versions; the
+[roadmap](docs/ROADMAP.md) records how Kin got here. Kin has not had an
+independent security audit; see [what it does not protect against](docs/THREAT-MODEL.md#known-limitations-at-v10).
 
-> Kin should help a household remember, coordinate, hand off, and recover context without requiring everyone to become a project manager.
+## Run Kin locally
 
-The October plan builds on the existing product and technical foundation with one small, coherent capability per minor release, followed by meaningful correctness, resilience, accessibility, and hardening work. The [roadmap](docs/ROADMAP.md) and [planned release contracts](docs/releases/) define the scope; they do not describe implemented features or authorize release tags.
+You need:
 
-October 3–31, 2026 spans 29 days, matching the 29 planned minor lines from `v0.12.x` through `v0.40.x`. The first target is completing `v0.12.0` on October 3, followed by `v0.13.x` on October 4 and one minor line per day through `v0.40.x` on October 31. The platform work through `v0.16.x` is part of this daily plan. These are targets, not completion claims: the current `v0.11.7` candidate still awaits human review. If prerequisites or a day's acceptance criteria are not met, narrow the feature or move the dates. Create patches only for real stabilization work; never fabricate releases or tags to meet the calendar.
+- **Node.js 24.16.0 or later**. Kin uses Node's built-in SQLite and has no
+  npm dependencies at all, so there is nothing to install; `npm ci` below
+  finishes instantly and only confirms the lockfile.
+- **Rust** via `rustup`, with the `wasm32-unknown-unknown` target. The
+  toolchain is pinned to 1.93.0 by `rust-toolchain.toml`; rustup installs it
+  on first use.
+- A current browser with WebAssembly, IndexedDB, Web Crypto and passkeys.
+  CI validates Edge and Chrome; Firefox and Safari are expected to work but
+  are not certified.
 
-The month targets a coherent, demoable pre-1.0 build at `v0.40.x`. The `v0.41.x`–`v0.45.x` plans remain undated follow-up work after October for recovery drills, broader platform validation, performance, and release-candidate readiness. `v1.0` depends on readiness and human feedback, with no deadline forcing it onto October 31. AI runtime features, gamification, surveillance, and enterprise workflows remain outside this plan.
-
-## Release history
-
-- `v0.0.1` — Product definition and principles (`kin-v0.0.1`)
-- `v0.0.2` — Architecture, event model, and privacy design (`kin-v0.0.2`)
-- `v0.0.3` — UX flows and implementation planning (`kin-v0.0.3`)
-- `v0.0.4` — Household Domain Specification (`kin-v0.0.4`)
-- `v0.0.5` — Trust, Identity, and Synchronization Design (`kin-v0.0.5`)
-- `v0.0.6` — Implementation Contract (`kin-v0.0.6`)
-- `v0.0.7` — Data Durability & Evolution (`kin-v0.0.7`)
-- `v0.0.8` — Developer & Contributor Experience (`kin-v0.0.8`)
-- `v0.0.9` — Implementation Preflight (`kin-v0.0.9`)
-- `v0.0.10` — GitHub Community & Project Documentation (`kin-v0.0.10`)
-- `v0.0.11` — Implementation Cycle Handoff (`kin-v0.0.11`)
-- `v0.0.12` — Changelog & Release History (`kin-v0.0.12`)
-- `v0.1.0` — Household Heartbeat (`kin-v0.1.0`)
-- `v0.1.1` — Core Correctness (`kin-v0.1.1`)
-- `v0.1.2` — Resilience & Accessibility (`kin-v0.1.2`)
-- `v0.1.3` — Household Heartbeat Hardening (`kin-v0.1.3`)
-- `v0.1.4` — Household Heartbeat Maintenance (`kin-v0.1.4`)
-- `v0.1.5` — Final 0.1.x Stabilization (`kin-v0.1.5`)
-- `v0.2.0` — Today + Needs (`kin-v0.2.0`)
-- `v0.2.1` — Today + Needs Correctness (`kin-v0.2.1`)
-- `v0.2.2` — Today + Needs Resilience & Accessibility (`kin-v0.2.2`)
-- `v0.2.3` — Today + Needs Hardening & Polish (`kin-v0.2.3`)
-- `v0.2.4` — Today + Needs Compatibility Fixes (`kin-v0.2.4`)
-- `v0.3.0` — Handoff (`kin-v0.3.0`)
-- `v0.3.1` — Handoff Correctness (`kin-v0.3.1`)
-- `v0.3.2` — Handoff Resilience & Accessibility (`kin-v0.3.2`)
-- `v0.3.3` — Handoff Hardening & Polish (`kin-v0.3.3`)
-- `v0.3.4` — Handoff Retry Recovery (`kin-v0.3.4`)
-- `v0.3.5` — Build & Run Convenience (`kin-v0.3.5`)
-- `v0.4.0` — Talk (`kin-v0.4.0`)
-- `v0.4.1` — Talk Correctness (`kin-v0.4.1`)
-- `v0.4.2` — Talk Resilience & Accessibility (`kin-v0.4.2`)
-- `v0.4.3` — Talk Hardening & Polish (`kin-v0.4.3`)
-- `v0.5.0` — Pulse (`kin-v0.5.0`)
-- `v0.5.1` — Pulse Correctness (`kin-v0.5.1`)
-- `v0.5.2` — Pulse Resilience & Accessibility (`kin-v0.5.2`)
-- `v0.5.3` — Pulse Hardening & Polish (`kin-v0.5.3`)
-- `v0.6.0` — Since You Last Looked (`kin-v0.6.0`)
-- `v0.6.1` — Summary Correctness (`kin-v0.6.1`)
-- `v0.6.2` — Summary Resilience & Accessibility (`kin-v0.6.2`)
-- `v0.6.3` — Summary Hardening & Polish (`kin-v0.6.3`)
-- `v0.7.0` — Routines (`kin-v0.7.0`)
-- `v0.7.1` — Routine Correctness (`kin-v0.7.1`)
-- `v0.7.2` — Routine Resilience & Accessibility (`kin-v0.7.2`)
-- `v0.7.3` — Routine Hardening & Polish (`kin-v0.7.3`)
-- `v0.7.4` — Routine Stale-Action Correctness (`kin-v0.7.4`)
-- `v0.8.0` — Household Pairing Foundation (`kin-v0.8.0`)
-- `v0.8.1` — Pairing Hardening and Failure Recovery (`kin-v0.8.1`)
-- `v0.8.2` — Trusted Devices, Authorization, and Security UX (`kin-v0.8.2`)
-- `v0.8.3` — Household Pairing Pre-Feedback Stabilization (`kin-v0.8.3`)
-- `v0.8.4` — Pairing Creation Response Correctness (`kin-v0.8.4`)
-- `v0.8.5` — Auth Panel Text Contrast (`kin-v0.8.5`)
-- `v0.8.6` — Pairing Feedback-Gate Corrections (`kin-v0.8.6`)
-- `v0.8.7` — Pairing Security and State Hygiene (`kin-v0.8.7`)
-- `v0.8.8` — Active-Member Slot Correctness (`kin-v0.8.8`)
-- `v0.9.0` — Encrypted Event Sync (`kin-v0.9.0`)
-- `v0.9.1` — Device Provisioning, Epochs, and Revocation (`kin-v0.9.1`)
-- `v0.9.2` — Offline Reconciliation and Conflict Semantics (`kin-v0.9.2`)
-- `v0.9.3` — Recovery, Privacy, and Feedback Readiness (`kin-v0.9.3`)
-- `v0.10.0` — Portable Core + Local Data Security (`kin-v0.10.0`)
-- `v0.10.1` — Security Lifecycle & Sync Recovery Correctness (`kin-v0.10.1`)
-- `v0.10.2` — Local Root Rotation & Recovery Lifecycle (`kin-v0.10.2`)
-- `v0.10.3` — Bounded Storage/Archive Hardening & Architecture Closure (`kin-v0.10.3`)
-- Earlier candidate: `v0.11.6` — Release Documentation & Code Clarity (includes v0.11.5 durable semantic integrity; not a published release)
-- Candidate: `v0.11.7` — October Roadmap & Startup Diagnostics (awaiting human review)
-- Planned: `v0.12.x` — Data Lifecycle, Retention & Deletion
-- Planned: `v0.13.x` — Recovery & Household Continuity
-- Planned: `v0.14.x` — UX/UI Consolidation
-- Planned: `v0.15.x` — Household Areas
-- Planned: `v0.16.x` — Household Notes & Reference Context
-- Planned: `v0.17.x`–`v0.40.x` — Incremental household capabilities, portability, and device migration within the October plan; see the [daily roadmap](docs/ROADMAP.md)
-- Planned after October, undated: `v0.41.x`–`v0.45.x` — Recovery drills, broader platform validation, performance, and release-candidate readiness
-- Planned: `v1.0.0` — Stable Kin Platform, when readiness and human feedback support it
-- See the [changelog](CHANGELOG.md) for the completed release history.
-
-## Install, build, and run
-
-Requirements: Rust/Cargo with the `wasm32-unknown-unknown` target, Node.js 22 or later, npm, and a modern browser with WebAssembly, Web Crypto, Web Locks, ES modules, Custom Elements and IndexedDB. Passkeys are needed for server identity/pairing; PRF support is optional because a user-held recovery secret is an explicit local unlock path. Use HTTPS outside localhost.
-
-From the repository root in PowerShell:
+Then, from `projects/kin/`:
 
 ```powershell
-npm ci --prefix projects/kin
+# Windows (PowerShell)
+npm ci
 rustup target add wasm32-unknown-unknown
-./projects/kin/run.ps1
+./run.ps1
 ```
 
-The script builds the WASM module and serves the web app at `http://localhost:8000`. On macOS/Linux, run `sh projects/kin/run.sh` from the repository root.
+```sh
+# macOS and Linux
+npm ci
+rustup target add wasm32-unknown-unknown
+sh run.sh
+```
 
-The service database defaults to `projects/kin/.kin-data/kin.sqlite`; set
-`KIN_DATA_DIR` or `KIN_DATABASE_PATH` to choose another location. Keep the data
-directory outside `web/`, restrict access to the service account, and back it
-up separately. Kin uses SQLite through the locked `better-sqlite3` dependency;
-only Windows with Node 22.12 has been exercised in this implementation
-candidate, so other platform/runtime combinations are not yet certified.
+The script builds the WebAssembly engine, then starts the service inside
+Node's permission sandbox. When the log shows
+`{"event":"service_ready",…}`, open <http://localhost:8000>, choose **Start a
+new household**, and keep the recovery key it shows you somewhere safe: Kin
+cannot recover a household whose every unlock path is lost. The database is
+created at `.kin-data/kin.sqlite` (ignored by Git).
 
-The service persists household identity, authorization metadata, opaque relay
-events and synchronization state. Sessions and in-flight WebAuthn/pairing
-ceremonies expire on restart, so members sign in again with a trusted device
-and passkey. A successful event response means its SQLite transaction committed;
-it does not mean a recipient received/read it or that a backup exists.
+On Windows, if the Node on your PATH is too old, `run.ps1` uses the lowest
+compatible version already installed through fnm; it does not install Node.
+For day-to-day development, `npm run dev` restarts the service when server
+files change (outside the sandbox, which watch mode does not allow), and
+`npm start` runs it as the launcher does. More in
+[DEVELOPMENT](docs/DEVELOPMENT.md).
 
-Create an online, integrity-checked database backup with
-`npm run backup -- <destination>` from `projects/kin/`. Restore only while the
-service is stopped using `npm run restore -- <backup-file>`; restore validates
-the backup and preserves the replaced database and WAL sidecars with a
-`.pre-restore-...` suffix. A stale service lock after a crash is not removed
-automatically: verify the process is stopped before deleting
-`<database-path>.service.lock`. Backups and preserved database copies contain
-sensitive identity/routing metadata and encrypted envelopes; stale restores can
-roll back revocations or key epochs. See [V0.11.0](docs/V0.11.0.md) for the
-full operational and privacy boundaries.
+## Run Kin on your own server
 
-First setup generates a recovery secret that must be confirmed and stored separately. Losing all unlock paths loses access; losing the browser profile also requires an encrypted backup. Drafts are memory-only and disappear on lock/reload. Encrypted archives restore exact history into an empty installation for local use; they do not recreate server identity or device trust. The static application shell supports offline recovery unlock after its first successful cache installation.
+Kin is one Node process and one SQLite file behind a TLS proxy. Four ways to
+run it, from least to most hands-on:
 
-Sync is off until an authenticated adult enables it. The v0.11 implementation candidate persists identity, relay ciphertext, cursors and provisioning state in SQLite; sessions, incomplete pairing and passkey flows remain process-local and expire on restart. Device-token verifiers persist, but raw tokens and private keys do not. A new/replacement adult cannot receive pre-join epochs. Existing adults can pair another device after comparing fingerprints. Encryption does not protect a compromised unlocked runtime, origin, privileged extension or OS. This prototype has not received an independent security audit.
+| | |
+| --- | --- |
+| **Railway** | Connect the repository, attach a volume, set one variable and one DNS record. [deploy/railway/](deploy/railway/README.md) |
+| **Docker Compose** on a Linux server | Kin plus Caddy, which gets the certificate for your subdomain. `cd deploy && cp .env.example .env && docker compose up -d --build`. [deploy/](deploy/README.md) |
+| **Node behind your own proxy** | nginx, Caddy or Traefik in front of `node server/start.mjs`. |
+| **Kin at home** (in progress) | One executable for Linux x64 and arm64 (macOS and Windows follow) or a container, installed as a service on a computer at home. With a name set, it dials out to the connection relay and phones reach it there over TLS that ends on the home server (#733). On first run a setup page on the computer itself chooses the name, gets the certificate and leads to creating the household; afterwards it is the home server's status page, for household admins too (#719, #720). It backs itself up every night and restores from the control panel (#721), and updates itself from signed releases, trying each before keeping it (#722; off until the release key is built in). Moving a household from the hosted service comes next. [HOME-SERVER](docs/HOME-SERVER.md), [ADR 0025](docs/decisions/0025-kin-at-home.md) |
+
+Every setting, the reverse-proxy rules, health endpoints, backups and
+restore, updating, and the optional GitHub forwarding of in-app reports are in
+[SELF-HOSTING](docs/SELF-HOSTING.md). Decide the public address before the
+first member signs up: passkeys are tied to the domain name.
+
+## Check a change
+
+```sh
+npm run verify            # static checks, every Node and Rust test, the WASM build
+npm run verify:browser    # plus the browser suites, in an installed Edge, Chrome or Chromium
+```
+
+The same gate runs in CI as the "Kin verification" workflow on every pull
+request that touches `projects/kin/`. [TESTING](docs/TESTING.md) explains the
+suites, how to run one of them on its own, and what to do about a flake.
+
+## Repository layout
+
+```text
+projects/kin/
+├── rust/           The household engine: events, replay, validation (Rust → WASM)
+├── web/            The app: components/ (Web Components), wasm/ (engine loaders),
+│                   styles/, service-worker.js, privacy.html
+├── server/         The Node service: server.mjs, start.mjs (sandboxed launcher),
+│                   admin.mjs (backup, restore, feedback)
+├── scripts/        The verification gate and the browser regression suites
+├── deploy/         Docker Compose and Railway deployments
+├── android/        The Android app for Google Play (Trusted Web Activity)
+├── play/           Store listing assets
+├── docs/           Documentation; start at docs/README.md
+├── run.sh, run.ps1 Build the engine and start the service
+└── Cargo.toml, package.json, rust-toolchain.toml
+```
+
+## Documentation
+
+[docs/README.md](docs/README.md) maps every document. The ones most people
+need:
+
+- [PRODUCT](docs/PRODUCT.md) and [PRINCIPLES](docs/PRINCIPLES.md): what Kin
+  is for and what it will never do.
+- [ARCHITECTURE](docs/ARCHITECTURE.md): how the engine, the components, the
+  event log and the service fit together.
+- [UX](docs/UX.md): how every screen behaves.
+- [PRIVACY](docs/PRIVACY.md) and [THREAT-MODEL](docs/THREAT-MODEL.md).
+- [V1.0-COMPATIBILITY](docs/V1.0-COMPATIBILITY.md): the formats frozen at v1.0
+  and the promise that every v1.x release keeps reading them.
+- [decisions/](docs/decisions/): the architecture decision records.
+- [CHANGELOG](CHANGELOG.md): every version, newest first.
+
+## Privacy and security
+
+Kin treats privacy as architecture. Household content is encrypted on the
+device before it is stored or sent; the service holds identity and routing
+metadata and encrypted envelopes, never household text or content keys.
+There is no advertising, no analytics on household content and no telemetry.
+
+The public, plain-language privacy policy is [`web/privacy.html`](web/privacy.html),
+served at `/privacy.html` (for the hosted service,
+<https://kin.journeytocode.io/privacy.html>) and linked from Household ›
+Privacy & recovery. It is the policy URL for the Google Play listing; keep it
+accurate to [PRIVACY](docs/PRIVACY.md) and [RETENTION](docs/RETENTION.md). A
+self-hosted server serves the same page, which names the hosted service, so an
+operator should publish their own.
+
+To report a vulnerability, follow the [security policy](SECURITY.md). Please
+do not open a public issue for one.
 
 ## AI usage
 
-AI-assisted development tools are used for brainstorming, product planning, architecture exploration, documentation, implementation support, debugging, and testing. Kin has no AI runtime or analytics, and household data is not sent to an AI service. When sync is explicitly enabled, the service receives encrypted event envelopes and limited routing metadata, never plaintext household semantics or content keys.
+AI-assisted development tools were used throughout: brainstorming, product
+planning, architecture exploration, documentation, implementation support,
+debugging and testing. Kin itself has no AI runtime and no analytics, and
+household data is never sent to an AI service. When sync is turned on, the
+service receives encrypted event envelopes and limited routing metadata, never
+plaintext household content or content keys.
+
+## Contributing and community
+
+Contributions are welcome, from a typo to a feature. Read
+[CONTRIBUTING](CONTRIBUTING.md) for how to set up, what a good change looks
+like and how a pull request is checked. The project follows a
+[Code of Conduct](CODE_OF_CONDUCT.md); [SUPPORT](SUPPORT.md) says where to ask
+questions.
+
+Because Kin is nested in the ZTM Build Fest repository, its community files
+and issue templates live in `projects/kin/` and `projects/kin/.github/`.
+GitHub does not apply nested templates automatically; see
+[GITHUB-COMMUNITY](docs/GITHUB-COMMUNITY.md).
 
 ## License
 
 Kin is available under the [MIT License](LICENSE).
 
-## Community
+## Release history
 
-- [Code of Conduct](CODE_OF_CONDUCT.md)
-- [Contributing](CONTRIBUTING.md)
-- [Security policy](SECURITY.md)
-- [Support](SUPPORT.md)
-- [GitHub community files and monorepo limitations](docs/GITHUB-COMMUNITY.md)
+Every release is tagged `kin-vX.Y.Z` in this repository. The
+[changelog](CHANGELOG.md) has the detail; the lines so far:
 
-Kin is nested in the ZTM Build Fest repository. Its community files and templates are kept inside `projects/kin/`; GitHub does not automatically apply nested `.github` templates or count them in the parent repository's Community Standards profile.
-
-## Project documents
-
-- [Routines release contract and test matrix](docs/V0.7.0.md)
-
-- [Changelog](CHANGELOG.md)
-- [Product vision](docs/PRODUCT.md)
-- [Principles and non-goals](docs/PRINCIPLES.md)
-- [Architecture](docs/ARCHITECTURE.md)
-- [Conceptual data model](docs/DATA-MODEL.md)
-- [Privacy](docs/PRIVACY.md)
-- [Household domain](docs/DOMAIN.md)
-- [Event contract](docs/EVENTS.md)
-- [Derived state and replay](docs/STATE.md)
-- [Entity lifecycles](docs/LIFECYCLES.md)
-- [Identity and trusted devices](docs/IDENTITY.md)
-- [Pairing](docs/PAIRING.md)
-- [Synchronization design](docs/SYNC.md)
-- [Cryptographic posture](docs/CRYPTOGRAPHY.md)
-- [Threat model](docs/THREAT-MODEL.md)
-- [v0.8.0 Household Pairing contract](docs/V0.8.0.md)
-- [v0.9.0 Encrypted Event Sync contract](docs/V0.9.0.md)
-- [Implementation layout and responsibilities](docs/IMPLEMENTATION.md)
-- [JavaScript/WASM ABI](docs/ABI.md)
-- [IndexedDB storage contract](docs/STORAGE.md)
-- [Web Component contract](docs/COMPONENTS.md)
-- [Testing contract](docs/TESTING.md)
-- [Accessibility contract](docs/ACCESSIBILITY.md)
-- [Persistent contract versioning](docs/VERSIONING.md)
-- [Migration safety](docs/MIGRATIONS.md)
-- [Portable household data](docs/PORTABILITY.md)
-- [Retention and deletion](docs/RETENTION.md)
-- [Development workflow](docs/DEVELOPMENT.md)
-- [Code style](docs/CODE-STYLE.md)
-- [Release process](docs/RELEASES.md)
-- [Debugging and diagnostics](docs/DEBUGGING.md)
-- [Implementation preflight](docs/PREFLIGHT.md)
-- [Requirement traceability](docs/TRACEABILITY.md)
-- [Canonical test vectors](docs/TEST-VECTORS.md)
-- [Since You Last Looked release contract](docs/V0.6.0.md)
-- [Accepted architecture decision: event-sourced household state](docs/decisions/0001-event-sourced-household-state.md)
-- [UX flows](docs/UX.md)
-- [Roadmap](docs/ROADMAP.md)
-- [Build Fest daily cadence](docs/BUILD-FEST-CADENCE.md)
-- [Platform foundation and early October sequence through v0.16](docs/BRIDGE-0.11-0.16.md)
-- [Product boundaries for the October plan](docs/PRODUCT-BOUNDARIES.md)
-- [Minor-release stabilization protocol](docs/RELEASE-LINE-PROTOCOL.md)
-- [v0.11 Durable Service & Deployment implementation candidate](docs/V0.11.0.md)
-- [Planned v0.12 Data Lifecycle, Retention & Deletion contract](docs/V0.12.0.md)
-- [Planned v0.13 Recovery & Household Continuity contract](docs/V0.13.0.md)
-- [Planned v0.14 UX/UI Consolidation contract](docs/V0.14.0.md)
-- [Planned v0.15 Household Areas contract](docs/releases/V0.15.0.md)
-- [Planned v0.16 Household Notes & Reference Context contract](docs/releases/V0.16.0.md)
-- [Planned release contracts: October through v0.40 and undated v0.41–v0.45 follow-up](docs/releases/)
-- [v0.1.0 implementation specification](docs/V0.1.0.md)
-- [Handoff release contract and final validation](docs/V0.3.0.md)
-
-- [Talk release contract and validation](docs/V0.4.0.md)
+- **v1.6.0 — Kin for Everyone** (2026-10-21): easy mode, Help on every screen,
+  household features an admin can switch off, reports and suggestions from
+  inside the app, setting Kin up for someone else, and the Android app.
+- **v1.5.0 — One Account and Private Spaces** (2026-10-21): username and
+  password, passkey and backup code, new-device sign-in, the journal, Just for
+  me, and reminders and settings that follow each member.
+- **v1.4.0 — Fridge, Meals and Household Helpers** (2026-10-20): the fridge,
+  Meals, Simple view, Talk later, undo and redo, share into Kin, shopping mode,
+  store sections, list import, This week, the sitter page and taking turns.
+- **v1.3.0 — Member Names and Clearer Setup** (2026-10-19).
+- **v1.2.0 — Household Chat** (2026-10-19): one chat room with receipts,
+  replies, reactions, polls and voice messages.
+- **v1.1.0 to v1.1.2 — Connected Household Devices** (2026-10-18): device
+  names, installed-app identity, push notifications, the service sandbox and
+  QR pairing.
+- **v1.0.0 — Stable Kin Platform** (2026-10-17): the first stable release,
+  freezing the storage, sync, export and server formats.
+- **v0.1.0 to v0.47.0** (September and October 2026): from the first
+  implementation through encrypted sync, the durable service, recovery,
+  the workspace UX and more than thirty capability lines. v0.21 to v0.47 were
+  never tagged on their own and shipped in v1.0.0.
+- **v0.0.1 to v0.0.12**: planning and documentation only.

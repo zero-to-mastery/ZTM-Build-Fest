@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "account": "example-community",
+  "accountType": "organization",
+  "organizationScope": "sample",
+  "organizationView": "collaboration",
+  "arrangement": "community-galaxy",
+  "maxRepos": 32,
+  "animate": false,
+  "identityRing": false,
+  "nodeColorMode": "language",
+  "organization": {
+    "contributors": { "enabled": true, "strategy": "representative", "maxRepositories": 100, "maxContributorsPerRepo": 25 },
+    "grouping": { "mode": "year" }
+  }
+}

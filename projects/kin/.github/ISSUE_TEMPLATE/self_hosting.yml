@@ -1,0 +1,49 @@
+name: Self-hosting help
+description: Trouble running Kin on your own server or computer
+title: "Kin: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please read [SELF-HOSTING](https://github.com/mnichols08/ZTM-Build-Fest/blob/kin-development/projects/kin/docs/SELF-HOSTING.md) first; most questions about proxies, passkeys, backups and settings are answered there. Remove secrets (tokens, keys, private calendar links) from anything you paste.
+  - type: dropdown
+    id: how
+    attributes:
+      label: How you run Kin
+      options:
+        - Docker Compose (deploy/)
+        - Railway (deploy/railway/)
+        - Node directly behind my own proxy
+        - On my computer with run.sh / run.ps1
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Kin version or commit
+      placeholder: kin-v1.6.0
+    validations:
+      required: true
+  - type: input
+    id: node
+    attributes:
+      label: Node.js version and operating system
+      placeholder: Node 24.22.0 on Ubuntu 24.04
+    validations:
+      required: true
+  - type: textarea
+    id: settings
+    attributes:
+      label: KIN_* settings, with secrets removed
+      render: shell
+      placeholder: |
+        KIN_ORIGIN=https://kin.example.org
+        KIN_TRUSTED_PROXIES=127.0.0.1,::1
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you did, what you expected, and what happened
+      description: Include the `service_ready` or `startup_failed` log line, and any message Kin or your proxy showed.
+    validations:
+      required: true

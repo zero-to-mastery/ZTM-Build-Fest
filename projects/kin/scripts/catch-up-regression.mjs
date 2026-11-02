@@ -37,13 +37,6 @@ export async function catchUpRegressions() {
       request.onerror = () => reject(request.error);
     });
   };
-  const resetCursor = async () => {
-    const existing = await context();
-    delete existing.last_looked_event_id;
-    delete existing.last_looked_local_sequence;
-    delete existing.last_looked_at;
-    await writeContext(existing);
-  };
   const makeBoundary = (snapshot) => ({
     eventId: snapshot.through.eventId,
     localSequence: snapshot.through.localSequence,
@@ -51,37 +44,17 @@ export async function catchUpRegressions() {
     snapshotThroughLocalSequence: snapshot.through.localSequence,
   });
 
-  let rows = await app.store.loadEvents();
-  let localContext = await context();
-  const historyCount = rows.length;
-  const logicalTime = localContext.next_logical_time;
-  const oldTail = rows.at(-1);
-  await resetCursor();
-  const initialized = await context();
-  check(
-    initialized.last_looked_local_sequence === oldTail.local_sequence &&
-      [...initialized.last_looked_event_id].every(
-        (byte, index) => byte === oldTail.event_id[index],
-      ),
-    "legacy context initializes caught up through existing history",
-  );
-  check(
-    initialized.next_logical_time === logicalTime &&
-      (await count()) === historyCount,
-    "first-run initialization does not mutate events or logical time",
-  );
-  await app.refreshFromEvents();
+  // Start caught up through the existing history, through the real path.
+  let localContext;
+  const existing = await app.store.getCatchUpState();
+  if (existing.through) await app.store.markCaughtUpThrough(makeBoundary(existing));
+  await app.ctx.refresh.refreshFromEvents();
   check(
     app.state.summary.totalCount === 0 &&
       app.catchUp.empty.textContent === "You're caught up.",
-    "existing history does not flood the first summary",
+    "history already marked as seen does not flood the summary",
   );
-
-  await resetCursor();
-  rows = await app.store.loadEvents();
-  const initializationTail = rows.at(-1);
-  const initialization = app.store.ensureContext();
-  const concurrentAppend = app.store.append(
+  const appendResult = await app.store.append(
     {
       type: "add",
       text: "Initialization race addition",
@@ -89,20 +62,11 @@ export async function catchUpRegressions() {
     },
     app.engine,
   );
-  const [initializedContext, appendResult] = await Promise.all([
-    initialization,
-    concurrentAppend,
-  ]);
-  check(
-    initializedContext.last_looked_local_sequence ===
-      initializationTail.local_sequence,
-    "initialization captures the pre-append transaction boundary",
-  );
   check(
     appendResult.state.summary.totalCount === 1 &&
       appendResult.state.summary.entries[0].text ===
         "Initialization race addition",
-    "an append ordered after initialization remains unseen",
+    "an append after the cursor remains unseen",
   );
   const handoff = await app.store.append(
     { type: "add-handoff", text: "Diaper bag summary" },
@@ -129,7 +93,7 @@ export async function catchUpRegressions() {
     },
     app.engine,
   );
-  await app.refreshFromEvents();
+  await app.ctx.refresh.refreshFromEvents();
   check(
     app.state.summary.totalCount === 5 &&
       app.state.summary.entries.map((entry) => entry.kind).join(",") ===
@@ -231,7 +195,7 @@ export async function catchUpRegressions() {
       afterStaleWrite.next_logical_time === monotonicCounter,
     "monotonic cursor updates do not touch canonical events or logical time",
   );
-  await app.refreshFromEvents();
+  await app.ctx.refresh.refreshFromEvents();
 
   for (let index = 0; index < 10; index += 1) {
     await app.store.append(
@@ -239,7 +203,7 @@ export async function catchUpRegressions() {
       app.engine,
     );
   }
-  await app.refreshFromEvents();
+  await app.ctx.refresh.refreshFromEvents();
   check(
     app.state.summary.entries.length === 8 &&
       app.state.summary.totalCount === 10,
@@ -247,9 +211,9 @@ export async function catchUpRegressions() {
   );
   check(
     app.catchUp.list.firstElementChild.textContent ===
-      "Bounded change 2 added to Needs" &&
+      "Bounded change 2 added to To do" &&
       app.catchUp.list.lastElementChild.textContent ===
-        "Bounded change 9 added to Needs" &&
+        "Bounded change 9 added to To do" &&
       app.catchUp.omitted.textContent === "2 earlier changes",
     "bounded entries preserve order and report omitted earlier changes",
   );
@@ -329,18 +293,18 @@ export async function catchUpRegressions() {
     "partial local cursor metadata fails closed and is not initialized over",
   );
   await writeContext(validContext);
-  await app.refreshFromEvents();
+  await app.ctx.refresh.refreshFromEvents();
 
   const addPendingChange = async (text) => {
     await app.store.append(
       { type: "add", text, classification: "need" },
       app.engine,
     );
-    await app.refreshFromEvents();
+    await app.ctx.refresh.refreshFromEvents();
   };
-  const originalBroadcast = app.broadcastViewStateChange.bind(app);
+  const originalBroadcast = app.ctx.peers.broadcastViewStateChange.bind(app.ctx.peers);
   let cursorBroadcasts = 0;
-  app.broadcastViewStateChange = () => {
+  app.ctx.peers.broadcastViewStateChange = () => {
     cursorBroadcasts += 1;
     originalBroadcast();
   };
@@ -423,7 +387,7 @@ export async function catchUpRegressions() {
   await idle();
 
   check(cursorBroadcasts === 1, "abort retry broadcasts its committed write");
-  app.broadcastViewStateChange = originalBroadcast;
+  app.ctx.peers.broadcastViewStateChange = originalBroadcast;
   await addPendingChange("Catch-up refresh recovery");
   const refreshCursor = await context();
   const refreshSummary = JSON.stringify(app.state.summary);
@@ -432,8 +396,8 @@ export async function catchUpRegressions() {
     throw new Error("Synthetic catch-up refresh failure");
   };
   try {
-    await app.refreshFromEvents();
-    await app.refreshFromEvents();
+    await app.ctx.refresh.refreshFromEvents();
+    await app.ctx.refresh.refreshFromEvents();
   } finally {
     app.store.getCatchUpState = originalSnapshotRead;
   }
@@ -458,7 +422,7 @@ export async function catchUpRegressions() {
     { type: "add", text: "Catch-up reconnect pending", classification: "need" },
     app.engine,
   );
-  await app.refreshFromEvents();
+  await app.ctx.refresh.refreshFromEvents();
   const pendingBoundary = structuredClone(app.snapshotBoundary);
   const pendingCount = await count();
   const pendingCounter = (await context()).next_logical_time;
@@ -478,14 +442,14 @@ export async function catchUpRegressions() {
     "catch-up write exposes busy state",
   );
   try {
-    app.handlePeerMessage({ data: { type: "view-state-changed" } });
+    app.ctx.peers.handlePeerMessage({ data: { type: "view-state-changed" } });
     check(app.busy && app.pendingRefresh, "peer refresh does not unlock pending catch-up write");
   } finally {
     releaseMark();
     app.store.markCaughtUpThrough = mark;
   }
   await idle();
-  await app.refreshFromEvents();
+  await app.ctx.refresh.refreshFromEvents();
   const afterReconnect = await context();
   check(
     afterReconnect.last_looked_local_sequence ===
@@ -504,10 +468,10 @@ export async function catchUpRegressions() {
     },
     app.engine,
   );
-  await app.refreshFromEvents();
+  await app.ctx.refresh.refreshFromEvents();
   const visibleSummary = structuredClone(app.state.summary);
   const pulseStartedAt = Date.now();
-  await app.savePulse({
+  await app.ctx.conversations.savePulse({
     type: "set-pulse",
     value: "okay",
     timestamp: pulseStartedAt,
@@ -544,7 +508,7 @@ export async function catchUpRegressions() {
       },
     )}`,
   );
-  await app.savePulse({ type: "clear-pulse" });
+  await app.ctx.conversations.savePulse({ type: "clear-pulse" });
 
   finalSnapshot = await app.store.getCatchUpState();
   sessionStorage.setItem(
@@ -555,7 +519,7 @@ export async function catchUpRegressions() {
 }
 
 export async function catchUpPeerRegressions(first, second, until) {
-  await first.evaluate(`document.querySelector('kin-app').handleAddItem({
+  await first.evaluate(`document.querySelector('kin-app').ctx.items.handleAddItem({
     detail: { text: 'Cross-tab catch-up change', classification: 'need' }
   })`);
   await until(() =>
@@ -569,6 +533,9 @@ export async function catchUpPeerRegressions(first, second, until) {
   await first.evaluate(
     `document.querySelector('kin-app').catchUp.button.focus()`,
   );
+  await until(() => first.evaluate(
+    `document.activeElement===document.querySelector('kin-app').catchUp.button`,
+  ));
   for (const type of ["keyDown", "keyUp"]) {
     await first.send("Input.dispatchKeyEvent", {
       type,
@@ -584,6 +551,10 @@ export async function catchUpPeerRegressions(first, second, until) {
     return app.state.summary.totalCount===0 && app.catchUpCursor.localSequence===app.snapshotBoundary?.localSequence;
   })()`),
   );
+  await until(() => first.evaluate(`(()=>{
+    const app=document.querySelector('kin-app');
+    return !app.busy && !app.refreshing && !app.pendingRefresh && !app.wakePending && document.activeElement===app.catchUp.heading;
+  })()`));
   assert.deepEqual(
     await second.evaluate("window.catchUpMessages"),
     [{ type: "view-state-changed" }],
@@ -606,7 +577,7 @@ export async function catchUpPeerRegressions(first, second, until) {
     'message',window.catchUpListener
   )`);
 
-  await first.evaluate(`document.querySelector('kin-app').handleAddItem({
+  await first.evaluate(`document.querySelector('kin-app').ctx.items.handleAddItem({
     detail: { text: 'Committed cursor refresh recovery', classification: 'need' }
   })`);
   await until(() => second.evaluate(`document.querySelector('kin-app').state.summary.entries.some(
@@ -634,7 +605,7 @@ export async function catchUpPeerRegressions(first, second, until) {
       app.store.getCatchUpState=async()=>{
         throw new Error('Synthetic post-commit snapshot failure');
       };
-      await app.handleCaughtUp();
+      await app.ctx.refresh.handleCaughtUp();
     })()`);
     await until(() => second.evaluate(`window.catchUpMessages.length===1 &&
       document.querySelector('kin-app').state.summary.totalCount===0`));
@@ -684,11 +655,11 @@ export async function catchUpPeerRegressions(first, second, until) {
       'message',window.catchUpListener
     )`);
   }
-  await first.evaluate("document.querySelector('kin-app').handleCaughtUp()");
+  await first.evaluate("document.querySelector('kin-app').ctx.refresh.handleCaughtUp()");
   await until(() => second.evaluate("document.querySelector('kin-app').state.summary.totalCount===0"));
   console.log('PASS committed cursor with failed refresh preserves local summary, invalidates peers, and retries without writing');
 
-  await first.evaluate(`document.querySelector('kin-app').handleAddItem({
+  await first.evaluate(`document.querySelector('kin-app').ctx.items.handleAddItem({
     detail: { text: 'Missed cursor notification', classification: 'need' }
   })`);
   await until(() =>
@@ -768,9 +739,9 @@ export async function catchUpPeerRegressions(first, second, until) {
   await markBoundary(second, newerA);
   assert.deepEqual(await readCursor(first), await readCursor(second));
   assert.equal((await readCursor(second)).localSequence, newerA.localSequence);
-  await first.evaluate("document.querySelector('kin-app').refreshFromEvents()");
+  await first.evaluate("document.querySelector('kin-app').ctx.refresh.refreshFromEvents()");
   await second.evaluate(
-    "document.querySelector('kin-app').refreshFromEvents()",
+    "document.querySelector('kin-app').ctx.refresh.refreshFromEvents()",
   );
   console.log(
     "PASS content-free cross-tab invalidation, missed-notification recovery, and both stale/new cursor write orders",

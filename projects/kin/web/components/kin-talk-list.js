@@ -11,10 +11,11 @@ class KinTalkList extends HTMLElement {
     const section = document.createElement("section");
     section.className = "today-section talk-section";
     const heading = document.createElement("h2");
-    heading.textContent = "Talk";
+    heading.textContent = this.getAttribute("heading") ?? "To talk about";
+    this.headingElement = heading;
     const hint = document.createElement("p");
     hint.className = "talk-hint";
-    hint.textContent = "Things worth coming back to.";
+    hint.textContent = "Topics to discuss when there is a calm moment. Resolving a topic only means the conversation happened; it is not an agreement.";
     const form = document.createElement("form");
     form.className = "compose-form talk-form";
     const label = document.createElement("label");
@@ -30,7 +31,7 @@ class KinTalkList extends HTMLElement {
     this.button = document.createElement("button");
     this.button.type = "submit";
     this.button.className = "add-button";
-    this.button.textContent = "Add";
+    this.button.textContent = "Add topic";
     this.message = document.createElement("p");
     this.message.id = "talk-message";
     this.message.className = "compose-message";
@@ -41,7 +42,7 @@ class KinTalkList extends HTMLElement {
       if (this.isDisabled) return;
       const text = this.input.value;
       if (!text.trim() || new TextEncoder().encode(text).length > 4096) {
-        this.message.textContent = "Add a few words, up to 4096 UTF-8 bytes.";
+        this.message.textContent = text.trim() ? "That's too long for one topic. Shorten it to roughly 4,000 characters or fewer." : "Add a few words first.";
         this.focusInput();
         return;
       }
@@ -56,7 +57,14 @@ class KinTalkList extends HTMLElement {
     this.disabled = this.isDisabled;
   }
 
+  static get observedAttributes() { return ["heading"]; }
+
+  attributeChangedCallback() {
+    if (this.headingElement) this.headingElement.textContent = this.getAttribute("heading") ?? "To talk about";
+  }
+
   set talks(value) {
+    if (value === this.records) return; // unchanged projection section
     this.records = value;
     this.render();
   }
@@ -94,7 +102,7 @@ class KinTalkList extends HTMLElement {
     if (!visible.length) {
       const empty = document.createElement("p");
       empty.className = "empty-state";
-      empty.textContent = "No topics yet. Add something worth coming back to.";
+      empty.textContent = "No topics yet. Add something worth talking about later."
       this.lists.append(empty);
     }
     for (const [status, title] of [["open", "Open"], ["resolved", "Resolved"]]) {
@@ -108,6 +116,8 @@ class KinTalkList extends HTMLElement {
       for (const record of records) {
         const row = document.createElement("li");
         row.className = "item-row talk-row";
+        row.dataset.talkId = record.talkId;
+        row.tabIndex = -1;
         const text = document.createElement("p");
         text.className = "item-text";
         text.textContent = record.text;

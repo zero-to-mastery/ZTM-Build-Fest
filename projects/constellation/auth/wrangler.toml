@@ -1,0 +1,9 @@
+name = "constellation-auth"
+main = "github-exchange.mjs"
+compatibility_date = "2026-09-01"
+# Set these public deployment values before publishing. Store the secret with
+# `wrangler secret put GITHUB_CLIENT_SECRET`, never in this file.
+[vars]
+GITHUB_CLIENT_ID = ""
+GITHUB_REDIRECT_URI = "https://mnichols08.github.io/constellation/"
+STUDIO_ORIGIN = "https://mnichols08.github.io"

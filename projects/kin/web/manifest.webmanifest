@@ -1,12 +1,39 @@
 {
   "id": "/",
-  "name": "Kin",
+  "name": "Kin — Household coordination",
   "short_name": "Kin",
   "description": "Private household coordination with encrypted local storage.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#f5f2e9",
-  "theme_color": "#214937",
-  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+  "orientation": "any",
+  "background_color": "#f5f1e9",
+  "theme_color": "#684033",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "categories": ["lifestyle", "utilities"],
+  "share_target": {
+    "action": "/share",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [{ "name": "files", "accept": ["image/*", "application/pdf", "text/calendar"] }]
+    }
+  },
+  "shortcuts": [
+    { "name": "Add to shopping", "short_name": "Add to shopping", "description": "Add something to the shopping list", "url": "/#kin-action=add-shopping", "icons": [{ "src": "/icons/shortcut-add-shopping-96.png", "sizes": "96x96", "type": "image/png" }, { "src": "/icons/shortcut-add-shopping-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Add a task", "short_name": "Add a task", "description": "Add a task to To do", "url": "/#kin-action=quick-add", "icons": [{ "src": "/icons/shortcut-add-task-96.png", "sizes": "96x96", "type": "image/png" }, { "src": "/icons/shortcut-add-task-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "New journal entry", "short_name": "Journal entry", "description": "Write in your own journal", "url": "/#kin-action=new-journal-entry", "icons": [{ "src": "/icons/shortcut-new-journal-entry-96.png", "sizes": "96x96", "type": "image/png" }, { "src": "/icons/shortcut-new-journal-entry-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "This week", "short_name": "This week", "description": "The next seven days", "url": "/#week", "icons": [{ "src": "/icons/shortcut-week-96.png", "sizes": "96x96", "type": "image/png" }, { "src": "/icons/shortcut-week-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Shopping", "short_name": "Shopping", "description": "The shopping list", "url": "/#lists/shopping", "icons": [{ "src": "/icons/shortcut-shopping-96.png", "sizes": "96x96", "type": "image/png" }, { "src": "/icons/shortcut-shopping-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Chat", "short_name": "Chat", "description": "Household chat", "url": "/#updates/chat", "icons": [{ "src": "/icons/shortcut-chat-96.png", "sizes": "96x96", "type": "image/png" }, { "src": "/icons/shortcut-chat-192.png", "sizes": "192x192", "type": "image/png" }] },
+    { "name": "Today", "short_name": "Today", "description": "What matters today", "url": "/#today", "icons": [{ "src": "/icons/shortcut-today-96.png", "sizes": "96x96", "type": "image/png" }, { "src": "/icons/shortcut-today-192.png", "sizes": "192x192", "type": "image/png" }] }
+  ]
 }

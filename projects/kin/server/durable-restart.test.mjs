@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline";
 import test from "node:test";
 import { DurableStore, hasDatabaseProcessLock } from "./durable-store.mjs";
+import { requestBody, responseBody } from "./sync-wire-test-utils.mjs";
 
 const workerPath = fileURLToPath(
   new URL("./durable-restart-worker.mjs", import.meta.url),
@@ -90,20 +91,16 @@ async function startWorker(databasePath) {
 }
 
 async function api(port, path, { method = "GET", cookie, body } = {}) {
+  const request = requestBody(path, method, body);
   const response = await fetch(`http://127.0.0.1:${port}${path}`, {
     method,
     headers: {
       ...(cookie ? { Cookie: cookie } : {}),
-      ...(body ? { "Content-Type": "application/json" } : {}),
+      ...request.headers,
     },
-    body: body ? JSON.stringify(body) : undefined,
+    body: request.body,
   });
-  return {
-    response,
-    body: response.headers.get("content-type")?.includes("application/json")
-      ? await response.json()
-      : null,
-  };
+  return { response, body: await responseBody(response) };
 }
 
 function cookieValue(response, name) {

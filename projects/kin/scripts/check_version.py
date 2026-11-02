@@ -30,25 +30,21 @@ def main() -> int:
 
     readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
     require_match(
-        "README last published release",
-        r"^\*\*Last published release: `v([0-9]+\.[0-9]+\.[0-9]+)`",
-        readme,
-        version,
-    )
-    require_match(
-        "README release history",
-        rf"^- `v({re.escape(version)})` —",
+        "README current implementation line",
+        r"Current implementation line: `v([0-9]+\.[0-9]+\.[0-9]+)`",
         readme,
         version,
     )
 
     changelog = (PROJECT_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
-    require_match(
-        "CHANGELOG latest published release",
-        r"^## v([0-9]+\.[0-9]+\.[0-9]+)(?: —|$)",
+    if not re.search(
+        rf"^##(?:#)? (?:Unreleased — )?v{re.escape(version)}[ —]",
         changelog,
-        version,
-    )
+        re.MULTILINE,
+    ):
+        raise ValueError(
+            f"CHANGELOG: current implementation line {version} is missing"
+        )
 
     issue_template = (PROJECT_ROOT / ".github/ISSUE_TEMPLATE/bug_report.yml").read_text(encoding="utf-8")
     require_match("bug report version placeholder", r"^\s+placeholder: kin-v([0-9]+\.[0-9]+\.[0-9]+)$", issue_template, version)
@@ -64,26 +60,25 @@ def main() -> int:
     if not isinstance(server_version, str):
         raise ValueError("package.json: server package.version is missing or invalid")
     if server_version != version:
-        require_match(
-            "README durable-service candidate",
-            rf"`v({re.escape(server_version)})` durable-service implementation candidate",
-            readme,
-            server_version,
+        raise ValueError(
+            f"package.json: expected Kin implementation line {version}, found {server_version}"
         )
-        require_match(
-            "CHANGELOG durable-service candidate",
-            r"^## Unreleased — v[0-9]+\.[0-9]+\.[0-9]+–v([0-9]+\.[0-9]+\.[0-9]+) Durable Service & Deployment candidate$",
-            changelog,
-            server_version,
-        )
-        if f"v{server_version}" not in agents:
-            raise ValueError(
-                f"AGENTS.md: durable-service candidate v{server_version} is missing"
-            )
+
+    index = (PROJECT_ROOT / "web/index.html").read_text(encoding="utf-8")
+    require_match("index release metadata", r'<meta name="kin-version" content="([0-9]+\.[0-9]+\.[0-9]+)"', index, version)
+    archive = (PROJECT_ROOT / "web/security/archive.js").read_text(encoding="utf-8")
+    require_match("portable archive metadata", r'^const KIN_VERSION = "([0-9]+\.[0-9]+\.[0-9]+)";', archive, version)
+    worker = (PROJECT_ROOT / "web/service-worker.js").read_text(encoding="utf-8")
+    if 'const CACHE = `kin-static-v${RELEASE}`;' not in worker:
+        raise ValueError("service worker cache name must derive from the release registration URL")
+    # The app shell registers the worker from its status controller.
+    app = (PROJECT_ROOT / "web/components/app/status.js").read_text(encoding="utf-8")
+    if '/service-worker.js?v=${encodeURIComponent(release ?? "")}' not in app:
+        raise ValueError("service worker registration must pass the document release version")
 
     print(
-        f"Kin published version {version} and server version {server_version} "
-        "are consistent across their release metadata."
+        f"Kin implementation candidate {version} is consistent across client, "
+        "server, and release metadata."
     )
     return 0
 

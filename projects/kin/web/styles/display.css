@@ -1,0 +1,306 @@
+/* Kitchen display mode (#669: #670, #671, ADR 0022 §4).
+   A wall tablet, read from two or three metres away and touched by wet or
+   small fingers: big type, nothing to press smaller than 64px, a grid of
+   regions (display/panels.js) laid out for portrait and landscape 10"+
+   tablets, a night dimmer and a screensaver. Uses app.css's tokens, so dark
+   mode follows the appearance; reduced motion, forced colours and "more
+   contrast" are honoured below. */
+
+:root { --display-tap: 64px; --display-gap: clamp(12px, 1.6vw, 24px); }
+
+/* A household that switched the Kitchen display off hides its setup. */
+:root[data-kin-features-off~="display"] [data-feature~="display"] { display: none !important; }
+
+/* ---- Household › Overview: the setup section ---------------------------- */
+.display-setup { margin-block-start: var(--space-4); }
+.display-setup h2 { margin-block-end: var(--space-1); }
+.display-setup-shows { margin-block: var(--space-2); padding-inline-start: 1.25rem; }
+.display-setup-shows li + li { margin-block-start: 4px; }
+.display-setup-lock { font-weight: 600; }
+.display-setup-form { display: grid; gap: var(--space-2); margin-block-start: var(--space-2); }
+.display-setup-form[hidden], .display-setup-unavailable[hidden] { display: none; }
+.display-setup-form fieldset { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0; padding: var(--space-2); border: 1px solid var(--line); border-radius: var(--r-row); }
+.display-setup-form legend { padding-inline: 4px; font-weight: 600; }
+.display-setup-time, .display-setup-field { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); margin: 0; }
+.display-setup-form input, .display-setup-form select { min-block-size: var(--tap); font: inherit; }
+.display-setup-start { justify-self: start; min-block-size: var(--display-tap); padding-inline: 24px; font-size: 1.1rem; }
+
+/* ---- The shell: no header, no navigation, no Quick add ------------------- */
+:root[data-kin-display="on"] .site-header,
+:root[data-kin-display="on"] .primary-nav,
+:root[data-kin-display="on"] .report-button,
+:root[data-kin-display="on"] .fridge-kitchen-note,
+:root[data-kin-display="on"] .tonight-link,
+:root[data-kin-display="on"] .today-tip { display: none !important; }
+:root[data-kin-display="on"] .application-shell { display: block; max-width: none; padding: 0; margin: 0; }
+:root[data-kin-display="on"] main { max-width: none; margin: 0; padding: 0; }
+:root[data-kin-display="on"] body { overscroll-behavior: none; }
+.display-view { padding: 0; }
+/* The display takes the whole screen: not Today's two-column grid (the view
+   keeps id="today" for routing), the content width or the detail column. */
+:root[data-kin-display="on"] .workspace-controls { display: block; }
+:root[data-kin-display="on"] #today.app-view.display-view { display: block; max-width: none; animation: none; }
+.display-background[hidden] { display: none; }
+
+.kitchen-display {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--display-gap);
+  min-block-size: 100dvh;
+  padding: var(--display-gap);
+  box-sizing: border-box;
+  font-size: clamp(18px, 1.55vw, 24px);
+  line-height: 1.35;
+}
+
+.display-header { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--display-gap); }
+.display-when { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--display-gap); flex: 1 1 auto; }
+.display-time { margin: 0; font-size: clamp(2.6rem, 5.5vw, 4.5rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.display-date { margin: 0; font-size: clamp(1.4rem, 2.6vw, 2.2rem); font-weight: 600; }
+.display-date:focus { outline: none; }
+.display-notice { margin: 0; padding: 8px 14px; border-radius: var(--r-control); background: var(--warm-soft); color: var(--ink); font-weight: 600; }
+.display-notice[hidden] { display: none; }
+.display-tools { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.kitchen-display button,
+.kitchen-display input[type="text"],
+.kitchen-display .cal-strip-day,
+.kitchen-display summary { min-block-size: var(--display-tap); min-inline-size: var(--display-tap); font-size: 1rem; }
+.display-tools button { padding-inline: 22px; border-radius: var(--r-control); }
+
+/* ---- Regions: landscape by default, portrait below ----------------------- */
+.display-grid {
+  flex: 1 1 auto;
+  display: grid;
+  gap: var(--display-gap);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr);
+  grid-template-areas:
+    "week week week"
+    "now chores lists"
+    "board board lists";
+  align-content: start;
+}
+.display-region { display: flex; flex-direction: column; gap: var(--display-gap); min-inline-size: 0; }
+.display-region[hidden] { display: none; }
+.display-region[data-region="week"] { grid-area: week; }
+.display-region[data-region="now"] { grid-area: now; }
+.display-region[data-region="chores"] { grid-area: chores; }
+.display-region[data-region="lists"] { grid-area: lists; }
+.display-region[data-region="board"] { grid-area: board; }
+/* Without the chart, the other columns share the row. */
+.display-grid:not([data-regions~="chores"]) { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "week week" "now lists" "board lists"; }
+
+@media (orientation: portrait) {
+  .display-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "week week"
+      "now lists"
+      "chores chores"
+      "board board";
+  }
+  .display-grid:not([data-regions~="chores"]) { grid-template-areas: "week week" "now lists" "board board"; }
+}
+/* A narrow screen (a phone held as a display) stacks everything. */
+@media (max-width: 719px) {
+  .display-grid, .display-grid:not([data-regions~="chores"]) { grid-template-columns: minmax(0, 1fr); grid-template-areas: "week" "now" "chores" "lists" "board"; }
+}
+
+.display-panel {
+  min-inline-size: 0;
+  padding: var(--display-gap);
+  border: 1px solid var(--line);
+  border-radius: var(--r-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-1);
+  box-sizing: border-box;
+}
+.display-panel[data-size="l"] { flex: 2 1 auto; }
+.display-panel[data-size="m"] { flex: 1 1 auto; }
+.display-panel[data-size="s"] { flex: 0 1 auto; }
+.display-panel h2, .display-panel-title { margin: 0 0 var(--space-2); font-size: 1.35em; line-height: 1.2; }
+.display-empty { margin: 0; color: var(--ink-muted); }
+.display-empty[hidden] { display: none; }
+.kitchen-display .section-hint { font-size: 0.9em; }
+
+/* The reused panels at display size. */
+.kitchen-display .today-section { margin: 0; padding: 0; border: 0; background: none; box-shadow: none; }
+.kitchen-display .tonight-line { font-size: 1.15em; font-weight: 600; }
+.kitchen-display .cal-toolbar { flex-wrap: wrap; gap: var(--space-2); }
+.kitchen-display .cal-period { font-size: 1.35em; }
+.kitchen-display .cal-strip { gap: 8px; }
+.kitchen-display .cal-strip-day { font-size: 1.05em; }
+.kitchen-display .cal-agenda { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: var(--space-2); }
+.kitchen-display .cal-agenda-day h3 { margin: 0 0 4px; font-size: 1em; }
+.kitchen-display .cal-event, .kitchen-display .cal-extra { font-size: 0.95em; }
+.kitchen-display .chore-cards { grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); }
+.kitchen-display .chore-tick { min-block-size: var(--display-tap); }
+.kitchen-display .chore-box { inline-size: 3rem; block-size: 3rem; }
+
+/* A child's reward from the chart (#699): the goal is chosen with big − and
+   + buttons and one-tap goals, never typed; every control is 64px. */
+kin-chore-chart[size="display"] .chore-reward-toggle { inline-size: 100%; font-size: 1.05em; }
+kin-chore-chart[size="display"] .chore-reward-form { gap: var(--space-2); }
+kin-chore-chart[size="display"] .chore-reward-form label { font-weight: 700; }
+kin-chore-chart[size="display"] .chore-reward-form input[type="text"] { padding-inline: 14px; border: 2px solid var(--line-strong); border-radius: var(--r-control); font-size: 1.1em; }
+.chore-goal-stepper { display: grid; gap: var(--space-1); margin: 0; padding: 0; border: 0; min-inline-size: 0; }
+.chore-goal-stepper legend { padding: 0; margin-block-end: var(--space-1); font-weight: 700; }
+.chore-goal-row { display: flex; align-items: center; gap: var(--space-2); }
+.chore-goal-step { flex: 0 0 auto; font-size: 1.75em !important; line-height: 1; }
+.chore-goal-value { flex: 1 1 auto; text-align: center; font-size: 1.5em; font-weight: 700; font-variant-numeric: tabular-nums; }
+.chore-goal-presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.chore-goal-preset { flex: 1 0 var(--display-tap); padding-inline: 8px; font-weight: 700; }
+.chore-goal-preset[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 3px var(--accent); }
+kin-chore-chart[size="display"] .chore-reward-actions { gap: var(--space-2); }
+kin-chore-chart[size="display"] .chore-reward-actions button { flex: 1 1 auto; padding-inline: 18px; }
+
+/* Undo after a change on the display: as big as everything else. */
+:root[data-kin-display="on"] .app-feedback { inset: auto var(--display-gap) var(--display-gap); max-width: 36rem; }
+:root[data-kin-display="on"] .undo-toast { padding: 10px 10px 10px 18px; }
+:root[data-kin-display="on"] .undo-toast-text, :root[data-kin-display="on"] .status-message { font-size: 1.1rem; }
+:root[data-kin-display="on"] .undo-toast-action,
+:root[data-kin-display="on"] .undo-toast-dismiss { min-block-size: var(--display-tap); min-inline-size: var(--display-tap); padding-inline: 20px; font-size: 1.15rem; }
+
+/* ---- The fridge on the wall (#700) ---------------------------------------
+   <kin-fridge size="display">: its tools in a 64px rail beside the door, the
+   door as large as the panel allows in its 3:4 shape, and the notes again
+   below in large type. No full screen, hover titles or drop-downs. Below
+   720px (a phone held as a display) the tools wrap above the door. */
+.kitchen-display kin-fridge { display: grid; gap: var(--space-2); }
+kin-fridge[data-layout="display"] {
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas: "heading heading" "tools board" "notes notes" "summary summary" "status status";
+  align-items: start;
+  column-gap: var(--display-gap);
+}
+kin-fridge[data-layout="display"] > .fridge-heading { grid-area: heading; }
+kin-fridge[data-layout="display"] > .fridge-lead,
+kin-fridge[data-layout="display"] > .fridge-fullscreen,
+kin-fridge[data-layout="display"] > .fridge-kitchen-note { display: none; }
+kin-fridge[data-layout="display"] > .fridge-tools { grid-area: tools; }
+kin-fridge[data-layout="display"] > .fridge-board { grid-area: board; justify-items: center; }
+kin-fridge[data-layout="display"] > .fridge-notes { grid-area: notes; }
+kin-fridge[data-layout="display"] > .fridge-summary { grid-area: summary; font-size: 0.95em; }
+kin-fridge[data-layout="display"] > .fridge-status { grid-area: status; }
+kin-fridge[data-layout="display"] .fridge-tools { display: grid; grid-template-columns: repeat(3, var(--display-tap)); gap: 10px; align-content: start; }
+kin-fridge[data-layout="display"] .fridge-tools[hidden] { display: none; }
+/* Each group on rows of its own: colours, widths, then Undo and Redo. */
+kin-fridge[data-layout="display"] .fridge-colours,
+kin-fridge[data-layout="display"] .fridge-widths { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, var(--display-tap)); gap: 10px; }
+kin-fridge[data-layout="display"] .fridge-history { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+kin-fridge[data-layout="display"] .fridge-colour,
+kin-fridge[data-layout="display"] .fridge-width { inline-size: var(--display-tap); block-size: var(--display-tap); }
+kin-fridge[data-layout="display"] .fridge-width::after { inline-size: 32px; }
+kin-fridge[data-layout="display"] .fridge-width[data-width="0"]::after { block-size: 3px; }
+kin-fridge[data-layout="display"] .fridge-width[data-width="1"]::after { block-size: 7px; }
+kin-fridge[data-layout="display"] .fridge-width[data-width="2"]::after { block-size: 14px; }
+kin-fridge[data-layout="display"] .fridge-eraser,
+kin-fridge[data-layout="display"] .fridge-add-magnet,
+kin-fridge[data-layout="display"] .fridge-clear,
+kin-fridge[data-layout="display"] .fridge-restore { grid-column: 1 / -1; }
+kin-fridge[data-layout="display"] .fridge-restore[hidden] { display: none; }
+kin-fridge[data-layout="display"] .fridge-door {
+  inline-size: min(100%, calc((100dvh - 2 * var(--display-gap) - 140px) * 0.75), 720px);
+  min-inline-size: min(100%, 280px);
+  border-width: 3px;
+}
+/* Magnets: 64px to tap, and a note big enough to read from the sink. */
+kin-fridge[data-layout="display"] .fridge-magnet { min-inline-size: var(--display-tap); min-block-size: var(--display-tap); font-size: 1rem; }
+kin-fridge[data-layout="display"] .fridge-magnet-emoji { font-size: 44px; }
+kin-fridge[data-layout="display"] .fridge-magnet-kin svg { inline-size: 48px; block-size: 48px; }
+kin-fridge[data-layout="display"] .fridge-magnet-note { max-inline-size: 11em; padding: 8px 12px; font-size: clamp(18px, 1.6vw, 24px); line-height: 1.2; }
+/* A magnet's menu, under the door: nine places laid out like the door. */
+kin-fridge[data-layout="display"] .fridge-magnet-menu { justify-self: stretch; box-sizing: border-box; display: grid; grid-template-columns: repeat(3, minmax(var(--display-tap), 1fr)); gap: 10px; margin: 0; padding: var(--space-2); }
+.fridge-magnet-menu-title { grid-column: 1 / -1; margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.fridge-magnet-places { display: contents; }
+kin-fridge[data-layout="display"] .fridge-magnet-menu button { padding-inline: 10px; }
+kin-fridge[data-layout="display"] .fridge-magnet-remove,
+kin-fridge[data-layout="display"] .fridge-magnet-done { grid-column: span 3; }
+/* The notes, as a row of big yellow slips. */
+.fridge-notes[hidden] { display: none; }
+.fridge-notes-title { margin: 0 0 var(--space-1); font-size: 1.1em; }
+.fridge-notes-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.fridge-note { display: grid; gap: 4px; padding: 12px 16px; border-radius: 6px; background: #fff4a8; color: #2b2522; box-shadow: 0 2px 4px rgb(0 0 0 / 0.2); }
+.fridge-note-text { font-size: 1.5em; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+.fridge-note-by { font-size: 0.85em; }
+/* The dialogs (Add a magnet, Clear) at display size. */
+.kitchen-display .fridge-dialog { inline-size: min(40rem, calc(100vw - 32px)); font-size: 1.1rem; }
+.kitchen-display .fridge-dialog label { min-block-size: var(--display-tap); }
+.kitchen-display .fridge-dialog input[type="radio"] { inline-size: 1.75rem; block-size: 1.75rem; }
+.kitchen-display .fridge-dialog select,
+.kitchen-display .fridge-dialog input[type="text"] { min-block-size: var(--display-tap); font-size: 1.1rem; }
+.kitchen-display .fridge-kin-choice { min-block-size: var(--display-tap); }
+@media (max-width: 719px) {
+  kin-fridge[data-layout="display"] { grid-template-columns: minmax(0, 1fr); grid-template-areas: "heading" "tools" "board" "notes" "summary" "status"; }
+  kin-fridge[data-layout="display"] .fridge-tools { grid-template-columns: repeat(auto-fill, var(--display-tap)); }
+  kin-fridge[data-layout="display"] .fridge-colours,
+  kin-fridge[data-layout="display"] .fridge-widths { grid-template-columns: repeat(auto-fill, var(--display-tap)); }
+  kin-fridge[data-layout="display"] .fridge-eraser,
+  kin-fridge[data-layout="display"] .fridge-add-magnet,
+  kin-fridge[data-layout="display"] .fridge-clear,
+  kin-fridge[data-layout="display"] .fridge-restore { grid-column: span 2; }
+}
+
+/* The shopping list. */
+.display-shopping-add { display: flex; gap: var(--space-2); margin-block-end: var(--space-2); }
+.display-shopping-add input { flex: 1 1 auto; min-inline-size: 0; padding-inline: 14px; border: 2px solid var(--line-strong); border-radius: var(--r-control); background: var(--surface); color: var(--ink); font: inherit; }
+.display-shopping-add button { padding-inline: 24px; }
+.display-shopping-list { margin: 0; padding: 0; list-style: none; }
+.display-shopping-list[hidden] { display: none; }
+.display-shopping-row + .display-shopping-row { border-block-start: 1px solid var(--line); }
+.display-shopping-row label { display: flex; align-items: center; gap: var(--space-2); min-block-size: var(--display-tap); cursor: pointer; }
+.display-check { flex: 0 0 auto; inline-size: 2.75rem; block-size: 2.75rem; margin: 0; accent-color: var(--accent); }
+.display-shopping-text { font-size: 1.1em; font-weight: 600; overflow-wrap: anywhere; }
+.display-shopping-row.is-done .display-shopping-text { color: var(--ink-muted); text-decoration: line-through; }
+
+/* Recent messages, read-only. */
+.display-chat-list { display: grid; gap: var(--space-2); margin: 0; padding: 0; list-style: none; }
+.display-chat-list[hidden] { display: none; }
+.display-chat-author { font-weight: 700; }
+.display-chat-time { color: var(--ink-muted); font-size: 0.85em; }
+.display-chat-text { margin: 2px 0 0; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* ---- Night and the screensaver ------------------------------------------ */
+.display-dimmer, .display-screensaver {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.display-dimmer[hidden], .display-screensaver[hidden] { display: none; }
+.display-dimmer { background: rgb(0 0 0 / 0.88); color: #d9d2cc; transition: opacity 600ms ease; }
+.display-dimmer p { margin: 0; padding: var(--display-gap); font-size: 1.25rem; text-align: center; }
+.display-screensaver { background: #0f0f0f; color: #f6f1ec; }
+.display-screensaver kin-photo-frame { inline-size: 100%; block-size: 100%; }
+.display-clock { display: grid; justify-items: center; gap: var(--space-2); text-align: center; }
+.display-clock:focus { outline: none; }
+.display-clock-time { margin: 0; font-size: clamp(4rem, 14vw, 10rem); font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.display-clock-date { margin: 0; font-size: clamp(1.5rem, 4vw, 3rem); }
+.display-clock-hint { margin: var(--space-3) 0 0; color: #c9bfb6; font-size: 1.1rem; }
+
+/* Leaving: the adult's passkey or password. */
+.display-leave-dialog { max-inline-size: min(34rem, calc(100vw - 32px)); }
+.display-leave-dialog .dialog-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.display-leave-dialog button, .display-leave-dialog input { min-block-size: var(--display-tap); font-size: 1.05rem; }
+.display-leave-dialog button { padding-inline: 20px; }
+.display-leave-form { display: grid; gap: var(--space-1); margin-block-start: var(--space-2); }
+.display-leave-form[hidden] { display: none; }
+.display-leave-message:empty { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .display-dimmer { transition: none; }
+}
+@media (prefers-contrast: more) {
+  .display-panel { border: 2px solid var(--ink); }
+  .fridge-note { border: 2px solid #2b2522; }
+  .display-empty, .display-chat-time { color: var(--ink); }
+  .display-dimmer { background: #000; color: #fff; }
+}
+@media (forced-colors: active) {
+  .display-panel, .display-notice { border: 1px solid CanvasText; }
+  .fridge-note { forced-color-adjust: auto; border: 1px solid CanvasText; background: Canvas; color: CanvasText; box-shadow: none; }
+  .chore-goal-preset[aria-pressed="true"] { outline: 3px solid Highlight; }
+  .display-dimmer, .display-screensaver { background: Canvas; color: CanvasText; }
+}

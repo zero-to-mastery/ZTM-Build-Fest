@@ -1,0 +1,12 @@
+{
+  "version": 6,
+  "account": "fixture",
+  "options": {
+    "referenceDate": "2026-09-01T00:00:00Z",
+    "animate": false,
+    "layers": { "starfield": { "visible": false } },
+    "starPositions": { "fixture/core": { "x": 200, "y": 180 } },
+    "mappings": { "size": "stars" },
+    "transforms": [{ "type": "filter", "field": "metrics.stars", "op": "gte", "value": 1 }]
+  }
+}

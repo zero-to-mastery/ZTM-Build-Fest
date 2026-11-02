@@ -1,6 +1,7 @@
 import {
   deviceKeyFingerprint,
   exportDevicePublicKeys,
+  exportStoredEpochKey,
   generateProtectedDeviceKeys,
   importProtectedDeviceKeys,
   createDeviceKeyTransition,
@@ -14,18 +15,50 @@ import { encryptedDatabase, snapshotStores, protectRows, replaceStores, protectR
   unprotectRecord, recordIdentity, valuesEqual } from "../storage/encrypted-idb.js";
 
 const DATABASE_NAME = "kin-crypto-keys";
-const DATABASE_VERSION = 4;
+const DATABASE_VERSION = 6;
 const SECURITY_STORE = "security_state";
 const KEY_DEFINITIONS = {
   devices: { keyPath: "deviceId" },
   epochs: { keyPath: "key", indexes: { household_id: "householdId" } },
   trusted_devices: { keyPath: "key" },
+  household_settings: { keyPath: "householdId" },
+  // Simple view (#343, ADR 0013): this device's member's last layout, so an
+  // offline unlock opens the same view. One record per household.
+  member_view: { keyPath: "householdId" },
 };
 const DEVICE_STORE = "devices";
 const EPOCH_STORE = "epochs";
+// Epoch rows are labelled with a key family: a household ID, or "chat:<id>"
+// for the household's dedicated chat key (#123). Either is held by the
+// devices of that household.
+const deviceHouseholdOf = (label) => (typeof label === "string" && label.startsWith("chat:") ? label.slice(5) : label);
 const TRUSTED_DEVICE_STORE = "trusted_devices";
+const HOUSEHOLD_SETTINGS_STORE = "household_settings";
+const MEMBER_VIEW_STORE = "member_view";
 const PENDING_DEVICE_ID = "pending";
 const MAX_KEY_EPOCHS = 128;
+
+// Listeners told when this device installs a household or chat epoch key it
+// didn't have (ADR 0018, #567): the account vault keeper re-seals the
+// member's vault with it. Told after the key is committed; a listener's
+// failure never fails the install.
+const epochInstalledListeners = new Set();
+
+/** Calls `listener({ householdId, keyEpoch })` after each newly installed
+ * epoch key; `householdId` is the key family label ("<id>" or "chat:<id>").
+ * Returns a function that removes the listener. */
+export function onEpochInstalled(listener) {
+  epochInstalledListeners.add(listener);
+  return () => epochInstalledListeners.delete(listener);
+}
+
+function announceEpochInstalled(householdId, keyEpoch) {
+  for (const listener of epochInstalledListeners) {
+    try {
+      Promise.resolve(listener({ householdId, keyEpoch })).catch(() => {});
+    } catch { /* Installing the key already succeeded. */ }
+  }
+}
 
 export class SyncKeyStoreError extends Error {
   constructor(message, cause) {
@@ -95,6 +128,46 @@ export class SyncKeyStore {
     }).then(record => hydrateDevice(record, this.vault));
   }
 
+  /** This browser's most recent device that a household approved: its ID,
+   * household, member and public keys, without the private keys. Null when
+   * it has none (only the pending device, or nothing). Signing in with a
+   * phone (#98) offers these keys so a returning computer keeps its device. */
+  latestBoundDevice() {
+    const transaction = this.database.transaction(DEVICE_STORE, "readonly");
+    const request = transaction.objectStore(DEVICE_STORE).getAll();
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => {
+        let latest = null;
+        for (const record of request.result ?? []) {
+          // A device mid key transition offers keys the service may not
+          // know yet; such a computer signs in as a new device instead.
+          if (record.deviceId === PENDING_DEVICE_ID || !record.householdId || !record.publicKeys || record.pendingTransition) continue;
+          if (!latest || (record.createdAt ?? 0) > (latest.createdAt ?? 0)) latest = record;
+        }
+        finish(latest && {
+          deviceId: latest.deviceId,
+          householdId: latest.householdId,
+          memberId: latest.memberId,
+          publicKeys: structuredClone(latest.publicKeys),
+          fingerprint: latest.fingerprint,
+        });
+      };
+      request.onerror = () => abortWith(transaction, request.error);
+    });
+  }
+
+  /** Throws away this browser's unbound pending device keys, so the next
+   * request generates fresh ones. Used when a sign-in with a phone couldn't
+   * be verified after the service had already trusted those keys (#100). */
+  discardPendingDevice() {
+    const transaction = this.database.transaction(DEVICE_STORE, "readwrite");
+    const request = transaction.objectStore(DEVICE_STORE).delete(PENDING_DEVICE_ID);
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => finish(true);
+      request.onerror = () => abortWith(transaction, request.error);
+    });
+  }
+
   async pinTrustedDevice({
     householdId,
     deviceId,
@@ -154,6 +227,49 @@ export class SyncKeyStore {
         finish(pin);
       };
     });
+  }
+
+  /** Every device this browser pinned for `householdId`:
+   * `[{ deviceId, memberId, fingerprint }]` (no certification-key pins). */
+  listPinnedDevices(householdId) {
+    const transaction = this.database.transaction(TRUSTED_DEVICE_STORE, "readonly");
+    const request = transaction.objectStore(TRUSTED_DEVICE_STORE).getAll();
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => finish((request.result ?? [])
+        .filter((pin) => pin.householdId === householdId && pin.kind !== "certification")
+        .map(({ deviceId, memberId, fingerprint }) => ({ deviceId, memberId, fingerprint })));
+      request.onerror = () => abortWith(transaction, request.error);
+    });
+  }
+
+  /**
+   * Pins a member's certification key (ADR 0018, #568) the first time this
+   * browser accepts a device it certified: the same trusted-device store,
+   * under its own key, so no storage format changes. A different key for the
+   * same member afterwards is refused (SyncKeyStoreError), as a changed
+   * device key is.
+   */
+  pinCertificationKey({ householdId, memberId, fingerprint }) {
+    this.vault?.assertUnlocked();
+    if (!/^[a-f0-9]{64}$/.test(fingerprint ?? "")) throw new SyncKeyStoreError("Kin could not pin this certification key.");
+    const pin = { key: `${householdId}:certification:${memberId}`, kind: "certification", householdId, memberId, fingerprint };
+    const transaction = this.database.transaction(TRUSTED_DEVICE_STORE, "readwrite");
+    const store = transaction.objectStore(TRUSTED_DEVICE_STORE);
+    const request = store.get(pin.key);
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => {
+        const existing = request.result;
+        if (existing && existing.fingerprint !== fingerprint)
+          return abortWith(transaction, new SyncKeyStoreError("Kin detected that a member's certification key changed."));
+        if (!existing) store.add(pin);
+        finish(existing ?? pin);
+      };
+      request.onerror = () => abortWith(transaction, request.error);
+    });
+  }
+
+  getPinnedCertificationKey(householdId, memberId) {
+    return this.getPinnedDevice(householdId, `certification:${memberId}`);
   }
 
   getPinnedDevice(householdId, deviceId) {
@@ -225,10 +341,17 @@ export class SyncKeyStore {
       throw new SyncKeyStoreError(
         "Kin reached its supported household-key history limit.",
       );
+    // The sealed record binds its own household and epoch. Saving it under a
+    // different label would let a relabelled key encrypt a newer epoch.
+    if (sealed?.keyEpoch !== keyEpoch || sealed?.householdId !== householdId)
+      throw new SyncKeyStoreError(
+        "Kin refused to store a household key under a different epoch or household.",
+      );
     const transaction = this.database.transaction(EPOCH_STORE, "readwrite");
     const store = transaction.objectStore(EPOCH_STORE);
     const key = `${householdId}:${keyEpoch}`;
     const request = store.get(key);
+    let added = false;
     return transactionResult(transaction, (finish) => {
       request.onsuccess = () => {
         const existing = request.result;
@@ -252,6 +375,7 @@ export class SyncKeyStore {
           sealed,
           fingerprint,
         });
+        added = true;
         finish({
           key,
           householdId,
@@ -261,7 +385,86 @@ export class SyncKeyStore {
         });
       };
       request.onerror = () => abortWith(transaction, request.error);
-    }).then(record => ({ ...record, householdKey }));
+    }).then(record => {
+      if (added) announceEpochInstalled(householdId, keyEpoch);
+      return { ...record, householdKey };
+    });
+  }
+
+  /**
+   * Every epoch key this device holds for `householdId`, household and chat
+   * families, as raw bytes for the member's account vault (ADR 0018):
+   * `[{ family: "household" | "chat", epoch, key }]`. The caller zeroes the
+   * keys once they are sealed. A key this device can't open is left out
+   * (another device's vault update carries it).
+   */
+  async vaultEpochKeys(householdId) {
+    this.vault.assertUnlocked();
+    const deviceTx = this.database.transaction(DEVICE_STORE, "readonly");
+    const deviceRequest = deviceTx.objectStore(DEVICE_STORE).getAll();
+    const stored = await transactionResult(deviceTx, finish => { deviceRequest.onsuccess = () => finish(deviceRequest.result); });
+    const devices = [];
+    for (const record of stored)
+      if (record.deviceId !== PENDING_DEVICE_ID && record.householdId === householdId) devices.push(await hydrateDevice(record, this.vault));
+    const entries = [];
+    for (const [family, label] of [["household", householdId], ["chat", `chat:${householdId}`]]) {
+      const tx = this.database.transaction(EPOCH_STORE, "readonly");
+      const request = tx.objectStore(EPOCH_STORE).index("household_id").getAll(label);
+      const records = await transactionResult(tx, finish => {
+        request.onsuccess = () => finish(request.result);
+        request.onerror = () => abortWith(tx, request.error);
+      });
+      for (const record of records) {
+        for (const device of devices) {
+          try {
+            entries.push({ family, epoch: record.keyEpoch, key: await exportStoredEpochKey({ record, deviceKeys: device.keys }) });
+            break;
+          } catch (error) {
+            if (!["stored_key_invalid", "stored_key_mismatch"].includes(error.code)) throw error;
+          }
+        }
+      }
+    }
+    this.vault.assertUnlocked();
+    return entries;
+  }
+
+  /**
+   * Keeps the member's account vault key (ADR 0018, #558) with this
+   * device's bound record, so it is sealed under the local root like the
+   * device keys (encrypted at rest, readable only while unlocked) and moves
+   * with them through a root rotation. One vault key per device record.
+   */
+  setAccountVaultKey(deviceId, vaultKey) {
+    if (!(vaultKey instanceof Uint8Array) || vaultKey.length !== 32 || deviceId === PENDING_DEVICE_ID)
+      throw new SyncKeyStoreError("Kin could not keep this account's vault key.");
+    const transaction = this.database.transaction(DEVICE_STORE, "readwrite");
+    const store = transaction.objectStore(DEVICE_STORE);
+    const request = store.get(deviceId);
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => {
+        const record = request.result;
+        if (!record?.householdId) return abortWith(transaction, new SyncKeyStoreError("This device isn't bound to a household yet."));
+        store.put({ ...record, accountVaultKey: vaultKey.slice() });
+        finish(true);
+      };
+      request.onerror = () => abortWith(transaction, request.error);
+    });
+  }
+
+  /** A fresh copy of the account vault key this device keeps for
+   * `householdId`, or null. The caller zeroes it. */
+  accountVaultKey(householdId) {
+    const transaction = this.database.transaction(DEVICE_STORE, "readonly");
+    const request = transaction.objectStore(DEVICE_STORE).getAll();
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => {
+        const record = request.result.find((entry) => entry.deviceId !== PENDING_DEVICE_ID &&
+          entry.householdId === householdId && entry.accountVaultKey instanceof Uint8Array);
+        finish(record ? record.accountVaultKey.slice() : null);
+      };
+      request.onerror = () => abortWith(transaction, request.error);
+    });
   }
 
   getEpoch(householdId, keyEpoch) {
@@ -287,13 +490,81 @@ export class SyncKeyStore {
     }).then(records => Promise.all(records.map(record => this.hydrateEpoch(record))));
   }
 
+  cacheHouseholdSettings(record) {
+    validateSettingsCache(record);
+    const transaction = this.database.transaction(HOUSEHOLD_SETTINGS_STORE, "readwrite");
+    const store = transaction.objectStore(HOUSEHOLD_SETTINGS_STORE);
+    const request = store.get(record.householdId);
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => {
+        const existing = request.result;
+        if (existing && existing.revision > record.revision) return finish(existing);
+        if (existing && existing.revision === record.revision) {
+          if (existing.keyEpoch !== record.keyEpoch || existing.digest !== record.digest || existing.ciphertext !== record.ciphertext)
+            return abortWith(transaction, new SyncKeyStoreError("Kin found conflicting cached household settings."));
+          return finish(existing);
+        }
+        store.put(structuredClone(record));
+        finish(record);
+      };
+      request.onerror = () => abortWith(transaction, request.error);
+    });
+  }
+
+  /** Saves this device's member's layout ({ householdId, memberId,
+   * simpleView }) as the service last reported it (ADR 0013). */
+  cacheMemberView(record) {
+    validateMemberView(record);
+    const transaction = this.database.transaction(MEMBER_VIEW_STORE, "readwrite");
+    const request = transaction.objectStore(MEMBER_VIEW_STORE).put({ householdId: record.householdId, memberId: record.memberId, simpleView: record.simpleView });
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => finish(record);
+      request.onerror = () => abortWith(transaction, request.error);
+    });
+  }
+
+  /** The cached layout for `memberId` in `householdId`, or null. A record for
+   * another member (the device changed hands) counts as none. */
+  getCachedMemberView(householdId, memberId) {
+    if (!/^[a-f0-9]{32}$/.test(householdId ?? "") || !/^[a-f0-9]{32}$/.test(memberId ?? ""))
+      throw new SyncKeyStoreError("Kin could not identify this device's member.");
+    const transaction = this.database.transaction(MEMBER_VIEW_STORE, "readonly");
+    const request = transaction.objectStore(MEMBER_VIEW_STORE).get(householdId);
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => {
+        try {
+          const record = request.result ?? null;
+          if (record) validateMemberView(record);
+          finish(record && record.memberId === memberId ? record : null);
+        } catch (error) { abortWith(transaction, error); }
+      };
+      request.onerror = () => abortWith(transaction, request.error);
+    });
+  }
+
+  getCachedHouseholdSettings(householdId) {
+    if (!/^[a-f0-9]{32}$/.test(householdId ?? "")) throw new SyncKeyStoreError("Kin could not identify the cached household settings.");
+    const transaction = this.database.transaction(HOUSEHOLD_SETTINGS_STORE, "readonly");
+    const request = transaction.objectStore(HOUSEHOLD_SETTINGS_STORE).get(householdId);
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => {
+        try {
+          const record = request.result ?? null;
+          if (record) validateSettingsCache(record, householdId);
+          finish(record);
+        } catch (error) { abortWith(transaction, error); }
+      };
+      request.onerror = () => abortWith(transaction, request.error);
+    });
+  }
+
   async hydrateEpoch(record) {
     if (!record) return null;
     const tx = this.database.transaction(DEVICE_STORE, "readonly");
     const request = tx.objectStore(DEVICE_STORE).getAll();
     const devices = await transactionResult(tx, finish => { request.onsuccess = () => finish(request.result); });
     for (const stored of devices) {
-      if (stored.householdId && stored.householdId !== record.householdId) continue;
+      if (stored.householdId && stored.householdId !== deviceHouseholdOf(record.householdId)) continue;
       const device = await hydrateDevice(stored, this.vault);
       try {
         const householdKey = await restoreHouseholdEpochKey({ sealed: record.sealed, deviceKeys: device.keys });
@@ -405,6 +676,8 @@ async function openRawDatabase() {
         epochs.createIndex("household_id", "householdId", { unique: false });
       }
       if (!db.objectStoreNames.contains(TRUSTED_DEVICE_STORE)) db.createObjectStore(TRUSTED_DEVICE_STORE, { keyPath: "key" });
+      if (!db.objectStoreNames.contains(HOUSEHOLD_SETTINGS_STORE)) db.createObjectStore(HOUSEHOLD_SETTINGS_STORE, { keyPath: "householdId" });
+      if (!db.objectStoreNames.contains(MEMBER_VIEW_STORE)) db.createObjectStore(MEMBER_VIEW_STORE, { keyPath: "householdId" });
       if (!db.objectStoreNames.contains(SECURITY_STORE)) db.createObjectStore(SECURITY_STORE, { keyPath: "key" });
     };
     request.onsuccess = () => { if (settled) request.result.close(); else { settled = true; resolve(request.result); } };
@@ -413,6 +686,22 @@ async function openRawDatabase() {
   });
   database.onversionchange = () => database.close();
   return database;
+}
+
+function validateMemberView(record) {
+  if (!record || !/^[a-f0-9]{32}$/.test(record.householdId ?? "") || !/^[a-f0-9]{32}$/.test(record.memberId ?? "") ||
+      typeof record.simpleView !== "boolean")
+    throw new SyncKeyStoreError("Kin found an invalid cached layout.");
+  return record;
+}
+
+function validateSettingsCache(record, expectedHouseholdId = record?.householdId) {
+  if (!record || !/^[a-f0-9]{32}$/.test(record.householdId ?? "") || record.householdId !== expectedHouseholdId ||
+      !Number.isSafeInteger(record.revision) || record.revision < 1 || !Number.isSafeInteger(record.keyEpoch) ||
+      record.keyEpoch < 1 || record.keyEpoch > MAX_KEY_EPOCHS || typeof record.ciphertext !== "string" ||
+      !/^[A-Za-z0-9_-]+$/.test(record.ciphertext) || !/^[a-f0-9]{64}$/.test(record.digest ?? ""))
+    throw new SyncKeyStoreError("Kin found invalid cached household settings.");
+  return record;
 }
 
 async function securityRecord(database) {
@@ -435,7 +724,8 @@ export async function migrateSyncKeys(vault, { prepareOnly = true, check = async
     if (marker?.phase === "preparing") {
       staged = await vault.open(marker.staging, { store: "sync-key-migration", id: "staged" });
     } else {
-      staged = { devices: [], epochs: [], trusted_devices: legacy.trusted_devices };
+      staged = { devices: [], epochs: [], trusted_devices: legacy.trusted_devices,
+        household_settings: legacy.household_settings };
       for (const old of legacy.devices) {
         await assertLive();
         if (!old.keys || old.serializedKeys) throw new SyncKeyStoreError("Unexpected legacy device-key format.");
@@ -495,7 +785,7 @@ export async function migrateSyncKeys(vault, { prepareOnly = true, check = async
 
 async function resealForMigration(sealed, oldDevices, newDevices, legacyEpoch = null) {
   for (const old of oldDevices) {
-    if (old.householdId && old.householdId !== sealed.householdId) continue;
+    if (old.householdId && old.householdId !== deviceHouseholdOf(sealed.householdId)) continue;
     const replacement = newDevices.find(record => record.deviceId === old.deviceId);
     if (!replacement) continue;
     const newDeviceKeys = await importProtectedDeviceKeys(replacement.serializedKeys);
@@ -613,7 +903,8 @@ export async function commitRootRotationKeys({ candidateVault, rotation, check =
     const original = await snapshotStores(database, Object.keys(KEY_DEFINITIONS));
     const replacements = {}, stageKeys = [], recovered = {};
     for (const [store, rows] of Object.entries(original)) {
-      if (rows.length !== marker.stagedCounts[store]) throw new SyncKeyStoreError("The saved sync keys changed during replacement.");
+      // A store added since the rotation was prepared (member_view, v6) had none.
+      if (rows.length !== (marker.stagedCounts[store] ?? 0)) throw new SyncKeyStoreError("The saved sync keys changed during replacement.");
       replacements[store] = []; recovered[store] = [];
       for (const row of rows) {
         candidateVault.assertUnlocked(); await check();
@@ -684,8 +975,18 @@ async function verifyProtectedKeyRows(rows, check) {
   }
   for (const pin of rows.trusted_devices) {
     await check();
+    // A member's certification-key pin (#568) has no device keys.
+    if (pin.kind === "certification") {
+      if (pin.key !== `${pin.householdId}:certification:${pin.memberId}` || !/^[a-f0-9]{64}$/.test(pin.fingerprint ?? ""))
+        throw new SyncKeyStoreError("A replacement trusted-device pin is inconsistent.");
+      continue;
+    }
     if (pin.key !== `${pin.householdId}:${pin.deviceId}` || await deviceKeyFingerprint(pin.publicKeys) !== pin.fingerprint)
       throw new SyncKeyStoreError("A replacement trusted-device pin is inconsistent.");
+  }
+  for (const settings of rows.household_settings) {
+    await check();
+    validateSettingsCache(settings);
   }
   await check();
   return devices;
@@ -709,7 +1010,7 @@ async function verifyPrivateCapabilities(keys) {
 
 async function verifyEpochWithDevices(record, devices) {
   for (const device of devices) {
-    if (device.householdId && device.householdId !== record.householdId) continue;
+    if (device.householdId && device.householdId !== deviceHouseholdOf(record.householdId)) continue;
     try { return await verifyStoredHouseholdEpoch({ record, deviceKeys: device.keys }); }
     catch (error) { if (error.code !== "stored_key_invalid") throw error; }
   }

@@ -1,0 +1,21 @@
+{
+  "name": "@constellation/web-component",
+  "version": "5.2.0",
+  "type": "module",
+  "exports": "./index.mjs",
+  "files": [
+    "index.mjs",
+    "web-component-atlas.mjs",
+    "README.md",
+    "temporal-stack.md",
+    "developer-topology.md",
+    "evidence-provenance.md",
+    "semantic-groups.md",
+    "project-constellations.md",
+    "portable-embed.md"
+  ],
+  "dependencies": {
+    "@constellation/core": "5.2.0"
+  },
+  "license": "UNLICENSED"
+}

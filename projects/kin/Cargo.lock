@@ -4,4 +4,4 @@ version = 4
 
 [[package]]
 name = "kin"
-version = "0.10.3"
+version = "1.6.0"

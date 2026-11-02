@@ -9,6 +9,8 @@ pub enum KinError {
     InvalidEvent = 4,
     SizeLimit = 5,
     Internal = 6,
+    /// No readable QR code in the frame (qr/wire.rs).
+    QrNotFound = 7,
 }
 
 impl KinError {
@@ -24,6 +26,7 @@ impl KinError {
             Self::InvalidEvent => "Invalid household event stream",
             Self::SizeLimit => "Event request or result exceeds a supported limit",
             Self::Internal => "Household engine could not complete the operation",
+            Self::QrNotFound => "No readable QR code in the image",
         }
     }
 }

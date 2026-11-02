@@ -1,0 +1,11 @@
+{
+  "account": "example",
+  "visualTheme": "deep-space",
+  "arrangement": "galaxy",
+  "referenceDate": "2026-09-27T12:00:00.000Z",
+  "history": { "mode": "time-lapse", "maxHistoricalFrames": 8, "timeLapse": { "enabled": true, "mode": "grow", "duration": 16, "loop": true } },
+  "languageEvolution": { "enabled": true, "style": "trails" },
+  "stellarAges": { "enabled": true },
+  "contributionOrbit": { "enabled": true },
+  "nodeColorMode": "language"
+}

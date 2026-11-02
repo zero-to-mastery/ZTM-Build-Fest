@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#684033" />
+    <!-- Kin's public privacy policy (#541), linked from the Google Play
+         listing, Household > Privacy & recovery and the README. A plain page:
+         no scripts, no inline styles, Kin's own stylesheet, and in the
+         service worker's shell so it opens offline. Keep it accurate to
+         docs/PRIVACY.md, docs/THREAT-MODEL.md and docs/RETENTION.md. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; style-src 'self'; img-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="description" content="What Kin keeps on your devices, what its service stores and sees, and how to delete it." />
+    <title>Privacy policy · Kin</title>
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles/app.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="policy-header">
+      <p><a href="/">Kin</a> · a private household app</p>
+    </header>
+    <main id="main" class="policy" tabindex="-1">
+      <h1>Kin privacy policy</h1>
+      <p class="policy-meta">Effective 21 October 2026. Applies to Kin v1.5.0 and later at kin.journeytocode.io and the Kin app on Google Play.</p>
+
+      <section class="policy-summary" aria-labelledby="summary">
+        <h2 id="summary">In short</h2>
+        <ul>
+          <li>What your household writes in Kin (lists, plans, chat, photos, the fridge, your journal) is encrypted on your device before it leaves it. Our service stores it but can't read it.</li>
+          <li>To sign you in and pass things between your household's devices, the service keeps your username, a check value made from your password (never the password), who is in your household, and your devices' public keys. It also sees when and how much you sync, and your IP address while you're connected.</li>
+          <li>No ads. No selling or sharing your information. No analytics or tracking. No AI reading your household's things.</li>
+          <li>Leaving a household, or being removed, deletes your account from the service. Deleting a household removes everything of it from the service after 30 days.</li>
+        </ul>
+      </section>
+
+      <nav aria-labelledby="contents">
+        <h2 id="contents">Contents</h2>
+        <ul>
+          <li><a href="#who">Who this policy covers</a></li>
+          <li><a href="#device">What stays on your device</a></li>
+          <li><a href="#stores">What our service stores</a></li>
+          <li><a href="#sees">What our service can see</a></li>
+          <li><a href="#never">What Kin never does</a></li>
+          <li><a href="#optional">Optional features that change what we hold</a></li>
+          <li><a href="#others">Other companies involved</a></li>
+          <li><a href="#delete">Deleting your data</a></li>
+          <li><a href="#retention">How long things are kept</a></li>
+          <li><a href="#children">Children and teens</a></li>
+          <li><a href="#security">Security and its limits</a></li>
+          <li><a href="#rights">Your choices and rights</a></li>
+          <li><a href="#changes">Changes to this policy</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <h2 id="who">Who this policy covers</h2>
+      <p>Kin is a household app for sharing lists, plans, messages and notes with the people you live with. This policy covers the Kin service at <a href="https://kin.journeytocode.io/">kin.journeytocode.io</a>, run by the Kin project ("we"), and the Kin app on Google Play, which opens that same web app full-screen. Kin is open source; someone who runs their own Kin server is responsible for their own copy and its policy.</p>
+      <p>Creating or joining a household gives you an account on the service, so your devices and your household's other members can sync with you.</p>
+
+      <h2 id="device">What stays on your device</h2>
+      <p>Your household's history lives on each of your household's devices, in the app's own storage, encrypted. It opens with your password, your passkey or your backup key. While Kin is unlocked, the decrypted copy is kept in memory only; locking Kin or closing it drops it.</p>
+      <p>Your password, your backup key or backup code, and the keys that open your household's data never leave your device in a form we can use. If you let it, your browser or phone may save your password in its own password manager; that is between you and that provider.</p>
+
+      <h2 id="stores">What our service stores</h2>
+      <h3>To run your account</h3>
+      <ul>
+        <li><strong>Your username</strong>, which you choose. It doesn't need to be your real name or an email address; Kin has no email system.</li>
+        <li><strong>A check value for your password</strong>: an Argon2id hash of a key your device derives from the password, with its salt and settings. Not the password, and not the separate key that unlocks your data.</li>
+        <li><strong>Your passkey's public key and ID</strong>, if you add a passkey, and for a backup code, a one-way hash of a key made from it.</li>
+        <li><strong>Your account key vault</strong>: your own keys, sealed on your device with a key we never receive. We see its size, version and when it changes.</li>
+        <li><strong>Your household membership</strong>: random IDs for your household, you and your devices; whether you are an Adult, a Limited member (a child or teen) or a Temporary member (a babysitter or guest); who is a household admin; each device's public keys and its automatic name, such as "Chrome on Android". The name you show to your household is encrypted; we never see it.</li>
+        <li><strong>A short security log</strong> of events such as sign-ins on a new device, devices added or removed and password changes, with times. It holds no content.</li>
+      </ul>
+      <h3>To pass things between your devices</h3>
+      <ul>
+        <li><strong>Encrypted household history</strong>: every change to your lists, plans, routines, notes and settings, as ciphertext.</li>
+        <li><strong>Encrypted chat and fridge</strong>: messages, photos, files, voice messages and drawings, as ciphertext. Photos are redrawn on your device first, which removes their location and camera details.</li>
+        <li><strong>Your private things</strong>: your journal, its photos, Just for me and reminders that follow you are sealed with a key only your own devices hold. No other member, not even a household admin, can read them, and neither can we.</li>
+      </ul>
+
+      <h2 id="sees">What our service can see</h2>
+      <p>Encryption hides what you write, not the fact that you are using Kin. Like any online service, ours can see:</p>
+      <ul>
+        <li>which devices belong to which household and member;</li>
+        <li>when each device syncs, sends a message or writes something private, and how many items and how many bytes each time;</li>
+        <li>when a device fetches a chat photo or file (not which one you looked at on screen);</li>
+        <li>when you sign in, add a device, change your password or add a passkey;</li>
+        <li>your IP address and connection details while you are connected. We use IP addresses to limit repeated sign-in attempts and new households. Kin keeps those counters in memory only and doesn't write IP addresses to its database. Our hosting provider may keep ordinary network logs.</li>
+      </ul>
+      <p>We don't claim Kin is anonymous or "zero-knowledge". See the <a href="https://github.com/mnichols08/ZTM-Build-Fest/blob/kin-development/projects/kin/docs/THREAT-MODEL.md">threat model</a> for the full technical detail.</p>
+
+      <h2 id="never">What Kin never does</h2>
+      <ul>
+        <li>No advertising, and no advertising or tracking code in the app.</li>
+        <li>No selling, renting or sharing your information with anyone.</li>
+        <li>No analytics, usage tracking or crash reporting services.</li>
+        <li>No reading your content: we don't have the keys.</li>
+        <li>No AI: nothing you write is sent to an AI service, and Kin has no AI features.</li>
+        <li>No scores, rankings or monitoring of household members.</li>
+        <li>No tracking cookies. Kin uses only the cookies that keep a trusted device signed in.</li>
+      </ul>
+
+      <h2 id="optional">Optional features that change what we hold</h2>
+      <ul>
+        <li><strong>Notifications</strong> (off until you turn them on, per device): we store your device's push address and its keys. A notification only says something is new: never what, who or how many.</li>
+        <li><strong>Showing your household's name and icon on home screens</strong> (off until an admin turns it on): we store that name, short name, description and icon <em>unencrypted</em>, so we can build the installed app's details. Turning it off deletes our copy.</li>
+        <li><strong>The count on the app icon</strong> (off until you turn it on): worked out on your device; nothing is sent to us.</li>
+        <li><strong>Syncing an outside calendar</strong> (off until an adult turns it on, per calendar): we store the calendar's private link <em>unencrypted</em>, who added it, who sees it, and when we last fetched it. Our server downloads that calendar about every 30 minutes and <em>can read it</em> while it does; it keeps the download in memory for at most 30 minutes and never saves its events. Your devices keep their copy encrypted. Turning it off deletes the link. Importing a calendar file instead never involves our server.</li>
+        <li><strong>Reporting a problem or suggesting something</strong> (only when you press Send): we store what you typed, the details about your device that you kept in the preview (Kin version, browser, screen size, page name, sync state and recent error codes; never your lists, names or IDs), and a picture of the screen only if you chose to add one, <em>unencrypted</em>, so the Kin team can read them. A report you send while signed in is linked to your account so you can see its status; one sent from the lock screen is linked to nobody. If the team has set it up, a copy without the picture and without anything that identifies you is posted to the project's issue tracker, which may be public; the preview tells you before you send. Kin never sends a report on its own.</li>
+      </ul>
+
+      <h2 id="others">Other companies involved</h2>
+      <ul>
+        <li><strong>Our hosting provider</strong> runs the server that stores the encrypted data listed above.</li>
+        <li><strong>Your browser's push service</strong> (Google for Chrome and the Play app, or Mozilla, Apple or Microsoft), only if you turn on notifications. It learns when your device gets a notification, never what it is about.</li>
+        <li><strong>Google Play</strong>, if you install Kin from it, under Google's own privacy policy. The Kin app adds no Google services of its own.</li>
+      </ul>
+
+      <h2 id="delete">Deleting your data</h2>
+      <p>You can do all of this inside Kin, at <a href="https://kin.journeytocode.io/">kin.journeytocode.io</a> or in the Play app. Open <strong>Household</strong>, then <strong>People &amp; devices</strong>.</p>
+      <ul>
+        <li><strong>Delete your account: Leave household.</strong> This signs out all your devices and removes from the service, straight away, your username, your password check value, your account key vault and all your private things (journal, its photos, Just for me, reminders). What stays until the household itself is deleted: a record that a member with a random ID was removed, your revoked devices' public keys, and the things you added to shared lists and chat, which belong to the household and stay part of its encrypted history. The only adult, or the last household admin, can't leave; they can delete the household instead.</li>
+        <li><strong>Remove a member</strong> (household admins): removes that member's account and private things in the same way.</li>
+        <li><strong>Delete household</strong> (household admins): stops sync for everyone at once. After 30 days, during which an admin can cancel, the service removes all of the household's encrypted history, chat, fridge, members, devices, accounts and security log. It keeps one record, the household's random ID and the date it was deleted, so that an old backup can never bring the household back.</li>
+        <li><strong>Remove Kin from one device</strong>: clear the site data for kin.journeytocode.io in your browser's settings. The Play app keeps its data in Chrome, so after uninstalling it, clear the site data in Chrome too (Chrome may offer to when you uninstall). This deletes that device's copy; the service and your other devices aren't affected.</li>
+      </ul>
+      <p>If you can no longer sign in, contact us (below) with your username and household name and we will help you delete your account. We may need to check with a household admin first, so that nobody can delete someone else's account.</p>
+      <p>Deleting on the service can't reach copies already on other people's devices, exports someone saved, or screenshots.</p>
+
+      <h2 id="retention">How long things are kept</h2>
+      <ul>
+        <li>Your account and your private things: while you are a member of the household.</li>
+        <li>Household history, chat and fridge: while the household exists, then 30 days after a deletion request. When a chat message is deleted for everyone, its content is removed from the service straight away; a record that a message was sent and deleted stays in the history.</li>
+        <li>Sign-in sessions: at most 12 hours, in memory. Rate-limit counters: minutes, in memory.</li>
+        <li>Synced calendar links: until the calendar is turned off, you leave the household, or it is deleted.</li>
+        <li>Problem reports and suggestions: 180 days, then deleted; sooner when you leave the household or it is deleted. A copy posted to the issue tracker stays there until the team deletes it.</li>
+        <li>The security log: the most recent 10,000 entries across the service, and removed with the household.</li>
+        <li>Server backups: we keep backups to recover from failures. A backup taken before you deleted something still holds it, encrypted as described above, until that backup is deleted.</li>
+      </ul>
+
+      <h2 id="children">Children and teens</h2>
+      <p>A household is set up by an adult. Children and teens join only when an adult in the household invites them, as Limited members. They see no ads, and nothing about them is tracked or analysed. We hold the same things for them as for any member: a username, a password check value and their devices, never the content of what they write. A household admin can turn private storage off for Limited members and can remove them, which deletes their account from the service. Kin is not designed for children to use on their own, outside a household run by an adult.</p>
+
+      <h2 id="security">Security and its limits</h2>
+      <p>Data travels to and from the service over encrypted connections (HTTPS), and your household's content is also end-to-end encrypted. Kin has not had an independent security review. Encryption can't protect a device that is already unlocked in someone else's hands, or one with malicious software on it. The known limitations are listed in the <a href="https://github.com/mnichols08/ZTM-Build-Fest/blob/kin-development/projects/kin/SECURITY.md">security policy</a>.</p>
+
+      <h2 id="rights">Your choices and rights</h2>
+      <p>Depending on where you live, you may have the right to ask what we hold about you, to correct it, to delete it or to take a copy. Most of what is about you is on your own devices, where you control it: Kin can export your household, and your private things, to a file only you can open. For what is on the service, use the controls above or contact us.</p>
+
+      <h2 id="changes">Changes to this policy</h2>
+      <p>If we change what Kin collects, we will update this page and its effective date before the change takes effect, and say what changed in Kin's <a href="https://github.com/mnichols08/ZTM-Build-Fest/blob/kin-development/projects/kin/CHANGELOG.md">changelog</a>.</p>
+
+      <h2 id="contact">Contact</h2>
+      <!-- PLACEHOLDER (#541): confirm this mailbox exists and is monitored
+           before the policy URL goes into Google Play. docs/PLAY-RELEASE.md
+           lists it in the one-time setup checklist. -->
+      <p>Questions or requests about your privacy: <a href="mailto:privacy@journeytocode.io" data-placeholder="contact-email">privacy@journeytocode.io</a>.</p>
+      <p><a href="/">Back to Kin</a></p>
+    </main>
+  </body>
+</html>

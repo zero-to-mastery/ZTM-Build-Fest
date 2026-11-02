@@ -14,6 +14,8 @@ export async function rootRotationUiChecks(oldRecovery) {
     }
     throw Error("Root rotation UI did not settle");
   };
+  app.ctx.navigation.navigate("#household/privacy");
+  await new Promise((resolve) => setTimeout(resolve, 0));
   if (!app.vault) await app.security.run(() => app.security.unlockRecovery(oldRecovery));
   const before = await EventStore.securityStatus();
   const originalBytes = (await app.store.loadEvents()).map((row) => Array.from(row.encoded_event));
@@ -30,7 +32,7 @@ export async function rootRotationUiChecks(oldRecovery) {
   confirmation.form.requestSubmit();
   await wait(() => !app.security.busy && Boolean(app.store));
   check(app.security.alert.textContent === "", "replacement finishes without security errors");
-  check(app.security.message.textContent.includes("Recovery protection updated"), "replacement announces success");
+  check(app.security.message.textContent.includes("Backup key replaced"), "replacement announces success");
   const after = await EventStore.securityStatus();
   check(after.rootVersion === before.rootVersion + 1 && after.wrappers.length === 1,
     "UI publishes exactly the next root and only the new recovery wrapper");
@@ -39,7 +41,7 @@ export async function rootRotationUiChecks(oldRecovery) {
   check(!document.body.textContent.includes(recovery), "completed replacement removes displayed recovery key");
   const archive = await exportHouseholdArchive({ store: app.store, engine: app.engine, vault: app.vault });
   check(archive.byteLength > 16, "rotated root exports a real KARC v1 archive");
-  app.lockHousehold();
+  app.ctx.session.lockHousehold();
   await app.security.run(() => app.security.unlockRecovery(oldRecovery));
   check(!app.vault && app.main.hidden, "old recovery cannot unlock after UI rotation");
   await app.security.run(() => app.security.unlockRecovery(recovery));
@@ -66,7 +68,7 @@ export async function rootRotationUiChecks(oldRecovery) {
     const pending = app.security.run(() => app.security.replaceProtection(resumedRecovery));
     await started;
     check(app.main.hidden && !app.store && !app.engine && !app.vault, "rotation disposes ordinary household capabilities");
-    app.lockHousehold();
+    app.ctx.session.lockHousehold();
     check(operationVault.locked, "manual lock disposes operation-owned candidate immediately");
     release();
     await pending;

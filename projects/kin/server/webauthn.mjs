@@ -14,23 +14,31 @@ export class WebAuthn {
     origin,
     now = () => Date.now(),
     maxChallenges = MAX_ACTIVE_CHALLENGES,
+    maxAnonymousChallenges = defaultAnonymousCapacity(maxChallenges),
   }) {
     this.rpId = rpId;
     this.origin = origin;
     this.now = now;
     this.maxChallenges = maxChallenges;
+    this.maxAnonymousChallenges = Math.max(
+      0,
+      Math.min(maxChallenges, maxAnonymousChallenges),
+    );
     this.challenges = new Map();
   }
 
-  registrationOptions(flow) {
-    const challenge = this.challenge("register", flow);
+  // `userName` names the passkey in the person's passkey manager: a
+  // password account's username (#561), so its passkey sits beside the
+  // saved password; otherwise a random name, as before.
+  registrationOptions(flow, { anonymous = false, userName = null, displayName = null } = {}) {
+    const challenge = this.challenge("register", flow, { anonymous });
     return {
       challenge,
       rp: { id: this.rpId, name: "Kin" },
       user: {
         id: b64url(randomBytes(32)),
-        name: `adult-${randomBytes(6).toString("hex")}`,
-        displayName: "Kin adult",
+        name: userName ?? `adult-${randomBytes(6).toString("hex")}`,
+        displayName: displayName ?? "Kin adult",
       },
       pubKeyCredParams: [
         { type: "public-key", alg: -7 },
@@ -55,8 +63,18 @@ export class WebAuthn {
     };
   }
 
-  challenge(kind, flow) {
+  challenge(kind, flow, { anonymous = false } = {}) {
     this.pruneChallenges();
+    if (
+      anonymous &&
+      [...this.challenges.values()].filter((record) => record.anonymous)
+        .length >= this.maxAnonymousChallenges
+    )
+      throw new PairingError(
+        "challenge_capacity",
+        "Too many active passkey requests. Wait and try again.",
+        503,
+      );
     if (this.challenges.size >= this.maxChallenges)
       throw new PairingError(
         "challenge_capacity",
@@ -67,9 +85,15 @@ export class WebAuthn {
     this.challenges.set(value, {
       kind,
       flow,
+      anonymous,
       expiresAt: this.now() + CHALLENGE_TTL_MS,
     });
     return value;
+  }
+
+  discardFlow(flow) {
+    for (const [value, record] of this.challenges)
+      if (record.flow === flow) this.challenges.delete(value);
   }
 
   pruneChallenges() {
@@ -171,18 +195,27 @@ export class WebAuthn {
       )
         throw authError();
       const count = authData.readUInt32BE(33);
-      if (credential.signCount && count && count <= credential.signCount)
+      // Once an authenticator has reported a counter, every later assertion
+      // must report a strictly higher one. A drop, including back to 0, can
+      // mean a cloned authenticator. Authenticators that always report 0
+      // keep a stored 0 and are accepted. The stored counter never goes down.
+      const stored = credential.signCount ?? 0;
+      if (stored > 0 && count <= stored)
         throw new PairingError(
           "credential_replayed",
-          "The passkey response could not be verified.",
+          "This passkey reported an unexpected sign-in count, which can mean it was copied, so Kin won't accept it. Sign in with another passkey or your backup key, then remove this passkey and add a new one.",
           401,
         );
-      credential.signCount = count;
+      if (count > stored) credential.signCount = count;
       return true;
     } catch (error) {
       normalizeVerificationError(error);
     }
   }
+}
+
+function defaultAnonymousCapacity(maximum) {
+  return maximum > 1 ? Math.max(1, Math.floor(maximum / 4)) : 0;
 }
 
 function verifyRpAndFlags(authData, rpId, registration) {

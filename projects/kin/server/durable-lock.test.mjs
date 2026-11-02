@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import Database from "better-sqlite3";
 import { spawnSync } from "node:child_process";
 import {
   existsSync,
@@ -25,6 +24,8 @@ import {
   hasDatabaseProcessLock,
 } from "./durable-store.mjs";
 import { PairingService } from "./pairing-service.mjs";
+import { openTestDatabase, sqlitePragma } from "./sqlite-test-utils.mjs";
+import { permissionFlags } from "./permissions.mjs";
 
 function temporaryDatabase(t) {
   const directory = mkdtempSync(join(tmpdir(), "kin-durable-lock-"));
@@ -50,7 +51,7 @@ test("another service process refuses an owned lock and starts after release", (
   try {
     const refused = spawnSync(
       process.execPath,
-      [fileURLToPath(new URL("./server.mjs", import.meta.url))],
+      [...permissionFlags(databasePath), fileURLToPath(new URL("./server.mjs", import.meta.url))],
       {
         encoding: "utf8",
         timeout: 10_000,
@@ -149,7 +150,9 @@ test("online backup preserves service use and excludes competing admin operation
       /lock already exists/,
     );
     await assert.rejects(
-      DurableStore.restoreBackup(join(directory, "unused.sqlite"), databasePath),
+      DurableStore.restoreBackup(join(directory, "unused.sqlite"), databasePath, {
+        acknowledgeDeletionHistory: true,
+      }),
       /lock already exists/,
     );
     assert.equal(await backup, destination);
@@ -181,7 +184,9 @@ test("restore refuses a service-owned database and cleans up only its own lock",
   try {
     const ownedServiceLock = readFileSync(databaseLockPath(databasePath), "utf8");
     await assert.rejects(
-      DurableStore.restoreBackup(join(directory, "unused.sqlite"), databasePath),
+      DurableStore.restoreBackup(join(directory, "unused.sqlite"), databasePath, {
+        acknowledgeDeletionHistory: true,
+      }),
       (error) => assertRecoveryGuidance(error, databaseLockPath(databasePath)),
     );
     assert.equal(hasDatabaseMaintenanceLock(databasePath), false);
@@ -197,13 +202,17 @@ test("restore excludes startup and other admin operations then releases both loc
   const sourcePath = join(directory, "source.sqlite");
   new DurableStore(databasePath).close();
   new DurableStore(sourcePath).close();
-  const restore = DurableStore.restoreBackup(sourcePath, databasePath);
+  const restore = DurableStore.restoreBackup(sourcePath, databasePath, {
+    acknowledgeDeletionHistory: true,
+  });
   try {
     assert.equal(hasDatabaseMaintenanceLock(databasePath), true);
     assert.equal(hasDatabaseProcessLock(databasePath), true);
     assert.throws(() => new DurableStore(databasePath), /lock already exists/);
     await assert.rejects(
-      DurableStore.restoreBackup(sourcePath, databasePath),
+      DurableStore.restoreBackup(sourcePath, databasePath, {
+        acknowledgeDeletionHistory: true,
+      }),
       /lock already exists/,
     );
     await assert.rejects(
@@ -232,7 +241,9 @@ test("failed restore preserves its target and releases both acquired locks", asy
   const invalidSource = join(directory, "invalid.sqlite");
   writeFileSync(invalidSource, "not a SQLite database");
   await assert.rejects(
-    DurableStore.restoreBackup(invalidSource, databasePath),
+    DurableStore.restoreBackup(invalidSource, databasePath, {
+      acknowledgeDeletionHistory: true,
+    }),
     DurableStoreError,
   );
   assert.equal(hasDatabaseMaintenanceLock(databasePath), false);
@@ -251,21 +262,27 @@ test("backup failure removes partial output and releases its maintenance lock", 
   const { directory, databasePath } = temporaryDatabase(t);
   const store = new DurableStore(databasePath);
   const destination = join(directory, "backup.sqlite");
-  const originalBackup = store.db.backup;
+  const originalPrepare = store.db.prepare.bind(store.db);
   try {
-    store.db.backup = async (temporary) => {
-      writeFileSync(temporary, "partial backup");
-      throw new Error("injected backup write failure");
+    store.db.prepare = (sql) => {
+      if (sql === "VACUUM INTO ?")
+        return {
+          run(temporary) {
+            writeFileSync(temporary, "partial backup");
+            throw new Error("injected backup write failure");
+          },
+        };
+      return originalPrepare(sql);
     };
     await assert.rejects(store.backup(destination), /could not create a verified backup/);
     assert.equal(existsSync(destination), false);
     assert.equal(readdirSync(directory).some((name) => name.endsWith(".tmp")), false);
     assert.equal(hasDatabaseMaintenanceLock(databasePath), false);
     assert.equal(hasDatabaseProcessLock(databasePath), true);
-    store.db.backup = originalBackup;
+    store.db.prepare = originalPrepare;
     assert.equal(await store.backup(destination), destination);
   } finally {
-    store.db.backup = originalBackup;
+    store.db.prepare = originalPrepare;
     store.close();
   }
 });
@@ -279,15 +296,17 @@ for (const kind of ["missing", "directory", "newer-schema", "empty"]) {
     if (kind === "directory") mkdirSync(sourcePath);
     if (kind === "empty") writeFileSync(sourcePath, "");
     if (kind === "newer-schema") {
-      const source = new Database(sourcePath);
-      source.pragma("user_version = 2");
+      const source = openTestDatabase(sourcePath);
+      sqlitePragma(source, "user_version = 4");
       source.close();
     }
     const sourceBytes = ["newer-schema", "empty"].includes(kind)
       ? readFileSync(sourcePath)
       : null;
     await assert.rejects(
-      DurableStore.restoreBackup(sourcePath, databasePath),
+      DurableStore.restoreBackup(sourcePath, databasePath, {
+        acknowledgeDeletionHistory: true,
+      }),
       DurableStoreError,
     );
     assert.deepEqual(readFileSync(databasePath), previous);
@@ -304,7 +323,6 @@ for (const kind of ["missing", "directory", "newer-schema", "empty"]) {
 test("restore preserves the old database and its recoverable WAL/SHM sidecars", async (t) => {
   const { directory, databasePath } = temporaryDatabase(t);
   const sourcePath = join(directory, "source.sqlite");
-  new DurableStore(sourcePath).close();
   const previousStore = new DurableStore(databasePath);
   let previousIdentity;
   let previousFiles;
@@ -313,6 +331,7 @@ test("restore preserves the old database and its recoverable WAL/SHM sidecars", 
       credential: { id: "previous-wal", publicKey: "previous-key", algorithm: -7 },
       deviceLabel: "Preserved WAL test",
     });
+    await previousStore.backup(sourcePath);
     previousFiles = new Map(
       ["", "-wal", "-shm"].map((suffix) => [
         suffix,
@@ -327,7 +346,9 @@ test("restore preserves the old database and its recoverable WAL/SHM sidecars", 
   for (const [suffix, bytes] of previousFiles)
     writeFileSync(`${databasePath}${suffix}`, bytes);
 
-  const result = await DurableStore.restoreBackup(sourcePath, databasePath);
+  const result = await DurableStore.restoreBackup(sourcePath, databasePath, {
+    acknowledgeDeletionHistory: true,
+  });
   assert.ok(result.previousDatabasePath);
   for (const [suffix, bytes] of previousFiles)
     assert.deepEqual(readFileSync(`${result.previousDatabasePath}${suffix}`), bytes);
@@ -343,7 +364,7 @@ test("restore preserves the old database and its recoverable WAL/SHM sidecars", 
   const restored = new DurableStore(databasePath);
   try {
     assert.equal(restored.validate(), true);
-    assert.equal(restored.loadIdentity().members.size, 0);
+    assert.ok(restored.loadIdentity().members.has(previousIdentity.memberId));
   } finally {
     restored.close();
   }

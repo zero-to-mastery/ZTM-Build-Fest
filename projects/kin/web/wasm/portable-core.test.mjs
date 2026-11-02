@@ -125,6 +125,35 @@ test("Rust rejects stale occurrence commands and malformed canonical records", a
   engine.dispose();
 });
 
+test("Areas replay, rename, archive, assign, unassign, and import as canonical history", async () => {
+  const engine = await loadKinEngine(url);
+  const areaId = idToHex(id(0x31));
+  const itemId = idToHex(id(0x11));
+  let records = [];
+  const run = (command, sequence) => {
+    const result = engine.executeCommand(command, context(sequence), records, 1234, null, day);
+    records = [...records, result.encodedEvent];
+    return result;
+  };
+  run({ type: "create-area", areaId, name: "  Kitchen  " }, 1);
+  run({ type: "add", text: "Wipe counter", classification: "need" }, 2);
+  let state = run({ type: "change-item-area", itemId, areaId }, 3).state;
+  assert.equal(state.items[0].areaId, areaId);
+  state = run({ type: "rename-area", areaId, name: "Cooking area" }, 4).state;
+  assert.equal(state.areas[0].name, "Cooking area");
+  state = run({ type: "archive-area", areaId }, 5).state;
+  assert.equal(state.areas[0].archived, true);
+  assert.equal(state.items[0].areaId, areaId);
+  run({ type: "change-item-area", itemId, areaId: null }, 6);
+  assert.equal(engine.applyEvents(records, 1234, null, day).items[0].areaId, null);
+  assert.equal(engine.planImport(records, 1234, null, day).state.areas[0].archived, true);
+  assert.throws(
+    () => engine.executeCommand({ type: "change-item-area", itemId, areaId }, context(7), records, 1234, null, day),
+    (error) => error.code === 4,
+  );
+  engine.dispose();
+});
+
 test("archive framing preserves opaque encrypted material and fails closed", async () => {
   const engine = await loadKinEngine(url);
   const metadata = new TextEncoder().encode('{"wrapper":"synthetic"}');

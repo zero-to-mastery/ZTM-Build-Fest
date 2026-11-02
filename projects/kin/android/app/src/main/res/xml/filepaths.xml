@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The only files the app shares with Chrome: the splash image it hands
+     over at launch (androidbrowserhelper's twa_splash directory). -->
+<paths>
+    <files-path name="twa_splash" path="twa_splash/" />
+</paths>

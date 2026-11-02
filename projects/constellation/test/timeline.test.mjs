@@ -1,0 +1,82 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createTimeline, createTimelineHost, serializeScene, parseScene, renderSceneSVG, renderSceneHTML, temporalMetadata } from '../src/core-api.mjs';
+import { mkdtemp, writeFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { pathToFileURL } from 'node:url';
+import { browser, openBrowser } from '../scripts/browser-harness.mjs';
+
+const records = [{ name: 'compiler', full_name: 'demo/compiler', created_at: '2020-01-01', updated_at: '2026-01-01', language: 'Rust', stargazers_count: 100 }, { name: 'runtime', full_name: 'demo/runtime', created_at: '2024-01-01', language: 'Rust', stargazers_count: 20 }];
+const referenceDate = '2026-09-01T00:00:00.000Z';
+const options = { referenceDate, animate: false };
+
+test('sparse timelines and bounded snapshot caches remain isolated and cancellable', () => {
+  const host = createTimelineHost({ maxEntries: 1 });
+  const first = host.create('demo', records, options, { dates: ['1990-01-01'] });
+  assert.equal(first.timeline.frames[0].scene.nodes.length, 0);
+  first.nodes[0].metadata.name = 'mutated';
+  assert.notEqual(host.create('demo', records, options, { dates: ['1990-01-01'] }).nodes[0].metadata.name, 'mutated');
+  assert.equal(host.cacheStatistics.hits, 1);
+  host.create('demo', records, options, { dates: [] });
+  assert.equal(host.cacheStatistics.entries, 1);
+  const abort = new AbortController(); abort.abort();
+  assert.throws(() => host.create('demo', records, options, { dates: [] }, { signal: abort.signal }), /abort/i);
+  const tiny = createTimelineHost({ maxBytes: 1 }); tiny.create('demo', records, options, { dates: [] });
+  assert.equal(tiny.cacheStatistics.entries, 0);
+  const dates = Array.from({ length: 63 }, (_, i) => `${1970 + i % 50}-${String(Math.floor(i / 50) + 1).padStart(2, '0')}-01`).filter(date => date < '2026');
+  const large = createTimeline('demo', [], options, { dates });
+  assert.equal(large.timeline.frames.length, 64);
+  assert.equal(parseScene(serializeScene(large)).timeline.frames.length, 64);
+  assert.throws(() => createTimeline('demo', [], options, { dates: [...dates, '2025-12-01'] }), /64/);
+  host.clear(); assert.equal(host.cacheStatistics.entries, 0);
+});
+
+test('timeline distinguishes current metadata from supplied historical snapshots', () => {
+  const timeline = createTimeline('demo', records, options, { dates: ['2021-01-01'] });
+  assert.equal(timeline.timeline.frames[0].evidence, 'current-metadata');
+  assert.equal(timeline.timeline.frames[0].scene.nodes.length, 1);
+  assert.equal(timeline.timeline.frames[0].scene.nodes[0].metadata.stargazers_count, 100);
+  assert.equal(timeline.timeline.frames[0].scene.nodes[0].metadata.updated_at, undefined);
+  assert.equal(temporalMetadata(records)[0].created, '2020-01-01T00:00:00.000Z');
+  const snapshot = createTimeline('demo', records, options, { snapshots: [{ date: '2021-01-01', records: [{ ...records[0], stargazers_count: 3 }] }] });
+  assert.equal(snapshot.timeline.frames[0].evidence, 'snapshot');
+  assert.equal(snapshot.timeline.frames[0].scene.nodes[0].metadata.stargazers_count, 3);
+  assert.equal(serializeScene(parseScene(serializeScene(snapshot))), serializeScene(snapshot));
+  assert.equal(renderSceneSVG(snapshot), renderSceneSVG(snapshot.timeline.frames.at(-1).scene));
+  assert.equal(renderSceneHTML(snapshot), renderSceneHTML(snapshot));
+  assert.throws(() => createTimeline('demo', records, options, { dates: ['2021-01-01', '2021-01-01'] }), /unique/);
+  assert.throws(() => createTimeline('demo', records, options, { dates: ['2030-01-01'] }), /reference/);
+  assert.throws(() => createTimeline('demo', records), /dates/);
+});
+
+test('offline timeline controls render supplied frames with evidence labels', { skip: !browser, timeout: 120000 }, async t => {
+  const dir = await mkdtemp(join(tmpdir(), 'constellation-timeline-')); t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = join(dir, 'index.html');
+  await writeFile(file, renderSceneHTML(createTimeline('demo', records, options, { snapshots: [{ date: '2021-01-01', records: [records[0]] }] })));
+  const { evaluate, waitFor, errors, cdp } = await openBrowser(t, pathToFileURL(file).href);
+  await waitFor(`Boolean(document.querySelector('main')?.constellation)`);
+  assert.equal(await evaluate(`document.querySelectorAll('.star').length`), 2);
+  await evaluate(`window.sharedNode = document.querySelector('[data-repo="demo/compiler"]').closest('.repository'); document.querySelector('main').constellation.selectNode('demo/compiler',{focus:false}); document.querySelector('main').constellation.setTheme('light'); document.querySelector('main').constellation.setFrame(0)`);
+  assert.equal(await evaluate(`sharedNode === document.querySelector('[data-repo="demo/compiler"]').closest('.repository')`), true);
+  assert.equal(await evaluate(`document.querySelector('main').constellation.selection`), 'demo/compiler');
+  assert.equal(await evaluate(`document.querySelector('main').constellation.theme`), 'light');
+  assert.equal(await evaluate(`document.querySelectorAll('.star').length`), 1);
+  assert.match(await evaluate(`document.querySelector('[aria-label=Timeline]').textContent`), /Historical snapshot/);
+  await evaluate(`document.querySelector('main').constellation.setFrame(1)`);
+  assert.equal(await evaluate(`document.querySelectorAll('.star').length`), 2);
+  await cdp('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
+  await waitFor(`document.querySelector('main').hasAttribute('data-reduced-motion')`);
+  await evaluate(`document.querySelector('main').constellation.setFrame(0)`);
+  assert.equal(await evaluate(`document.querySelectorAll('.departing-node').length`), 0);
+  assert.equal(await evaluate(`document.querySelector('.repository').getAnimations().length`), 0);
+  await evaluate(`document.querySelector('main').constellation.compareWithNow(true)`);
+  assert.match(await evaluate(`document.querySelector('[aria-label=Timeline]').nextElementSibling.textContent`), /1 added, 0 removed/);
+  assert.equal(await evaluate(`document.querySelector('[aria-label="Now comparison"]').shadowRoot.querySelectorAll('.star').length`), 2);
+  await evaluate(`document.querySelector('main').constellation.setDate('2026-08-01')`);
+  assert.equal(await evaluate(`document.querySelector('main').constellation.frameIndex`), 1);
+  await evaluate(`const range = document.querySelector('[aria-label=Timeline] input[type=range]'); range.value='0'; range.dispatchEvent(new Event('input'));`);
+  assert.equal(await evaluate(`document.querySelector('main').constellation.frameIndex`), 0);
+  assert.match(await evaluate(`document.querySelector('[aria-label=Timeline] input[type=range]').getAttribute('aria-valuetext')`), /2021-01-01/);
+  assert.deepEqual(errors, []);
+});

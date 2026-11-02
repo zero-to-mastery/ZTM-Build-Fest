@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "account": "example-community",
+  "accountType": "organization",
+  "organizationUser": "alice",
+  "organizationScope": "sample",
+  "organizationView": "collaboration",
+  "arrangement": "collaboration-gravity",
+  "maxRepos": 24,
+  "animate": false,
+  "identityRing": false,
+  "organization": { "grouping": { "mode": "regex", "pattern": "^v(?<voyage>\\d+)-(?<tier>tier\\d+)-" } }
+}

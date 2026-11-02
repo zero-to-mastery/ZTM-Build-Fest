@@ -1,7 +1,9 @@
 //! Versioned, bounded framing for an authenticated encrypted archive. Browser
 //! Web Crypto owns authentication; parsing alone never establishes authenticity.
 use crate::error::KinError;
-use crate::protocol::MAX_PROTOCOL_BYTES;
+use crate::history::History;
+use crate::wire::MAX_PROTOCOL_BYTES;
+pub const MAX_ARCHIVE_BYTES: usize = 160 * 1024 * 1024;
 
 pub const ARCHIVE_VERSION: u16 = 1;
 pub const MAX_ARCHIVE_METADATA: usize = 1024 * 1024;
@@ -41,7 +43,7 @@ fn validate_lengths(metadata: usize, ciphertext: usize) -> Result<(), KinError> 
         || metadata
             .checked_add(ciphertext)
             .and_then(|v| v.checked_add(16))
-            .is_none_or(|v| v > MAX_PROTOCOL_BYTES)
+            .is_none_or(|v| v > MAX_ARCHIVE_BYTES)
     {
         return Err(KinError::SizeLimit);
     }
@@ -127,11 +129,38 @@ pub fn validate_request(bytes: &[u8]) -> Result<Vec<u8>, KinError> {
     Ok(result)
 }
 
-/// Authenticate/decrypt in the host first. This validates the complete canonical
-/// corpus, rejects duplicate archive entries, and derives a replacement plan.
-/// It performs no persistence and cannot partially import a failed archive.
+/// The import plan for the history an engine instance holds (`kin_plan_import`):
+/// the host decrypts an archive and appends its records to the instance's
+/// history (`kin_history_append` checks each one), then asks for the plan in
+/// the context of a record-less KINE request. The plan rejects duplicate
+/// event IDs, gives the next safe logical time and carries the projection.
+/// It performs no persistence, so a failed archive cannot partially import.
+pub fn plan_import_history(context: &[u8], history: &mut History) -> Result<Vec<u8>, KinError> {
+    let mut ids = std::collections::BTreeSet::new();
+    let mut next_logical_time = 1u64;
+    for view in history.views() {
+        if !ids.insert(view.event_id()) {
+            return Err(KinError::InvalidEvent);
+        }
+        next_logical_time = next_logical_time.max(
+            view.logical_time()
+                .checked_add(1)
+                .ok_or(KinError::InvalidEvent)?,
+        );
+    }
+    let count = history.len();
+    import_plan(
+        count,
+        next_logical_time,
+        crate::core::replay_history(context, history)?,
+    )
+}
+
+/// The same plan for a whole KINE request: the oracle the held-history plan
+/// is tested against.
+#[cfg(test)]
 pub fn plan_import(bytes: &[u8]) -> Result<Vec<u8>, KinError> {
-    let request = crate::protocol::decode_request_with_summary(bytes)?;
+    let request = crate::request::decode_request(bytes)?;
     let mut ids = std::collections::BTreeSet::new();
     let mut next_logical_time = 1u64;
     for event in &request.events {
@@ -147,12 +176,22 @@ pub fn plan_import(bytes: &[u8]) -> Result<Vec<u8>, KinError> {
     }
     let projection = crate::core::project(&request)?;
     let encoded = crate::core::encode_projection(&request, &projection)?;
+    import_plan(request.events.len(), next_logical_time, encoded)
+}
+
+/// KIMP: magic and version, event count:u32, next logical time:u64,
+/// projection length:u32, then the KINS projection.
+fn import_plan(
+    count: usize,
+    next_logical_time: u64,
+    encoded: Vec<u8>,
+) -> Result<Vec<u8>, KinError> {
     if encoded.len() + 24 > MAX_PROTOCOL_BYTES {
         return Err(KinError::SizeLimit);
     }
     let mut output = Vec::with_capacity(24 + encoded.len());
     output.extend_from_slice(b"KIMP\x01\0\0\0");
-    output.extend_from_slice(&(request.events.len() as u32).to_le_bytes());
+    output.extend_from_slice(&(count as u32).to_le_bytes());
     output.extend_from_slice(&next_logical_time.to_le_bytes());
     output.extend_from_slice(&(encoded.len() as u32).to_le_bytes());
     output.extend_from_slice(&encoded);
@@ -179,7 +218,7 @@ mod tests {
             layout[16..].copy_from_slice(&total.to_le_bytes());
             assert_eq!(layout_request(&layout), Err(KinError::MalformedProtocol));
         }
-        let maximum_ciphertext = MAX_PROTOCOL_BYTES - MAX_ARCHIVE_METADATA - 16;
+        let maximum_ciphertext = MAX_ARCHIVE_BYTES - MAX_ARCHIVE_METADATA - 16;
         let mut maximum = (MAX_ARCHIVE_METADATA as u32).to_le_bytes().to_vec();
         maximum.extend_from_slice(&(maximum_ciphertext as u32).to_le_bytes());
         assert!(header_request(&maximum).is_ok());
@@ -237,8 +276,8 @@ mod tests {
         };
         let event = create_event(&command, context).unwrap();
         let make_request = |count: u32| {
-            let mut bytes = vec![0; 44];
-            bytes[..8].copy_from_slice(b"KINE\x07\0\0\0");
+            let mut bytes = vec![0; 64];
+            bytes[..8].copy_from_slice(b"KINE\x18\0\0\0");
             bytes[8..12].copy_from_slice(&count.to_le_bytes());
             bytes[12..20].copy_from_slice(&1234i64.to_le_bytes());
             bytes[40..44].copy_from_slice(&20261003u32.to_le_bytes());
@@ -255,8 +294,67 @@ mod tests {
         assert_eq!(&plan[24..28], b"KINS");
         assert_eq!(plan_import(&make_request(2)), Err(KinError::InvalidEvent));
         assert!(plan_import(&bytes[..bytes.len() - 1]).is_err());
-        let mut corrupt = bytes;
-        corrupt[44] = 255;
+        let mut corrupt = bytes.clone();
+        corrupt[64] = 255;
         assert_eq!(plan_import(&corrupt), Err(KinError::UnsupportedVersion));
+
+        // The held-history plan agrees, duplicate rejection included.
+        let context = |bytes: &[u8]| {
+            let mut context = bytes[..64].to_vec();
+            context[8..12].fill(0);
+            context
+        };
+        let held = |count: usize| {
+            let mut history = History::new();
+            let mut batch = (count as u32).to_le_bytes().to_vec();
+            for _ in 0..count {
+                batch.extend_from_slice(&(event.canonical_bytes.len() as u32).to_le_bytes());
+            }
+            for _ in 0..count {
+                batch.extend_from_slice(&event.canonical_bytes);
+            }
+            history.append(&batch).unwrap();
+            history
+        };
+        assert_eq!(
+            plan_import_history(&context(&bytes), &mut held(1)),
+            plan_import(&bytes)
+        );
+        assert_eq!(
+            plan_import_history(&context(&bytes), &mut held(2)),
+            Err(KinError::InvalidEvent)
+        );
+        assert_eq!(
+            plan_import_history(&bytes, &mut held(1)),
+            Err(KinError::MalformedProtocol),
+            "the context carries no records"
+        );
+    }
+
+    #[test]
+    fn the_held_history_plan_matches_the_whole_request_for_every_golden_fixture() {
+        let fixtures =
+            std::path::PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("rust/fixtures/golden");
+        for name in ["empty", "full", "distributed", "pulse-expiry", "bulk"] {
+            let request = std::fs::read(fixtures.join(format!("{name}.kine"))).unwrap();
+            let decoded = crate::request::decode_request(&request).unwrap();
+            let bindings = u16::from_le_bytes([request[60], request[61]]) as usize;
+            let mut context = request[..64 + bindings * crate::wire::BINDING_BYTES].to_vec();
+            context[8..12].fill(0);
+            let mut batch = (decoded.events.len() as u32).to_le_bytes().to_vec();
+            for event in &decoded.events {
+                batch.extend_from_slice(&(event.canonical_bytes.len() as u32).to_le_bytes());
+            }
+            for event in &decoded.events {
+                batch.extend_from_slice(&event.canonical_bytes);
+            }
+            let mut history = History::new();
+            history.append(&batch).unwrap();
+            assert_eq!(
+                plan_import_history(&context, &mut history),
+                plan_import(&request),
+                "{name}"
+            );
+        }
     }
 }

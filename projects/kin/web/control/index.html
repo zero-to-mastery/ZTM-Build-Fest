@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#684033" />
+    <!-- The home server's control panel (ADR 0025 §11, #718): setup on first
+         run, then status and settings. Served only by a home server
+         (KIN_MODE=home), at http://localhost:<port>/control/ on its own
+         computer and at https://<name>/control/ for household admins.
+         Scripts are Kin's own modules only; nothing inline. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <title>Control panel · Kin</title>
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles/app.css" />
+    <link rel="stylesheet" href="/control/control.css" />
+    <script type="module" src="/control/kin-control-panel.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="policy-header control-header">
+      <p><span class="control-brand">Kin</span> · home server control panel</p>
+    </header>
+    <main id="main" class="control-page" tabindex="-1">
+      <h1>Control panel</h1>
+      <kin-control-panel>
+        <p>Loading…</p>
+        <noscript><p>The control panel needs JavaScript.</p></noscript>
+      </kin-control-panel>
+    </main>
+  </body>
+</html>

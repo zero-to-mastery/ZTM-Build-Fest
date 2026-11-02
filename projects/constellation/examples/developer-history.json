@@ -1,0 +1,11 @@
+{
+  "account": "example",
+  "visualTheme": "deep-space",
+  "arrangement": "galaxy",
+  "referenceDate": "2026-09-27T12:00:00.000Z",
+  "contributionOrbit": { "enabled": true },
+  "languageEvolution": { "enabled": true, "style": "eras" },
+  "stellarAges": { "enabled": true },
+  "nodeColorMode": "language",
+  "legend": true
+}

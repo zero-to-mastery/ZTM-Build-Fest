@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <!-- GitHub sign-in (public values; the secret lives only in Netlify). It is
+       offered only when the page is served from the registered callback. -->
+  <meta name="constellation-oauth-client" content="Iv23liR08ouHTagVz31P" />
+  <meta name="constellation-oauth-exchange" content="https://constellation-sign-in.netlify.app/api/github-exchange" />
+  <meta name="constellation-oauth-redirect" content="https://mnichols08.github.io/constellation/" />
+  <meta name="referrer" content="no-referrer" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#0b0e1a" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f6f7fb" media="(prefers-color-scheme: light)" />
+  <meta name="description" content="Turn your GitHub projects into a sky full of stars. Make it yours, then put it on your profile or website." />
+  <title>Constellation — your GitHub projects as a sky full of stars</title>
+  <!-- Link previews. The image is built by scripts/build-og-image.mjs. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Constellation" />
+  <meta property="og:title" content="Constellation — your GitHub projects as a sky full of stars" />
+  <meta property="og:description" content="Turn your GitHub projects into a sky full of stars. Make it yours, then put it on your profile or website." />
+  <meta property="og:url" content="https://mnichols08.github.io/constellation/" />
+  <meta property="og:image" content="https://mnichols08.github.io/constellation/assets/og-image.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Constellation: Your code, written in the stars. A sky of GitHub projects drawn as glowing stars joined by lines." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image:alt" content="Constellation: Your code, written in the stars. A sky of GitHub projects drawn as glowing stars joined by lines." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%236d5efc' d='M12 1.5 14.6 9.4 22.5 12l-7.9 2.6L12 22.5l-2.6-7.9L1.5 12l7.9-2.6z'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./src/app/app.css" />
+</head>
+<body>
+  <a class="skip-link" id="skip-link" href="#main">Skip to content</a>
+
+  <div id="home" class="home">
+    <div class="home-sky" aria-hidden="true"></div>
+    <header class="home-head">
+      <!-- Not a link: this is already the home page. -->
+      <span class="brand">
+        <svg class="brand-mark" width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.5 14.6 9.4 22.5 12l-7.9 2.6L12 22.5l-2.6-7.9L1.5 12l7.9-2.6z" /></svg>
+        <span class="brand-text">constellation</span>
+      </span>
+      <div class="home-head-actions" id="home-head-actions"></div>
+    </header>
+    <main id="main" class="home-main" tabindex="-1">
+      <h1 class="home-title">Your code, written in the <em>stars</em>.</h1>
+      <p class="home-lede">Type a GitHub username and watch your projects become a sky. Make it yours, then put it on your profile or website.</p>
+      <form id="account-form" class="home-form" novalidate>
+        <label class="visually-hidden" for="username">GitHub username</label>
+        <div class="home-input-row">
+          <span class="prefix" aria-hidden="true">@</span>
+          <input id="username" name="username" type="text" inputmode="text" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="100" placeholder="GitHub username" required autofocus aria-describedby="status" />
+          <button id="open-studio" class="btn btn-primary" type="submit" data-primary disabled>Show my sky</button>
+        </div>
+        <p id="status" class="home-error" role="status" aria-live="polite"></p>
+      </form>
+      <script>
+        // Typing works before the map engine has loaded. An Enter pressed in
+        // that moment is kept, and the app submits it as soon as it is ready.
+        document.getElementById('username').addEventListener('keydown', function (event) {
+          if (event.key !== 'Enter' || !document.getElementById('open-studio').disabled) return;
+          event.preventDefault();
+          document.getElementById('account-form').setAttribute('data-pending', '');
+        });
+      </script>
+      <div class="home-alt" id="home-alt"></div>
+      <p id="engine-status" class="notice" data-tone="error" hidden></p>
+    </main>
+    <footer class="home-foot">
+      <span class="made-by">Made with <span class="heart" aria-hidden="true">♥</span><span class="visually-hidden">love</span> by <a href="https://github.com/mnichols08">mnichols08</a></span>
+      <a href="./how-it-works.html">How it works</a>
+      <!-- A new tab, so leaving to star the project never loses your place. -->
+      <a class="star-link" href="https://github.com/mnichols08/constellation" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.5l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 17.3l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z" /></svg>
+        Star on GitHub<span class="visually-hidden"> (opens in a new tab)</span>
+      </a>
+    </footer>
+  </div>
+
+  <div id="studio" class="studio" hidden></div>
+
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+  <div id="announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+  <noscript>
+    <p style="padding:16px;text-align:center">Constellation needs JavaScript to draw your sky. Here is an example:</p>
+    <img src="./dist/constellation.svg" alt="An example GitHub constellation" style="margin:auto;max-width:900px;width:100%" />
+  </noscript>
+  <script type="module" src="./src/app/boot.mjs"></script>
+</body>
+</html>

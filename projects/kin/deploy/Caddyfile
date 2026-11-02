@@ -1,0 +1,11 @@
+# HTTPS for the Kin test server. Caddy obtains and renews the certificate
+# for KIN_DOMAIN automatically (ports 80 and 443 must reach this server).
+{$KIN_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8000 {
+		# Replace, never append: Kin limits pairing guesses and new households
+		# per client, and must see the address Caddy received, not one a client
+		# wrote itself (README, "Running behind a TLS proxy").
+		header_up X-Forwarded-For {remote_host}
+	}
+}

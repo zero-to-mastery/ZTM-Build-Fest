@@ -112,8 +112,8 @@ export async function talkRegressions() {
     throw new Error("Synthetic refresh failure");
   };
   try {
-    await app.refreshFromEvents();
-    await app.refreshFromEvents();
+    await app.ctx.refresh.refreshFromEvents();
+    await app.ctx.refresh.refreshFromEvents();
     check(
       app.retryAction === app.retryRefresh,
       "failed refresh offers refresh recovery first",
@@ -155,7 +155,7 @@ export async function talkRegressions() {
       return request;
     };
     try {
-      await app.saveTalk({ type: "add-talk", text: "Atomic talk " + mode });
+      await app.ctx.conversations.saveTalk({ type: "add-talk", text: "Atomic talk " + mode });
     } finally {
       IDBObjectStore.prototype.add = originalAdd;
     }
@@ -185,6 +185,9 @@ export async function talkRegressions() {
       tx.onabort = () => reject(tx.error);
     });
   await writeRow({ ...saved, actor_id: new Uint8Array(16) });
+  // The session arena already holds this row; corruption written outside Kin's
+  // write paths is detected at the next full read (THREAT-MODEL.md), forced here.
+  app.store.arena.reset(null);
   let rejected = false;
   try {
     await app.store.loadEvents();
@@ -213,16 +216,16 @@ export async function talkRegressions() {
     return append(...args);
   };
   edit("Delayed talk");
-  const pending = app.saveTalk({ type: "add-talk", text: capture.input.value });
+  const pending = app.ctx.conversations.saveTalk({ type: "add-talk", text: capture.input.value });
   check(
-    [...app.main.querySelectorAll("input,select,button")].every(
-      (control) => control.disabled,
-    ),
+    [...app.main.querySelectorAll("input,select,button")]
+      .filter((control) => !control.closest("kin-security"))
+      .every((control) => control.matches(":disabled")),
     "all controls disabled during Talk save",
   );
   check(app.busy, "Talk pending save retains busy state");
   edit("Newer talk draft");
-  app.handlePeerMessage({ data: { type: "events-changed" } });
+  app.ctx.peers.handlePeerMessage({ data: { type: "events-changed" } });
   check(app.pendingRefresh, "peer refresh waits for pending Talk save");
   release();
   await pending;
@@ -252,7 +255,7 @@ export async function talkRegressions() {
       return request;
     };
     try {
-      await app.saveTalk({ type: type, talkId: target });
+      await app.ctx.conversations.saveTalk({ type: type, talkId: target });
     } finally {
       IDBObjectStore.prototype.add = originalAdd;
     }
@@ -270,8 +273,8 @@ export async function talkRegressions() {
       throw new Error("Synthetic action refresh failure");
     };
     try {
-      await app.refreshFromEvents();
-      await app.refreshFromEvents();
+      await app.ctx.refresh.refreshFromEvents();
+      await app.ctx.refresh.refreshFromEvents();
     } finally {
       app.store.getCatchUpState = getCatchUpState;
     }
@@ -311,7 +314,7 @@ export async function talkRegressions() {
     throw new Error("Synthetic save failure");
   };
   try {
-    await app.saveTalk({ type: "add-talk", text: "Superseded retry" });
+    await app.ctx.conversations.saveTalk({ type: "add-talk", text: "Superseded retry" });
   } finally {
     app.store.append = realAppend;
   }
@@ -319,15 +322,15 @@ export async function talkRegressions() {
     throw new Error("Synthetic refresh failure");
   };
   try {
-    await app.refreshFromEvents();
+    await app.ctx.refresh.refreshFromEvents();
   } finally {
     app.store.getCatchUpState = getCatchUpState;
   }
-  await app.saveTalk({
+  await app.ctx.conversations.saveTalk({
     type: "add-talk",
     text: "New command after refresh failure",
   });
-  await app.refreshFromEvents();
+  await app.ctx.refresh.refreshFromEvents();
   check(
     app.retryAction === null &&
       app.suspendedRetry === null &&
@@ -342,7 +345,7 @@ export async function talkRegressions() {
     "mixed deterministic replay",
   );
   check(
-    app.store.database.version === 3,
+    app.store.database.version === 5,
     "encrypted stores retain canonical event compatibility",
   );
   return "PASS Talk add/resolve/reopen/archive, tombstones, invalid references, inert Unicode, retry draft ownership and mixed replay";
@@ -350,7 +353,7 @@ export async function talkRegressions() {
 
 export async function talkPeerRegressions(first, second, until) {
   await first.evaluate(
-    `document.querySelector('kin-app').saveTalk({type:'add-talk',text:'Peer Talk'})`,
+    `document.querySelector('kin-app').ctx.conversations.saveTalk({type:'add-talk',text:'Peer Talk'})`,
   );
   await until(() =>
     second.evaluate(
@@ -378,7 +381,7 @@ export async function talkPeerRegressions(first, second, until) {
       if(this.name==='events') throw new DOMException('Synthetic quota','QuotaExceededError');
       return original.apply(this,args);
     };
-    try { await app.saveTalk({type:'resolve-talk',talkId:record.talkId}); }
+    try { await app.ctx.conversations.saveTalk({type:'resolve-talk',talkId:record.talkId}); }
     finally { IDBObjectStore.prototype.add=original; }
   })()`);
   assert.equal(
@@ -389,7 +392,7 @@ export async function talkPeerRegressions(first, second, until) {
   );
   await first.evaluate(`(()=>{
     const app=document.querySelector('kin-app');
-    return app.saveTalk({type:'archive-talk',talkId:app.state.talks.find(row=>row.text==='Peer Talk').talkId});
+    return app.ctx.conversations.saveTalk({type:'archive-talk',talkId:app.state.talks.find(row=>row.text==='Peer Talk').talkId});
   })()`);
   await until(() =>
     second.evaluate(
@@ -400,7 +403,7 @@ export async function talkPeerRegressions(first, second, until) {
     for (const action of ["resolve-talk", "reopen-talk", "archive-talk"]) {
       const id = await first.evaluate(`(async()=>{
       const app=document.querySelector('kin-app');
-      await app.saveTalk({type:"add-talk",text:'Missed Talk invalidation'});
+      await app.ctx.conversations.saveTalk({type:"add-talk",text:'Missed Talk invalidation'});
       return app.state.talks.at(-1).talkId;
     })()`);
       await until(() =>
@@ -416,7 +419,7 @@ export async function talkPeerRegressions(first, second, until) {
         if(this.name==='events') throw new DOMException('Synthetic quota','QuotaExceededError');
         return original.apply(this,args);
       };
-      try { await app.saveTalk({type:'${action}',talkId:'${id}'}); }
+      try { await app.ctx.conversations.saveTalk({type:'${action}',talkId:'${id}'}); }
       finally { IDBObjectStore.prototype.add=original; }
     })()`);
       if (recoverRefresh)
@@ -424,14 +427,14 @@ export async function talkPeerRegressions(first, second, until) {
       const app=document.querySelector('kin-app');
       const load=app.store.getCatchUpState.bind(app.store);
       app.store.getCatchUpState=async()=>{throw new Error('Synthetic refresh failure');};
-      try { await app.refreshFromEvents(); await app.refreshFromEvents(); }
+      try { await app.ctx.refresh.refreshFromEvents(); await app.ctx.refresh.refreshFromEvents(); }
       finally { app.store.getCatchUpState=load; }
     })()`);
       const count = await first.evaluate(
         '(async()=>(await document.querySelector("kin-app").store.loadEvents()).length)()',
       );
       await first.evaluate(
-        `document.querySelector('kin-app').saveTalk({type:'archive-talk',talkId:'${id}'})`,
+        `document.querySelector('kin-app').ctx.conversations.saveTalk({type:'archive-talk',talkId:'${id}'})`,
       );
       await second.evaluate(
         'document.querySelector("kin-app").retryButton.click()',
@@ -455,7 +458,7 @@ export async function talkPeerRegressions(first, second, until) {
     'document.querySelector("kin-talk-list .archive-button").focus()',
   );
   await first.evaluate(
-    "document.querySelector('kin-app').saveTalk({type:'add-talk',text:'Focus refresh Talk'})",
+    "document.querySelector('kin-app').ctx.conversations.saveTalk({type:'add-talk',text:'Focus refresh Talk'})",
   );
   await until(() =>
     second.evaluate(

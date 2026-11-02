@@ -3,11 +3,13 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { webcrypto } from "node:crypto";
+import { createHash, webcrypto } from "node:crypto";
 import { PairingService } from "./pairing-service.mjs";
 import { createKinServer } from "./server.mjs";
 import { EncryptedSyncService } from "./sync-service.mjs";
 import { DurableStore } from "./durable-store.mjs";
+import { canonicalEventEnvelope } from "./sync-contract.mjs";
+import { requestBody, responseBody } from "./sync-wire-test-utils.mjs";
 
 globalThis.crypto ??= webcrypto;
 
@@ -62,6 +64,45 @@ function eventEnvelope(identity, overrides = {}) {
   };
 }
 
+for (const failure of ["durable row", "page encoding"]) {
+  test(`pull reports invalid ${failure} with event metadata but no ciphertext`, async (t) => {
+    const service = new PairingService();
+    const adult = service.bootstrap({ credential: credential(`bad-${failure}`), deviceLabel: "A" });
+    const app = await start(service);
+    const logs = t.mock.method(console, "error", () => {});
+    const envelope = eventEnvelope(adult);
+    try {
+      app.syncService.push(adult.sessionToken, [envelope]);
+      const invalid = { ...envelope, signature: `${envelope.signature.slice(0, -1)}B` };
+      if (failure === "durable row") {
+        app.store.db.prepare("UPDATE sync_events SET canonical_envelope = ? WHERE household_id = ? AND event_id = ?")
+          .run(canonicalEventEnvelope(invalid), adult.householdId, envelope.eventId);
+      } else {
+        t.mock.method(app.store, "readEvents", () => ({
+          events: [{ cursor: "AAAAAAAAAAE", envelope: invalid }],
+          nextCursor: "AAAAAAAAAAE", hasMore: false,
+        }));
+      }
+      const response = await fetch(`${app.url}/api/sync/events?cursor=&limit=20`, {
+        headers: { Cookie: `kin_session=${adult.sessionToken}` },
+      });
+      assert.equal(response.status, 500);
+      const body = await response.json();
+      assert.equal(body.error, "sync_store_invalid");
+      assert.equal(Object.hasOwn(body, "nextCursor"), false);
+      const lines = logs.mock.calls.map((call) => call.arguments[0]);
+      const diagnostic = lines.map((line) => JSON.parse(line)).find((line) => line.event === "sync_store_invalid");
+      assert.deepEqual(diagnostic, {
+        event: "sync_store_invalid", householdId: adult.householdId, eventId: envelope.eventId,
+      });
+      assert.ok(lines.every((line) => !line.includes(envelope.ciphertext)));
+      assert.equal(app.store.db.prepare("SELECT COUNT(*) AS count FROM sync_events").get().count, 1);
+    } finally {
+      await app.close();
+    }
+  });
+}
+
 test("HTTP sync operations require an active session and revoked devices cannot use stale cursors", async () => {
   const service = new PairingService();
   const adult = service.bootstrap({
@@ -85,9 +126,9 @@ test("HTTP sync operations require an active session and revoked devices cannot 
       method,
       headers: {
         ...(token ? { Cookie: `kin_session=${token}` } : {}),
-        ...(body ? { "Content-Type": "application/json" } : {}),
+        ...requestBody(path, method, body).headers,
       },
-      body: body ? JSON.stringify(body) : undefined,
+      body: requestBody(path, method, body).body,
     });
   try {
     assert.equal((await call("/api/sync/status", { token: null })).status, 401);
@@ -114,15 +155,18 @@ test("HTTP sync operations require an active session and revoked devices cannot 
     );
     const pulled = await call("/api/sync/events?cursor=&limit=1");
     assert.equal(
-      (await pulled.json()).events[0].envelope.eventId,
+      (await responseBody(pulled)).events[0].envelope.eventId,
       envelope.eventId,
     );
 
-    const revoked = await call(`/api/devices/${other.deviceId}`, {
+    const sessionOnlyRevoke = await call(`/api/devices/${other.deviceId}`, {
       method: "DELETE",
       body: {},
     });
-    assert.equal(revoked.status, 200);
+    assert.equal(sessionOnlyRevoke.status, 401);
+    assert.equal(service.devices.get(other.deviceId).revokedAt, null);
+    service.revokeDevice(adult.sessionToken, other.deviceId, adult.memberId);
+    app.syncService.onAccessChange(adult.householdId, [other.deviceId]);
     const status = await (await call("/api/sync/status")).json();
     assert.equal(status.rotationPending, true);
     assert.equal(status.pendingEpoch, 2);
@@ -153,6 +197,83 @@ test("HTTP sync operations require an active session and revoked devices cannot 
   } finally {
     await app.close();
   }
+});
+
+test("independent HTTP clients retain relay history while revoked devices fail on reconnect", async () => {
+  const service = new PairingService();
+  const adultA = service.bootstrap({ credential: credential("live-a"), deviceLabel: "Client A" });
+  const invite = service.createPairing(adultA.sessionToken);
+  const claim = service.claimPairing({
+    code: invite.code,
+    credential: credential("live-b"),
+    deviceLabel: "Client B",
+  });
+  service.approvePairing(adultA.sessionToken, invite.pairingId, claim.version);
+  const adultB = service.activateClaim(claim.claimToken);
+  const app = await start(service);
+  const client = (session) => async (path, { method = "GET", body } = {}) =>
+    fetch(`${app.url}${path}`, {
+      method,
+      headers: {
+        Cookie: `kin_session=${session}`,
+        ...requestBody(path, method, body).headers,
+      },
+      body: requestBody(path, method, body).body,
+    });
+  const clientA = client(adultA.sessionToken);
+  const clientB = client(adultB.sessionToken);
+  const event = eventEnvelope(adultA, { eventId: "c".repeat(32) });
+  try {
+    assert.equal((await clientA("/api/sync/events", { method: "POST", body: { events: [event] } })).status, 200);
+    const firstPull = await clientB("/api/sync/events?cursor=&limit=20");
+    assert.equal(firstPull.status, 200);
+    assert.deepEqual((await responseBody(firstPull)).events.map((row) => row.envelope), [event]);
+
+    // Client B retains its old cursor and retryable upload. The relay accepts
+    // the exact retry once; revocation must invalidate the same session later.
+    const retry = eventEnvelope(adultB, { eventId: "d".repeat(32), deviceSequence: 1 });
+    assert.equal((await clientB("/api/sync/events", { method: "POST", body: { events: [retry] } })).status, 200);
+    assert.equal((await clientB("/api/sync/events", { method: "POST", body: { events: [retry] } })).status, 200);
+    service.revokeDevice(adultA.sessionToken, adultB.deviceId, adultA.memberId);
+    app.syncService.onAccessChange(adultA.householdId, [adultB.deviceId]);
+
+    assert.equal((await clientB("/api/sync/status")).status, 401);
+    assert.equal((await clientB("/api/sync/events?cursor=&limit=20")).status, 401);
+    assert.equal((await clientB("/api/sync/events", { method: "POST", body: { events: [retry] } })).status, 401);
+
+    // An authorized client still sees both distinct events exactly once and in
+    // the relay order; revocation changes access, not the event history.
+    const reconciled = await responseBody(await clientA("/api/sync/events?cursor=&limit=20"));
+    assert.deepEqual(reconciled.events.map((row) => row.envelope), [event, retry]);
+    assert.equal(reconciled.events.length, 2);
+  } finally {
+    await app.close();
+  }
+});
+
+test("HTTP attachment transfer requires an active synced session and returns only opaque bytes", async () => {
+  const service = new PairingService();
+  const adult = service.bootstrap({ credential: credential("attachment-http"), deviceLabel: "A" });
+  const app = await start(service);
+  const headers = { Cookie: `kin_session=${adult.sessionToken}` };
+  try {
+    assert.equal((await fetch(`${app.url}/api/sync/enable`, { method: "POST", headers })).status, 200);
+    const ciphertext = Buffer.alloc(64, 0xd3);
+    const digest = createHash("sha256").update(ciphertext).digest("hex");
+    const attachmentId = "d".repeat(32);
+    const uploaded = await fetch(`${app.url}/api/sync/attachments/${attachmentId}`, { method: "POST", headers: { ...headers, "Content-Type": "application/octet-stream", "X-Attachment-Key-Epoch": "1", "X-Attachment-SHA256": digest }, body: ciphertext });
+    assert.equal(uploaded.status, 200);
+    assert.deepEqual(await uploaded.json(), { accepted: true, size: 64, digest });
+    const listed = await fetch(`${app.url}/api/sync/attachments`, { headers });
+    assert.deepEqual(await listed.json(), { attachments: [{ attachmentId, keyEpoch: 1, size: 64, digest }] });
+    const downloaded = await fetch(`${app.url}/api/sync/attachments/${attachmentId}`, { headers });
+    assert.equal(downloaded.headers.get("content-type"), "application/octet-stream");
+    assert.equal(downloaded.headers.get("x-attachment-sha256"), digest);
+    assert.deepEqual(Buffer.from(await downloaded.arrayBuffer()), ciphertext);
+    assert.equal((await fetch(`${app.url}/api/sync/attachments/${attachmentId}`, { method: "DELETE", headers })).status, 200);
+    assert.equal((await fetch(`${app.url}/api/sync/attachments/${attachmentId}`, { headers })).status, 404);
+    assert.equal((await fetch(`${app.url}/api/sync/attachments`, {})).status, 401);
+  } finally { await app.close(); }
 });
 
 test("relay without a durable store is process-local and HTTPS is required outside loopback", async () => {

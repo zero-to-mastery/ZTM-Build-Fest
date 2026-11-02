@@ -10,7 +10,7 @@ export async function securityOperationChecks(recovery) {
   };
 
   for (const settleOlderWhilePending of [false, true]) {
-    app.lockHousehold();
+    app.ctx.session.lockHousehold();
     const originalUnlock = LocalVault.unlock;
     const completions = [0, 1].map(() => {
       let release, reached;
@@ -33,7 +33,7 @@ export async function securityOperationChecks(recovery) {
     try {
       older = app.security.run(() => app.security.unlockRecovery(recovery));
       await completions[0].obtained;
-      app.lockHousehold();
+      app.ctx.session.lockHousehold();
       newer = app.security.run(() => app.security.unlockRecovery(recovery));
       await completions[1].obtained;
 
@@ -85,7 +85,7 @@ export async function securityOperationChecks(recovery) {
 
   // A failed credential also reloads public metadata before showing its error.
   // Locking during that reload must invalidate its catch and finally blocks.
-  app.lockHousehold();
+  app.ctx.session.lockHousehold();
   const originalStatus = EventStore.securityStatus;
   let release, reached, calls = 0;
   const gate = new Promise((resolve) => { release = resolve; });
@@ -101,7 +101,7 @@ export async function securityOperationChecks(recovery) {
     const wrongRecovery = (recovery[0] === "f" ? "e" : "f") + recovery.slice(1);
     failed = app.security.run(() => app.security.unlockRecovery(wrongRecovery));
     await obtained;
-    app.lockHousehold();
+    app.ctx.session.lockHousehold();
     await app.security.run(() => app.security.unlockRecovery(recovery));
     const current = app.vault;
     const heading = app.security.heading;

@@ -1,6 +1,6 @@
 # Architecture
 
-**Status:** v0.11.7 implementation candidate; awaiting human review. Rust owns portable commands, canonical codecs, replay and archive framing/import validation. JavaScript owns root rotation, local encryption/unlock, bounded persistence and browser capabilities. Event DB schema 3 and key DB schema 4 persist encrypted protected values. The same-origin identity/relay service uses SQLite server schema v1 for durable authorization and opaque relay state.
+**Status:** v0.25.0 adds local, in-memory search over the existing decrypted projection without a search index, event, protocol, storage, sync-envelope, server, or archive-container change. v0.24.0 adds a date-only Item history label derived from canonical event replay and exposes it in protocol 17. v0.23.0's iCalendar export remains explicit, local, plaintext, bounded, and read-only. Planning dates remain fixed civil dates in protocol 16; canonical Rust events and deterministic Rust/WASM replay remain authoritative.
 
 ## v0.10 implementation boundary
 
@@ -12,7 +12,7 @@ archives are intentionally local-only copies; they authorize no sync reattachmen
 v0.10 preserves v0.9.3 encrypted relay sync, two-adult passkey pairing,
 recipient-bound key provisioning, deterministic v8 replay, exact-envelope retries
 and revocation/epoch rotation. It additionally encrypts local persistent content
-and gates replay on successful unlock. The [implementation record](V0.10.0.md)
+and gates replay on successful unlock. The [implementation record](planning/V0.10.0.md)
 contains the baseline, frozen contract and validation evidence.
 
 ```text
@@ -66,16 +66,17 @@ historical signatures. Portable archives use an independent versioned encrypted
 container, validated completely before an atomic import. The service worker only
 caches an explicit static-shell allowlist; API/user data cannot enter Cache Storage.
 Offline startup uses the same lock boundary. See [PORTABILITY](PORTABILITY.md)
-and [V0.10.0](V0.10.0.md).
+and [V0.10.0](planning/V0.10.0.md).
 
 The post-v0.10 roadmap first closes platform gaps: v0.11 makes identity and relay
-state durable and defines deployment/restart behavior; v0.12 defines retention,
-deletion and event lifecycle; v0.13 defines recovery authority and continuity.
+state durable and defines deployment/restart behavior; v0.12 implements
+retention, deletion and event lifecycle; v0.13 is planned to define recovery
+authority and continuity.
 Only then does v0.14 own holistic navigation, visual and interaction refinement.
 Basic accessible lock, unsupported-unlock, recovery, migration and corruption
 states remain required in v0.10. The architecture is not complete if v0.14 must
 redesign encryption, storage, commands, service durability, deletion or recovery.
-See [ROADMAP](ROADMAP.md) and the [v0.11](V0.11.0.md)–[v0.14](V0.14.0.md)
+See [ROADMAP](ROADMAP.md) and the [v0.11](planning/V0.11.0.md)–[v0.14](planning/V0.14.0.md)
 planning contracts.
 
 ## v0.9.3 system shape (baseline)
@@ -119,9 +120,12 @@ Rust owns deterministic domain behavior:
 
 - Household event model and event validation
 - State transitions and reconstruction by replay
-- Implemented Daily/Weekly recurrence with explicit civil-date context
+- Implemented Daily/Weekly/biweekly/monthly recurrence with explicit civil-date context
 - Diffing and useful search/indexing where justified
 - Distributed v8 event ordering and deterministic domain replay
+- QR codes since v1.1 (#94, #95): encoding a Kin link to a module grid and
+  decoding camera frames (`rust/src/qr/`, no crates). The browser only draws
+  the grid and turns camera frames into grayscale ([ABI](ABI.md#qr-codes-94-95))
 
 Rust must not manipulate the DOM. It should be possible to test domain behavior independently from browser rendering and storage.
 
@@ -198,12 +202,18 @@ The domain event envelope, event naming, ordering requirements, and replay behav
 
 ## v0.5.0 Pulse
 
-Pulse adds Rust rebuild_at(events, as_of). Timers request canonical reprojection; Rust never reads ambient time. Same events plus same explicit time yield identical state. See [V0.5.0](V0.5.0.md).
+Pulse adds Rust rebuild_at(events, as_of). Timers request canonical reprojection; Rust never reads ambient time. Same events plus same explicit time yield identical state. See [V0.5.0](planning/V0.5.0.md).
 
 ## v0.6.0 Since You Last Looked
 
-Rust protocol v6 derives structured summary entries and the exact through-event boundary from the ordered canonical stream plus an optional stable event-ID cursor. IndexedDB local_sequence remains browser-only. Browser local_context holds the installation cursor; no summary view or acknowledgement is a household event. See [V0.6.0](V0.6.0.md).
+Rust protocol v6 derives structured summary entries and the exact through-event boundary from the ordered canonical stream plus an optional stable event-ID cursor. IndexedDB local_sequence remains browser-only. Browser local_context holds the installation cursor; no summary view or acknowledgement is a household event. See [V0.6.0](planning/V0.6.0.md).
 
-## v0.7.0 Routines
+## v0.7.0 Routines and v0.18.0 Richer Scheduling
 
-Rust derives Daily/Weekly periods from validated explicit civil dates, alongside as_of for Pulse. JS obtains local year/month/day from one browser clock sample; timers only request replay. Inside occurrence append transactions, JS compares the frozen intent key with Rust’s fresh canonical current key before candidate replay. This is identity checking, not a browser recurrence reducer. See [V0.7.0](V0.7.0.md).
+Rust derives Daily, Monday-start Weekly, creation-date-anchored every-two-weeks,
+and calendar-month periods from validated explicit civil dates, alongside
+as_of for Pulse. JS obtains local year/month/day from one browser clock sample;
+timers only request replay. Inside occurrence append transactions, JS compares
+the frozen intent key with Rust’s fresh canonical current key before candidate
+replay. This is identity checking, not a browser recurrence reducer. See
+[V0.7.0](planning/V0.7.0.md) and [V0.18.0](planning/releases/V0.18.0.md).

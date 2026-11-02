@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security problem
+    url: https://github.com/mnichols08/ZTM-Build-Fest/blob/kin-development/projects/kin/SECURITY.md
+    about: Please report vulnerabilities privately, never in a public issue.
+  - name: Where to ask and what to include
+    url: https://github.com/mnichols08/ZTM-Build-Fest/blob/kin-development/projects/kin/SUPPORT.md
+    about: The docs to check first, and what a useful report contains.
+  - name: Running your own Kin server
+    url: https://github.com/mnichols08/ZTM-Build-Fest/blob/kin-development/projects/kin/docs/SELF-HOSTING.md
+    about: Every setting, reverse proxies, backups and restore.

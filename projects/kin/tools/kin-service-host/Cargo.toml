@@ -1,0 +1,22 @@
+# Kin's Windows service host (ADR 0025 §10, #749): a small program the
+# Service Control Manager can talk to, which starts and stops the Kin
+# launcher. Rust std only, no crates; the few Win32 functions it calls are
+# declared by hand in src/win32.rs. Its own package and workspace, so the
+# engine's build (the crate at the project root) never includes it.
+[package]
+name = "kin-service-host"
+version = "1.6.0"
+edition = "2021"
+publish = false
+description = "Runs the Kin home server as a Windows service."
+license = "MIT"
+
+[dependencies]
+
+[workspace]
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

@@ -226,6 +226,30 @@ test("sealed household key provisions to the fingerprint-bound device only", asy
     }),
     (error) => error.code === "provisioning_expired",
   );
+  const recovered = await unwrapEpochKey({
+    package: keyPackage,
+    deviceKeys: recipientKeys,
+    householdId,
+    deviceId: grant.recipientDeviceId,
+    deviceFingerprint: recipientFingerprint,
+    senderSigningKey: senderKeys.signingPublicKey,
+    allowExpiredCommittedRotation: true,
+    now: 2_000,
+  });
+  assert.equal(recovered.fingerprint, senderFingerprint);
+  await assert.rejects(
+    unwrapEpochKey({
+      package: keyPackage,
+      deviceKeys: recipientKeys,
+      householdId,
+      deviceId: grant.recipientDeviceId,
+      deviceFingerprint: recipientFingerprint,
+      senderSigningKey: senderKeys.signingPublicKey,
+      allowExpiredCommittedRotation: "yes",
+      now: 2_000,
+    }),
+    (error) => error.code === "provisioning_expired",
+  );
   await assert.rejects(
     unwrapEpochKey({
       package: { ...keyPackage, grantId: identity("4") },

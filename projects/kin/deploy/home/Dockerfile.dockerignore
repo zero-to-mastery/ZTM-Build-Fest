@@ -1,0 +1,19 @@
+# Build context is projects/kin (deploy/home/Dockerfile). Only Cargo/rust,
+# server, web, package.json, relay/ktun.mjs and the executable's build
+# script are used.
+.git
+.kin-data
+target
+node_modules
+android
+play
+docs
+deploy
+web/wasm/kin_engine.wasm
+web/wasm/kin_engine.wasm.sha256
+scripts
+!scripts/build-sea.mjs
+!scripts/sea
+**/*.test.mjs
+**/*-test-utils.mjs
+server/test-fixtures

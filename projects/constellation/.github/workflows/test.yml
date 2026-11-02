@@ -1,0 +1,65 @@
+name: Test
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    # Usually 5-7 minutes; a hung step must not hold a runner for six hours.
+    timeout-minutes: 30
+    env:
+      CONSTELLATION_BROWSER: /usr/bin/google-chrome
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          package-manager-cache: false
+      - name: Install isolated framework consumer fixtures
+        run: |
+          npm ci --prefix fixtures/consumer-react
+          npm ci --prefix fixtures/consumer-astro
+      - run: npm test
+      - name: Test Rust core
+        run: cargo test --locked --manifest-path rust/constellation-core/Cargo.toml
+      - name: Rebuild Rust engine and verify integration
+        run: |
+          rustup target add wasm32-unknown-unknown
+          cargo install wasm-bindgen-cli --version 0.2.128 --locked
+          npm run build:rust
+          npm run build:core
+          node scripts/build-extensions.mjs
+          node scripts/benchmark-html.mjs
+          node scripts/benchmark-timeline.mjs
+          node scripts/benchmark-hierarchy.mjs
+          node scripts/benchmark-story.mjs
+          node scripts/benchmark-evidence-navigation.mjs
+          npm test
+      - uses: ./
+        with:
+          output: dist/smoke.svg
+  # The Studio's journeys and perception budgets (ADR-0008): overlap, blank
+  # controls, jargon, map size, one primary action, axe, keyboard and phone.
+  ui:
+    runs-on: ubuntu-latest
+    # Usually 6-14 minutes; a stuck browser must not hold a runner for six hours.
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          package-manager-cache: false
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+        env:
+          CI: "true"
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14

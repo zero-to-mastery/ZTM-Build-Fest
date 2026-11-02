@@ -1,14 +1,21 @@
 import {
   idToHex, idFromHex, randomId, eventMetadata, eventMetadataBatch,
 } from "../wasm/kin-engine.js";
+import { recordDiagnostic } from "../diagnostics/ring-buffer.js";
+import { errorName } from "../diagnostics/global.js";
 import {
   encryptedDatabase, snapshotStores, protectRows, valuesEqual, compareStoreRows,
 } from "./encrypted-idb.js";
 import { projectionContext } from "../browser-time.js";
+import { choreWeek } from "../wasm/kin-chores.js";
+import { hasFinalUnlockPath } from "../security/local-vault.js";
+import { bumpEventGeneration as bumpGeneration, EventArena, EVENT_GENERATION_KEY, historyWith } from "./event-arena.js";
 import { rotateEventProtection, resumeEventProtection } from "./root-rotation.js";
+import { nextQuarantine, quarantineRetryItems } from "./quarantine.js";
+import { MAX_HOUSEHOLD_ATTACHMENT_BYTES, MAX_HOUSEHOLD_ATTACHMENTS } from "../attachments/attachment-crypto.js";
 
 const DATABASE_NAME = "kin";
-const DATABASE_VERSION = 3;
+const DATABASE_VERSION = 5;
 const SECURITY_STORE = "security_state";
 const SECURITY_KEY = "vault";
 export const EVENT_STORE_DEFINITIONS = {
@@ -17,6 +24,10 @@ export const EVENT_STORE_DEFINITIONS = {
   sync_state: { keyPath: "key" },
   sync_outbox: { keyPath: "event_id" },
   sync_bindings: { keyPath: "legacy_key" },
+  attachment_records: { keyPath: "attachment_id" },
+  // Protected, member-bound, device-local presentation. Never enters events,
+  // the sync outbox, attachment records, catch-up, or portable exports.
+  personal_appearance: { keyPath: "owner" },
 };
 const EVENT_STORE = "events";
 const CONTEXT_STORE = "local_context";
@@ -25,7 +36,8 @@ const SYNC_OUTBOX_STORE = "sync_outbox";
 const SYNC_BINDING_STORE = "sync_bindings";
 const CONTEXT_KEY = "installation";
 const MAX_EVENT_COUNT = 10_000;
-const MAX_LOGICAL_TIME = (1n << 64n) - 1n;
+// Must match rust/src/state.rs and server/sync-contract.mjs.
+const MAX_LOGICAL_TIME = 9_007_199_254_740_991n;
 
 export class EventStoreError extends Error {
   constructor(message, cause) {
@@ -36,9 +48,113 @@ export class EventStoreError extends Error {
   }
 }
 
+export function validateAttachmentAggregate(records, candidate) {
+  const existing = records.find((row) => row.attachment_id === candidate.attachment_id);
+  const count = records.length + (existing ? 0 : 1);
+  const bytes = records.reduce((total, row) => total +
+    (row.attachment_id === candidate.attachment_id ? 0 : row.ciphertext?.byteLength ?? 0), 0) +
+    (candidate.ciphertext?.byteLength ?? existing?.ciphertext?.byteLength ?? 0);
+  if (count > MAX_HOUSEHOLD_ATTACHMENTS || bytes > MAX_HOUSEHOLD_ATTACHMENT_BYTES)
+    throw new EventStoreError("Kin reached its 50 MiB encrypted attachment limit.");
+}
+
+/** Admit only replayable remote events; report rejected ciphertext so callers
+ * can advance the relay cursor and keep it for a later retry (see
+ * quarantine.js). `quarantined` counts the refusals; `quarantinedItems` holds
+ * `{ eventId, encoded, reason }` for each (`eventId` is null when the bytes
+ * could not be decoded at all). An item marked `retry` (a kept event replayed
+ * from the quarantine) never stops the batch: any engine refusal of it is
+ * reported as a refusal, so one kept event can't stall sync on every poll.
+ * `history` is the HistoryView the batch validates against (`rows`, a plain
+ * row array, is accepted for tests). Each candidate is replayed as the history
+ * plus the admitted additions, without copying the history per candidate.
+ * Returns the admitted rows (with Rust metadata and their local sequence) and
+ * `candidates`, a replay source for history plus additions. */
+export function reconcileRemoteEvents({ history, rows, received, engine, context, asOf, civilDate }) {
+  let temporary = null;
+  if (!history) {
+    temporary = historyFromRows(rows ?? []);
+    history = temporary.view;
+  }
+  try {
+    const additions = [];
+    const added = new Map();
+    const duplicateEventIds = [];
+    const quarantinedItems = [];
+    const projection = projectionContext();
+    const candidates = [];
+    for (const item of received) {
+      let canonical;
+      let candidate;
+      try {
+        canonical = asBytes(item.encodedEvent).slice();
+        candidate = eventRowFromCanonical(canonical);
+      } catch {
+        quarantinedItems.push({ eventId: null, encoded: null, reason: "unreadable" });
+        continue;
+      }
+      candidates.push({ candidate, canonical, retry: item.retry === true });
+    }
+    candidates.sort((left, right) =>
+      left.candidate.logical_time < right.candidate.logical_time ? -1 :
+        left.candidate.logical_time > right.candidate.logical_time ? 1 :
+          compareByteArrays(left.candidate.device_id, right.candidate.device_id) ||
+          compareByteArrays(left.candidate.event_id, right.candidate.event_id),
+    );
+    for (const { candidate, canonical, retry } of candidates) {
+      const eventId = idToHex(candidate.event_id);
+      const index = history.indexOfEventId(candidate.event_id);
+      const existing = index >= 0 ? history.record(index) : added.get(eventId)?.encoded_event;
+      if (existing) {
+        if (!bytesEqual(existing, canonical))
+          throw new EventStoreError("Kin found conflicting synchronized bytes for an existing event ID.");
+        duplicateEventIds.push(eventId);
+        continue;
+      }
+      try {
+        engine.applyEvents(
+          historyWith(history, [...additions.map((row) => row.encoded_event), candidate.encoded_event]),
+          asOf ?? projection.asOf,
+          context.last_looked_event_id === null ? null : idToHex(context.last_looked_event_id),
+          civilDate ?? projection.civilDate,
+          syncIdentityFromContext(context),
+        );
+      } catch (error) {
+        if (error?.code !== 4 && !retry) throw error;
+        quarantinedItems.push({ eventId, encoded: canonical, reason: error?.code === 4 ? "not-applicable" : "unsupported" });
+        continue;
+      }
+      candidate.local_sequence = history.tail + additions.length + 1;
+      additions.push(candidate);
+      added.set(eventId, candidate);
+    }
+    const extras = additions.map((row) => row.encoded_event);
+    return {
+      additions,
+      // A temporary arena is wiped below, so its callers get detached copies.
+      candidates: temporary
+        ? [...history.records().map((record) => record.slice()), ...extras]
+        : historyWith(history, extras),
+      quarantined: quarantinedItems.length,
+      quarantinedItems,
+      duplicateEventIds,
+    };
+  } finally {
+    temporary?.arena.wipe();
+  }
+}
+
+function compareByteArrays(left, right) {
+  for (let index = 0; index < Math.min(left.length, right.length); index += 1)
+    if (left[index] !== right[index]) return left[index] - right[index];
+  return left.length - right.length;
+}
+
 export class EventStore {
   constructor(database) {
     this.database = database;
+    // Session plaintext history; derived, discardable, wiped on close.
+    this.arena = new EventArena();
   }
 
   static rotateProtection(options) {
@@ -61,6 +177,55 @@ export class EventStore {
     finally { database.close(); }
   }
 
+  /**
+   * Validates archive parts (see archivePartsFromSnapshot) against `vault`,
+   * which must open their local attachment data, and returns their counts.
+   */
+  static async validateArchiveParts({ parts, engine, vault, bindings = null }) {
+    vault.assertUnlocked();
+    // `bindings` from an earlier check of the same history and context
+    // (validateArchiveParts' result) saves a second replay; every other
+    // check still runs.
+    bindings = validateArchiveParts(parts, engine, bindings);
+    await validateAttachmentArchivePayloads(
+      parts.attachments,
+      bindings,
+      (id, sealed) => vault.open(sealed, { store: "attachment-file", id }),
+    );
+    vault.assertUnlocked();
+    return {
+      bindings,
+      eventCount: parts.history.length,
+      attachmentCount: parts.attachments.length,
+      attachmentBytes: parts.attachments.reduce(
+        (total, row) => total + (row.ciphertext?.byteLength ?? 0),
+        0,
+      ),
+    };
+  }
+
+  /**
+   * An empty history for an archive being read, and `append(sequences,
+   * records)`, which checks one chunk of it (local order, the event limit,
+   * Rust-derived metadata) and copies it in. The caller wipes `arena`.
+   */
+  static archiveHistory(engine) {
+    const arena = new EventArena();
+    arena.reset(null);
+    return {
+      arena,
+      append: (sequences, records) => appendRecords(arena, sequences, records, engine),
+      // Room for `records` records of at most `bytes` bytes in all, so the
+      // arena is allocated once instead of doubling past its size.
+      reserve: (records, bytes) => arena.reserve(Math.min(records, MAX_EVENT_COUNT), Math.min(bytes, 64 * 1024 * 1024)),
+    };
+  }
+
+  /** Archive parts from the historical snapshot shape (package format 2). */
+  static archivePartsFromSnapshot(snapshot, engine) {
+    return archivePartsFromSnapshot(snapshot, engine, { owned: true });
+  }
+
   static async prepareSecurity(manifest) {
     const database = await openEventDatabase();
     try {
@@ -70,7 +235,7 @@ export class EventStore {
       return await transactionResult(transaction, (finish) => {
         request.onsuccess = () => {
           if (request.result) { abortWith(transaction, new EventStoreError("Kin already has a local security setup. Unlock the existing store.")); return; }
-          if (manifest?.formatVersion !== 1 || !/^[a-f0-9]{32}$/.test(manifest.vaultId ?? "") || !manifest.verifier || !manifest.wrappers?.some((wrapper) => wrapper.type === "recovery")) {
+          if (manifest?.formatVersion !== 1 || !/^[a-f0-9]{32}$/.test(manifest.vaultId ?? "") || !manifest.verifier || !hasFinalUnlockPath(manifest)) {
             abortWith(transaction, new EventStoreError("Kin requires a verified recovery path before migration.")); return;
           }
           const record = { ...structuredClone(manifest), key: SECURITY_KEY, phase: "preparing", lockEpoch: 0, configRevision: 0 };
@@ -83,7 +248,7 @@ export class EventStore {
 
   static async updateSecurityManifest(manifest, vault) {
     vault.assertUnlocked();
-    if (manifest.vaultId !== vault.vaultId || !manifest.wrappers?.some((wrapper) => wrapper.type === "recovery"))
+    if (manifest.vaultId !== vault.vaultId || !hasFinalUnlockPath(manifest))
       throw new EventStoreError("Kin requires the current vault and a verified recovery path.");
     const database = await openEventDatabase();
     try {
@@ -211,20 +376,18 @@ export class EventStore {
             sync_state: structuredClone(original.sync_state) };
           const events = validateEventRows(rows.events);
           validateLegacyOutbox(rows.sync_outbox, events);
+          const { arena: historyArena, view: history } = historyFromRows(events);
+          try {
           let context = rows.local_context.find((row) => row.key === CONTEXT_KEY);
           if (!context && events.length) throw invalidCatchUpState();
           if (!context) {
             context = { key: CONTEXT_KEY, household_id: randomId(), actor_id: randomId(), device_id: randomId(), next_logical_time: 1n, last_looked_event_id: null, last_looked_local_sequence: 0, last_looked_at: Date.now() };
             rows.local_context.push(context);
-          } else if (!hasCatchUpMetadata(context)) {
-            validateContext(context, { allowUninitialized: true });
-            const tail = events.at(-1);
-            Object.assign(context, { last_looked_event_id: tail ? asBytes(tail.event_id).slice() : null, last_looked_local_sequence: tail?.local_sequence ?? 0, last_looked_at: Date.now() });
           }
           validateContext(context);
-          validateCursorBoundary(context, events);
+          validateCursorBoundary(context, history);
           const { asOf, civilDate } = projectionContext();
-          engine.applyEvents(events.map((row) => row.encoded_event), asOf, context.last_looked_event_id === null ? null : idToHex(context.last_looked_event_id), civilDate, syncIdentityFromContext(context));
+          engine.applyEvents(history, asOf, cursorEventId(context), civilDate, syncIdentityFromContext(context));
           const keys = await prepareKeys(vault, { check: checkMigration });
           if (keys?.rewrapEventRows) await keys.rewrapEventRows(rows);
           else if (keys?.rewrapSyncState) {
@@ -234,11 +397,11 @@ export class EventStore {
           // protectRows decrypts and compares every complete candidate record.
           // Replaying the proven-equal canonical source preserves the complete
           // post-verification replay without another recovered plaintext graph.
-          engine.applyEvents(events.map((row) => row.encoded_event), asOf,
-            context.last_looked_event_id === null ? null : idToHex(context.last_looked_event_id), civilDate, syncIdentityFromContext(context));
+          engine.applyEvents(history, asOf, cursorEventId(context), civilDate, syncIdentityFromContext(context));
           vault.assertUnlocked();
           manifest = { ...manifest, phase: "cleanup-pending" };
           await replaceVerifiedSnapshot(database, original, protectedRows, manifest, vault);
+          } finally { historyArena.wipe(); }
         }
         await finalizeKeys(vault, { check: checkMigration });
         vault.assertUnlocked();
@@ -258,6 +421,7 @@ export class EventStore {
     vault?.assertUnlocked();
     if (!vault) throw new EventStoreError("Kin is locked. Unlock before reading household data.");
     const database = await openEventDatabase();
+    let store;
     try {
       const manifest = await readSecurity(database);
       if (manifest?.phase !== "encrypted" || manifest.vaultId !== vault.vaultId || manifest.rootVersion !== vault.manifest.rootVersion)
@@ -269,14 +433,24 @@ export class EventStore {
       }
       vault.securityEpoch = epoch;
       vault.checkSecurityEpoch = () => EventStore.checkSecurityEpoch(vault);
-      const store = new EventStore(encryptedDatabase(database, vault, EVENT_STORE_DEFINITIONS, {
+      store = new EventStore(encryptedDatabase(database, vault, EVENT_STORE_DEFINITIONS, {
         securityGuard: { store: SECURITY_STORE, key: SECURITY_KEY, epoch, rootVersion: manifest.rootVersion },
       }));
+      store.vault = vault;
       store.engine = engine;
+      // Any lock (local, peer-tab, epoch mismatch) discards session plaintext,
+      // even before the application closes this store.
+      store.removeLockListener = vault.onLock(() => store.arena.wipe());
       const context = await store.ensureContext();
       store.actorId = idToHex(context.sync_member_id ?? context.actor_id);
+      // Names this device's family-album database (#673, album/album-store.js).
+      store.localHouseholdId = context.household_id ? idToHex(context.household_id) : null;
       return store;
-    } catch (error) { database.close(); throw error; }
+    } catch (error) {
+      if (store) store.close();
+      else database.close();
+      throw error;
+    }
   }
 
   static async openLegacyForMigration() {
@@ -288,36 +462,189 @@ export class EventStore {
     return store;
   }
 
+  /** The current history as detached row objects (copies). Prefer
+   * loadHistory() unless the rows must outlive the next append. */
   async loadEvents() {
     const transaction = this.database.transaction(EVENT_STORE, "readonly");
-    const request = transaction.objectStore(EVENT_STORE).getAll();
+    const history = historyRequest(this, transaction);
     return transactionResult(transaction, (finish) => {
-      request.onsuccess = () => {
-        try {
-          finish(validateEventRows(request.result));
-        } catch (error) {
-          abortWith(transaction, error);
-        }
-      };
-      request.onerror = () =>
-        abortWith(transaction, storageError(request.error));
+      history.onsuccess = () => finish(history.result.rows());
     });
   }
 
-  async snapshotForArchive() {
-    const snapshot = await snapshotStores(this.database, [EVENT_STORE, CONTEXT_STORE]);
-    const archive = { formatVersion: 1, events: snapshot.events, local_context: snapshot.local_context };
-    validateArchiveSnapshot(archive, this.engine);
-    return archive;
+  /** The current history as a HistoryView over the session arena. */
+  async loadHistory() {
+    const transaction = this.database.transaction(EVENT_STORE, "readonly");
+    const history = historyRequest(this, transaction);
+    return transactionResult(transaction, (finish) => {
+      history.onsuccess = () => finish(history.result);
+    });
   }
 
+  async loadAttachments() {
+    const transaction = this.database.transaction("attachment_records", "readonly");
+    const request = transaction.objectStore("attachment_records").getAll();
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => { try { finish(validateAttachmentRows(request.result)); } catch (error) { abortWith(transaction, error); } };
+      request.onerror = () => abortWith(transaction, storageError(request.error));
+    });
+  }
+
+  async saveAttachment(record) {
+    const [validated] = validateAttachmentRows([record]);
+    const transaction = this.database.transaction("attachment_records", "readwrite");
+    const store = transaction.objectStore("attachment_records"), request = store.getAll();
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => {
+        try {
+          const current = validateAttachmentRows(request.result);
+          const existing = current.find((row) => row.attachment_id === validated.attachment_id);
+          validateAttachmentAggregate(current, validated);
+          if (existing?.ciphertext && validated.ciphertext && (!bytesEqual(existing.ciphertext, validated.ciphertext) || existing.digest !== validated.digest || existing.keyEpoch !== validated.keyEpoch)) throw new EventStoreError("Kin found conflicting encrypted content for this attachment.");
+          const row = existing ? { ...existing, ...validated, state: validated.ciphertext ? validated.state : existing.state } : validated;
+          const put = store.put(row);
+          put.onsuccess = () => finish(validated.attachment_id);
+          put.onerror = () => abortWith(transaction, storageError(put.error));
+        } catch (error) { abortWith(transaction, error); }
+      };
+      request.onerror = () => abortWith(transaction, storageError(request.error));
+    });
+  }
+
+  async sealAttachmentData(attachmentId, data) {
+    if (!this.vault || !/^[a-f0-9]{32}$/.test(attachmentId)) throw new EventStoreError("Kin could not protect this attachment locally.");
+    return this.vault.seal(data, { store: "attachment-file", id: attachmentId });
+  }
+
+  async openAttachmentData(attachmentId, sealed) {
+    if (!this.vault || !/^[a-f0-9]{32}$/.test(attachmentId) || !sealed) throw new EventStoreError("This attachment is unavailable on this device.");
+    return this.vault.open(sealed, { store: "attachment-file", id: attachmentId });
+  }
+
+  async updateAttachmentState(attachmentId, state) {
+    if (!/^[a-f0-9]{32}$/.test(attachmentId) || !["local", "queued", "uploading", "synced", "failed", "removed"].includes(state)) throw new EventStoreError("Kin could not update this attachment.");
+    const transaction = this.database.transaction("attachment_records", "readwrite");
+    const store = transaction.objectStore("attachment_records"), request = store.get(attachmentId);
+    return transactionResult(transaction, (finish) => { request.onsuccess = () => { if (!request.result) { finish(false); return; } store.put({ ...request.result, state }); finish(true); }; request.onerror = () => abortWith(transaction, storageError(request.error)); });
+  }
+
+  async deleteAttachment(attachmentId) {
+    if (!/^[a-f0-9]{32}$/.test(attachmentId)) throw new EventStoreError("Kin could not remove this attachment.");
+    const transaction = this.database.transaction("attachment_records", "readwrite");
+    const store = transaction.objectStore("attachment_records"), request = store.get(attachmentId);
+    return transactionResult(transaction, (finish) => { request.onsuccess = () => { if (request.result) store.delete(attachmentId); finish(Boolean(request.result)); }; request.onerror = () => abortWith(transaction, storageError(request.error)); });
+  }
+
+  /**
+   * What an export holds, read in one transaction: the context and
+   * attachment records, and the history as a view of the session arena
+   * (`history`), so nothing is decrypted a second time. The view stays valid
+   * while the arena is only appended to; a rebuild (another tab's restore or
+   * rotation) makes it throw StaleHistoryError.
+   */
+  async readArchiveParts() {
+    const transaction = this.database.transaction([EVENT_STORE, CONTEXT_STORE, "attachment_records"], "readonly");
+    const history = historyRequest(this, transaction);
+    const contexts = transaction.objectStore(CONTEXT_STORE).getAll();
+    const attachments = transaction.objectStore("attachment_records").getAll();
+    return transactionResult(transaction, (finish) => {
+      let waiting = 3;
+      const ready = () => {
+        if (--waiting) return;
+        finish({ formatVersion: 2, history: history.result, local_context: contexts.result, attachments: attachments.result });
+      };
+      history.onsuccess = ready;
+      contexts.onsuccess = ready;
+      attachments.onsuccess = ready;
+    });
+  }
+
+  /**
+   * The household's archive parts, validated for export. A given
+   * `portableMembership` (the server's membership directory) replaces the
+   * context's membership snapshot.
+   */
+  async archiveParts({ portableMembership } = {}) {
+    const parts = await this.readArchiveParts();
+    if (portableMembership !== undefined) {
+      validatePortableMembership(portableMembership);
+      parts.local_context[0].portable_membership = structuredClone(portableMembership);
+    }
+    const bindings = validateArchiveParts(parts, this.engine);
+    await validateAttachmentArchivePayloads(parts.attachments, bindings, (id, sealed) => this.openAttachmentData(id, sealed));
+    return parts;
+  }
+
+  /** archiveParts() in the historical row shape, for tests and diagnostics. */
+  async snapshotForArchive(options) {
+    const parts = await this.archiveParts(options);
+    return { formatVersion: 2, events: parts.history.rows(), local_context: parts.local_context, attachments: parts.attachments };
+  }
+
+  async containsSameHouseholdArchive(parts, { engine, vault }) {
+    vault.assertUnlocked();
+    this.engine = engine;
+    const incomingContext = parts?.local_context?.[0];
+    const current = await this.readArchiveParts();
+    const currentContext = current.local_context?.[0];
+    const incomingHousehold = incomingContext?.sync_household_id ?? incomingContext?.household_id;
+    const currentHousehold = currentContext?.sync_household_id ?? currentContext?.household_id;
+    if (!incomingHousehold || !currentHousehold || !bytesEqual(incomingHousehold, currentHousehold))
+      return false;
+    const incoming = parts.history, held = current.history;
+    for (let index = 0; index < incoming.length; index += 1) {
+      const at = held.indexOfEventId(incoming.id(index, "event_id"));
+      if (at < 0 || !bytesEqual(held.record(at), incoming.record(index))) return false;
+    }
+    const currentAttachments = new Map((current.attachments ?? []).map((row) => [row.attachment_id, row]));
+    for (const row of parts.attachments ?? []) {
+      const existing = currentAttachments.get(row.attachment_id);
+      if (!existing) return false;
+      if (row.ciphertext || existing.ciphertext) {
+        if (!row.ciphertext || !existing.ciphertext || row.digest !== existing.digest ||
+            row.keyEpoch !== existing.keyEpoch || !bytesEqual(row.ciphertext, existing.ciphertext)) return false;
+        continue;
+      }
+      if (!row.localSealed || !existing.localSealed) return false;
+      const [incomingPayload, currentPayload] = await Promise.all([
+        vault.open(row.localSealed, { store: "attachment-file", id: row.attachment_id }),
+        vault.open(existing.localSealed, { store: "attachment-file", id: row.attachment_id }),
+      ]);
+      try {
+        if (!valuesEqual(incomingPayload, currentPayload)) return false;
+      } finally {
+        incomingPayload?.bytes?.fill?.(0);
+        currentPayload?.bytes?.fill?.(0);
+      }
+    }
+    vault.assertUnlocked();
+    return true;
+  }
+
+  /** Restores an empty household from a snapshot in the historical row
+   * shape (tests and fixtures); see restoreArchive. */
   static async restoreEmpty({ vault, engine, snapshot, manifest, ownedSnapshot = false }) {
     vault.assertUnlocked();
-    // Authenticated archive decoding can transfer its private result to this
-    // operation. Public callers retain defensive cloning against later mutation.
-    const source = ownedSnapshot ? snapshot : structuredClone(snapshot);
-    validateArchiveSnapshot(source, engine);
-    const context = source.local_context[0];
+    // The history is copied into a new arena either way; the context and
+    // attachment rows are cloned unless the caller hands them over.
+    const parts = archivePartsFromSnapshot(snapshot, engine, { owned: ownedSnapshot });
+    try { return await EventStore.restoreArchive({ vault, engine, parts, manifest }); }
+    finally { parts.arena.wipe(); }
+  }
+
+  /**
+   * Replaces an empty household with archive parts, which this takes over
+   * (the context row is rewritten). Every row is protected before one native
+   * transaction checks that the household is still empty and writes them, so
+   * a failure changes nothing. The history is protected 256 events at a time
+   * from its arena; `onProgress({ done, total })` reports events protected.
+   */
+  static async restoreArchive({ vault, engine, parts, manifest, bindings = null, onProgress }) {
+    vault.assertUnlocked();
+    // Staged parts pass the bindings their check found (see
+    // validateArchiveParts); the rewritten context below is replayed again.
+    await validateAttachmentArchivePayloads(parts.attachments, validateArchiveParts(parts, engine, bindings), (id, sealed) => vault.open(sealed, { store: "attachment-file", id }));
+    const context = parts.local_context[0];
     // An archive contains history, not device authorization. New local actions
     // use fresh anonymous IDs while the historical replay household stays stable.
     const householdId = randomId(), actorId = randomId(), deviceId = randomId();
@@ -328,9 +655,23 @@ export class EventStore {
       sync_identity_bindings: [...(context.sync_identity_bindings ?? [])],
       archive_imported: true,
     });
-    validateArchiveSnapshot(source, engine);
-    const rows = { events: source.events, local_context: source.local_context };
-    const protectedRows = await protectRows(vault, EVENT_STORE_DEFINITIONS, rows, { check: () => EventStore.checkSecurityEpoch(vault) });
+    await validateAttachmentArchivePayloads(parts.attachments, validateArchiveParts(parts, engine), (id, sealed) => vault.open(sealed, { store: "attachment-file", id }));
+    const check = () => EventStore.checkSecurityEpoch(vault);
+    const history = parts.history;
+    const events = [];
+    for (let from = 0; from < history.length; from += ARCHIVE_CHUNK_EVENTS) {
+      const to = Math.min(from + ARCHIVE_CHUNK_EVENTS, history.length);
+      const rows = [];
+      for (let index = from; index < to; index += 1) rows.push(history.row(index));
+      try { events.push(...(await protectRows(vault, EVENT_STORE_DEFINITIONS, { events: rows }, { check })).events); }
+      finally { zeroRows(rows); }
+      onProgress?.({ done: to, total: history.length });
+    }
+    const protectedRows = {
+      events,
+      ...await protectRows(vault, EVENT_STORE_DEFINITIONS,
+        { local_context: parts.local_context, attachment_records: parts.attachments }, { check }),
+    };
     const database = await openEventDatabase();
     try {
       const names = [...Object.keys(EVENT_STORE_DEFINITIONS), SECURITY_STORE];
@@ -356,7 +697,8 @@ export class EventStore {
               store.clear();
               for (const record of records) store.put(record);
             }
-            finish({ eventCount: source.events.length, localOnly: true });
+            bumpEventGeneration(transaction);
+            finish({ eventCount: history.length, localOnly: true });
           } catch (error) { abortWith(transaction, error); }
         };
         for (const name of names) {
@@ -387,12 +729,15 @@ export class EventStore {
     const contextStore = transaction.objectStore(CONTEXT_STORE);
     const syncStates = transaction.objectStore(SYNC_STATE_STORE);
     const outbox = transaction.objectStore(SYNC_OUTBOX_STORE);
-    const eventRequest = events.getAll();
+    const history = historyRequest(this, transaction);
     const contextRequest = contextStore.get(CONTEXT_KEY);
     const syncStateRequest = syncStates.get("active");
 
-    return transactionResult(transaction, (finish) => {
-      let loadedEvents;
+    // Filled once the new row has a key; applied to the arena after commit.
+    let committed = null;
+
+    const result = transactionResult(transaction, (finish) => {
+      let view;
       let context;
       let syncState;
       let eventsReady = false;
@@ -405,10 +750,9 @@ export class EventStore {
           return;
         }
         try {
-          loadedEvents = validateEventRows(loadedEvents);
           validateContext(context);
-          validateCursorBoundary(context, loadedEvents);
-          if (loadedEvents.length >= MAX_EVENT_COUNT) {
+          validateCursorBoundary(context, view);
+          if (view.length >= MAX_EVENT_COUNT) {
             throw new EventStoreError(
               "Kin has reached its local event limit. Your saved information was not deleted.",
             );
@@ -419,7 +763,7 @@ export class EventStore {
             );
 
           const logicalTime = BigInt(context.next_logical_time);
-          if (logicalTime <= 0n || logicalTime >= MAX_LOGICAL_TIME) {
+          if (logicalTime <= 0n || logicalTime > MAX_LOGICAL_TIME) {
             throw new EventStoreError(
               "Kin has reached a supported event-order limit. Your saved information was not deleted.",
             );
@@ -440,9 +784,9 @@ export class EventStore {
           const result = engine.executeCommand(
             command,
             { ...identity, entityId: randomId() },
-            loadedEvents.map((event) => event.encoded_event),
+            view,
             asOf,
-            context.last_looked_event_id === null ? null : idToHex(context.last_looked_event_id),
+            cursorEventId(context),
             civilDate,
             syncIdentity,
           );
@@ -464,25 +808,15 @@ export class EventStore {
                 return;
               }
               const currentState = engine.applyEvents(
-                loadedEvents.map((storedEvent) => storedEvent.encoded_event),
+                view,
                 asOf,
-                context.last_looked_event_id === null
-                  ? null
-                  : idToHex(context.last_looked_event_id),
+                cursorEventId(context),
                 civilDate,
                 syncIdentity,
               );
-              const tail = loadedEvents.at(-1);
               finish({
                 state: currentState,
-                snapshotBoundary: tail
-                  ? {
-                      eventId: idToHex(tail.event_id),
-                      localSequence: tail.local_sequence,
-                      snapshotThroughEventId: idToHex(tail.event_id),
-                      snapshotThroughLocalSequence: tail.local_sequence,
-                    }
-                  : null,
+                snapshotBoundary: snapshotBoundary(view),
               });
               return;
             }
@@ -511,6 +845,7 @@ export class EventStore {
                   snapshotThroughEventId: idToHex(eventId),
                   snapshotThroughLocalSequence: addRequest.result,
                 };
+                committed = { view, localSequence: addRequest.result, encodedEvent, metadata: result.metadata };
               };
               const contextWrite = contextStore.put({
                 ...context,
@@ -564,8 +899,8 @@ export class EventStore {
         }
       };
 
-      eventRequest.onsuccess = () => {
-        loadedEvents = eventRequest.result;
+      history.onsuccess = () => {
+        view = history.result;
         eventsReady = true;
         prepareCandidate();
       };
@@ -579,13 +914,25 @@ export class EventStore {
         syncStateReady = true;
         prepareCandidate();
       };
-      eventRequest.onerror = () =>
-        abortWith(transaction, storageError(eventRequest.error));
       contextRequest.onerror = () =>
         abortWith(transaction, storageError(contextRequest.error));
       syncStateRequest.onerror = () =>
         abortWith(transaction, storageError(syncStateRequest.error));
     });
+    return result.then((value) => {
+      this.#appendCommitted(committed);
+      return value;
+    });
+  }
+
+  // Extends the arena with an event this tab just committed, using the
+  // plaintext it already holds. Only a direct successor of the view the write
+  // validated against is appended; anything else is left for the next read.
+  #appendCommitted(committed) {
+    if (!committed) return;
+    const { view, localSequence, encodedEvent, metadata } = committed;
+    if (view.epoch !== this.arena.epoch || this.arena.length !== view.length) return;
+    this.arena.append(localSequence, encodedEvent, metadata);
   }
 
   getCatchUpState() {
@@ -593,7 +940,7 @@ export class EventStore {
       [EVENT_STORE, CONTEXT_STORE],
       "readonly",
     );
-    const eventsRequest = transaction.objectStore(EVENT_STORE).getAll();
+    const history = historyRequest(this, transaction);
     const contextRequest = transaction
       .objectStore(CONTEXT_STORE)
       .get(CONTEXT_KEY);
@@ -606,12 +953,18 @@ export class EventStore {
       const complete = () => {
         if (!eventsReady || !contextReady) return;
         try {
-          loadedEvents = validateEventRows(loadedEvents);
           validateContext(context);
           validateCursorBoundary(context, loadedEvents);
-          const tail = loadedEvents.at(-1);
+          const boundary = snapshotBoundary(loadedEvents);
+          // Meals views reuse this (see meals()), with the arena it names.
+          this.recentSyncIdentity = { epoch: loadedEvents.epoch, value: syncIdentityFromContext(context) };
           finish({
+            // A HistoryView, not an array: pass it to the engine directly;
+            // `.rows()` gives detached row objects.
             events: loadedEvents,
+            // `cursor` is where this person last looked ("Caught up"), so the
+            // summary lists what came after it. `through` is the newest event
+            // in this snapshot, which a later "Caught up" may commit.
             syncIdentity: syncIdentityFromContext(context),
             cursor: {
               eventId: context.last_looked_event_id
@@ -620,19 +973,16 @@ export class EventStore {
               localSequence: context.last_looked_local_sequence,
               lastLookedAt: context.last_looked_at,
             },
-            through: tail
-              ? {
-                  eventId: idToHex(tail.event_id),
-                  localSequence: tail.local_sequence,
-                }
+            through: boundary
+              ? { eventId: boundary.eventId, localSequence: boundary.localSequence }
               : null,
           });
         } catch (error) {
           abortWith(transaction, error);
         }
       };
-      eventsRequest.onsuccess = () => {
-        loadedEvents = eventsRequest.result;
+      history.onsuccess = () => {
+        loadedEvents = history.result;
         eventsReady = true;
         complete();
       };
@@ -641,8 +991,6 @@ export class EventStore {
         contextReady = true;
         complete();
       };
-      eventsRequest.onerror = () =>
-        abortWith(transaction, storageError(eventsRequest.error));
       contextRequest.onerror = () =>
         abortWith(transaction, storageError(contextRequest.error));
     });
@@ -669,7 +1017,7 @@ export class EventStore {
     const syncStates = transaction.objectStore(SYNC_STATE_STORE);
     const outbox = transaction.objectStore(SYNC_OUTBOX_STORE);
     const bindings = transaction.objectStore(SYNC_BINDING_STORE);
-    const eventsRequest = eventsStore.getAll();
+    const history = historyRequest(this, transaction);
     const contextRequest = contextStore.get(CONTEXT_KEY);
     const syncStateRequest = syncStates.get("active");
 
@@ -682,13 +1030,14 @@ export class EventStore {
         ready += 1;
         if (ready !== 3) return;
         try {
-          loadedEvents = validateEventRows(loadedEvents);
           validateContext(context);
           validateCursorBoundary(context, loadedEvents);
+          loadedEvents = loadedEvents.rows();
           for (const field of ["householdId", "memberId", "deviceId"])
             idFromHex(identity?.[field]);
-          if (context.archive_imported)
-            throw new EventStoreError("Restored archives are local-only. Kin preserves their history without restoring device trust or uploading it as another device.");
+          if (context.archive_imported && context.sync_household_id &&
+              idToHex(context.sync_household_id) !== identity.householdId)
+            throw new EventStoreError("This export belongs to another household. Its history was kept on this device and was not synced.");
           if (state) {
             if (
               state.householdId !== identity.householdId ||
@@ -789,6 +1138,8 @@ export class EventStore {
             pendingCount: loadedEvents.length,
             initialized: false,
           };
+          // The sync identity or bindings may change: meals and names read again (recentHistory).
+          this.recentSyncIdentity = null;
           const contextWrite = contextStore.put(updatedContext);
           const stateWrite = syncStates.add(newState);
           contextWrite.onerror = () =>
@@ -817,7 +1168,13 @@ export class EventStore {
               householdId: identity.householdId,
               deviceId: identity.deviceId,
               deviceSequence: index + 1,
-              keyEpoch: serverStatus.currentEpoch,
+              // Like a new local change (append), history queued while a key
+              // rotation is pending waits for the new epoch: sealing it under
+              // the epoch being retired would let a removed device read it
+              // and hide it from a member who joins at the new epoch.
+              keyEpoch: serverStatus.rotationPending === true
+                ? null
+                : serverStatus.currentEpoch,
               canonical_event: asBytes(row.encoded_event).slice(),
               envelope: null,
               accepted: false,
@@ -833,8 +1190,8 @@ export class EventStore {
           abortWith(transaction, error);
         }
       };
-      eventsRequest.onsuccess = () => {
-        loadedEvents = eventsRequest.result;
+      history.onsuccess = () => {
+        loadedEvents = history.result;
         initialize();
       };
       contextRequest.onsuccess = () => {
@@ -845,8 +1202,6 @@ export class EventStore {
         state = syncStateRequest.result;
         initialize();
       };
-      eventsRequest.onerror = () =>
-        abortWith(transaction, storageError(eventsRequest.error));
       contextRequest.onerror = () =>
         abortWith(transaction, storageError(contextRequest.error));
       syncStateRequest.onerror = () =>
@@ -862,6 +1217,164 @@ export class EventStore {
       request.onerror = () =>
         abortWith(transaction, storageError(request.error));
     });
+  }
+
+  async projectCurrent() {
+    if (!this.engine) throw new EventStoreError("Kin could not rebuild the household view.");
+    const { events, cursor, syncIdentity } = await this.getCatchUpState();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.applyEvents(events, asOf, cursor.eventId, civilDate, syncIdentity);
+  }
+
+  /** The household's named devices (#71), replayed from the current history
+   * under its sync identity: [{ deviceId, memberId, autoName, nickname }]. */
+  async deviceNames() {
+    if (!this.engine) throw new EventStoreError("Kin could not read device names.");
+    const { events, syncIdentity } = await this.getCatchUpState();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.deviceNames(events, asOf, civilDate, syncIdentity);
+  }
+
+  /** Members' preferred display names (#224), replayed from the current
+   * history under its sync identity: [{ memberId, name }]. */
+  async memberNames() {
+    if (!this.engine) throw new EventStoreError("Kin could not read member names.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.memberNames(events, asOf, civilDate, syncIdentity);
+  }
+
+  /** Meals (#333), replayed from the current history: { recipes, dinners }
+   * (kin-meals.js decodeMeals), dinners around the projection date. */
+  async meals() {
+    if (!this.engine) throw new EventStoreError("Kin could not read meals.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.meals(events, asOf, civilDate, syncIdentity);
+  }
+
+  /** Item emoji (#344): a Map itemId -> emoji. */
+  /** The seven days from `startCivilDate` (#417): items, routines, dinners
+   * and maintenance by day, from Rust. */
+  async week(startCivilDate) {
+    if (!this.engine) throw new EventStoreError("Kin could not read the week.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.week(startCivilDate, events, asOf, civilDate, syncIdentity);
+  }
+
+  async itemEmojis() {
+    if (!this.engine) throw new EventStoreError("Kin could not read item pictures.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.itemEmojis(events, asOf, civilDate, syncIdentity);
+  }
+
+  /** Store sections (#411, ADR 0015): { sections: [{ sectionId, name }],
+   * itemSections: Map itemId -> sectionId }. */
+  async shoppingSections() {
+    if (!this.engine) throw new EventStoreError("Kin could not read store sections.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.shoppingSections(events, asOf, civilDate, syncIdentity);
+  }
+
+  /** Taking turns (#429, ADR 0016): [{ routineId, memberIds, current, next }]
+   * for each rotating routine; kin-rotations.js turnAmong() passes over
+   * members who aren't active. */
+  async routineRotations() {
+    if (!this.engine) throw new EventStoreError("Kin could not read whose turn it is.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.routineRotations(events, asOf, civilDate, syncIdentity);
+  }
+  /** The sitter page (#442, ADR 0017): { intro, entries: [{ kind, id }] },
+   * the entries whose record exists and isn't archived, in the page's order.
+   * Changing it is Adult-only; the command append path checks that
+   * (kin-sitter.js). */
+  async sitterPage() {
+    if (!this.engine) throw new EventStoreError("Kin could not read the sitter page.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.sitterPage(events, asOf, civilDate, syncIdentity);
+  }
+
+  /** The family album (#673, ADR 0022 §5): { photos, removed }, both
+   * newest first (kin-album.js). Removing a photo is for whoever added it or
+   * a household admin; the command append path checks that. */
+  async album() {
+    if (!this.engine) throw new EventStoreError("Kin could not read the family photos.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.album(events, asOf, civilDate, syncIdentity);
+  }
+
+  /** The calendar from `from` to `to` (#656, ADR 0022; civil dates, at most
+   * 400 days): event occurrences merged with dated items, routines and
+   * meals, the next countdown and member colours (kin-calendar.js
+   * decodeCalendarRange). Options: { allEvents, includeCancelled }. */
+  async calendarRange(from, to, options = {}) {
+    if (!this.engine) throw new EventStoreError("Kin could not read the calendar.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.calendarRange(from, to, events, asOf, civilDate, syncIdentity, options);
+  }
+
+  /** Members' chosen calendar colours (#656): a Map memberId -> 0–11. Members
+   * without one use kin-calendar.js defaultMemberColour by join order. */
+  async memberColours() {
+    const { civilDate } = projectionContext();
+    return (await this.calendarRange(civilDate, civilDate)).colours;
+  }
+
+  /** An .ics file's events, parsed on this device (#666; kin-calendar.js
+   * decodeICalendar). Reads no history; saving them is the caller's job. */
+  parseICalendar(bytes) {
+    if (!this.engine) throw new EventStoreError("Kin could not read that calendar file.");
+    return this.engine.parseICalendar(bytes);
+  }
+
+  /** The chore chart for this week (#676, ADR 0022 §6): `members` are the
+   * household's children and Adults in join order ([{ memberId, kind:
+   * "child" | "adult" }]) and `adultsAllowed` the admin's setting. The week
+   * is Monday to Sunday in this device's time zone (kin-chores.js). */
+  async choreChart({ members = [], adultsAllowed = false } = {}) {
+    if (!this.engine) throw new EventStoreError("Kin could not read the chore chart.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    const { start, bounds } = choreWeek(civilDate);
+    return this.engine.choreChart({ start, bounds, adultsAllowed, members }, events, asOf, civilDate, syncIdentity);
+  }
+
+  /** `memberId`'s things today (#344, ADR 0013), in Rust's order. */
+  async myThings(memberId) {
+    if (!this.engine) throw new EventStoreError("Kin could not read your things for today.");
+    const { events, syncIdentity } = await this.recentHistory();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.myThings(memberId, events, asOf, civilDate, syncIdentity);
+  }
+
+  /**
+   * The history for a view that is read after every render (meals, names).
+   * The session arena already holds what the last read loaded plus this
+   * tab's appends since, so it's used as it is; another tab's changes arrive
+   * through the peer refresh, which reads and then renders. When the arena
+   * isn't known to be current (locked, rebuilt, never read), this reads.
+   */
+  async recentHistory() {
+    const recent = this.recentSyncIdentity;
+    if (recent && recent.epoch === this.arena.epoch && this.arena.generation !== null && this.arena.length > 0)
+      return { events: this.arena.view(), syncIdentity: recent.value };
+    return this.getCatchUpState();
+  }
+
+  /** What adding a recipe's ({ recipeId }) or a date's dinner's ({ date })
+   * ingredients to Shopping would do now (#333). */
+  async mealShoppingPlan(source) {
+    if (!this.engine) throw new EventStoreError("Kin could not plan the ingredients.");
+    const { events, syncIdentity } = await this.getCatchUpState();
+    const { asOf, civilDate } = projectionContext();
+    return this.engine.mealShoppingPlan(source, events, asOf, civilDate, syncIdentity);
   }
 
   updateSyncServerState(status) {
@@ -959,11 +1472,16 @@ export class EventStore {
             return;
           }
           for (const row of rows) {
+            if (row.remote_present) {
+              delete row.remote_present;
+              delete row.remote_device_sequence;
+            }
             if (row.accepted && row.envelope) {
               row.accepted = false;
+            }
+            if (!row.accepted || row.envelope) {
               const write = outbox.put(row);
-              write.onerror = () =>
-                abortWith(transaction, storageError(write.error));
+              write.onerror = () => abortWith(transaction, storageError(write.error));
             }
           }
           state.pendingCount = rows.filter((row) => !row.accepted).length;
@@ -1201,7 +1719,7 @@ export class EventStore {
       [EVENT_STORE, CONTEXT_STORE],
       "readonly",
     );
-    const eventsRequest = transaction.objectStore(EVENT_STORE).getAll();
+    const history = historyRequest(this, transaction);
     const contextRequest = transaction
       .objectStore(CONTEXT_STORE)
       .get(CONTEXT_KEY);
@@ -1213,8 +1731,9 @@ export class EventStore {
         ready += 1;
         if (ready !== 2) return;
         try {
-          events = validateEventRows(events);
           validateContext(context);
+          const maxLogicalTime = events.maxLogicalTime();
+          events = events.rows();
           finish({
             events,
             legacyIdentity: {
@@ -1222,26 +1741,20 @@ export class EventStore {
               actorId: idToHex(context.actor_id),
               deviceId: idToHex(context.device_id),
             },
-            maxLogicalTime: events.reduce(
-              (maximum, row) =>
-                row.logical_time > maximum ? row.logical_time : maximum,
-              0n,
-            ),
+            maxLogicalTime,
           });
         } catch (error) {
           abortWith(transaction, error);
         }
       };
-      eventsRequest.onsuccess = () => {
-        events = eventsRequest.result;
+      history.onsuccess = () => {
+        events = history.result;
         complete();
       };
       contextRequest.onsuccess = () => {
         context = contextRequest.result;
         complete();
       };
-      eventsRequest.onerror = () =>
-        abortWith(transaction, storageError(eventsRequest.error));
       contextRequest.onerror = () =>
         abortWith(transaction, storageError(contextRequest.error));
     });
@@ -1260,6 +1773,33 @@ export class EventStore {
             (record) => !record.uploaded && record.controlEnvelope,
           ),
         );
+      request.onerror = () =>
+        abortWith(transaction, storageError(request.error));
+    });
+  }
+
+  // Replaces the sealed envelope of this device's not-yet-uploaded identity
+  // binding (re-sealed under a newer key epoch). False if it was uploaded or
+  // another tab already replaced the envelope this one re-sealed.
+  replacePendingBindingEnvelope(legacyKey, expectedEventId, envelope) {
+    const transaction = this.database.transaction(
+      SYNC_BINDING_STORE,
+      "readwrite",
+    );
+    const store = transaction.objectStore(SYNC_BINDING_STORE);
+    const request = store.get(legacyKey);
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => {
+        const record = request.result;
+        if (!record || record.uploaded || record.controlEnvelope?.eventId !== expectedEventId) {
+          finish(false);
+          return;
+        }
+        record.controlEnvelope = structuredClone(envelope);
+        const write = store.put(record);
+        write.onerror = () => abortWith(transaction, storageError(write.error));
+        finish(true);
+      };
       request.onerror = () =>
         abortWith(transaction, storageError(request.error));
     });
@@ -1336,6 +1876,8 @@ export class EventStore {
               abortWith(transaction, storageError(write.error));
           }
           context.sync_identity_bindings = [...bindingsByKey.values()];
+          // The sync identity or bindings may change: meals and names read again (recentHistory).
+          this.recentSyncIdentity = null;
           const contextWrite = contextStore.put(context);
           contextWrite.onerror = () =>
             abortWith(transaction, storageError(contextWrite.error));
@@ -1365,6 +1907,65 @@ export class EventStore {
         );
       request.onerror = () =>
         abortWith(transaction, storageError(request.error));
+    });
+  }
+
+  getRemoteDuplicateOutbox(limit = MAX_EVENT_COUNT) {
+    const transaction = this.database.transaction(SYNC_OUTBOX_STORE, "readonly");
+    const request = transaction.objectStore(SYNC_OUTBOX_STORE).getAll();
+    return transactionResult(transaction, (finish) => {
+      request.onsuccess = () => finish(request.result
+        .filter((row) => row.remote_present === true && !row.accepted)
+        .sort((left, right) => left.deviceSequence - right.deviceSequence)
+        .slice(0, limit));
+      request.onerror = () => abortWith(transaction, storageError(request.error));
+    });
+  }
+
+  compactArchiveOutboxSequences() {
+    const transaction = this.database.transaction(
+      [CONTEXT_STORE, SYNC_STATE_STORE, SYNC_OUTBOX_STORE], "readwrite",
+    );
+    const contexts = transaction.objectStore(CONTEXT_STORE);
+    const states = transaction.objectStore(SYNC_STATE_STORE);
+    const outbox = transaction.objectStore(SYNC_OUTBOX_STORE);
+    const contextRequest = contexts.get(CONTEXT_KEY);
+    const stateRequest = states.get("active");
+    const rowsRequest = outbox.getAll();
+    return transactionResult(transaction, (finish) => {
+      let context, state, rows, ready = 0;
+      const complete = () => {
+        ready += 1;
+        if (ready !== 3) return;
+        try {
+          validateContext(context);
+          if (!context.archive_imported || !state || state.initialized) {
+            finish(false);
+            return;
+          }
+          let nextSequence = rows.reduce((maximum, row) =>
+            row.remote_present && Number.isSafeInteger(row.remote_device_sequence) &&
+              row.deviceId === state.deviceId
+              ? Math.max(maximum, row.remote_device_sequence) : maximum, 0);
+          const pending = rows.filter((row) => !row.accepted && !row.remote_present)
+            .sort((left, right) => left.deviceSequence - right.deviceSequence);
+          for (const row of pending) {
+            row.deviceSequence = ++nextSequence;
+            row.envelope = null;
+            outbox.put(row);
+          }
+          state.nextDeviceSequence = nextSequence + 1;
+          state.pendingCount = pending.length;
+          states.put(state);
+          finish({ pendingCount: pending.length, nextDeviceSequence: state.nextDeviceSequence });
+        } catch (error) { abortWith(transaction, error); }
+      };
+      contextRequest.onsuccess = () => { context = contextRequest.result; complete(); };
+      stateRequest.onsuccess = () => { state = stateRequest.result; complete(); };
+      rowsRequest.onsuccess = () => { rows = rowsRequest.result; complete(); };
+      contextRequest.onerror = () => abortWith(transaction, storageError(contextRequest.error));
+      stateRequest.onerror = () => abortWith(transaction, storageError(stateRequest.error));
+      rowsRequest.onerror = () => abortWith(transaction, storageError(rowsRequest.error));
     });
   }
 
@@ -1495,25 +2096,28 @@ export class EventStore {
         "Kin received a sync batch outside its supported bounds.",
       );
     const transaction = this.database.transaction(
-      [EVENT_STORE, CONTEXT_STORE, SYNC_STATE_STORE],
+      [EVENT_STORE, CONTEXT_STORE, SYNC_STATE_STORE, SYNC_OUTBOX_STORE],
       "readwrite",
     );
     const eventsStore = transaction.objectStore(EVENT_STORE);
     const contextStore = transaction.objectStore(CONTEXT_STORE);
     const syncStates = transaction.objectStore(SYNC_STATE_STORE);
-    const eventsRequest = eventsStore.getAll();
+    const outbox = transaction.objectStore(SYNC_OUTBOX_STORE);
+    const history = historyRequest(this, transaction);
     const contextRequest = contextStore.get(CONTEXT_KEY);
     const stateRequest = syncStates.get("active");
-    return transactionResult(transaction, (finish) => {
+    const outboxRequest = outbox.getAll();
+    let committed = null;
+    const result = transactionResult(transaction, (finish) => {
       let rows;
       let context;
       let syncState;
+      let outboxRows;
       let ready = 0;
       const complete = () => {
         ready += 1;
-        if (ready !== 3) return;
+        if (ready !== 4) return;
         try {
-          rows = validateEventRows(rows);
           validateContext(context);
           if (!syncState || !context.sync_household_id)
             throw new EventStoreError(
@@ -1522,31 +2126,63 @@ export class EventStore {
           if (cursorValue(nextCursor) < cursorValue(syncState.cursorHighWater))
             throw new EventStoreError("Kin rejected a sync cursor rollback.");
           validateCursorBoundary(context, rows);
-          const byId = new Map(rows.map((row) => [idToHex(row.event_id), row]));
-          const additions = [];
-          for (const item of received) {
-            const canonical = asBytes(item.encodedEvent).slice();
-            const candidate = eventRowFromCanonical(canonical);
-            const eventId = idToHex(candidate.event_id);
-            const existing = byId.get(eventId);
-            if (existing) {
-              if (!bytesEqual(existing.encoded_event, canonical))
-                throw new EventStoreError(
-                  "Kin found conflicting synchronized bytes for an existing event ID.",
-                );
-              continue;
+          // Validate each event independently. One poison event advances the
+          // relay cursor without entering durable canonical history; its
+          // bytes stay in the encrypted sync state and are retried with every
+          // later page that brings events, in case it arrived before an event
+          // it depends on (#153).
+          // Retrying replays history, so only a page carrying an event this
+          // device doesn't have yet (something a kept event might need)
+          // triggers it.
+          const previousQuarantine = syncState.quarantine ?? [];
+          const pageIds = new Set();
+          let fresh = false;
+          if (previousQuarantine.length > 0) {
+            for (const item of received) {
+              let eventId;
+              try { eventId = engine.eventMetadata(item.encodedEvent).eventId; } catch { continue; /* reconcile counts unreadable bytes */ }
+              pageIds.add(idToHex(eventId));
+              if (rows.indexOfEventId(eventId) < 0) fresh = true;
             }
-            candidate.local_sequence =
-              (rows.at(-1)?.local_sequence ?? 0) + additions.length + 1;
-            additions.push(candidate);
-            byId.set(eventId, candidate);
           }
-          const candidateRows = [...rows, ...additions];
-          validateEventRows(candidateRows);
+          const retried = fresh;
+          const retryItems = retried
+            ? quarantineRetryItems(previousQuarantine, {
+                isKnown: (eventId) => pageIds.has(eventId) || rows.indexOfEventId(idFromHex(eventId)) >= 0,
+              })
+            : [];
+          const { additions, candidates, quarantinedItems, duplicateEventIds } = reconcileRemoteEvents({
+            history: rows,
+            received: [...retryItems, ...received],
+            engine, context, asOf, civilDate,
+          });
+          const quarantine = nextQuarantine(previousQuarantine, quarantinedItems, {
+            now: asOf ?? Date.now(), retried,
+          });
+          const remoteIds = new Set(duplicateEventIds);
+          const remoteInfo = new Map();
+          for (const item of received) {
+            if (!item.sourceDeviceId || !Number.isSafeInteger(item.sourceDeviceSequence)) continue;
+            const metadata = engine.eventMetadata(item.encodedEvent);
+            remoteInfo.set(idToHex(metadata.eventId), item);
+          }
+          for (const row of outboxRows) {
+            if (remoteIds.has(row.event_id)) {
+              let changed = row.remote_present !== true;
+              row.remote_present = true;
+              const remote = remoteInfo.get(row.event_id);
+              if (remote?.sourceDeviceId === syncState.deviceId &&
+                  remote.sourceDeviceSequence !== row.remote_device_sequence) {
+                row.remote_device_sequence = remote.sourceDeviceSequence;
+                changed = true;
+              }
+              if (changed) outbox.put(row);
+            }
+          }
           const { asOf: projectionAsOf, civilDate: projectionDate } =
             projectionContext();
           const state = engine.applyEvents(
-            candidateRows.map((row) => row.encoded_event),
+            candidates,
             asOf ?? projectionAsOf,
             context.last_looked_event_id === null
               ? null
@@ -1569,28 +2205,43 @@ export class EventStore {
             write.onerror = () =>
               abortWith(transaction, storageError(write.error));
           }
-          const maximumLogicalTime = candidateRows.reduce(
+          const maximumLogicalTime = additions.reduce(
             (maximum, row) =>
               row.logical_time > maximum ? row.logical_time : maximum,
-            0n,
+            rows.maxLogicalTime(),
           );
           context.next_logical_time =
             context.next_logical_time > maximumLogicalTime
               ? context.next_logical_time
               : maximumLogicalTime + 1n;
           syncState.maxLogicalTime = maximumLogicalTime;
+          // Events older clients only counted, and refusals beyond the bound,
+          // stay counted; kept rows are counted while they remain.
+          if (syncState.quarantineDropped === undefined)
+            syncState.quarantineDropped = syncState.quarantinedEventCount ?? 0;
+          syncState.quarantineDropped += quarantine.dropped;
+          syncState.quarantine = quarantine.quarantine;
+          syncState.quarantinedEventCount =
+            syncState.quarantine.length + syncState.quarantineDropped;
           syncState.syncCursor = nextCursor;
           syncState.cursorHighWater = nextCursor;
+          // The sync identity or bindings may change: meals and names read again (recentHistory).
+          this.recentSyncIdentity = null;
           const contextWrite = contextStore.put(context);
           const stateWrite = syncStates.put(syncState);
           contextWrite.onerror = () =>
             abortWith(transaction, storageError(contextWrite.error));
           stateWrite.onerror = () =>
             abortWith(transaction, storageError(stateWrite.error));
-          const tail = candidateRows.at(-1);
+          const tail = additions.at(-1);
+          committed = { view: rows, additions };
           finish({
             state,
             added: additions.length,
+            // Only refusals new to this device, so a kept event that is
+            // retried and refused again doesn't alert on every poll.
+            quarantined: quarantine.added,
+            duplicateEventIds: [...remoteIds],
             snapshotBoundary: tail
               ? {
                   eventId: idToHex(tail.event_id),
@@ -1598,14 +2249,14 @@ export class EventStore {
                   snapshotThroughEventId: idToHex(tail.event_id),
                   snapshotThroughLocalSequence: tail.local_sequence,
                 }
-              : null,
+              : snapshotBoundary(rows),
           });
         } catch (error) {
           abortWith(transaction, error);
         }
       };
-      eventsRequest.onsuccess = () => {
-        rows = eventsRequest.result;
+      history.onsuccess = () => {
+        rows = history.result;
         complete();
       };
       contextRequest.onsuccess = () => {
@@ -1616,12 +2267,20 @@ export class EventStore {
         syncState = stateRequest.result;
         complete();
       };
-      eventsRequest.onerror = () =>
-        abortWith(transaction, storageError(eventsRequest.error));
+      outboxRequest.onsuccess = () => { outboxRows = outboxRequest.result; complete(); };
       contextRequest.onerror = () =>
         abortWith(transaction, storageError(contextRequest.error));
       stateRequest.onerror = () =>
         abortWith(transaction, storageError(stateRequest.error));
+      outboxRequest.onerror = () => abortWith(transaction, storageError(outboxRequest.error));
+    });
+    return result.then((value) => {
+      // Remote rows were validated and committed; extend the arena in order.
+      if (committed && committed.view.epoch === this.arena.epoch && this.arena.length === committed.view.length) {
+        for (const row of committed.additions)
+          this.arena.append(row.local_sequence, row.encoded_event, row.metadata);
+      }
+      return value;
     });
   }
 
@@ -1658,7 +2317,7 @@ export class EventStore {
       "readwrite",
     );
     const eventsStore = transaction.objectStore(EVENT_STORE);
-    const eventsRequest = eventsStore.getAll();
+    const history = historyRequest(this, transaction);
     const contextStore = transaction.objectStore(CONTEXT_STORE);
     const contextRequest = contextStore.get(CONTEXT_KEY);
 
@@ -1670,30 +2329,23 @@ export class EventStore {
       const complete = () => {
         if (!eventsReady || !contextReady) return;
         try {
-          loadedEvents = validateEventRows(loadedEvents);
           validateContext(context);
           validateCursorBoundary(context, loadedEvents);
           const boundary = validateSnapshotBoundary(snapshotBoundary);
           const snapshotTail =
             boundary.snapshotThroughLocalSequence === 0
-              ? null
-              : loadedEvents.find(
-                  (row) =>
-                    row.local_sequence ===
-                    boundary.snapshotThroughLocalSequence,
-                );
+              ? -1
+              : loadedEvents.indexOfSequence(boundary.snapshotThroughLocalSequence);
           if (
-            !snapshotTail ||
-            idToHex(snapshotTail.event_id) !==
+            snapshotTail < 0 ||
+            idToHex(loadedEvents.id(snapshotTail, "event_id")) !==
               boundary.snapshotThroughEventId ||
             boundary.localSequence > boundary.snapshotThroughLocalSequence
           ) {
             throw invalidCatchUpState();
           }
-          const requested = loadedEvents.find(
-            (row) => row.local_sequence === boundary.localSequence,
-          );
-          if (!requested || idToHex(requested.event_id) !== boundary.eventId) {
+          const requestedIndex = loadedEvents.indexOfSequence(boundary.localSequence);
+          if (requestedIndex < 0 || idToHex(loadedEvents.id(requestedIndex, "event_id")) !== boundary.eventId) {
             throw invalidCatchUpState();
           }
           if (boundary.localSequence <= context.last_looked_local_sequence) {
@@ -1706,10 +2358,12 @@ export class EventStore {
 
           const updatedContext = {
             ...context,
-            last_looked_event_id: requested.event_id,
-            last_looked_local_sequence: requested.local_sequence,
+            last_looked_event_id: loadedEvents.id(requestedIndex, "event_id").slice(),
+            last_looked_local_sequence: boundary.localSequence,
             last_looked_at: Date.now(),
           };
+          // The sync identity or bindings may change: meals and names read again (recentHistory).
+          this.recentSyncIdentity = null;
           const write = contextStore.put(updatedContext);
           write.onerror = () =>
             abortWith(transaction, storageError(write.error));
@@ -1721,8 +2375,8 @@ export class EventStore {
           abortWith(transaction, error);
         }
       };
-      eventsRequest.onsuccess = () => {
-        loadedEvents = eventsRequest.result;
+      history.onsuccess = () => {
+        loadedEvents = history.result;
         eventsReady = true;
         complete();
       };
@@ -1731,8 +2385,6 @@ export class EventStore {
         contextReady = true;
         complete();
       };
-      eventsRequest.onerror = () =>
-        abortWith(transaction, storageError(eventsRequest.error));
       contextRequest.onerror = () =>
         abortWith(transaction, storageError(contextRequest.error));
     });
@@ -1743,7 +2395,7 @@ export class EventStore {
       [EVENT_STORE, CONTEXT_STORE],
       "readwrite",
     );
-    const eventRequest = transaction.objectStore(EVENT_STORE).getAll();
+    const history = historyRequest(this, transaction);
     const contexts = transaction.objectStore(CONTEXT_STORE);
     const request = contexts.get(CONTEXT_KEY);
     let loadedEvents;
@@ -1755,7 +2407,6 @@ export class EventStore {
       const initialize = () => {
         if (!eventsReady || !contextReady) return;
         try {
-          loadedEvents = validateEventRows(loadedEvents);
           if (!context) {
             if (loadedEvents.length) throw invalidCatchUpState();
             context = {
@@ -1775,24 +2426,8 @@ export class EventStore {
             return;
           }
 
-          validateContext(context, { allowUninitialized: true });
-          validateEventHousehold(context, loadedEvents);
-          if (!hasCatchUpMetadata(context)) {
-            const tail = loadedEvents.at(-1);
-            context = {
-              ...context,
-              last_looked_event_id: tail
-                ? Uint8Array.from(asBytes(tail.event_id))
-                : null,
-              last_looked_local_sequence: tail?.local_sequence ?? 0,
-              last_looked_at: Date.now(),
-            };
-            const write = contexts.put(context);
-            write.onerror = () =>
-              abortWith(transaction, storageError(write.error));
-          } else {
-            validateCursorBoundary(context, loadedEvents);
-          }
+          validateContext(context);
+          validateCursorBoundary(context, loadedEvents);
           finish(context);
         } catch (error) {
           abortWith(transaction, error);
@@ -1805,19 +2440,38 @@ export class EventStore {
       };
       request.onerror = () =>
         abortWith(transaction, storageError(request.error));
-      eventRequest.onsuccess = () => {
-        loadedEvents = eventRequest.result;
+      history.onsuccess = () => {
+        loadedEvents = history.result;
         eventsReady = true;
         initialize();
       };
-      eventRequest.onerror = () =>
-        abortWith(transaction, storageError(eventRequest.error));
     });
   }
 
   close() {
+    this.removeLockListener?.();
+    this.removeLockListener = null;
+    this.arena.wipe();
     this.database.close();
   }
+}
+
+function validateAttachmentRows(rows) {
+  const fields = ["attachment_id", "ciphertext", "localSealed", "keyEpoch", "digest", "state"];
+  if (!Array.isArray(rows) || rows.length > 64) throw new EventStoreError("Kin found invalid local attachment records.");
+  const ids = new Set(); let total = 0;
+  for (const row of rows) {
+    if (!row || Object.keys(row).some((key) => !fields.includes(key)) || Object.keys(row).length !== fields.length || !/^[a-f0-9]{32}$/.test(row.attachment_id ?? "") || ids.has(row.attachment_id) || !["local", "queued", "uploading", "synced", "failed", "removed"].includes(row.state))
+      throw new EventStoreError("Kin found an invalid local attachment record.");
+    if (row.ciphertext) {
+      const bytes = asBytes(row.ciphertext);
+      if (bytes.length < 29 || bytes.length > 4 * 1024 * 1024 + 4096 || !Number.isSafeInteger(row.keyEpoch) || row.keyEpoch < 1 || row.keyEpoch > 128 || !/^[a-f0-9]{64}$/.test(row.digest ?? "")) throw new EventStoreError("Kin found an attachment outside its supported size.");
+      total += bytes.length;
+    } else if (!row.localSealed || row.keyEpoch !== null || row.digest !== null) throw new EventStoreError("Kin found an attachment without protected local content.");
+    if (total > MAX_HOUSEHOLD_ATTACHMENT_BYTES) throw new EventStoreError("Kin found attachment data above the 50 MiB household storage limit.");
+    ids.add(row.attachment_id);
+  }
+  return rows;
 }
 
 function transactionResult(transaction, schedule) {
@@ -1866,7 +2520,154 @@ function storageError(cause) {
       ? "Kin couldn't save because local browser storage is full. Free some space, then try again. Your saved information was not deleted."
       : "Kin could not safely access local household storage. Your saved information was not intentionally deleted.";
   const error = new EventStoreError(message, cause);
+  recordDiagnostic("storage_failed", { store: "events", name: errorName(cause) });
   return error;
+}
+
+/**
+ * Reads the transaction's event history into the store's session arena and
+ * returns a request-like object whose result is a HistoryView of exactly the
+ * rows this transaction observes.
+ *
+ * Inside one native transaction it reads the persisted store generation and
+ * the row count, then either decrypts only rows after the arena tail (same
+ * generation, consistent count) or rebuilds the arena from every row. A raw
+ * pre-protection database has no generation and always rebuilds.
+ *
+ * Why callbacks and not a Promise: an IndexedDB transaction commits as soon
+ * as no request is pending at the end of a task. Awaiting a Promise between
+ * requests can let it commit early, so every follow-up request is issued
+ * from inside the previous request's callback, and callers attach their own
+ * `onsuccess` the same way.
+ */
+function historyRequest(store, transaction) {
+  const request = { result: undefined, error: null, onsuccess: null, onerror: null };
+  const arena = store.arena;
+  const events = transaction.objectStore(EVENT_STORE);
+  const fail = (error) => {
+    request.error = error;
+    if (request.onerror) request.onerror();
+    else abortWith(transaction, error);
+  };
+  const succeed = (view) => {
+    request.result = view;
+    request.onsuccess?.();
+  };
+  const rebuild = (generation) => {
+    const all = events.getAll();
+    all.onsuccess = () => {
+      try {
+        arena.reset(generation);
+        appendRows(arena, all.result, store.engine);
+        succeed(arena.view());
+      } catch (error) { arena.reset(null); fail(error); }
+      // The arena holds the only kept copy; these decrypted rows go either way.
+      finally { zeroRows(all.result); }
+    };
+    all.onerror = () => fail(storageError(all.error));
+  };
+  // `securityValue` reads plaintext security metadata inside this same
+  // transaction (encrypted-idb.js). Only databases opened without a security
+  // guard lack it (setup and migration); they cannot track a generation.
+  if (typeof transaction.securityValue !== "function") {
+    rebuild(null);
+    return request;
+  }
+  const generationRequest = transaction.securityValue(EVENT_GENERATION_KEY);
+  const countRequest = events.count();
+  // IndexedDB completes requests in the order they were made, so `generation`
+  // is set before countRequest.onsuccess below runs.
+  let generation;
+  generationRequest.onsuccess = () => { generation = generationRequest.result?.generation ?? 0; };
+  generationRequest.onerror = () => fail(storageError(generationRequest.error));
+  countRequest.onerror = () => fail(storageError(countRequest.error));
+  countRequest.onsuccess = () => {
+    try {
+      const total = countRequest.result;
+      if (!Number.isSafeInteger(generation) || generation < 0) throw invalidEventHistory();
+      // A different generation means the corpus was replaced (restore,
+      // migration, root rotation); fewer rows than the arena holds cannot come
+      // from appends. Either way the arena is rebuilt from storage.
+      if (arena.generation !== generation || total < arena.length) { rebuild(generation); return; }
+      if (total === arena.length) { succeed(arena.view(total)); return; }
+      const known = arena.length;
+      const delta = events.getAll(IDBKeyRange.lowerBound(arena.tail, true));
+      delta.onsuccess = () => {
+        try {
+          // While this read waited, a commit in this tab may already have added
+          // rows to the shared arena (#appendCommitted), so the filter skips
+          // rows at or below the tail. Any other mismatch rebuilds.
+          if (arena.generation !== generation || known + delta.result.length !== total) { rebuild(generation); return; }
+          appendRows(arena, delta.result.filter((row) => row.local_sequence > arena.tail), store.engine);
+          succeed(arena.view(total));
+        } catch (error) { arena.reset(null); fail(error); }
+        finally { zeroRows(delta.result); }
+      };
+      delta.onerror = () => fail(storageError(delta.error));
+    } catch (error) { fail(error); }
+  };
+  return request;
+}
+
+// Decrypted row copies are this read's own; zero them once the arena holds
+// their bytes so the session keeps one plaintext copy.
+// Zero-fills decrypted row bytes once the arena holds its copy. A row that
+// failed validation may not hold bytes at all, so failures are ignored.
+function zeroRows(rows) {
+  for (const row of rows) {
+    try { asBytes(row.encoded_event).fill(0); } catch { /* Rejected row. */ }
+  }
+}
+
+/**
+ * Validates rows in ascending local order and appends them to `arena`.
+ * `engine` is the store's own engine. Without one (snapshot helpers used
+ * before a store exists) the module-level codec, the last engine created,
+ * reads the metadata.
+ */
+function appendRows(arena, rows, engine = null) {
+  if (!Array.isArray(rows) || arena.length + rows.length > MAX_EVENT_COUNT) throw invalidEventHistory();
+  let previousSequence = arena.tail;
+  for (const row of rows) {
+    if (!row || typeof row !== "object" || Array.isArray(row) ||
+        !Number.isSafeInteger(row.local_sequence) || row.local_sequence <= previousSequence)
+      throw new EventStoreError("Kin found an invalid local event order. The stored data was preserved.");
+    previousSequence = row.local_sequence;
+  }
+  if (!rows.length) return;
+  const records = rows.map((row) => asBytes(row.encoded_event));
+  const metadata = engine ? engine.eventMetadataBatch(records) : eventMetadataBatch(records);
+  rows.forEach((row, index) => validateEventRow(row, metadata[index]));
+  rows.forEach((row, index) => arena.append(row.local_sequence, asBytes(row.encoded_event), metadata[index]));
+}
+
+/** A validated history view over plain rows, for snapshot-based operations
+ * (migration, rotation, archives). The caller wipes the returned arena. */
+function historyFromRows(rows) {
+  const arena = new EventArena();
+  arena.reset(null);
+  try { appendRows(arena, rows); }
+  catch (error) { arena.wipe(); throw error; }
+  return { arena, view: arena.view() };
+}
+
+function invalidEventHistory() {
+  return new EventStoreError("Kin found an invalid local event history. The stored data was preserved.");
+}
+
+function bumpEventGeneration(transaction) {
+  bumpGeneration(transaction.objectStore(SECURITY_STORE),
+    (error) => abortWith(transaction, error ? storageError(error) : invalidEventHistory()));
+}
+
+function snapshotBoundary(view) {
+  if (!view.length) return null;
+  const eventId = idToHex(view.id(view.length - 1, "event_id"));
+  return { eventId, localSequence: view.tail, snapshotThroughEventId: eventId, snapshotThroughLocalSequence: view.tail };
+}
+
+function cursorEventId(context) {
+  return context.last_looked_event_id === null ? null : idToHex(context.last_looked_event_id);
 }
 
 function validateEventRows(rows) {
@@ -1922,7 +2723,7 @@ function validateLegacyOutbox(outboxRows, eventRows) {
   }
 }
 
-function validateContext(context, { allowUninitialized = false } = {}) {
+function validateContext(context) {
   if (
     context?.key !== CONTEXT_KEY ||
     !isId(context.household_id) ||
@@ -1930,7 +2731,7 @@ function validateContext(context, { allowUninitialized = false } = {}) {
     !isId(context.device_id) ||
     typeof context.next_logical_time !== "bigint" ||
     context.next_logical_time < 1n ||
-    context.next_logical_time > MAX_LOGICAL_TIME
+    context.next_logical_time > MAX_LOGICAL_TIME + 1n
   ) {
     throw new EventStoreError(
       "Kin found invalid local household identity data. The stored data was preserved.",
@@ -1966,7 +2767,6 @@ function validateContext(context, { allowUninitialized = false } = {}) {
   const presentFields = catchUpFields.filter((field) =>
     Object.prototype.hasOwnProperty.call(context, field),
   );
-  if (presentFields.length === 0 && allowUninitialized) return;
   if (
     presentFields.length !== catchUpFields.length ||
     !Number.isSafeInteger(context.last_looked_local_sequence) ||
@@ -1981,46 +2781,30 @@ function validateContext(context, { allowUninitialized = false } = {}) {
   }
 }
 
-function hasCatchUpMetadata(context) {
-  return [
-    "last_looked_event_id",
-    "last_looked_local_sequence",
-    "last_looked_at",
-  ].some((field) => Object.prototype.hasOwnProperty.call(context, field));
-}
-
-function validateEventHousehold(context, events) {
+function validateEventHousehold(context, view) {
   if (context.sync_household_id) {
-    const bindings = new Set(
-      context.sync_identity_bindings.map(
-        (binding) =>
-          `${binding.legacyHouseholdId}:${binding.legacyActorId}:${binding.legacyDeviceId}`,
-      ),
-    );
-    if (
-      events.some((event) => {
-        if (bytesEqual(event.household_id, context.sync_household_id))
-          return false;
-        const key = `${idToHex(event.household_id)}:${idToHex(event.actor_id)}:${idToHex(event.device_id)}`;
-        return !bindings.has(key);
-      })
-    )
-      throw invalidCatchUpState();
+    const syncHousehold = asBytes(context.sync_household_id);
+    let bindings;
+    for (let index = 0; index < view.length; index += 1) {
+      if (bytesEqual(view.id(index, "household_id"), syncHousehold)) continue;
+      bindings ??= new Set(context.sync_identity_bindings.map((binding) =>
+        `${binding.legacyHouseholdId}:${binding.legacyActorId}:${binding.legacyDeviceId}`));
+      const key = `${idToHex(view.id(index, "household_id"))}:${idToHex(view.id(index, "actor_id"))}:${idToHex(view.id(index, "device_id"))}`;
+      if (!bindings.has(key)) throw invalidCatchUpState();
+    }
     return;
   }
-  if (
-    events.some(
-      (event) => !bytesEqual(event.household_id, context.household_id),
-    )
-  ) {
-    throw invalidCatchUpState();
-  }
+  const household = asBytes(context.household_id);
+  for (let index = 0; index < view.length; index += 1)
+    if (!bytesEqual(view.id(index, "household_id"), household)) throw invalidCatchUpState();
 }
 
 function syncIdentityFromContext(context) {
   return context.sync_household_id
     ? {
         householdId: idToHex(context.sync_household_id),
+        memberId: idToHex(context.sync_member_id),
+        deviceId: idToHex(context.sync_device_id),
         bindings: context.sync_identity_bindings,
       }
     : null;
@@ -2037,7 +2821,8 @@ function sameLegacyTupleForContext(binding, context) {
 function eventRowFromCanonical(encodedEvent) {
   const bytes = asBytes(encodedEvent).slice();
   const metadata = eventMetadata(bytes);
-  return eventRowFromMetadata(bytes, metadata);
+  // The Rust metadata travels with the row so the arena can append it later.
+  return Object.defineProperty(eventRowFromMetadata(bytes, metadata), "metadata", { value: metadata });
 }
 
 function eventRowFromMetadata(bytes, metadata) {
@@ -2082,13 +2867,11 @@ function cursorValue(value) {
   return result;
 }
 
-function validateCursorBoundary(context, events) {
-  validateEventHousehold(context, events);
+function validateCursorBoundary(context, view) {
+  validateEventHousehold(context, view);
   if (context.last_looked_local_sequence === 0) return;
-  const cursor = events.find(
-    (event) => event.local_sequence === context.last_looked_local_sequence,
-  );
-  if (!cursor || !bytesEqual(cursor.event_id, context.last_looked_event_id)) {
+  const index = view.indexOfSequence(context.last_looked_local_sequence);
+  if (index < 0 || !bytesEqual(view.id(index, "event_id"), context.last_looked_event_id)) {
     throw invalidCatchUpState();
   }
 }
@@ -2154,7 +2937,9 @@ function bytesEqual(left, right) {
     if (leftBytes.length !== rightBytes.length) {
       return false;
     }
-    return leftBytes.every((byte, index) => byte === rightBytes[index]);
+    for (let index = 0; index < leftBytes.length; index += 1)
+      if (leftBytes[index] !== rightBytes[index]) return false;
+    return true;
   } catch {
     return false;
   }
@@ -2191,39 +2976,139 @@ function validateRotationRows(rows, engine) {
   if (rows.local_context.length !== 1) throw invalidCatchUpState();
   const context = rows.local_context[0];
   validateContext(context);
-  validateCursorBoundary(context, events);
-  if (events.some((row) => row.logical_time >= context.next_logical_time))
-    throw new EventStoreError("Kin found an invalid event counter. The saved history was preserved.");
-  const { asOf, civilDate } = projectionContext();
-  engine.applyEvents(events.map((row) => row.encoded_event), asOf,
-    context.last_looked_event_id === null ? null : idToHex(context.last_looked_event_id), civilDate, syncIdentityFromContext(context));
+  const { arena, view } = historyFromRows(events);
+  try {
+    validateCursorBoundary(context, view);
+    if (events.some((row) => row.logical_time >= context.next_logical_time))
+      throw new EventStoreError("Kin found an invalid event counter. The saved history was preserved.");
+    const { asOf, civilDate } = projectionContext();
+    engine.applyEvents(view, asOf, cursorEventId(context), civilDate, syncIdentityFromContext(context));
+  } finally { arena.wipe(); }
 }
 
-function validateArchiveSnapshot(snapshot, engine) {
-  const onlyFields = (value, names) => value && typeof value === "object" && !Array.isArray(value) && Object.keys(value).every((key) => names.includes(key));
-  if (!engine || !onlyFields(snapshot, ["formatVersion", "events", "local_context"]) || snapshot.formatVersion !== 1 ||
-      !Array.isArray(snapshot.local_context) || snapshot.local_context.length !== 1)
+const onlyFields = (value, names) => value && typeof value === "object" && !Array.isArray(value) && Object.keys(value).every((key) => names.includes(key));
+// Archive histories are read, protected and written this many events at a
+// time (security/archive-stream.js CHUNK_EVENTS).
+const ARCHIVE_CHUNK_EVENTS = 256;
+
+/**
+ * Archive parts from the historical snapshot shape ({ formatVersion, events,
+ * local_context, attachments }): package-format-2 archives and test fixtures.
+ * The event rows are checked like stored rows and copied into a new arena,
+ * which the caller wipes (`parts.arena`). Context and attachment rows are
+ * cloned unless `owned`.
+ */
+function archivePartsFromSnapshot(snapshot, engine, { owned = false } = {}) {
+  if (!engine || !onlyFields(snapshot, ["formatVersion", "events", "local_context", "attachments"]) || snapshot.formatVersion !== 2 || !Array.isArray(snapshot.attachments) ||
+      !Array.isArray(snapshot.local_context) || snapshot.local_context.length !== 1 || !Array.isArray(snapshot.events))
     throw new EventStoreError("Kin could not validate this archive's household records.");
-  const rows = validateEventRows(snapshot.events);
   const eventFields = ["local_sequence", "event_id", "household_id", "actor_id", "device_id", "timestamp", "logical_time", "kind", "event_version", "encoded_event"];
-  if (rows.some((row) => !onlyFields(row, eventFields)) || rows.reduce((size, row) => size + asBytes(row.encoded_event).byteLength, 0) > 64 * 1024 * 1024)
+  if (snapshot.events.some((row) => !onlyFields(row, eventFields)))
     throw new EventStoreError("Kin found unsupported archive event fields or size.");
-  const context = snapshot.local_context[0];
-  if (!onlyFields(context, ["key", "household_id", "actor_id", "device_id", "next_logical_time", "last_looked_event_id", "last_looked_local_sequence", "last_looked_at", "sync_household_id", "sync_member_id", "sync_device_id", "sync_identity_bindings", "archive_imported"]))
+  const arena = new EventArena();
+  arena.reset(null);
+  try { appendRows(arena, snapshot.events, engine); }
+  catch (error) { arena.wipe(); throw error; }
+  return {
+    formatVersion: 2, history: arena.view(), arena,
+    local_context: owned ? snapshot.local_context : structuredClone(snapshot.local_context),
+    attachments: owned ? snapshot.attachments : structuredClone(snapshot.attachments),
+  };
+}
+
+/** Appends one checked chunk of archive records (local sequences and
+ * canonical bytes) to `arena`; see EventStore.archiveHistory. */
+function appendRecords(arena, sequences, records, engine) {
+  if (records.length !== sequences.length || arena.length + records.length > MAX_EVENT_COUNT) throw invalidEventHistory();
+  let previous = arena.tail;
+  for (const sequence of sequences) {
+    if (!Number.isSafeInteger(sequence) || sequence <= previous)
+      throw new EventStoreError("Kin found an invalid local event order. The stored data was preserved.");
+    previous = sequence;
+  }
+  const metadata = engine.eventMetadataBatch(records);
+  records.forEach((record, index) => arena.append(sequences[index], record, metadata[index]));
+}
+
+/**
+ * Checks archive parts ({ formatVersion: 2, history, local_context,
+ * attachments }, plus `arena` when they own one) and returns the attachment
+ * bindings of Rust's import plan. The history is a HistoryView whose records
+ * were checked when they entered its arena; the plan replays it from the
+ * engine's own history. Given `bindings` from an earlier check of the same
+ * history and context, the replay is skipped and the other checks run.
+ */
+function validateArchiveParts(parts, engine, bindings = null) {
+  if (!engine || !onlyFields(parts, ["formatVersion", "history", "local_context", "attachments", "arena"]) || parts.formatVersion !== 2 ||
+      typeof parts.history?.copyRecordsTo !== "function" || !Array.isArray(parts.attachments) ||
+      !Array.isArray(parts.local_context) || parts.local_context.length !== 1)
+    throw new EventStoreError("Kin could not validate this archive's household records.");
+  const view = parts.history;
+  const attachments = validateAttachmentRows(parts.attachments);
+  if (view.length > MAX_EVENT_COUNT || view.byteLength > 64 * 1024 * 1024)
+    throw new EventStoreError("Kin found unsupported archive event fields or size.");
+  const context = parts.local_context[0];
+  if (!onlyFields(context, ["key", "household_id", "actor_id", "device_id", "next_logical_time", "last_looked_event_id", "last_looked_local_sequence", "last_looked_at", "sync_household_id", "sync_member_id", "sync_device_id", "sync_identity_bindings", "archive_imported", "portable_membership"]))
     throw new EventStoreError("Kin found unsupported archive context fields.");
+  if (context.portable_membership !== undefined) validatePortableMembership(context.portable_membership);
   if (context.archive_imported !== undefined && context.archive_imported !== true)
     throw new EventStoreError("Kin found an invalid archive restore marker.");
   validateContext(context);
-  validateCursorBoundary(context, rows);
-  if (rows.some((row) => row.logical_time >= context.next_logical_time))
+  validateCursorBoundary(context, view);
+  if (view.length && view.maxLogicalTime() >= context.next_logical_time)
     throw new EventStoreError("The archive logical counter cannot safely continue its history.");
   const bindingFields = ["legacyHouseholdId", "legacyActorId", "legacyDeviceId", "householdId", "actorId", "deviceId"];
   if ((context.sync_identity_bindings ?? []).some((binding) => !onlyFields(binding, bindingFields) || Object.keys(binding).length !== bindingFields.length))
     throw new EventStoreError("Kin found unsupported archive identity bindings.");
   const { asOf, civilDate } = projectionContext();
-  engine.planImport(rows.map((row) => row.encoded_event), asOf,
-    context.last_looked_event_id === null ? null : idToHex(context.last_looked_event_id), civilDate, syncIdentityFromContext(context));
-  return snapshot;
+  bindings ??= engine.importBindings(view, asOf,
+    context.last_looked_event_id === null ? null : idToHex(context.last_looked_event_id), civilDate, syncIdentityFromContext(context)).attachments;
+  const bound = new Set(bindings.map((attachment) => attachment.attachmentId));
+  if (attachments.some((attachment) => !bound.has(attachment.attachment_id))) throw new EventStoreError("Kin found attachment data without matching household history.");
+  const included = new Set(attachments.map((attachment) => attachment.attachment_id));
+  if (bindings.some((attachment) => !attachment.removed && !included.has(attachment.attachmentId))) throw new EventStoreError("Kin cannot export this household yet because an attachment needs to be downloaded to this device.");
+  return bindings;
+}
+
+export function validatePortableMembership(members) {
+  if (!Array.isArray(members) || members.length > 12)
+    throw new EventStoreError("Kin found invalid household membership in this export.");
+  const ids = new Set();
+  for (const member of members) {
+    const keys = Object.keys(member ?? {}).sort().join(",");
+    const expected = member?.expiresAt === undefined
+      ? "memberId,memberKind,status"
+      : "expiresAt,memberId,memberKind,status";
+    if (keys !== expected || !/^[a-f0-9]{32}$/.test(member.memberId ?? "") ||
+        ids.has(member.memberId) || !["adult", "limited", "temporary"].includes(member.memberKind) ||
+        !["active", "removed", "expired"].includes(member.status) ||
+        (member.memberKind === "temporary"
+          ? !Number.isSafeInteger(member.expiresAt) || Math.abs(member.expiresAt) > 8_640_000_000_000_000
+          : member.expiresAt !== undefined || member.status === "expired"))
+      throw new EventStoreError("Kin found invalid household membership in this export.");
+    ids.add(member.memberId);
+  }
+}
+
+async function validateAttachmentArchivePayloads(rows, bindings, openSealed) {
+  const byId = new Map(bindings.map((entry) => [entry.attachmentId, entry]));
+  for (const row of rows) {
+    const binding = byId.get(row.attachment_id);
+    if (!binding) throw new EventStoreError("Kin found attachment data without matching household history.");
+    if (row.ciphertext) {
+      const bytes = asBytes(row.ciphertext);
+      const digest = [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+      if (digest !== row.digest) throw new EventStoreError("Kin found an attachment archive with damaged file data.");
+      continue;
+    }
+    let saved;
+    try { saved = await openSealed(row.attachment_id, row.localSealed); }
+    catch { throw new EventStoreError("Kin could not open protected attachment data in this archive."); }
+    try {
+      if (!(saved?.bytes instanceof Uint8Array) || saved.bytes.length < 1 || saved.bytes.length > 4 * 1024 * 1024 || !["image/jpeg", "image/png", "image/webp", "application/pdf"].includes(saved.type) || typeof saved.name !== "string" || saved.name.length > 240 || saved.parentKind !== binding.parentKind || saved.parentId !== binding.parentId)
+        throw new EventStoreError("Kin found attachment data that does not match its household binding.");
+    } finally { saved?.bytes?.fill(0); }
+  }
 }
 
 async function readSecurity(database) {
@@ -2287,6 +3172,7 @@ async function replaceVerifiedSnapshot(database, original, protectedRows, manife
           for (const row of rows) store.put(row);
         }
         transaction.objectStore(SECURITY_STORE).put(manifest);
+        bumpEventGeneration(transaction);
         finish(manifest);
       } catch (error) { abortWith(transaction, error); }
     }

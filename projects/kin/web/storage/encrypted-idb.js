@@ -203,6 +203,13 @@ export function encryptedDatabase(database, vault, definitions, { securityGuard 
         set onerror(value) { native.onerror = value; },
         abort() { native.abort(); },
         addEventListener(...args) { native.addEventListener(...args); },
+        // Plaintext security-store metadata (for example the event-store
+        // generation) read inside this same native transaction, so it shares
+        // the snapshot of the protected stores it accompanies.
+        // Absent when the database was opened without a security guard.
+        securityValue: securityGuard
+          ? (key) => requestOperation(() => runNative(() => native.objectStore(securityGuard.store).get(key)))
+          : undefined,
         fail(error) {
           if (ended) return;
           native.__kinFailure ??= error;
@@ -213,12 +220,16 @@ export function encryptedDatabase(database, vault, definitions, { securityGuard 
           const store = native.objectStore(name);
           const definition = definitions[name];
           const read = (source, method, args, many = false) => requestOperation(async () => {
-            if (many && source === store && args.length === 0) {
+            // A whole-store read or an open-ended lower-bound read (the event
+            // arena's tail delta) is paged the same way.
+            const pagedRange = args.length === 0 ||
+              (args.length === 1 && args[0] instanceof IDBKeyRange && args[0].upper === undefined);
+            if (many && source === store && pagedRange) {
               // One native transaction retains the original serialization and
               // snapshot contract while holding at most 128 ciphertext rows;
               // Web Crypto still processes only 32 values at a time.
               const values = [];
-              let range;
+              let range = args[0];
               while (true) {
                 assertLive();
                 const page = await runNative(() => store.getAll(range, PROTECTED_PAGE_SIZE));

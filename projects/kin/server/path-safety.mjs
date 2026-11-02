@@ -16,7 +16,7 @@ export function isInsideRoot(candidate, root) {
 
 // Resolve the nearest existing ancestor, including when several parent
 // directories have yet to be created. Never guess through a dangling symlink.
-function canonicalPath(path) {
+export function canonicalPath(path) {
   try {
     return realpathSync(path);
   } catch (error) {

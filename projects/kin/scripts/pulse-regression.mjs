@@ -62,11 +62,11 @@ export async function pulseRegressions() {
       others,
     "Pulse cannot change other features",
   );
-  await app.refreshFromEvents();
+  await app.ctx.refresh.refreshFromEvents();
   check(app.state.pulses[0].value === "need-quiet", "canonical reload");
   pulse.clearButton.click();
   await idle();
-  await app.savePulse({ type: "clear-pulse" });
+  await app.ctx.conversations.savePulse({ type: "clear-pulse" });
   check(
     app.state.pulses.length === 0 &&
       pulse.current.textContent === "No current pulse.",
@@ -88,7 +88,7 @@ export async function pulseRegressions() {
     return originalAdd.apply(this, args);
   };
   try {
-    await app.savePulse(command);
+    await app.ctx.conversations.savePulse(command);
   } finally {
     IDBObjectStore.prototype.add = originalAdd;
   }
@@ -103,8 +103,8 @@ export async function pulseRegressions() {
     throw new Error("Synthetic refresh");
   };
   try {
-    await app.refreshFromEvents();
-    await app.refreshFromEvents();
+    await app.ctx.refresh.refreshFromEvents();
+    await app.ctx.refresh.refreshFromEvents();
   } finally {
     app.store.getCatchUpState = load;
   }
@@ -124,11 +124,11 @@ export async function pulseRegressions() {
     "original SET retry",
   );
   check((await count()) === initial + 5, "rapid retry appends once");
-  await app.savePulse({ type: "clear-pulse" });
+  await app.ctx.conversations.savePulse({ type: "clear-pulse" });
 
   // Advisory timer calls Rust; no expiry event is appended.
   const now = Date.now();
-  await app.savePulse({
+  await app.ctx.conversations.savePulse({
     type: "set-pulse",
     value: "okay",
     timestamp: now,
@@ -144,9 +144,9 @@ export async function pulseRegressions() {
     "timer reprojects expiry",
   );
   check((await count()) === beforeExpiry, "expiry appends nothing");
-  await app.savePulse({ type: "clear-pulse" });
+  await app.ctx.conversations.savePulse({ type: "clear-pulse" });
   check(
-    app.store.database.version === 3,
+    app.store.database.version === 5,
     "sync stores are additive to the event schema",
   );
   return "PASS Pulse fixed values, actor projection, set/replace/clear, timer expiry, original retry and repeated refresh recovery";
@@ -154,7 +154,7 @@ export async function pulseRegressions() {
 
 export async function pulsePeerRegressions(first, second, until, unlockReady) {
   await first.evaluate(
-    `(async()=>{const a=document.querySelector('kin-app');const timestamp=Date.now();await a.savePulse({type:'set-pulse',value:'drained',timestamp,expiresAt:timestamp+3600000});})()`,
+    `(async()=>{const a=document.querySelector('kin-app');const timestamp=Date.now();await a.ctx.conversations.savePulse({type:'set-pulse',value:'drained',timestamp,expiresAt:timestamp+3600000});})()`,
   );
   await until(() =>
     second.evaluate(
@@ -175,7 +175,7 @@ export async function pulsePeerRegressions(first, second, until, unlockReady) {
     "Drained",
   );
   await first.evaluate(
-    `document.querySelector('kin-app').savePulse({type:'clear-pulse'})`,
+    `document.querySelector('kin-app').ctx.conversations.savePulse({type:'clear-pulse'})`,
   );
   await until(() =>
     second.evaluate(
@@ -188,9 +188,9 @@ export async function pulsePeerRegressions(first, second, until, unlockReady) {
     ),
     "No current pulse.",
   );
-  await second.evaluate(`document.querySelector('kin-app').closePeerChannel()`);
+  await second.evaluate(`document.querySelector('kin-app').ctx.peers.closePeerChannel()`);
   await first.evaluate(
-    `(async()=>{const a=document.querySelector('kin-app');const timestamp=Date.now();await a.savePulse({type:'set-pulse',value:'need-quiet',timestamp,expiresAt:timestamp+3600000});})()`,
+    `(async()=>{const a=document.querySelector('kin-app');const timestamp=Date.now();await a.ctx.conversations.savePulse({type:'set-pulse',value:'need-quiet',timestamp,expiresAt:timestamp+3600000});})()`,
   );
   assert.equal(
     await second.evaluate(
@@ -207,7 +207,7 @@ export async function pulsePeerRegressions(first, second, until, unlockReady) {
     ),
   );
   await first.evaluate(
-    `document.querySelector('kin-app').savePulse({type:'clear-pulse'})`,
+    `document.querySelector('kin-app').ctx.conversations.savePulse({type:'clear-pulse'})`,
   );
   await second.evaluate(
     `document.dispatchEvent(new Event('visibilitychange'))`,
@@ -217,7 +217,7 @@ export async function pulsePeerRegressions(first, second, until, unlockReady) {
       `document.querySelector('kin-app').state.pulses.length===0`,
     ),
   );
-  await second.evaluate(`document.querySelector('kin-app').openPeerChannel()`);
+  await second.evaluate(`document.querySelector('kin-app').ctx.peers.openPeerChannel()`);
   console.log(
     "PASS Pulse cross-tab SET/CLEAR, reload and missed invalidation recovered by focus/visibility",
   );
@@ -231,7 +231,7 @@ export async function pulseResilienceRegressions() {
   };
   const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const idle = async () => {
-    for (let i = 0; (app.busy || app.refreshing || app.pendingRefresh) && i < 300; i++) await pause(10);
+    for (let i = 0; (app.busy || app.refreshing || app.pendingRefresh || app.wakePending) && i < 300; i++) await pause(10);
     check(!app.busy, "Pulse operation settled");
   };
   const count = async () => (await app.store.loadEvents()).length;
@@ -240,7 +240,7 @@ export async function pulseResilienceRegressions() {
   let clock = base;
   Date.now = () => clock;
   try {
-    await app.savePulse({
+    await app.ctx.conversations.savePulse({
       type: "set-pulse",
       value: "good",
       timestamp: base,
@@ -298,14 +298,14 @@ export async function pulseResilienceRegressions() {
     Date.now = originalNow;
     delete document.visibilityState;
   }
-  await app.savePulse({ type: "clear-pulse" });
+  await app.ctx.conversations.savePulse({ type: "clear-pulse" });
 
   const originalAdd = IDBObjectStore.prototype.add;
   for (const type of ["set-pulse", "clear-pulse"])
     for (const mode of ["quota", "abort"]) {
       if (type === "clear-pulse") {
         const timestamp = Date.now();
-        await app.savePulse({
+        await app.ctx.conversations.savePulse({
           type: "set-pulse",
           value: "okay",
           timestamp,
@@ -334,7 +334,7 @@ export async function pulseResilienceRegressions() {
         return request;
       };
       try {
-        await app.savePulse(command);
+        await app.ctx.conversations.savePulse(command);
       } finally {
         IDBObjectStore.prototype.add = originalAdd;
       }
@@ -357,8 +357,8 @@ export async function pulseResilienceRegressions() {
         throw new Error("Synthetic refresh");
       };
       try {
-        await app.refreshFromEvents();
-        await app.refreshFromEvents();
+        await app.ctx.refresh.refreshFromEvents();
+        await app.ctx.refresh.refreshFromEvents();
       } finally {
         app.store.getCatchUpState = load;
       }
@@ -394,7 +394,7 @@ export async function pulseResilienceRegressions() {
     throw new Error("Synthetic append");
   };
   try {
-    await app.savePulse(old);
+    await app.ctx.conversations.savePulse(old);
   } finally {
     app.store.append = append;
   }
@@ -403,18 +403,18 @@ export async function pulseResilienceRegressions() {
     throw new Error("Synthetic refresh");
   };
   try {
-    await app.refreshFromEvents();
+    await app.ctx.refresh.refreshFromEvents();
   } finally {
     app.store.getCatchUpState = load;
   }
-  await app.savePulse({ ...old, value: "need-quiet" });
+  await app.ctx.conversations.savePulse({ ...old, value: "need-quiet" });
   check(
     app.retryAction === null &&
       app.suspendedRetry === null &&
       app.state.pulses[0].value === "need-quiet",
     "new SET supersedes suspended retry",
   );
-  await app.savePulse({ type: "clear-pulse" });
+  await app.ctx.conversations.savePulse({ type: "clear-pulse" });
 
   // Pending persistence remains busy through timer and repeated intents.
   let release;
@@ -426,16 +426,16 @@ export async function pulseResilienceRegressions() {
     return append(...args);
   };
   const before = await count();
-  const pending = app.savePulse({ ...old, value: "good" });
+  const pending = app.ctx.conversations.savePulse({ ...old, value: "good" });
   check(
     app.busy &&
-      [...pulse.querySelectorAll("button,select")].every((c) => c.disabled),
+      [...pulse.querySelectorAll("button,select")].every((c) => c.matches(":disabled")),
     "all Pulse controls busy",
   );
   check(app.busy, "pending save remains busy");
   await app.onTimeWake();
-  await app.savePulse({ ...old, value: "drained" });
-  await app.savePulse({ type: "clear-pulse" });
+  await app.ctx.conversations.savePulse({ ...old, value: "drained" });
+  await app.ctx.conversations.savePulse({ type: "clear-pulse" });
   release();
   await pending;
   app.store.append = append;
@@ -448,7 +448,7 @@ export async function pulseResilienceRegressions() {
   pulse.valueSelect.value = "rough-day";
   pulse.durationSelect.value = "8";
   pulse.valueSelect.focus();
-  await app.refreshFromEvents();
+  await app.ctx.refresh.refreshFromEvents();
   check(
     pulse.valueSelect.value === "rough-day" &&
       pulse.durationSelect.value === "8",
@@ -459,7 +459,7 @@ export async function pulseResilienceRegressions() {
     "refresh preserves Pulse focus",
   );
   check(app.status.getAttribute("aria-live") === "polite", "polite success");
-  await app.savePulse({ type: "clear-pulse" });
+  await app.ctx.conversations.savePulse({ type: "clear-pulse" });
   return "PASS Pulse sleep/wake, focus, forward/backward clock, late timer, SET/CLEAR quota/abort recovery, supersession, rapid intents and busy isolation";
 }
 

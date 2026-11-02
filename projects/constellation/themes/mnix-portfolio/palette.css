@@ -1,0 +1,30 @@
+/* Preserved Mnix portfolio palette. Load after your site's base stylesheet. */
+:root {
+  color-scheme: light dark;
+  --page: #111111;
+  --panel: #171813;
+  --line: #555a38;
+  --text: #f3f3f4;
+  --muted: #c5c8b5;
+  --accent: #e3de13;
+  --sky-background: #111111;
+  --sky-foreground: #f3f3f4;
+  --sky-accent: #e3de13;
+  --sky-line: #555a38;
+  --sky-star: #e3de13;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --page: #fafaf3;
+    --panel: #fefef9;
+    --line: #838d66;
+    --text: #202516;
+    --muted: #505745;
+    --accent: #595600;
+    --sky-background: #fafaf3;
+    --sky-foreground: #202516;
+    --sky-accent: #595600;
+    --sky-line: #838d66;
+    --sky-star: #8b8500;
+  }
+}

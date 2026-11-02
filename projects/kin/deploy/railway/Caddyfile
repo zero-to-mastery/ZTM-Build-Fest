@@ -1,0 +1,15 @@
+# Inside the Railway container: plain HTTP on Railway's $PORT, passed to Kin
+# on loopback. Railway's edge terminates HTTPS and overwrites X-Real-IP with
+# the client's address, so that is what Kin is given as X-Forwarded-For. A
+# missing header leaves it empty, and Kin then falls back to one shared limit
+# rather than trusting anything a client wrote.
+{
+	auto_https off
+	admin off
+}
+
+:{$PORT:8080} {
+	reverse_proxy 127.0.0.1:8000 {
+		header_up X-Forwarded-For {http.request.header.X-Real-IP}
+	}
+}

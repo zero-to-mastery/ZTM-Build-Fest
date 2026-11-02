@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Embedded constellation</title>
+<script type="importmap">{"imports":{"@constellation/core":"/packages/core/src/core-api.mjs","@constellation/core/browser-runtime":"/packages/core/src/browser-runtime.mjs","@constellation/web-component":"/packages/web-component/index.mjs"}}</script>
+</head><body><h1>Embedded project constellation</h1><constellation-view id="view"></constellation-view>
+<script type="module">
+import '@constellation/web-component';
+const view = document.querySelector('#view');
+view.config = { version: 6, account: 'example', options: { referenceDate: '2026-09-01T00:00:00Z' } };
+view.records = ['compiler', 'runtime', 'studio'].map((name, i) => ({ name, full_name: `example/${name}`, language: i === 2 ? 'JavaScript' : 'Rust', stargazers_count: 10 + i }));
+</script></body></html>

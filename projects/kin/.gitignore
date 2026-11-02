@@ -1,5 +1,24 @@
 /target/
+/tools/kin-service-host/target/
 /web/wasm/kin_engine.wasm
+/web/wasm/kin_engine.wasm.sha256
 __pycache__/
 /node_modules/
 /.kin-data/
+/deploy/.env
+
+# Android app (android/, docs/ANDROID.md). Signing keys and their passwords
+# never enter the repository, wherever they are put.
+*.jks
+*.keystore
+keystore.properties
+/android/.gradle/
+/android/build/
+/android/app/build/
+/android/local.properties
+/android/.idea/
+*.iml
+# The Gradle wrapper is created locally with `gradle wrapper`, not committed.
+/android/gradlew
+/android/gradlew.bat
+/android/gradle/wrapper/

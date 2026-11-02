@@ -93,7 +93,7 @@ export async function boundedStorageRegression() {
   for (let index = 0; index < 70; index += 1)
     await legacy.append({ type: "add", text: `atomic restore lock fixture ${index}`, classification: "need" }, engine);
   const source = await snapshotStores(legacy.database, ["events", "local_context"]);
-  const snapshot = { formatVersion: 1, ...source };
+  const snapshot = { formatVersion: 2, ...source, attachments: [] };
   legacy.close();
   const migration = await LocalVault.create();
   await EventStore.prepareSecurity(migration.manifest);

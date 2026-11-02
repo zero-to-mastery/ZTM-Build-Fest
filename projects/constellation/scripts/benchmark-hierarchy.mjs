@@ -1,0 +1,10 @@
+import { performance } from 'node:perf_hooks';
+import { createScene, createHierarchy, htmlBundleStatistics } from '../src/core-api.mjs';
+const options = { referenceDate: '2026-09-01T00:00:00Z', nodeCap: 128, maxRepos: 128, animate: false };
+const records = Array.from({ length: 128 }, (_, i) => ({ name: `project-${i}`, full_name: `benchmark/project-${i}`, language: 'Rust' }));
+const root = createScene('benchmark', records, options);
+const definition = { root: 'root', scenes: [{ id: 'root', scene: root, links: records.slice(0, 15).map((record, i) => ({ nodeId: record.full_name, target: `child-${i}` })) }, ...Array.from({ length: 15 }, (_, i) => ({ id: `child-${i}`, scene: root }))] };
+const start = performance.now(); const scene = createHierarchy(definition); const compileMs = performance.now() - start;
+const sizes = htmlBundleStatistics(scene);
+if (sizes.htmlBytes > 16 * 1024 * 1024) throw new Error('Hierarchy benchmark exceeds 16 MiB export budget.');
+console.log(JSON.stringify({ scenes: scene.hierarchy.scenes.length, nodes: 16 * 128, compileMs, ...sizes }, null, 2));

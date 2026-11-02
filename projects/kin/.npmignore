@@ -1,0 +1,4 @@
+node_modules/
+target/
+.kin-data/
+__pycache__/

@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "smileys",
+      "label": "Smileys",
+      "emoji": [
+        ["😀", "grinning face"], ["😃", "grinning face with big eyes"], ["😄", "grinning face with smiling eyes"], ["😁", "beaming face"],
+        ["😆", "laughing face"], ["😅", "grinning face with sweat"], ["🤣", "rolling on the floor laughing"], ["😂", "face with tears of joy"],
+        ["🙂", "slightly smiling face"], ["🙃", "upside-down face"], ["😉", "winking face"], ["😊", "smiling face with smiling eyes"],
+        ["😇", "smiling face with halo"], ["🥰", "smiling face with hearts"], ["😍", "heart eyes"], ["🤩", "star-struck"],
+        ["😘", "face blowing a kiss"], ["😋", "face savoring food"], ["😛", "face with tongue"], ["😜", "winking face with tongue"],
+        ["🤪", "zany face"], ["🤗", "hugging face"], ["🤭", "face with hand over mouth"], ["🤫", "shushing face"],
+        ["🤔", "thinking face"], ["🤐", "zipper-mouth face"], ["🤨", "face with raised eyebrow"], ["😐", "neutral face"],
+        ["😑", "expressionless face"], ["😶", "face without mouth"], ["😏", "smirking face"], ["😒", "unamused face"],
+        ["🙄", "face with rolling eyes"], ["😬", "grimacing face"], ["😌", "relieved face"], ["😔", "pensive face"],
+        ["😪", "sleepy face"], ["😴", "sleeping face"], ["😷", "face with medical mask"], ["🤒", "face with thermometer"],
+        ["🤕", "face with head bandage"], ["🤢", "nauseated face"], ["🤧", "sneezing face"], ["🥵", "hot face"],
+        ["🥶", "cold face"], ["🥴", "woozy face"], ["😵", "dizzy face"], ["🤯", "exploding head"],
+        ["🥳", "partying face"], ["😎", "smiling face with sunglasses"], ["🤓", "nerd face"], ["😕", "confused face"],
+        ["😟", "worried face"], ["🙁", "slightly frowning face"], ["😮", "face with open mouth"], ["😲", "astonished face"],
+        ["😳", "flushed face"], ["🥺", "pleading face"], ["😦", "frowning face with open mouth"], ["😧", "anguished face"],
+        ["😨", "fearful face"], ["😰", "anxious face with sweat"], ["😥", "sad but relieved face"], ["😢", "crying face"],
+        ["😭", "loudly crying face"], ["😱", "face screaming in fear"], ["😖", "confounded face"], ["😣", "persevering face"],
+        ["😞", "disappointed face"], ["😓", "downcast face with sweat"], ["😩", "weary face"], ["😫", "tired face"],
+        ["🥱", "yawning face"], ["😤", "face with steam from nose"], ["😠", "angry face"], ["😡", "pouting face"]
+      ]
+    },
+    {
+      "id": "people",
+      "label": "People & hearts",
+      "emoji": [
+        ["👋", "waving hand"], ["🤚", "raised back of hand"], ["✋", "raised hand"], ["👌", "OK hand"],
+        ["✌️", "victory hand"], ["🤞", "crossed fingers"], ["🤟", "love-you gesture"], ["🤙", "call me hand"],
+        ["👈", "pointing left"], ["👉", "pointing right"], ["👆", "pointing up"], ["👇", "pointing down"],
+        ["👍", "thumbs up"], ["👎", "thumbs down"], ["✊", "raised fist"], ["👊", "oncoming fist"],
+        ["👏", "clapping hands"], ["🙌", "raising hands"], ["👐", "open hands"], ["🤲", "palms up together"],
+        ["🤝", "handshake"], ["🙏", "folded hands"], ["💪", "flexed biceps"], ["👀", "eyes"],
+        ["🧠", "brain"], ["👶", "baby"], ["🧒", "child"], ["👦", "boy"],
+        ["👧", "girl"], ["🧑", "person"], ["👨", "man"], ["👩", "woman"],
+        ["🧓", "older person"], ["👴", "old man"], ["👵", "old woman"], ["🤷", "person shrugging"],
+        ["🙋", "person raising hand"], ["🤦", "person facepalming"], ["🏃", "person running"], ["🚶", "person walking"],
+        ["❤️", "red heart"], ["🧡", "orange heart"], ["💛", "yellow heart"], ["💚", "green heart"],
+        ["💙", "blue heart"], ["💜", "purple heart"], ["🖤", "black heart"], ["🤍", "white heart"],
+        ["💔", "broken heart"], ["💕", "two hearts"], ["💖", "sparkling heart"], ["💗", "growing heart"],
+        ["💯", "hundred points"], ["💤", "zzz"]
+      ]
+    },
+    {
+      "id": "nature",
+      "label": "Animals & nature",
+      "emoji": [
+        ["🐶", "dog face"], ["🐱", "cat face"], ["🐭", "mouse face"], ["🐹", "hamster"],
+        ["🐰", "rabbit face"], ["🦊", "fox"], ["🐻", "bear"], ["🐼", "panda"],
+        ["🐨", "koala"], ["🐯", "tiger face"], ["🦁", "lion"], ["🐮", "cow face"],
+        ["🐷", "pig face"], ["🐸", "frog"], ["🐵", "monkey face"], ["🐔", "chicken"],
+        ["🐧", "penguin"], ["🐦", "bird"], ["🐤", "baby chick"], ["🦆", "duck"],
+        ["🦉", "owl"], ["🐴", "horse face"], ["🦄", "unicorn"], ["🐝", "honeybee"],
+        ["🦋", "butterfly"], ["🐞", "lady beetle"], ["🐢", "turtle"], ["🐍", "snake"],
+        ["🐙", "octopus"], ["🐠", "tropical fish"], ["🐬", "dolphin"], ["🐳", "spouting whale"],
+        ["🌸", "cherry blossom"], ["🌹", "rose"], ["🌻", "sunflower"], ["🌷", "tulip"],
+        ["🌱", "seedling"], ["🌲", "evergreen tree"], ["🌳", "deciduous tree"], ["🍂", "fallen leaf"],
+        ["🍁", "maple leaf"], ["🌵", "cactus"], ["☀️", "sun"], ["🌤️", "sun behind small cloud"],
+        ["☁️", "cloud"], ["🌧️", "cloud with rain"], ["⛈️", "cloud with lightning and rain"], ["❄️", "snowflake"],
+        ["⛄", "snowman"], ["🌈", "rainbow"], ["🌙", "crescent moon"], ["⭐", "star"]
+      ]
+    },
+    {
+      "id": "food",
+      "label": "Food & drink",
+      "emoji": [
+        ["🍎", "red apple"], ["🍐", "pear"], ["🍊", "tangerine"], ["🍋", "lemon"],
+        ["🍌", "banana"], ["🍉", "watermelon"], ["🍇", "grapes"], ["🍓", "strawberry"],
+        ["🫐", "blueberries"], ["🍒", "cherries"], ["🍑", "peach"], ["🥭", "mango"],
+        ["🍍", "pineapple"], ["🥥", "coconut"], ["🥝", "kiwi fruit"], ["🍅", "tomato"],
+        ["🥑", "avocado"], ["🥦", "broccoli"], ["🥕", "carrot"], ["🌽", "ear of corn"],
+        ["🥔", "potato"], ["🧅", "onion"], ["🥒", "cucumber"], ["🍞", "bread"],
+        ["🥐", "croissant"], ["🥯", "bagel"], ["🧀", "cheese"], ["🥚", "egg"],
+        ["🍳", "cooking"], ["🥞", "pancakes"], ["🥓", "bacon"], ["🍗", "poultry leg"],
+        ["🍔", "hamburger"], ["🍟", "french fries"], ["🍕", "pizza"], ["🌭", "hot dog"],
+        ["🌮", "taco"], ["🌯", "burrito"], ["🥗", "green salad"], ["🍝", "spaghetti"],
+        ["🍜", "steaming bowl"], ["🍲", "pot of food"], ["🍣", "sushi"], ["🍚", "cooked rice"],
+        ["🍪", "cookie"], ["🎂", "birthday cake"], ["🍰", "shortcake"], ["🧁", "cupcake"],
+        ["🍩", "doughnut"], ["🍫", "chocolate bar"], ["🍿", "popcorn"], ["🍦", "soft ice cream"],
+        ["🥛", "glass of milk"], ["☕", "hot beverage"], ["🍵", "teacup"], ["🧃", "juice box"],
+        ["🥤", "cup with straw"], ["🍷", "wine glass"], ["🍺", "beer mug"], ["🥂", "clinking glasses"]
+      ]
+    },
+    {
+      "id": "home",
+      "label": "Home & activities",
+      "emoji": [
+        ["🏠", "house"], ["🏡", "house with garden"], ["🛏️", "bed"], ["🛋️", "couch and lamp"],
+        ["🚿", "shower"], ["🛁", "bathtub"], ["🧺", "basket"], ["🧹", "broom"],
+        ["🧼", "soap"], ["🧽", "sponge"], ["🗑️", "wastebasket"], ["🧸", "teddy bear"],
+        ["🎈", "balloon"], ["🎉", "party popper"], ["🎁", "wrapped gift"], ["🎄", "Christmas tree"],
+        ["🎃", "jack-o-lantern"], ["🎓", "graduation cap"], ["⚽", "soccer ball"], ["🏀", "basketball"],
+        ["🏈", "american football"], ["⚾", "baseball"], ["🎾", "tennis"], ["🏐", "volleyball"],
+        ["🎮", "video game"], ["🧩", "puzzle piece"], ["🎨", "artist palette"], ["🎵", "musical note"],
+        ["🎸", "guitar"], ["🎹", "musical keyboard"], ["📚", "books"], ["✏️", "pencil"],
+        ["🚗", "car"], ["🚌", "bus"], ["🚲", "bicycle"], ["✈️", "airplane"],
+        ["🚆", "train"], ["⛽", "fuel pump"], ["🏫", "school"], ["🏥", "hospital"],
+        ["🛒", "shopping cart"], ["🏖️", "beach with umbrella"], ["⛺", "tent"], ["🏕️", "camping"]
+      ]
+    },
+    {
+      "id": "objects",
+      "label": "Objects & symbols",
+      "emoji": [
+        ["📱", "mobile phone"], ["💻", "laptop"], ["📷", "camera"], ["🔋", "battery"],
+        ["💡", "light bulb"], ["🔑", "key"], ["🔒", "locked"], ["🧾", "receipt"],
+        ["💊", "pill"], ["🩹", "adhesive bandage"], ["🧴", "lotion bottle"], ["🪥", "toothbrush"],
+        ["👕", "t-shirt"], ["👖", "jeans"], ["🧦", "socks"], ["👟", "running shoe"],
+        ["🎒", "backpack"], ["☂️", "umbrella"], ["⏰", "alarm clock"], ["⌛", "hourglass done"],
+        ["📅", "calendar"], ["📝", "memo"], ["📌", "pushpin"], ["📎", "paperclip"],
+        ["✂️", "scissors"], ["📦", "package"], ["✉️", "envelope"], ["💰", "money bag"],
+        ["✅", "check mark button"], ["✔️", "check mark"], ["❌", "cross mark"], ["❓", "question mark"],
+        ["❗", "exclamation mark"], ["⚠️", "warning"], ["🚫", "prohibited"], ["⭕", "hollow red circle"],
+        ["🔴", "red circle"], ["🟢", "green circle"], ["🔵", "blue circle"], ["➕", "plus"],
+        ["➖", "minus"], ["🔁", "repeat button"], ["⏳", "hourglass not done"], ["✨", "sparkles"],
+        ["🔥", "fire"], ["💥", "collision"], ["🆗", "OK button"], ["🆘", "SOS button"]
+      ]
+    }
+  ]
+}

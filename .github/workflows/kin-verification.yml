@@ -1,0 +1,699 @@
+name: Kin verification
+
+on:
+  pull_request:
+    paths:
+      - "projects/kin/**"
+      - ".github/workflows/kin-verification.yml"
+  push:
+    branches: [kin-development]
+    paths:
+      - "projects/kin/**"
+      - ".github/workflows/kin-verification.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kin-verification-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.0
+      - name: Install pinned Rust and WASM target
+        shell: pwsh
+        run: |
+          rustup toolchain install 1.93.0 --profile minimal --component rustfmt --component clippy --target wasm32-unknown-unknown
+          rustup default 1.93.0
+      - name: Install Kin dependencies
+        working-directory: projects/kin
+        run: npm ci
+      # Stage C's engine tests load the browser engine, so it is built first.
+      - name: Prepare ignored WASM asset for the engine tests
+        working-directory: projects/kin
+        run: ./build-wasm.ps1
+      # Stages A–D on Windows. The browser suites run in the `browser` jobs
+      # below, in parallel, on Windows Edge and Linux Chrome (#329).
+      - name: Run verification
+        working-directory: projects/kin
+        shell: pwsh
+        # On failure, the failing lines and the end of the output are also
+        # reported as annotations, which the checks API returns even where
+        # the full job log can't be downloaded (#164).
+        run: |
+          npm run verify 2>&1 | Tee-Object -FilePath "$env:RUNNER_TEMP/kin-verify.txt"
+          $code = $LASTEXITCODE
+          if ($code -ne 0) {
+            # Annotations are cut at about 4 KB and a step may emit 10, so
+            # lines are shortened and sent in chunks, failing lines first.
+            $all = Get-Content "$env:RUNNER_TEMP/kin-verify.txt" | ForEach-Object { if ($_.Length -gt 1500) { $_.Substring(0, 1500) + '…' } else { $_ } }
+            $failing = $all | Select-String -CaseSensitive -Pattern 'FAIL|Error|not ok|timed out' | ForEach-Object { $_.Line } | Select-Object -Last 30
+            $sections = @(@{ title = 'Kin verification failed - failing lines'; lines = @($failing) }, @{ title = 'Kin verification failed - last lines'; lines = @($all | Select-Object -Last 40) })
+            foreach ($section in $sections) {
+              $chunk = ''
+              $part = 1
+              foreach ($line in $section.lines) {
+                if (($chunk.Length + $line.Length) -gt 3800) {
+                  Write-Output "::error title=$($section.title) ($part)::$($chunk.Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A'))"
+                  $chunk = ''
+                  $part += 1
+                }
+                $chunk += "$line`n"
+              }
+              if ($chunk) { Write-Output "::error title=$($section.title) ($part)::$($chunk.Replace('%', '%25').Replace("`r", '%0D').Replace("`n", '%0A'))" }
+            }
+          }
+          exit $code
+
+  verify-linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.0
+      - name: Install pinned Rust and WASM target
+        run: |
+          rustup toolchain install 1.93.0 --profile minimal --component rustfmt --component clippy --target wasm32-unknown-unknown
+          rustup default 1.93.0
+      - name: Install Kin dependencies
+        working-directory: projects/kin
+        run: npm ci
+      - name: Exercise Linux WASM launcher
+        working-directory: projects/kin
+        run: |
+          ./build-wasm.sh
+          sha256sum web/wasm/kin_engine.wasm | tee web/wasm/kin_engine.wasm.sha256
+      # The engine every browser run of this commit uses, with its hash, so
+      # a machine without the wasm32 target can run the browser gates (#330,
+      # #331: scripts/fetch-wasm.mjs).
+      - name: Publish the built WASM engine
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: kin-engine-wasm
+          path: |
+            projects/kin/web/wasm/kin_engine.wasm
+            projects/kin/web/wasm/kin_engine.wasm.sha256
+          if-no-files-found: error
+          retention-days: 30
+      - name: Run browserless verification
+        working-directory: projects/kin
+        # As on Windows: on failure, report the failing lines and the end of
+        # the output as annotations the checks API can return (#164).
+        run: |
+          set -o pipefail
+          status=0
+          node scripts/verify.mjs 2>&1 | tee "$RUNNER_TEMP/kin-verify.txt" || status=$?
+          if [ "$status" -ne 0 ]; then
+            # Reporting must never stop early: a grep with no match or a short
+            # file would otherwise end the step before any annotation (#164).
+            set +e +o pipefail
+            report() {
+              title="$1"; chunk=""; part=1
+              while IFS= read -r line; do
+                line="${line:0:1500}"
+                if [ $(( ${#chunk} + ${#line} )) -gt 3800 ]; then
+                  printf '::error title=%s (%s)::%s\n' "$title" "$part" "$(printf '%s' "$chunk" | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"} {print}')"
+                  chunk=""; part=$((part + 1))
+                fi
+                chunk="${chunk}${line}"$'\n'
+              done
+              [ -n "$chunk" ] && printf '::error title=%s (%s)::%s\n' "$title" "$part" "$(printf '%s' "$chunk" | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"} {print}')"
+            }
+            grep -E 'FAIL|Error|not ok|timed out|✖' "$RUNNER_TEMP/kin-verify.txt" | tail -n 30 | report "Kin verification failed - failing lines"
+            tail -n 40 "$RUNNER_TEMP/kin-verify.txt" | report "Kin verification failed - last lines"
+          fi
+          exit "$status"
+
+  # Each browser suite in its own job, on Windows Edge and on Linux Chrome,
+  # against the engine verify-linux built and published for this commit
+  # (#329). verify.mjs retries a failed suite once and reports a pass on
+  # retry as FLAKY (#328).
+  browser:
+    name: browser (${{ matrix.browser }}, ${{ matrix.suite }})
+    needs: verify-linux
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [edge, chrome]
+        # The longest suite runs as two parts (KIN_REGRESSION_PART).
+        suite:
+          - browser-regression-part1
+          - browser-regression-part2
+          - security-storage-regression
+          - security-ui-regression
+          - passkey-regression
+          - household-authority-regression
+          - worker-claim-regression
+          - control-panel-regression
+        include:
+          - browser: edge
+            os: windows-latest
+            executable: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+          - browser: chrome
+            os: ubuntu-latest
+            executable: /usr/bin/google-chrome
+    defaults:
+      run:
+        shell: bash
+        working-directory: projects/kin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.0
+      - name: Download this commit's engine
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: kin-engine-wasm
+          path: projects/kin/web/wasm
+      - name: Check the engine against its recorded hash
+        run: sha256sum -c web/wasm/kin_engine.wasm.sha256
+      - name: Run the browser suite
+        env:
+          KIN_BROWSER: ${{ matrix.executable }}
+          KIN_DIAGNOSTICS_DIR: ${{ runner.temp }}/kin-diagnostics
+        # On failure, as in the other jobs, the failing lines and the end of
+        # the output become annotations the checks API can return (#164).
+        run: |
+          set -o pipefail
+          status=0
+          suite="${{ matrix.suite }}"
+          case "$suite" in
+            *-part[0-9]) export KIN_REGRESSION_PART="${suite##*-part}"; suite="${suite%-part*}" ;;
+          esac
+          node scripts/verify.mjs --browser-only --suite "$suite" 2>&1 | tee "$RUNNER_TEMP/kin-verify.txt" || status=$?
+          if [ "$status" -ne 0 ]; then
+            set +e +o pipefail
+            report() {
+              title="$1"; chunk=""; part=1
+              while IFS= read -r line; do
+                line="${line:0:1500}"
+                if [ $(( ${#chunk} + ${#line} )) -gt 3800 ]; then
+                  printf '::error title=%s (%s)::%s\n' "$title" "$part" "$(printf '%s' "$chunk" | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"} {print}')"
+                  chunk=""; part=$((part + 1))
+                fi
+                chunk="${chunk}${line}"$'\n'
+              done
+              [ -n "$chunk" ] && printf '::error title=%s (%s)::%s\n' "$title" "$part" "$(printf '%s' "$chunk" | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"} {print}')"
+            }
+            grep -E 'FAIL|Error|not ok|timed out|✖' "$RUNNER_TEMP/kin-verify.txt" | tail -n 30 | report "Kin ${{ matrix.suite }} (${{ matrix.browser }}) failed - failing lines"
+            tail -n 40 "$RUNNER_TEMP/kin-verify.txt" | report "Kin ${{ matrix.suite }} (${{ matrix.browser }}) failed - last lines"
+          fi
+          exit "$status"
+      - name: Upload browser diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: kin-browser-diagnostics-${{ matrix.browser }}-${{ matrix.suite }}
+          path: ${{ runner.temp }}/kin-diagnostics
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # The Google Play wrapper (ADR 0020, docs/ANDROID.md): an unsigned debug
+  # build on every run, checked against the web manifest, so a change to the
+  # manifest, the icons or the Android project can't break it unnoticed. The
+  # runner image has the Android SDK; Google's Maven repository provides the
+  # Android Gradle Plugin and androidbrowserhelper. Signed builds for Play are
+  # made by hand with the owner's upload key, never here. No other job waits
+  # for this one (docs/ANDROID.md "CI").
+  android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+        working-directory: projects/kin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.0
+      - uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: "17"
+      # No Gradle wrapper is committed; this installs the pinned Gradle.
+      - uses: gradle/actions/setup-gradle@3f5f9adaf7d9fecd50b5935e54106014257a94e6 # v6.4.0
+        with:
+          gradle-version: 8.14.3
+          cache-provider: basic
+          add-job-summary: on-failure
+      - name: Check the Android pictures match the renderer
+        run: node scripts/render-icons.mjs --check
+      - name: Build the debug app (APK and App Bundle)
+        # As in the other jobs, on failure the failing lines and the end of
+        # the output become annotations the checks API can return (#164).
+        run: |
+          set -o pipefail
+          status=0
+          gradle --no-daemon --stacktrace -p android assembleDebug bundleDebug 2>&1 | tee "$RUNNER_TEMP/kin-android.txt" || status=$?
+          if [ "$status" -ne 0 ]; then
+            set +e +o pipefail
+            report() {
+              title="$1"; chunk=""; part=1
+              while IFS= read -r line; do
+                line="${line:0:1500}"
+                if [ $(( ${#chunk} + ${#line} )) -gt 3800 ]; then
+                  printf '::error title=%s (%s)::%s\n' "$title" "$part" "$(printf '%s' "$chunk" | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"} {print}')"
+                  chunk=""; part=$((part + 1))
+                fi
+                chunk="${chunk}${line}"$'\n'
+              done
+              [ -n "$chunk" ] && printf '::error title=%s (%s)::%s\n' "$title" "$part" "$(printf '%s' "$chunk" | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"} {print}')"
+            }
+            grep -E -A4 'What went wrong|error:|ERROR|^e: |FAILED' "$RUNNER_TEMP/kin-android.txt" | head -n 60 | report "Kin Android build failed - failing lines"
+            tail -n 40 "$RUNNER_TEMP/kin-android.txt" | report "Kin Android build failed - last lines"
+          fi
+          exit "$status"
+      - name: Check the built app against the web manifest
+        run: |
+          set -o pipefail
+          status=0
+          node scripts/check-android-app.mjs android/app/build/outputs/apk/debug/app-debug.apk 2>&1 | tee "$RUNNER_TEMP/kin-android-check.txt" || status=$?
+          if [ "$status" -ne 0 ]; then
+            grep -E 'FAIL' "$RUNNER_TEMP/kin-android-check.txt" | head -n 20 | while IFS= read -r line; do printf '::error title=Kin Android app check failed::%s\n' "${line:0:1500}"; done
+          fi
+          exit "$status"
+      - name: Keep the debug app
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: kin-android-debug
+          path: |
+            projects/kin/android/app/build/outputs/apk/debug/app-debug.apk
+            projects/kin/android/app/build/outputs/bundle/debug/app-debug.aab
+          if-no-files-found: error
+          retention-days: 14
+
+  # Google Play Store screenshots (#540), on request only (Run workflow):
+  # a demo household in Linux Chrome, against this commit's engine, uploaded
+  # as the kin-play-screenshots artifact (docs/PLAY-LISTING.md).
+  play-screenshots:
+    if: github.event_name == 'workflow_dispatch'
+    needs: verify-linux
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+        working-directory: projects/kin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.0
+      - name: Download this commit's engine
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: kin-engine-wasm
+          path: projects/kin/web/wasm
+      - name: Check the engine against its recorded hash
+        run: sha256sum -c web/wasm/kin_engine.wasm.sha256
+      - name: Capture the Play Store screenshots
+        env:
+          KIN_DIAGNOSTICS_DIR: ${{ runner.temp }}/kin-diagnostics
+        run: |
+          set -o pipefail
+          status=0
+          node scripts/play-screenshots.mjs /usr/bin/google-chrome --out "$RUNNER_TEMP/play-screenshots" 2>&1 | tee "$RUNNER_TEMP/play.txt" || status=$?
+          if [ "$status" -ne 0 ]; then
+            # As in the other jobs: the end of the output as an annotation
+            # the checks API returns (#164); reporting never stops early.
+            set +e +o pipefail
+            text="$(tail -n 30 "$RUNNER_TEMP/play.txt" | cut -c1-300 | sed -e 's/%/%25/g' | awk 'BEGIN{ORS="%0A"} {print}')"
+            printf '::error title=Play screenshots failed::%s\n' "${text:0:3800}"
+          fi
+          exit "$status"
+      - name: Upload the Play Store screenshots
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: kin-play-screenshots
+          path: ${{ runner.temp }}/play-screenshots
+          if-no-files-found: error
+          retention-days: 30
+      - name: Upload diagnostics
+        if: failure()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: kin-play-screenshots-diagnostics
+          path: ${{ runner.temp }}/kin-diagnostics
+          if-no-files-found: ignore
+          retention-days: 14
+
+  # Kin at home (ADR 0025 §10, #713, #714, #747, #748): the home server's
+  # single executables for Linux x64 and arm64, macOS arm64 and x64 and
+  # Windows x64, all built here on Linux from the official node binaries
+  # (checked against nodejs.org's SHASUMS256.txt) with this commit's engine,
+  # parsed back and checked by the build, checksummed, the Linux x64 one
+  # started once to record the start time, and kept as the
+  # kin-home-executables artifact. The injector tests then run again against
+  # the official binaries the build cached (with llvm-objdump and
+  # llvm-readobj as independent readers when the runner has them). The
+  # Windows service host (#749) shipped beside kin.exe is the one the
+  # service-host job built and ran as a service on Windows. No other job
+  # waits for this one.
+  home-executables:
+    needs: [verify-linux, service-host]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+        working-directory: projects/kin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.0
+      - name: Download this commit's engine
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: kin-engine-wasm
+          path: projects/kin/web/wasm
+      - name: Check the engine against its recorded hash
+        run: sha256sum -c web/wasm/kin_engine.wasm.sha256
+      - name: Download the Windows service host
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: kin-service-host-windows-x64
+          path: ${{ runner.temp }}/service-host
+      - name: Build the executables and record their size and start time
+        run: |
+          export KIN_SERVICE_HOST_EXE="$RUNNER_TEMP/service-host/kin-service-host.exe"
+          node scripts/build-sea.mjs --measure
+          cat target/sea/dist/SHA256SUMS target/sea/dist/build-info.json target/sea/dist/start-time.json
+          (cd target/sea/dist && sha256sum -c SHA256SUMS)
+      - name: Check the injectors against the official node binaries
+        run: |
+          llvm="$(ls -d /usr/lib/llvm-*/bin 2>/dev/null | sort -V | tail -n 1)"
+          if [ -n "$llvm" ]; then export PATH="$llvm:$PATH"; fi
+          export KIN_SERVICE_HOST_EXE="$RUNNER_TEMP/service-host/kin-service-host.exe"
+          node --test --test-timeout=300000 scripts/build-sea.test.mjs scripts/sea/*.test.mjs
+      - name: Keep the executables
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: kin-home-executables
+          path: projects/kin/target/sea/dist
+          if-no-files-found: error
+          retention-days: 7
+
+  # The macOS and Windows executables built on Linux above, run on a Mac
+  # (arm64) and on Windows (#747, #748): Apple's codesign accepts the ad-hoc
+  # signatures, each runs --version, starts the service and answers
+  # --health, and on Windows `kin.exe --print-service` finds the service
+  # host shipped beside it (so --install-service registers the real
+  # service). The same target is also built here, natively, and must be
+  # byte-identical to the Linux build (the build is reproducible across
+  # machines). The x64 Mac executable runs only if the runner has Rosetta.
+  # Every check runs even when an earlier one failed, and reports what went
+  # wrong as an annotation (readable from the checks API). Installing as a
+  # service and rebooting are device checks (#717). No other job waits for
+  # this one.
+  home-executables-run:
+    name: home-executables-run (${{ matrix.target }})
+    needs: home-executables
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: darwin-arm64
+          - os: windows-latest
+            target: win-x64
+    defaults:
+      run:
+        shell: bash
+        working-directory: projects/kin
+    env:
+      # annotate LEVEL TITLE TEXT: the last 30 lines of TEXT as one
+      # annotation (titles avoid ':' and ',').
+      KIN_ANNOTATE: |
+        annotate() {
+          printf '::%s title=%s::%s\n' "$1" "$2" "$(printf '%s\n' "$3" | tail -n 30 | cut -c1-800 | sed -e 's/%/%25/g' -e 's/\r//g' | awk 'BEGIN{ORS="%0A"} {print}')"
+        }
+        # run_limited SECONDS COMMAND...: COMMAND with a time limit (Git for
+        # Windows has timeout; macOS doesn't, so perl's alarm stands in).
+        run_limited() {
+          local limit="$1"; shift
+          if command -v timeout > /dev/null; then timeout "$limit" "$@"; else perl -e 'alarm shift; exec @ARGV or die "exec: $!\n"' "$limit" "$@"; fi
+        }
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.0
+      - name: Download this commit's engine
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: kin-engine-wasm
+          path: projects/kin/web/wasm
+      - name: Download the executables built on Linux
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: kin-home-executables
+          path: projects/kin/target/sea/linux
+      - name: Download the Windows service host
+        if: runner.os == 'Windows'
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: kin-service-host-windows-x64
+          path: ${{ runner.temp }}/service-host
+      - name: Check the engine and the executables against their recorded hashes
+        run: |
+          eval "$KIN_ANNOTATE"
+          # macOS has shasum but not always sha256sum.
+          if command -v sha256sum > /dev/null; then sum="sha256sum"; else sum="shasum -a 256"; fi
+          if ! out="$($sum -c web/wasm/kin_engine.wasm.sha256 2>&1)"; then echo "$out"; annotate error "Engine hash" "$out"; exit 1; fi
+          if ! out="$(cd target/sea/linux && $sum -c SHA256SUMS 2>&1)"; then echo "$out"; annotate error "Linux build hashes" "$out"; exit 1; fi
+          echo "$out"
+      - name: Build ${{ matrix.target }} here and start it
+        if: ${{ !cancelled() }}
+        run: |
+          eval "$KIN_ANNOTATE"
+          if [ "${{ runner.os }}" = Windows ]; then export KIN_SERVICE_HOST_EXE="$RUNNER_TEMP/service-host/kin-service-host.exe"; fi
+          status=0
+          node scripts/build-sea.mjs --target "${{ matrix.target }}" --measure > "$RUNNER_TEMP/native-build.txt" 2>&1 || status=$?
+          cat "$RUNNER_TEMP/native-build.txt"
+          if [ "$status" -ne 0 ]; then annotate error "Native ${{ matrix.target }} build failed (exit $status)" "$(cat "$RUNNER_TEMP/native-build.txt")"; exit "$status"; fi
+          annotate notice "Native ${{ matrix.target }} build" "$(cat target/sea/dist/SHA256SUMS target/sea/dist/start-time.json)"
+      - name: The Linux build is byte-identical
+        if: ${{ !cancelled() }}
+        run: |
+          eval "$KIN_ANNOTATE"
+          if [ ! -s target/sea/dist/SHA256SUMS ]; then annotate error "Byte-identical check" "There is no native build to compare (see the build step)."; exit 1; fi
+          # Every file built here (with the service host on Windows) is
+          # listed, with the same hash, in the Linux build's SHA256SUMS.
+          differs=0
+          while read -r hash file; do
+            if grep -qx "$hash  $file" target/sea/linux/SHA256SUMS; then echo "$file: same"; continue; fi
+            differs=1
+            linux="$(grep -- "  $file\$" target/sea/linux/SHA256SUMS | cut -d ' ' -f 1)"
+            detail="$(node -e '
+              const fs = require("fs");
+              const [a, b] = process.argv.slice(1).map((path) => fs.existsSync(path) ? fs.readFileSync(path) : null);
+              if (!a || !b) { console.log("missing from the Linux build"); process.exit(); }
+              let at = 0;
+              while (at < a.length && at < b.length && a[at] === b[at]) at += 1;
+              console.log(`native ${a.length} bytes, Linux ${b.length} bytes, first difference at byte ${at}`);
+            ' "target/sea/dist/$file" "target/sea/linux/$file")"
+            echo "$file differs: native $hash, Linux ${linux:-none}; $detail"
+            annotate error "Not byte-identical $file" "native $hash
+          Linux ${linux:-none}
+          $detail"
+          done < target/sea/dist/SHA256SUMS
+          if [ "$differs" -ne 0 ]; then
+            # Different app files (line endings, say) show as a different
+            # bundle; the same bundle with a different blob or executable
+            # points at the injector or the node binary.
+            annotate error "Build information (native, then Linux)" "$(node -e '
+              for (const path of process.argv.slice(1)) {
+                const { bundle, files, blob, targets } = JSON.parse(require("fs").readFileSync(path, "utf8"));
+                console.log(`bundle ${bundle} (${files} files), blob ${blob.sha256}, node ${targets.map(({ target, node }) => `${target} ${node.sha256}`).join(" ")}`);
+              }
+            ' target/sea/dist/build-info.json target/sea/linux/build-info.json 2>&1)"
+          fi
+          exit "$differs"
+      - name: Apple's codesign accepts the ad-hoc signatures
+        if: ${{ !cancelled() && runner.os == 'macOS' }}
+        run: |
+          eval "$KIN_ANNOTATE"
+          failed=0
+          for file in target/sea/linux/kin-[0-9]*-darwin-* target/sea/dist/kin-[0-9]*-darwin-*; do
+            [ -f "$file" ] || continue
+            if out="$(codesign --verify --strict --verbose=4 "$file" 2>&1)"; then
+              annotate notice "codesign --verify accepts $file" "$out"
+            else
+              failed=1
+              annotate error "codesign --verify rejects $file" "$out"
+            fi
+            annotate notice "codesign --display $file" "$(codesign --display --verbose=4 "$file" 2>&1)"
+          done
+          exit "$failed"
+      - name: Diagnose the Mac executable (ours, and re-signed by Apple's codesign)
+        if: ${{ !cancelled() && runner.os == 'macOS' }}
+        run: |
+          eval "$KIN_ANNOTATE"
+          chmod +x target/sea/linux/kin-* 2>/dev/null || true
+          for file in target/sea/linux/kin-[0-9]*-darwin-arm64 target/sea/dist/kin-[0-9]*-darwin-arm64; do
+            [ -f "$file" ] || continue
+            # If Apple's own ad-hoc signature runs where ours doesn't, the
+            # signature is the problem; if neither runs, the layout is.
+            copy="$RUNNER_TEMP/apple-signed-$(basename "$(dirname "$file")")"
+            cp "$file" "$copy"
+            resign="$(codesign --force --sign - "$copy" 2>&1)" || annotate error "codesign --sign - failed on a copy of $file" "$resign"
+            for candidate in "$file" "$copy"; do
+              status=0
+              out="$(run_limited 60 "$candidate" --version 2>&1)" || status=$?
+              if [ "$status" -eq 0 ]; then annotate notice "$candidate --version works" "$out"; else annotate error "$candidate --version exited $status" "$out"; fi
+            done
+          done
+          annotate notice "Recent code-signing and kernel messages" "$(log show --last 10m --style compact --predicate 'process == "kernel" OR sender == "AppleMobileFileIntegrity" OR sender == "amfid"' 2>&1 | grep -i -E 'kin|code sign|cs_|amfi' | tail -n 30)"
+      - name: The Linux-built executable runs, starts and answers --health
+        if: ${{ !cancelled() }}
+        run: |
+          eval "$KIN_ANNOTATE"
+          exe="$(ls target/sea/linux/kin-[0-9]*-${{ matrix.target }}* 2>/dev/null | head -n 1)"
+          if [ -z "$exe" ]; then annotate error "Run check" "The Linux build has no ${{ matrix.target }} executable."; exit 1; fi
+          chmod +x target/sea/linux/kin-*
+          version="$(node -p 'require("./package.json").version')"
+          status=0
+          printed="$(run_limited 60 "$exe" --version 2>&1)" || status=$?
+          printed="$(printf '%s' "$printed" | tr -d '\r')"
+          if [ "$status" -ne 0 ] || [ "$printed" != "$version" ]; then annotate error "$exe --version (exit $status)" "expected $version, got: $printed"; exit 1; fi
+          if [ "${{ runner.os }}" = macOS ]; then
+            if arch -x86_64 /usr/bin/true 2>/dev/null; then
+              status=0
+              printed="$(run_limited 60 target/sea/linux/kin-[0-9]*-darwin-x64 --version 2>&1)" || status=$?
+              if [ "$status" -ne 0 ] || [ "$printed" != "$version" ]; then annotate error "darwin-x64 --version under Rosetta (exit $status)" "expected $version, got: $printed"; exit 1; fi
+            else
+              annotate notice "darwin-x64" "No Rosetta on this runner; the x64 Mac executable wasn't run."
+            fi
+          fi
+          export KIN_DATA_DIR="$RUNNER_TEMP/kin-data" KIN_APP_CACHE="$RUNNER_TEMP/kin-cache" KIN_PORT=18731
+          "$exe" > "$RUNNER_TEMP/kin.log" 2>&1 &
+          pid=$!
+          healthy=1
+          for attempt in $(seq 1 60); do
+            if run_limited 30 "$exe" --health > /dev/null 2>&1; then healthy=0; break; fi
+            sleep 1
+          done
+          cat "$RUNNER_TEMP/kin.log"
+          kill "$pid" 2>/dev/null || true
+          if [ "$healthy" -ne 0 ]; then annotate error "$exe didn't answer --health within a minute" "$(cat "$RUNNER_TEMP/kin.log")"; exit 1; fi
+          annotate notice "$exe runs and answers --health" "$(tail -n 5 "$RUNNER_TEMP/kin.log")"
+      - name: kin.exe finds the service host beside it
+        if: ${{ !cancelled() && runner.os == 'Windows' }}
+        run: |
+          eval "$KIN_ANNOTATE"
+          if ! ls target/sea/linux/kin-service-host-*-win-x64.exe; then annotate error "Service host" "The Linux build has no kin-service-host-*-win-x64.exe."; exit 1; fi
+          status=0
+          definition="$(run_limited 60 target/sea/linux/kin-[0-9]*-win-x64.exe --print-service 2>&1)" || status=$?
+          echo "$definition"
+          if [ "$status" -ne 0 ] || ! echo "$definition" | grep -q 'sc.exe create' || ! echo "$definition" | grep -q 'kin-service-host.exe'; then
+            annotate error "kin.exe --print-service doesn't use the service host (exit $status)" "$definition"
+            exit 1
+          fi
+
+  # The home server's container image (#715): built from deploy/home and
+  # started until its own health check passes, as its unprivileged user.
+  home-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+        working-directory: projects/kin
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Build the image
+        run: docker build -f deploy/home/Dockerfile -t kin-home:ci .
+      - name: Start it and wait until it is healthy
+        run: |
+          docker run -d --name kin-home kin-home:ci
+          status=starting
+          for attempt in $(seq 1 40); do
+            status="$(docker inspect -f '{{.State.Health.Status}}' kin-home)"
+            [ "$status" = starting ] || break
+            sleep 3
+          done
+          docker logs kin-home
+          echo "health: $status"
+          test "$(docker inspect -f '{{.Config.User}}' kin-home)" = "65532:65532"
+          test "$status" = healthy
+
+  # Kin's Windows service host (tools/kin-service-host, #749), Rust std only.
+  # On both systems it is formatted, linted and unit-tested (on Linux, the
+  # parts that don't need Windows); on Windows its release build is kept and
+  # run as a real Windows service: started, a failed child restarted, stopped
+  # gracefully, and a child that ignores the stop ended after the timeout.
+  service-host:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    defaults:
+      run:
+        shell: bash
+        working-directory: projects/kin/tools/kin-service-host
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.0
+      - name: Install pinned Rust
+        run: |
+          rustup toolchain install 1.93.0 --profile minimal --component rustfmt --component clippy --target wasm32-unknown-unknown
+          rustup default 1.93.0
+      - name: Format, lint and test
+        run: |
+          cargo fmt --check
+          cargo clippy --locked --all-targets -- -D warnings
+          cargo test --locked
+      - name: Build the release host
+        if: runner.os == 'Windows'
+        run: cargo build --locked --release
+      - name: Run it as a Windows service
+        if: runner.os == 'Windows'
+        working-directory: projects/kin
+        run: node scripts/service-host-smoke.mjs tools/kin-service-host/target/release/kin-service-host.exe
+      - name: Keep the host
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: kin-service-host-windows-x64
+          path: projects/kin/tools/kin-service-host/target/release/kin-service-host.exe
+          if-no-files-found: error
+          retention-days: 7

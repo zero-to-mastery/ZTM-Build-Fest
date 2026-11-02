@@ -1,0 +1,214 @@
+// Kin's Android app (ADR 0020): the configuration Bubblewrap would generate,
+// written by hand and derived from Kin's own files, so nothing drifts:
+//
+//   ../gradle.properties          kinPackage, kinHost, kinVersionCode
+//   ../../package.json            versionName (Kin's version)
+//   ../../web/manifest.webmanifest  names, colours, share target, shortcuts
+//
+// There is no Java or Kotlin code: the activities and the notification
+// service are androidbrowserhelper's own classes, configured in
+// src/main/AndroidManifest.xml.
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import groovy.xml.MarkupBuilder
+
+plugins {
+    id 'com.android.application'
+}
+
+// ---- Configuration ----------------------------------------------------------
+
+def kinPackage = providers.gradleProperty('kinPackage').get().trim()
+def kinHost = providers.gradleProperty('kinHost').get().trim()
+def kinVersionCode = providers.gradleProperty('kinVersionCode').get().trim()
+
+// The same package-name rule the service applies to KIN_ANDROID_PACKAGE
+// (server/asset-links.mjs).
+if (!(kinPackage ==~ /[a-zA-Z][a-zA-Z0-9_]*(\.[a-zA-Z][a-zA-Z0-9_]*)+/) || kinPackage.length() > 255)
+    throw new GradleException("kinPackage \"${kinPackage}\" in gradle.properties isn't an Android package name (like org.example.kin).")
+if (!(kinHost ==~ /[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+/))
+    throw new GradleException("kinHost \"${kinHost}\" in gradle.properties must be a lower-case host name only, like kin.example.org (no https://, no path).")
+if (!(kinVersionCode ==~ /[1-9][0-9]{0,9}/) || kinVersionCode.toLong() > 2100000000L)
+    throw new GradleException("kinVersionCode \"${kinVersionCode}\" in gradle.properties must be a whole number from 1 to 2100000000.")
+
+def kinRoot = rootProject.file('..')
+def webManifest = new JsonSlurper().parse(new File(kinRoot, 'web/manifest.webmanifest'))
+def kinVersion = new JsonSlurper().parse(new File(kinRoot, 'package.json')).version
+def origin = "https://${kinHost}".toString()
+
+def colour = { String field ->
+    def value = webManifest[field]
+    if (!(value ==~ /#[0-9a-fA-F]{6}/)) throw new GradleException("web/manifest.webmanifest ${field} must be #rrggbb, not \"${value}\".")
+    value
+}
+
+// A resValue string is written into a generated values XML file as it is;
+// aapt2 then reads backslash escapes and drops bare quotes. Escape what it
+// would otherwise eat, so JSON reaches the app intact.
+def aaptString = { String value ->
+    value.replace('\\', '\\\\').replace('"', '\\"').replace("'", "\\'").replace('\n', '\\n').replaceFirst(/^([@?])/, '\\\\$1')
+}
+
+// The statement Android checks against https://<kinHost>/.well-known/assetlinks.json.
+def assetStatements = JsonOutput.toJson([[
+    relation: ['delegate_permission/common.handle_all_urls'],
+    target: [namespace: 'web', site: origin],
+]])
+
+// The web manifest's share_target, with its action made absolute: Chrome
+// POSTs what was shared there, as the installed web app does (#389).
+def webShare = webManifest.share_target
+if (!webShare?.action?.startsWith('/')) throw new GradleException('web/manifest.webmanifest share_target.action must be a path on the same origin.')
+def shareTarget = JsonOutput.toJson([
+    action: origin + webShare.action,
+    method: webShare.method,
+    enctype: webShare.enctype,
+    params: webShare.params,
+])
+
+// Static shortcuts: the first four of the web manifest's, in its order.
+// Launchers show at most four (Bubblewrap stops at four for the same reason).
+def shortcuts = webManifest.shortcuts.take(4).collect { s ->
+    def icon = (s.icons?.getAt(0)?.src ?: '') =~ /^\/icons\/shortcut-([a-z0-9-]+)-\d+\.png$/
+    if (!icon.matches()) throw new GradleException("Shortcut \"${s.name}\" needs an /icons/shortcut-<name>-<size>.png icon.")
+    def slug = icon.group(1)
+    def drawable = 'shortcut_' + slug.replace('-', '_')
+    if (!file("src/main/res/drawable-xxxhdpi/${drawable}.png").exists())
+        throw new GradleException("No ${drawable}.png for shortcut \"${s.name}\": run node scripts/render-icons.mjs.")
+    [id: slug, name: s.name, shortName: s.short_name ?: s.name, url: new URI(origin + '/').resolve(s.url).toString(), drawable: drawable]
+}
+
+def shortcutsXml = { ->
+    def writer = new StringWriter()
+    def xml = new MarkupBuilder(new IndentPrinter(writer, '    ', true))
+    xml.doubleQuotes = true
+    xml.'shortcuts'('xmlns:android': 'http://schemas.android.com/apk/res/android') {
+        shortcuts.eachWithIndex { s, i ->
+            'shortcut'('android:shortcutId': s.id,
+                    'android:enabled': 'true',
+                    'android:icon': "@drawable/${s.drawable}",
+                    'android:shortcutShortLabel': "@string/shortcut_short_name_${i}",
+                    'android:shortcutLongLabel': "@string/shortcut_name_${i}") {
+                'intent'('android:action': 'android.intent.action.MAIN',
+                        'android:targetPackage': kinPackage,
+                        'android:targetClass': 'com.google.androidbrowserhelper.trusted.LauncherActivity',
+                        'android:data': s.url)
+                'categories'('android:name': 'android.intent.category.LAUNCHER')
+            }
+        }
+    }
+    '<?xml version="1.0" encoding="utf-8"?>\n' + writer.toString() + '\n'
+}()
+
+// ---- Release signing (docs/ANDROID.md "Signing") ----------------------------
+//
+// The upload key never enters the repository. Its location and passwords come
+// from an untracked keystore.properties next to this project's
+// gradle.properties, or from environment variables. Without them, debug
+// builds work and release builds stop with an explanation.
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('keystore.properties')
+if (keystorePropertiesFile.exists()) keystorePropertiesFile.withInputStream { keystoreProperties.load(it) }
+def signingValue = { String key, String env -> (keystoreProperties.getProperty(key) ?: System.getenv(env) ?: '').trim() }
+def uploadKey = [
+    storeFile: signingValue('storeFile', 'KIN_ANDROID_KEYSTORE'),
+    storePassword: signingValue('storePassword', 'KIN_ANDROID_KEYSTORE_PASSWORD'),
+    keyAlias: signingValue('keyAlias', 'KIN_ANDROID_KEY_ALIAS'),
+    keyPassword: signingValue('keyPassword', 'KIN_ANDROID_KEY_PASSWORD'),
+]
+def uploadSigning = uploadKey.values().every { it }
+if (uploadSigning) {
+    def store = rootProject.file(uploadKey.storeFile)
+    if (!store.isFile()) throw new GradleException("The upload keystore ${store} doesn't exist (storeFile / KIN_ANDROID_KEYSTORE).")
+    if (store.canonicalPath.startsWith(kinRoot.canonicalPath + File.separator))
+        logger.warn("Warning: the upload keystore is inside the Kin project. Keep it outside the repository (docs/ANDROID.md).")
+}
+
+gradle.taskGraph.whenReady { graph ->
+    if (!uploadSigning && graph.allTasks.any { it.project == project && it.name ==~ /(bundle|assemble)Release/ })
+        throw new GradleException('A release build needs the upload key: create android/keystore.properties or set KIN_ANDROID_KEYSTORE, ' +
+                'KIN_ANDROID_KEYSTORE_PASSWORD, KIN_ANDROID_KEY_ALIAS and KIN_ANDROID_KEY_PASSWORD (docs/ANDROID.md "Signing").')
+}
+
+// ---- The app ------------------------------------------------------------------
+
+android {
+    // The code namespace (R class), not the Play identity: applicationId is.
+    namespace 'kin.twa'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId kinPackage
+        // androidbrowserhelper 2.7.4 needs Android 7.0 (API 24).
+        minSdk 24
+        targetSdk 36
+        versionCode kinVersionCode.toInteger()
+        versionName kinVersion
+
+        manifestPlaceholders = [kinHost: kinHost]
+
+        resValue 'string', 'appName', aaptString(webManifest.name)
+        resValue 'string', 'launcherName', aaptString(webManifest.short_name)
+        resValue 'string', 'assetStatements', aaptString(assetStatements)
+        resValue 'string', 'shareTarget', aaptString(shareTarget)
+        resValue 'color', 'themeColor', colour('theme_color')
+        resValue 'color', 'backgroundColor', colour('background_color')
+        shortcuts.eachWithIndex { s, i ->
+            resValue 'string', "shortcut_name_${i}", aaptString(s.name)
+            resValue 'string', "shortcut_short_name_${i}", aaptString(s.shortName)
+        }
+    }
+
+    signingConfigs {
+        if (uploadSigning) {
+            create('upload') {
+                storeFile = rootProject.file(uploadKey.storeFile)
+                storePassword = uploadKey.storePassword
+                keyAlias = uploadKey.keyAlias
+                keyPassword = uploadKey.keyPassword
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            if (uploadSigning) signingConfig signingConfigs.getByName('upload')
+        }
+    }
+
+    lint {
+        checkReleaseBuilds false
+    }
+}
+
+// res/xml/shortcuts.xml is generated into the build directory (never into
+// src/), from the web manifest, so the two can't disagree.
+abstract class GenerateKinShortcuts extends DefaultTask {
+    @Input abstract Property<String> getShortcutsXml()
+    @OutputDirectory abstract DirectoryProperty getOutputDir()
+
+    @TaskAction
+    void generate() {
+        def target = outputDir.file('xml/shortcuts.xml').get().asFile
+        target.parentFile.mkdirs()
+        target.text = shortcutsXml.get()
+    }
+}
+
+def generateKinShortcuts = tasks.register('generateKinShortcuts', GenerateKinShortcuts) {
+    it.shortcutsXml.set(shortcutsXml)
+}
+
+androidComponents {
+    onVariants(selector().all()) { variant ->
+        variant.sources.res.addGeneratedSourceDirectory(generateKinShortcuts, { task -> task.outputDir })
+    }
+}
+
+dependencies {
+    // The documented dependency exception (ADR 0020): Google's TWA helper,
+    // which brings androidx.browser. Pinned; update deliberately.
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.7.4'
+}

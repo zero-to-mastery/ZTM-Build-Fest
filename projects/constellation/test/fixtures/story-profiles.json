@@ -1,0 +1,12 @@
+[
+  {"id":"frontend-heavy","languages":["TypeScript","JavaScript"],"topics":["react","accessibility","design-systems"],"projects":12},
+  {"id":"full-stack","languages":["TypeScript","Python","SQL"],"topics":["api","web","database"],"projects":10},
+  {"id":"polyglot-tooling","languages":["Rust","Go","Python","Shell"],"topics":["cli","build-tools","automation"],"projects":11},
+  {"id":"one-language-specialist","languages":["Python"],"topics":["data-science"],"projects":9},
+  {"id":"many-tiny-repos","languages":["JavaScript"],"topics":[],"projects":50},
+  {"id":"sparse-metadata","languages":[],"topics":[],"projects":8},
+  {"id":"long-history","languages":["C","Rust","Python"],"topics":["systems","tooling"],"projects":18},
+  {"id":"mostly-forks","languages":["Go"],"topics":["learning"],"projects":6},
+  {"id":"organization-contributor","languages":["Java","Kotlin"],"topics":["platform"],"projects":8},
+  {"id":"small-portfolio","languages":["Rust","TypeScript","CSS"],"topics":["constellation","web-component","tooling"],"projects":4}
+]

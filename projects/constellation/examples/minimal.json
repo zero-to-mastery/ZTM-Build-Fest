@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "theme": "monochrome",
+  "seedMode": "account",
+  "nodeSize": "uniform",
+  "nodeGlowMode": "uniform",
+  "animate": false,
+  "identityRing": false,
+  "exportProfile": "transparent",
+  "maxRepos": 15
+}

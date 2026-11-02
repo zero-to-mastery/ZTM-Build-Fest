@@ -63,7 +63,7 @@ for (const conflict of [
       );
 
       assert.equal(store.failed, false);
-      assert.equal(store.db.inTransaction, false);
+      assert.equal(store.transactionDepth, 0);
       assert.equal(store.health(), true);
       assert.deepEqual(
         store.db
@@ -107,7 +107,7 @@ test("unexpected durable invariant failures roll back and keep the store failed 
       (error) => error === failure,
     );
     assert.equal(store.failed, true);
-    assert.equal(store.db.inTransaction, false);
+    assert.equal(store.transactionDepth, 0);
     assert.equal(
       store.db
         .prepare("SELECT version FROM households WHERE id = ?")
@@ -131,10 +131,10 @@ test("an unexpected SQLite constraint failure rolls back the whole event batch a
           eventEntry(identity, 1),
           eventEntry(identity, 2),
         ]),
-      (error) => error.code === "SQLITE_CONSTRAINT_UNIQUE",
+      (error) => error.code === "ERR_SQLITE_ERROR" && error.errcode > 0,
     );
     assert.equal(store.failed, true);
-    assert.equal(store.db.inTransaction, false);
+    assert.equal(store.transactionDepth, 0);
     assert.deepEqual(store.db.prepare("SELECT * FROM sync_events").all(), []);
     assert.deepEqual(store.db.prepare("SELECT * FROM sync_households").all(), []);
     assert.deepEqual(

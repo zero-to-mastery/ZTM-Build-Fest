@@ -1,0 +1,24 @@
+{
+  "layout": "compact",
+  "title": "mnix / a small universe of code",
+  "animate": true,
+  "maxRepos": 24,
+  "includeForks": false,
+  "connectionDensity": "all",
+  "bridges": false,
+  "showOther": false,
+  "includeRepos": [
+    "drawer-count-app",
+    "kitchen-inventory-app",
+    "ctd-react-v3-final",
+    "ctd-react-v3-guided-project",
+    "web-components",
+    "WebComponentAccesibility",
+    "wcl",
+    "breather",
+    "tick-it",
+    "rust-swing-or-cast",
+    "open.CRM",
+    "banking-app"
+  ]
+}

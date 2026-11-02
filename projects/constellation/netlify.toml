@@ -1,0 +1,9 @@
+# Netlify hosts only the GitHub sign-in exchange function. GitHub Pages
+# serves the Studio itself. See docs/github-oauth.md.
+[build]
+  publish = "auth/netlify/public"
+  command = "echo 'Nothing to build: this site only hosts the sign-in function.'"
+
+[functions]
+  directory = "auth/netlify/functions"
+  node_bundler = "esbuild"

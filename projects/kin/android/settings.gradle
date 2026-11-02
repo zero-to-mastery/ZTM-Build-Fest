@@ -1,0 +1,22 @@
+// Kin's Google Play wrapper (ADR 0020, epic #527): a Trusted Web Activity that
+// opens Kin's public origin (kinHost) full-screen. Build tooling and the one
+// library it uses are a documented exception to Kin's zero-dependency rule,
+// scoped to this directory. See docs/ANDROID.md.
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'kin-android'
+include ':app'

@@ -1,44 +1,63 @@
 name: Bug report
-description: Report a reproducible problem in an implemented Kin version
-title: "[Bug] "
+description: Something in Kin does not work the way the documentation says it should
+title: "Kin: "
+labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
-        Kin is a local-first v0.9.x prototype. Report runtime bugs only for behavior that exists in the version under test.
-        Use synthetic data. Do not include household messages, personal details, credentials, tokens, or storage dumps.
+        Thanks for the report. Kin is a local-first household app, so please use **synthetic data only**: no household messages, names, passwords, passkeys, tokens, recovery keys or browser-storage dumps.
+        You can also report from inside Kin (Help › Report a problem), which collects the version and diagnostics for you.
   - type: input
     id: version
     attributes:
       label: Kin version or commit
-      description: Identify the exact release/tag or commit tested.
-      placeholder: kin-v0.10.3
+      description: The Report a problem preview inside Kin shows the version. For a checkout, the commit hash.
+      placeholder: kin-v1.6.0
+    validations:
+      required: true
+  - type: dropdown
+    id: how
+    attributes:
+      label: How Kin was running
+      options:
+        - The hosted instance (kin.journeytocode.io)
+        - My own server (Docker Compose, Railway or Node)
+        - On my computer with run.sh / run.ps1 or npm run dev
+        - The Android app
     validations:
       required: true
   - type: input
     id: environment
     attributes:
       label: Operating system and browser
-      placeholder: Windows 11, Firefox version
+      placeholder: Windows 11, Edge 141 (installed app) / iOS 26, Safari
     validations:
       required: true
   - type: textarea
     id: reproduction
     attributes:
       label: Steps to reproduce
-      placeholder: Use the smallest synthetic example that reproduces the issue.
+      placeholder: The smallest synthetic example that shows the problem.
     validations:
       required: true
   - type: textarea
     id: expected
     attributes:
-      label: Expected behavior
+      label: What you expected
     validations:
       required: true
   - type: textarea
     id: actual
     attributes:
-      label: Actual behavior and redacted diagnostics
-      description: Remove household text, IDs that identify real people, secrets, and personal data.
+      label: What happened, with any error text
+      description: Remove household text, names, IDs that identify real people, and secrets.
     validations:
       required: true
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy check
+      options:
+        - label: This report contains no real household data, credentials or keys.
+          required: true

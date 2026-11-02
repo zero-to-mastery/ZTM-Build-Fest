@@ -1,0 +1,10 @@
+# Build context is projects/kin; only Cargo/rust, server, web and package.json are used.
+.git
+.kin-data
+target
+node_modules
+deploy/.env
+docs
+scripts
+**/*.test.mjs
+**/*-test-utils.mjs

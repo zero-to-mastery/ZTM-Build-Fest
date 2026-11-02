@@ -1,0 +1,15 @@
+import { performance } from 'node:perf_hooks';
+import { normalizeRecords, applyTransforms, toGraphRecords, graphNodes, createScene, createDataPipeline } from '../src/core-api.mjs';
+const repositories = Array.from({ length: 2048 }, (_, i) => ({ full_name: `pipeline/p-${i}`, name: `p-${i}`, language: ['Rust', 'JavaScript'][i % 2], stargazers_count: i }));
+const transforms = [{ type: 'filter', field: 'metrics.stars', op: 'gte', value: 100 }, { type: 'sort', field: 'metrics.stars', direction: 'desc' }, { type: 'limit', count: 1024 }];
+const options = { nodeCap: 2048, maxRepos: 2048, referenceDate: '2026-09-01T00:00:00Z', animate: false };
+const time = fn => { const start = performance.now(); const result = fn(); return { ms: performance.now() - start, result }; };
+const normalization = time(() => normalizeRecords(repositories));
+const transformation = time(() => applyTransforms(normalization.result.records, transforms));
+const graphRecords = toGraphRecords(transformation.result.records);
+const graph = time(() => graphNodes(graphRecords, options));
+const scene = time(() => createScene('pipeline', graphRecords, options));
+const pipeline = createDataPipeline();
+const cold = time(() => pipeline.run(repositories, { transforms }));
+const warm = time(() => pipeline.run(repositories, { transforms }));
+console.log(JSON.stringify({ node: process.version, counts: { loaded: repositories.length, transformed: graphRecords.length, graph: graph.result.nodes.length, scene: scene.result.nodes.length }, milliseconds: { normalization: normalization.ms, transforms: transformation.ms, graph: graph.ms, sceneIncludingLayout: scene.ms, cachedPipelineCold: cold.ms, cachedPipelineWarm: warm.ms }, cache: pipeline.cacheStatistics }, null, 2));

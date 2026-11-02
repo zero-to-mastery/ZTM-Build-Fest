@@ -46,4 +46,20 @@ Kin is not couples therapy, a marriage score, a chore competition, a relationshi
 
 ## Current status
 
-Kin implements the Today and Needs views, fixed lightweight classification, fast local capture, completion, reopening, and archival. Older v0.1.x items without classification remain visible in Today. Handoff adds short context capture, acknowledgement, recent context, and archival. Local actors are not verified people. Talk captures short topics with workflow-only resolution. Pulse adds fixed temporary current capacity, explicit expiry and clear. Since You Last Looked is implemented as a bounded protocol-v6 projection with schema-1 local cursor metadata; Routines remain future work.
+Kin implements the Today, Needs, Shopping, and Staples views with fixed
+lightweight classification, fast local capture, completion, reopening, and
+archival. Each Item also shows a date-only Last changed value derived from its
+canonical Item and checklist-Step events, without actor attribution. Staples
+are reusable Item entries; a household member can manually
+add one to Shopping without tracking inventory or stock. All use the same
+local-first, encrypted-sync flow. Older v0.1.x items without classification
+remain visible in Today. Handoff adds short context capture, acknowledgement, recent context,
+and archival. Local actors are not verified people. Talk captures short topics
+with workflow-only resolution. Pulse adds fixed temporary current capacity,
+explicit expiry and clear. Since You Last Looked is implemented as a bounded
+protocol-v6 projection with schema-1 local cursor metadata. Routines support
+daily, Monday-start weekly, creation-anchored every-two-weeks, and
+calendar-month schedules. Search finds unarchived Item/Step, Handoff, Talk,
+and Note text from the unlocked local projection. Classification, status, and
+Area filters narrow Item/Step results only; queries are ephemeral and no
+search index is persisted.

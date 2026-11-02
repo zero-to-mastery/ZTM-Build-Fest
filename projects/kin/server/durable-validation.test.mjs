@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import Database from "better-sqlite3";
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -9,6 +8,8 @@ import { DurableStore, DurableStoreError, hasDatabaseProcessLock } from "./durab
 import { PairingService } from "./pairing-service.mjs";
 import { EncryptedSyncService } from "./sync-service.mjs";
 import { createKinServer } from "./server.mjs";
+import { openTestDatabase, sqlitePragma } from "./sqlite-test-utils.mjs";
+import { permissionFlags } from "./permissions.mjs";
 
 function fixture(t, count = 3) {
   const directory = mkdtempSync(join(tmpdir(), "kin-semantic-validation-"));
@@ -102,19 +103,38 @@ const corruptions = [
     device.syncHistoryFromEpoch = 3;
     store.db.prepare("UPDATE devices SET device_json = ? WHERE id = ?").run(JSON.stringify(device), partner.deviceId);
   }],
+  ...[false, "yes", 1].map((value) => [`device carried-over mark ${JSON.stringify(value)}`, ({ store, partner }) => {
+    const row = store.db.prepare("SELECT device_json FROM devices WHERE id = ?").get(partner.deviceId);
+    const device = JSON.parse(row.device_json);
+    device.carriedOver = value;
+    store.db.prepare("UPDATE devices SET device_json = ? WHERE id = ?").run(JSON.stringify(device), partner.deviceId);
+  }]),
 ];
 
 for (const [name, corrupt] of corruptions) {
   test(`SQLite-valid ${name} prevents durable startup`, (t) => {
     const state = fixture(t);
     corrupt(state);
-    assert.equal(state.store.db.pragma("integrity_check", { simple: true }), "ok");
-    assert.deepEqual(state.store.db.pragma("foreign_key_check"), []);
+    assert.equal(sqlitePragma(state.store.db, "integrity_check", { simple: true }), "ok");
+    assert.deepEqual(sqlitePragma(state.store.db, "foreign_key_check"), []);
     state.store.close();
     assert.throws(() => new DurableStore(state.path), DurableStoreError);
     assert.equal(hasDatabaseProcessLock(state.path), false);
   });
 }
+
+test("a device carried over from the old address loads with its mark", (t) => {
+  const { store, path, partner } = fixture(t);
+  const row = store.db.prepare("SELECT device_json FROM devices WHERE id = ?").get(partner.deviceId);
+  store.db.prepare("UPDATE devices SET device_json = ? WHERE id = ?").run(JSON.stringify({ ...JSON.parse(row.device_json), carriedOver: true }), partner.deviceId);
+  store.close();
+  const reopened = new DurableStore(path);
+  try {
+    assert.equal(reopened.loadIdentity().devices.get(partner.deviceId).carriedOver, true);
+  } finally {
+    reopened.close();
+  }
+});
 
 test("new adult may enable sync while awaiting the next epoch", (t) => {
   const { store, sync, adult, partner } = fixture(t);
@@ -137,7 +157,7 @@ test("readiness detects semantic corruption before any household request; health
     const origin = `http://127.0.0.1:${app.server.address().port}`;
     assert.equal((await fetch(`${origin}/readiness`)).status, 200);
     store.db.exec("UPDATE sync_device_sequences SET last_sequence = 99");
-    assert.equal(store.db.pragma("quick_check", { simple: true }), "ok");
+    assert.equal(sqlitePragma(store.db, "quick_check", { simple: true }), "ok");
     const ready = await fetch(`${origin}/readiness`);
     assert.equal(ready.status, 503);
     const body = await ready.text();
@@ -159,7 +179,7 @@ test("production startup never announces ready for semantic corruption", (t) => 
   store.db.exec("UPDATE sync_device_sequences SET last_sequence = 99");
   store.close();
   assert.throws(() => createKinServer({ databasePath: path }), DurableStoreError);
-  const child = spawnSync(process.execPath, [join(import.meta.dirname, "server.mjs")], {
+  const child = spawnSync(process.execPath, [...permissionFlags(path), join(import.meta.dirname, "server.mjs")], {
     env: { ...process.env, KIN_DATABASE_PATH: path, KIN_PORT: "0", KIN_HOST: "127.0.0.1", KIN_ORIGIN: "http://localhost:8000" },
     encoding: "utf8", timeout: 10_000, windowsHide: true,
   });
@@ -182,7 +202,12 @@ test("backup and restore reject semantic corruption without publishing or replac
   assert.equal(existsSync(backup), false);
   store.close();
   const sourceBefore = readFileSync(path);
-  await assert.rejects(DurableStore.restoreBackup(path, target), DurableStoreError);
+  await assert.rejects(
+    DurableStore.restoreBackup(path, target, {
+      acknowledgeDeletionHistory: true,
+    }),
+    DurableStoreError,
+  );
   assert.deepEqual(readFileSync(target), targetBefore);
   assert.deepEqual(readFileSync(path), sourceBefore);
   assert.equal(readdirSync(directory).some((name) => /\.lock$|\.tmp$|\.restore$|\.pre-restore-/.test(name)), false);
@@ -191,18 +216,25 @@ test("backup and restore reject semantic corruption without publishing or replac
 test("backup copy must pass semantic validation before becoming a verified backup", async (t) => {
   const { store, directory } = fixture(t);
   const backup = join(directory, "backup.sqlite");
-  const original = store.db.backup.bind(store.db);
-  store.db.backup = async (temporary) => {
-    const result = await original(temporary);
-    const copy = new Database(temporary);
-    try {
-      copy.exec("UPDATE sync_device_sequences SET last_sequence = 99");
-    } finally {
-      copy.close();
-    }
-    return result;
+  const originalPrepare = store.db.prepare.bind(store.db);
+  store.db.prepare = (sql) => {
+    if (sql === "VACUUM INTO ?")
+      return {
+        run(temporary) {
+          const result = originalPrepare(sql).run(temporary);
+          const copy = openTestDatabase(temporary);
+          try {
+            copy.exec("UPDATE sync_device_sequences SET last_sequence = 99");
+          } finally {
+            copy.close();
+          }
+          return result;
+        },
+      };
+    return originalPrepare(sql);
   };
   await assert.rejects(store.backup(backup), DurableStoreError);
+  store.db.prepare = originalPrepare;
   assert.equal(existsSync(backup), false);
   assert.equal(readdirSync(directory).some((name) => name.endsWith(".tmp")), false);
   assert.equal(store.validate(), true);
@@ -227,7 +259,9 @@ test("full validation uses bounded relay pages and valid backups/restores remain
   const backup = join(directory, "backup.sqlite");
   await store.backup(backup);
   const target = join(directory, "restored.sqlite");
-  await DurableStore.restoreBackup(backup, target);
+  await DurableStore.restoreBackup(backup, target, {
+    acknowledgeDeletionHistory: true,
+  });
   const restored = new DurableStore(target);
   try {
     assert.equal(restored.validate(), true);

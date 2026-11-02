@@ -18,9 +18,13 @@ export const MAX_HOUSEHOLD_EVENTS = 100_000;
 export const MAX_KEY_EPOCHS = 128;
 export const MAX_BINDINGS = 256;
 export const MAX_ROTATION_PACKAGES = 64;
+// Shared protocol ceiling (JavaScript safe integer) and per-event Lamport
+// advance bound. Replay applies the same rule in Rust.
+export const MAX_LOGICAL_TIME = 9_007_199_254_740_991n;
+export const MAX_LOGICAL_TIME_ADVANCE = 1_000_000n;
 
 export function isEventEnvelopeValid(envelope) {
-  return Boolean(
+  if (!(
     envelope &&
       typeof envelope === "object" &&
       Object.keys(envelope).length === CANONICAL_ENVELOPE_FIELDS.length &&
@@ -35,16 +39,23 @@ export function isEventEnvelopeValid(envelope) {
       envelope.keyEpoch <= MAX_KEY_EPOCHS &&
       Number.isSafeInteger(envelope.deviceSequence) &&
       envelope.deviceSequence >= 1 &&
+      typeof envelope.logicalTime === "string" &&
+      envelope.logicalTime.length <= 16 &&
       /^(0|[1-9][0-9]*)$/.test(envelope.logicalTime) &&
+      BigInt(envelope.logicalTime) > 0n &&
+      BigInt(envelope.logicalTime) <= MAX_LOGICAL_TIME &&
       /^[A-Za-z0-9_-]{16}$/.test(envelope.nonce) &&
       typeof envelope.ciphertext === "string" &&
       /^[A-Za-z0-9_-]+$/.test(envelope.ciphertext) &&
       Buffer.byteLength(envelope.ciphertext) <= MAX_ENVELOPE_BYTES &&
-      /^[A-Za-z0-9_-]{86}$/.test(envelope.signature) &&
-      Buffer.from(envelope.nonce, "base64url").length === 12 &&
-      Buffer.from(envelope.signature, "base64url").length === 64 &&
-      Buffer.from(envelope.ciphertext, "base64url").length >= 16,
-  );
+      /^[A-Za-z0-9_-]{86}$/.test(envelope.signature)
+  )) return false;
+  const nonce = Buffer.from(envelope.nonce, "base64url");
+  const signature = Buffer.from(envelope.signature, "base64url");
+  const ciphertext = Buffer.from(envelope.ciphertext, "base64url");
+  return nonce.length === 12 && nonce.toString("base64url") === envelope.nonce &&
+    signature.length === 64 && signature.toString("base64url") === envelope.signature &&
+    ciphertext.length >= 16 && ciphertext.toString("base64url") === envelope.ciphertext;
 }
 
 export function isProvisioningPackageValid(value, expected) {
@@ -128,6 +139,11 @@ export function isDurableGrantValid(grant, row, currentEpoch, getDevice) {
     (grant.requestId ?? null) !== row.request_id ||
     grant.expiresAt !== row.expires_at ||
     (grant.requestId != null && !isSyncId(grant.requestId)) ||
+    (grant.committedRotation !== undefined &&
+      (grant.committedRotation !== true ||
+        grant.package === null ||
+        grant.requestId != null ||
+        grant.state !== "pending")) ||
     !["pending", "acknowledged"].includes(grant.state)
   )
     return false;

@@ -40,7 +40,7 @@ export async function householdLifecycleChecks(recovery) {
     const oldVault = oldHousehold.connectionVault;
     const pendingLogin = oldHousehold.login();
     await wait(() => Boolean(releaseCredential));
-    app.lockHousehold();
+    app.ctx.session.lockHousehold();
     await app.security.run(() => app.security.unlockRecovery(recovery));
     check(app.store && app.household !== oldHousehold && app.vault !== oldVault, 'new unlock owns a fresh household controller and vault: ' + JSON.stringify({store:!!app.store, fresh:app.household!==oldHousehold, vault:app.vault!==oldVault, error:app.security.alert?.textContent,phase:app.security.phase}));
     releaseCredential({ id: 'AQ', type: 'public-key', response: {
@@ -54,7 +54,7 @@ export async function householdLifecycleChecks(recovery) {
     const controller = app.household;
     const pendingFetch = controller.api('/api/lifecycle-pending').then(() => false, () => true);
     await wait(() => pendingRequested);
-    app.lockHousehold();
+    app.ctx.session.lockHousehold();
     check(await pendingFetch && aborted, 'disconnect aborts the in-flight household fetch');
     await app.security.run(() => app.security.unlockRecovery(recovery));
 
@@ -70,9 +70,9 @@ export async function householdLifecycleChecks(recovery) {
 
     const currentApp = document.querySelector('kin-app');
     const currentVault = currentApp.vault;
-    currentApp.handlePeerMessage({ data: { type: 'household-locked', lockEpoch: currentVault.securityEpoch } });
+    currentApp.ctx.peers.handlePeerMessage({ data: { type: 'household-locked', lockEpoch: currentVault.securityEpoch } });
     check(currentApp.vault === currentVault && !currentVault.locked, 'delayed peer notification at the current epoch cannot revoke a fresh unlock');
-    currentApp.handlePeerMessage({ data: { type: 'household-locked', lockEpoch: currentVault.securityEpoch + 1 } });
+    currentApp.ctx.peers.handlePeerMessage({ data: { type: 'household-locked', lockEpoch: currentVault.securityEpoch + 1 } });
     check(currentApp.vault === null && currentVault.locked, 'newer peer lock epoch revokes the active household');
     await currentApp.security.run(() => currentApp.security.unlockRecovery(recovery));
   } finally {

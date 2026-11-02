@@ -1,4 +1,7 @@
 // Real browser IndexedDB + Web Crypto regressions; no third-party harness.
+import { BROWSER_STDIO, waitForDevTools } from "./browser-launch.mjs";
+import { applyRegressionDefaults, captureFailure, waitForOrigin } from "./cdp-page.mjs";
+import { eventArenaRegression, projectionOracle } from "./event-arena-regression.mjs";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
@@ -289,6 +292,13 @@ async function storagePerformance({ maximumPayload = false } = {}) {
       transaction.oncomplete = resolve; transaction.onabort = () => reject(transaction.error);
     });
     legacy.close();
+    // Keep one SHA-256 per canonical record, not the records themselves, so
+    // the fixture does not inflate the memory the archive phases are judged by.
+    const canonicalBytes = rows.reduce((total, row) => total + row.encoded_event.byteLength, 0);
+    const digest = async (bytes) => new Uint8Array(await crypto.subtle.digest("SHA-256", bytes));
+    const expected = [];
+    for (const row of rows) expected.push(await digest(row.encoded_event));
+    rows.length = 0;
     const { vault, manifest, recoverySecret } = await LocalVault.create();
     await EventStore.prepareSecurity(manifest);
     const migrationStart = performance.now();
@@ -302,9 +312,19 @@ async function storagePerformance({ maximumPayload = false } = {}) {
     const unlockDecryptMs = performance.now() - unlockStart;
     const replayStart = performance.now();
     const { asOf, civilDate } = projectionContext();
-    engine.applyEvents(snapshot.events.map((row) => row.encoded_event), asOf, null, civilDate);
+    engine.applyEvents(snapshot.events, asOf, null, civilDate);
     const replayMs = performance.now() - replayStart;
-    const measurement = { events: count, textBytes: text.length, canonicalBytes: rows.reduce((total, row) => total + row.encoded_event.byteLength, 0), migrationMs, unlockDecryptMs, replayMs };
+    const measurement = { events: count, textBytes: text.length, canonicalBytes, migrationMs, unlockDecryptMs, replayMs, phases: [] };
+    // Wall-clock bounds of each archive phase, for the memory monitor. A
+    // forced collection first (when the browser exposes gc) gives each phase
+    // the same starting point.
+    const phase = async (name, run) => {
+      globalThis.gc?.();
+      await new Promise((resolve) => setTimeout(resolve, 1_200));
+      const start = performance.timeOrigin + performance.now();
+      try { return await run(); }
+      finally { measurement.phases.push({ name, start, end: performance.timeOrigin + performance.now() }); }
+    };
     snapshot = null;
     const raw = await new Promise((resolve, reject) => { const request = indexedDB.open("kin"); request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error); });
     try {
@@ -322,10 +342,10 @@ async function storagePerformance({ maximumPayload = false } = {}) {
     measurement.originUsageBytes = (await navigator.storage.estimate()).usage;
     {
       const exportStart = performance.now();
-      const archive = await exportHouseholdArchive({ store, engine, vault: unlocked });
+      const archive = await phase("export", () => exportHouseholdArchive({ store, engine, vault: unlocked }));
       measurement.archiveBytes = archive.byteLength;
       measurement.archiveExportMs = performance.now() - exportStart;
-      if (archive.byteLength > 64 * 1024 * 1024) throw Error("Archive exceeded its supported 64 MiB framing bound.");
+      if (archive.byteLength > 160 * 1024 * 1024) throw Error("Archive exceeded its supported 160 MiB framing bound.");
       store.close(); unlocked.lock();
       await new Promise((resolve, reject) => { const request = indexedDB.deleteDatabase("kin"); request.onsuccess = resolve; request.onerror = () => reject(request.error); });
       const target = await LocalVault.create();
@@ -333,17 +353,22 @@ async function storagePerformance({ maximumPayload = false } = {}) {
       await EventStore.migrate({ vault: target.vault, engine, prepareKeys: async () => ({}), finalizeKeys: async () => {} });
       const restoredStore = await EventStore.open({ vault: target.vault, engine });
       const restoreStart = performance.now();
-      await importHouseholdArchive({ bytes: archive, recoverySecret, engine, vault: target.vault });
+      await phase("restore", () => importHouseholdArchive({ bytes: archive, recoverySecret, engine, vault: target.vault }));
       measurement.archiveRestoreMs = performance.now() - restoreStart;
       const restored = await restoredStore.loadEvents();
-      if (restored.length !== rows.length || restored.some((row, i) => row.encoded_event.length !== rows[i].encoded_event.length || row.encoded_event.some((byte, j) => byte !== rows[i].encoded_event[j])))
+      if (restored.length !== expected.length)
         throw Error("Archive did not restore the exact complete canonical history.");
+      for (let i = 0; i < restored.length; i += 1) {
+        const actual = await digest(restored[i].encoded_event);
+        if (actual.some((byte, j) => byte !== expected[i][j]))
+          throw Error("Archive did not restore the exact complete canonical history.");
+      }
       measurement.archiveRoundTripExact = true;
       restoredStore.close(); target.vault.lock();
     }
     results.push(measurement);
   }
-  return { initializationMs, results, scope: "Real browser crypto/IDB and release WASM; source fixture rows retained for exact roundtrip comparison; encryptedRecordBytes is UTF-8 serialized records, originUsageBytes is browser-estimated storage rather than physical database file size." };
+  return { initializationMs, results, scope: "Real browser crypto/IDB and release WASM; the exact round trip compares per-record SHA-256 digests, so no fixture rows are retained; encryptedRecordBytes is UTF-8 serialized records, originUsageBytes is browser-estimated storage rather than physical database file size." };
 }
 
 function monitorRendererMemory(profile) {
@@ -352,30 +377,54 @@ function monitorRendererMemory(profile) {
   // Sampled working set includes native/WASM allocations; it is not JS heap size.
   const script = `
 $ErrorActionPreference = 'Stop'
+# Finding the renderers needs a slow process query (about half a second), so
+# it runs every 50 ticks; reading their counters by ID takes microseconds.
+$kinRenderers = @()
+$kinTick = 0
 while ($true) {
-  $kinProcesses = @(Get-CimInstance Win32_Process -Filter "Name = 'msedge.exe' OR Name = 'chrome.exe'")
-  $kinIds = [System.Collections.Generic.HashSet[int]]::new()
-  foreach ($kinProcess in $kinProcesses) { if ($kinProcess.CommandLine -like "*$env:KIN_TEST_PROFILE*") { [void]$kinIds.Add([int]$kinProcess.ProcessId) } }
-  do { $kinChanged = $false; foreach ($kinProcess in $kinProcesses) { if ($kinIds.Contains([int]$kinProcess.ParentProcessId) -and $kinIds.Add([int]$kinProcess.ProcessId)) { $kinChanged = $true } } } while ($kinChanged)
+  if ($kinTick % 50 -eq 0 -or -not $kinRenderers.Count) {
+    $kinProcesses = @(Get-CimInstance Win32_Process -Filter "Name = 'msedge.exe' OR Name = 'chrome.exe'")
+    $kinIds = [System.Collections.Generic.HashSet[int]]::new()
+    foreach ($kinProcess in $kinProcesses) { if ($kinProcess.CommandLine -like "*$env:KIN_TEST_PROFILE*") { [void]$kinIds.Add([int]$kinProcess.ProcessId) } }
+    do { $kinChanged = $false; foreach ($kinProcess in $kinProcesses) { if ($kinIds.Contains([int]$kinProcess.ParentProcessId) -and $kinIds.Add([int]$kinProcess.ProcessId)) { $kinChanged = $true } } } while ($kinChanged)
+    $kinRenderers = @($kinProcesses | Where-Object { $kinIds.Contains([int]$_.ProcessId) -and $_.CommandLine -like '*--type=renderer*' } | ForEach-Object { [int]$_.ProcessId })
+  }
   [long]$kinWorkingSet = 0
-  foreach ($kinProcess in $kinProcesses) { if ($kinIds.Contains([int]$kinProcess.ProcessId) -and $kinProcess.CommandLine -like '*--type=renderer*') { $kinWorkingSet += [long]$kinProcess.WorkingSetSize } }
-  [Console]::WriteLine($kinWorkingSet)
-  Start-Sleep -Milliseconds 500
+  [long]$kinPrivate = 0
+  foreach ($kinId in $kinRenderers) {
+    try { $kinProcess = [System.Diagnostics.Process]::GetProcessById($kinId); $kinWorkingSet += $kinProcess.WorkingSet64; $kinPrivate += $kinProcess.PrivateMemorySize64 } catch { }
+  }
+  [Console]::WriteLine("$kinWorkingSet $kinPrivate")
+  $kinTick += 1
+  Start-Sleep -Milliseconds 100
 }`;
   const monitor = spawn("powershell.exe", ["-NoProfile", "-Command", script], { windowsHide: true, stdio: ["ignore", "pipe", "pipe"], env: { ...process.env, KIN_TEST_PROFILE: profile } });
   let pending = "", peak = 0, samples = 0, failure = "";
+  const timeline = [];
   monitor.stdout.on("data", (data) => {
     pending += data.toString();
     const lines = pending.split(/\r?\n/u); pending = lines.pop();
-    for (const line of lines) { const bytes = Number(line); if (bytes > 0) { peak = Math.max(peak, bytes); samples += 1; } }
+    for (const line of lines) {
+      const [bytes, privateBytes] = line.trim().split(" ").map(Number);
+      if (bytes > 0) { peak = Math.max(peak, bytes); samples += 1; timeline.push({ at: Date.now(), bytes, privateBytes }); }
+    }
   });
   monitor.stderr.on("data", (data) => { failure += data.toString(); });
   monitor.on("error", (error) => { failure = error.message; });
-  return { stop: async () => {
+  // Working set and private (committed) bytes: the last sample before
+  // [start, end] and the peak inside it.
+  const during = ({ start, end }) => {
+    const before = timeline.filter((sample) => sample.at < start).at(-1);
+    const inside = timeline.filter((sample) => sample.at >= start && sample.at <= end + 200);
+    const peakOf = (field) => inside.length ? Math.max(...inside.map((sample) => sample[field])) : null;
+    return { beforeBytes: before?.bytes ?? null, peakBytes: peakOf("bytes"),
+      beforePrivateBytes: before?.privateBytes ?? null, peakPrivateBytes: peakOf("privateBytes"), samples: inside.length };
+  };
+  return { during, stop: async () => {
     monitor.kill();
     if (monitor.exitCode === null) await Promise.race([once(monitor, "exit"), delay(2_000)]).catch(() => {});
     return { peakRendererWorkingSetBytes: peak || null, rendererMemorySamples: samples,
-      memoryScope: "Peak sampled sum of isolated-profile renderer working sets during all benchmark cases; sampled about every 500ms plus process-query time, includes retained source fixture rows. Not a mobile measurement.",
+      memoryScope: "Peak sampled sum of isolated-profile renderer working sets during all benchmark cases; sampled about every 100ms. Per-phase figures (working set and private bytes) are the peak inside each archive phase and the last sample before it. Not a mobile measurement.",
       ...(failure ? { memorySamplingError: failure.trim() } : {}) };
   } };
 }
@@ -398,10 +447,9 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   let browser, socket;
   async function connectBrowser() {
     await rm(join(profile, "DevToolsActivePort"), { force: true });
-    browser = spawn(executable, ["--headless=new", "--disable-gpu", "--disable-extensions", "--no-first-run", "--no-default-browser-check", "--edge-skip-compat-layer-relaunch", "--remote-debugging-port=0", `--user-data-dir=${profile}`, "about:blank"], { windowsHide: true, stdio: "ignore" });
-    let port;
-    for (let attempt = 0; attempt < 200 && !port; attempt += 1) { try { port = (await readFile(join(profile, "DevToolsActivePort"), "utf8")).split("\n")[0]; } catch { await delay(50); } }
-    assert.ok(port, "Browser did not start");
+    const timing = process.argv.includes("--performance") || process.argv.includes("--performance-only");
+    browser = spawn(executable, [...(timing ? ["--js-flags=--expose-gc"] : []), "--headless=new", "--disable-gpu", "--disable-extensions", "--no-first-run", "--no-default-browser-check", "--edge-skip-compat-layer-relaunch", "--remote-debugging-port=0", `--user-data-dir=${profile}`, "about:blank"], BROWSER_STDIO);
+    const port = await waitForDevTools(browser, profile);
     const target = await fetch(`http://127.0.0.1:${port}/json/new?${encodeURIComponent(origin)}`, { method: "PUT" }).then((response) => response.json());
     socket = new WebSocket(target.webSocketDebuggerUrl);
     await new Promise((resolve, reject) => { socket.onopen = resolve; socket.onerror = reject; });
@@ -410,8 +458,12 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
     socket.onmessage = ({ data }) => { const message = JSON.parse(data); if (message.id) { const task = pending.get(message.id); pending.delete(message.id); message.error ? task.reject(Error(JSON.stringify(message.error))) : task.resolve(message.result); } };
     socket.onclose = () => { for (const task of pending.values()) task.reject(Error("Isolated browser connection closed")); pending.clear(); };
     const send = (method, params) => new Promise((resolve, reject) => { const next = ++id; pending.set(next, { resolve, reject }); socket.send(JSON.stringify({ id: next, method, params })); });
-    const client = { evaluate: async (expression) => { const result = await send("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true }); assert.equal(result.exceptionDetails, undefined, JSON.stringify(result.exceptionDetails)); return result.result.value; } };
-    for (let attempt = 0; attempt < 100; attempt += 1) { if (await client.evaluate("location.origin === " + JSON.stringify(origin))) break; await delay(20); }
+    const client = {
+      evaluate: async (expression) => { const result = await send("Runtime.evaluate", { expression, awaitPromise: true, returnByValue: true }); assert.equal(result.exceptionDetails, undefined, JSON.stringify(result.exceptionDetails)); return result.result.value; },
+      send,
+    };
+    await applyRegressionDefaults(send);
+    await waitForOrigin(client.evaluate, origin, { navigate: () => send("Page.navigate", { url: origin }) });
     return client;
   }
   async function stopBrowser() {
@@ -441,6 +493,7 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       if (!process.argv.includes("--adapter-only")) console.log(await client.evaluate(`(${rotationStorageRegression.toString()})()`));
       if (!process.argv.includes("--adapter-only")) console.log(await client.evaluate(`(${rootRotationRegression.toString()})()`));
       if (!process.argv.includes("--adapter-only")) console.log(await client.evaluate(`(${boundedStorageRegression.toString()})()`));
+      if (!process.argv.includes("--adapter-only")) console.log(await client.evaluate(`(${eventArenaRegression.toString()})(${projectionOracle.toString()})`));
       if (!process.argv.includes("--adapter-only")) console.log(await client.evaluate(`(${rootKeyRotationRegression.toString()})()`));
       if (!process.argv.includes("--adapter-only")) {
         let restartChecks = 0;
@@ -471,11 +524,27 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       }
     }
     if (process.argv.includes("--performance") || process.argv.includes("--performance-only")) {
+      const throttleIndex = process.argv.indexOf("--cpu-throttle");
+      const cpuThrottle = throttleIndex === -1 ? 1 : Number(process.argv[throttleIndex + 1]);
+      assert.ok(Number.isFinite(cpuThrottle) && cpuThrottle >= 1, "--cpu-throttle must be a number of at least 1");
+      if (cpuThrottle > 1) await client.send("Emulation.setCPUThrottlingRate", { rate: cpuThrottle });
       const monitor = monitorRendererMemory(profile);
       let measurement;
-      try { measurement = await client.evaluate(`(${storagePerformance.toString()})(${JSON.stringify({ maximumPayload: process.argv.includes("--maximum-payload") })})`); }
-      finally { const memory = await monitor.stop(); if (measurement) console.log("PERFORMANCE " + JSON.stringify({ ...measurement, ...memory })); }
+      try {
+        measurement = await client.evaluate(`(${storagePerformance.toString()})(${JSON.stringify({ maximumPayload: process.argv.includes("--maximum-payload") })})`);
+        measurement.cpuThrottle = cpuThrottle;
+      }
+      finally {
+        if (measurement) for (const result of measurement.results)
+          result.phases = result.phases.map((entry) => ({ name: entry.name, ms: Math.round(entry.end - entry.start), ...monitor.during(entry) }));
+        const memory = await monitor.stop();
+        if (measurement) console.log("PERFORMANCE " + JSON.stringify({ ...measurement, ...memory }));
+      }
     }
+  } catch (error) {
+    // Before the browser closes: what each page showed (#328).
+    await captureFailure("security storage regression");
+    throw error;
   } finally {
     await stopBrowser();
     server.closeAllConnections();

@@ -1,0 +1,10 @@
+{
+  "version": 6,
+  "theme": "midnight",
+  "animate": false,
+  "layers": {
+    "rings": { "opacity": 0.3 },
+    "starfield": { "visible": false },
+    "connections": { "opacity": 0.6 }
+  }
+}

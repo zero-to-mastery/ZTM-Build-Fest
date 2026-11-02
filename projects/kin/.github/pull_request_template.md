@@ -1,17 +1,18 @@
-## Summary
+## What changed
 
-<!-- What changed and which Kin release does it support? -->
+<!-- The problem, what you did about it, and the issue it closes (e.g. "Closes #123"). -->
 
-## Validation
+## How you checked it
 
-<!-- What documentation, links, tests, or builds were checked? Do not claim checks that were not run. -->
+<!-- Which of `npm run verify`, `npm run verify:browser`, a single suite, or a manual pass you ran, and what they showed. Say plainly what you could not run. -->
 
 ## Checklist
 
-- [ ] All Kin-specific changes are under `projects/kin/`.
-- [ ] The change matches the current release scope; no future feature leaked in.
-- [ ] README and related specifications distinguish implemented, specified, and planned behavior.
-- [ ] Privacy and accessibility implications are addressed.
-- [ ] No household content, credentials, or secrets are included in examples or logs.
-- [ ] Any new dependency has a documented technical justification.
-- [ ] Required checks have been run, or the reason they could not be run is stated.
+- [ ] Every changed path is under `projects/kin/`.
+- [ ] The change does one thing; anything else is a separate issue or PR.
+- [ ] No new dependency, or its justification is written above.
+- [ ] Household text and imported data stay untrusted (rendered as text, never HTML); no secrets, real household data or storage dumps in code, fixtures, screenshots or logs.
+- [ ] Keyboard, focus, 48 px targets, 320 px reflow, reduced motion and easy mode still work for anything a person can see.
+- [ ] Frozen v1.0 formats are untouched, or `docs/V1.0-COMPATIBILITY.md` is updated with them.
+- [ ] The documentation this touches is updated, the README describes only what exists, and there is a line under *Unreleased* in `CHANGELOG.md`.
+- [ ] `npm run verify` passes locally, or the reason it could not run is stated above.

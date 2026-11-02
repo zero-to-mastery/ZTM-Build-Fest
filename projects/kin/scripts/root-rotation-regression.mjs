@@ -76,11 +76,12 @@ export async function rootRotationRegression() {
   {
     const test = await fixture();
     const { exportHouseholdArchive } = await import("/security/archive.js");
-    const seal = test.source.vault.sealArchive.bind(test.source.vault);
+    // Holds the export where its archive key is derived, just before sealing.
+    const derive = test.source.vault.archiveStreamKey.bind(test.source.vault);
     let entered, release;
     const pending = new Promise((resolve) => { entered = resolve; });
     const gate = new Promise((resolve) => { release = resolve; });
-    test.source.vault.sealArchive = async (...args) => { entered(); await gate; return seal(...args); };
+    test.source.vault.archiveStreamKey = async (...args) => { entered(); await gate; return derive(...args); };
     const operation = exportHouseholdArchive({ store: test.store, engine, vault: test.source.vault });
     operation.catch(() => {});
     await pending;

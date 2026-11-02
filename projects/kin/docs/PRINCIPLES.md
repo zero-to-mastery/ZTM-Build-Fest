@@ -26,6 +26,8 @@ Features should reduce friction, not introduce competition. Household coordinati
 
 Kin must not become a covert tracking or monitoring system. Do not infer or expose member activity in a way that turns ordinary household coordination into surveillance. Sharing and presence must be understandable and intentional.
 
+Household chat's read receipts, typing indicators and "online now" follow this rule ([ADR 0008](decisions/0008-household-chat.md)): each is visible to everyone it applies to, each member can turn off sending their own, turning one off also stops showing it from others, and none is kept as history. There is no "last seen", no location and no background activity record.
+
 ## No gamified marriage
 
 No spouse scores, leaderboards, streak pressure, chore points, or comparative contribution percentages. Kin must not use competitive mechanics to pressure household members.

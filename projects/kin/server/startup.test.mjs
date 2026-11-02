@@ -7,6 +7,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 import { DurableStore, hasDatabaseProcessLock } from "./durable-store.mjs";
+import { permissionFlags } from "./permissions.mjs";
 
 function temporaryDatabase(t) {
   const directory = mkdtempSync(join(tmpdir(), "kin-startup-"));
@@ -17,7 +18,8 @@ function temporaryDatabase(t) {
 function startServer(databasePath, port, args = []) {
   return spawnSync(
     process.execPath,
-    [...args, fileURLToPath(new URL("./server.mjs", import.meta.url))],
+    // Inside the service's sandbox, as server/start.mjs starts it (#106).
+    [...permissionFlags(databasePath), ...args, fileURLToPath(new URL("./server.mjs", import.meta.url))],
     {
       encoding: "utf8",
       timeout: 10_000,

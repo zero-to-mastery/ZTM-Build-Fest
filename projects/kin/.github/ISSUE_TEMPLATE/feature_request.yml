@@ -1,16 +1,17 @@
 name: Feature proposal
-description: Propose a small, privacy-conscious household coordination improvement
-title: "[Proposal] "
+description: Propose a small, privacy-conscious improvement to household coordination
+title: "Kin: "
+labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
       value: |
-        Describe the household problem, not only a requested feature. Keep examples synthetic and avoid personal household information.
+        Describe the household problem before the feature. Kin's test for every feature is whether a tired parent holding a child would use it, and it never blames, scores, ranks or watches anyone ([PRINCIPLES](https://github.com/mnichols08/ZTM-Build-Fest/blob/kin-development/projects/kin/docs/PRINCIPLES.md)). Keep examples synthetic.
   - type: textarea
     id: problem
     attributes:
       label: What household problem needs solving?
-      placeholder: What gets missed, repeated, or handed off poorly?
+      placeholder: What gets missed, repeated or handed off badly today?
     validations:
       required: true
   - type: textarea
@@ -22,14 +23,19 @@ body:
   - type: textarea
     id: smallest-flow
     attributes:
-      label: Smallest useful interaction
-      description: Consider the tap, type a few words, tap principle.
+      label: The smallest useful interaction
+      description: Tap, type a few words, tap. What would the person do, and what would they see?
     validations:
       required: true
   - type: textarea
     id: tradeoffs
     attributes:
-      label: Alternatives, privacy, accessibility, and release scope
-      description: Explain what data is needed, risks, accessible behavior, and which planned release it fits.
+      label: Data, privacy and accessibility
+      description: What new data would Kin hold, where, and who could see it? How does it work with a keyboard, a screen reader, easy mode and a 320 px screen?
     validations:
       required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: Including doing nothing, or doing it outside Kin.

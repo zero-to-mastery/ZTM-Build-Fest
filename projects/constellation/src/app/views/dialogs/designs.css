@@ -1,0 +1,19 @@
+/* Save / Saved designs dialogs. Tokens come from app.css. */
+.designs-form { display: grid; gap: var(--space-4); }
+.designs-error-slot:empty { display: none; }
+.designs-notice-text { display: grid; gap: var(--space-2); justify-items: start; }
+.designs-notice-text p { margin: 0; }
+.designs-notice-text .btn { color: var(--text); }
+.designs-saved { display: grid; gap: var(--space-5); }
+.designs-group { display: grid; gap: var(--space-2); }
+.designs-group > h3 { font-size: 13px; font-weight: 650; letter-spacing: .02em; color: var(--text-3); overflow-wrap: anywhere; }
+.designs-list { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
+.design-row {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--space-3);
+  min-height: 52px; padding: 4px var(--space-2) 4px var(--space-3); border-radius: var(--radius-s);
+}
+.design-row:hover { background: var(--surface-2); }
+.design-name { font-weight: 580; overflow-wrap: anywhere; }
+.design-actions { display: inline-flex; align-items: center; gap: var(--space-2); }
+.designs-empty { color: var(--text-2); }
+.designs-empty:focus { outline: none; }

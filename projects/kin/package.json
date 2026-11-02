@@ -1,19 +1,19 @@
 {
   "name": "kin-server",
   "private": true,
-  "version": "0.11.7",
+  "version": "1.6.0",
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": ">=24.16.0"
   },
   "scripts": {
-    "dev": "node --watch server/server.mjs",
-    "start": "node server/server.mjs",
+    "dev": "node --watch server/server.mjs --unrestricted",
+    "start": "node server/start.mjs",
     "backup": "node server/admin.mjs backup",
     "restore": "node server/admin.mjs restore",
-    "test:server": "node --test server/*.test.mjs"
-  },
-  "dependencies": {
-    "better-sqlite3": "12.4.1"
+    "test:calendar": "node --test web/calendar-export.test.mjs",
+    "test:server": "node --test --test-timeout=120000 server/*.test.mjs",
+    "verify": "node scripts/verify.mjs",
+    "verify:browser": "node scripts/verify.mjs --browser"
   }
 }

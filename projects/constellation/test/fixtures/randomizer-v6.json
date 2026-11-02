@@ -1,0 +1,38 @@
+[
+  {
+    "shape": "ordinary",
+    "code": "v6:m000-y2026-f2015-e1-fixture-641",
+    "starfield": "classic",
+    "sha256": "4fb986261af7b27083a21ecd1e225b299e4f9ee079fc2caf5455e09fca58fc73"
+  },
+  {
+    "shape": "hourglass",
+    "code": "v6:mfff-y2026-f2015-e1-fixture-23",
+    "starfield": "space",
+    "sha256": "72772d01559e6112a59a82b0eaa23545a164565d58b2453f3486782eadd1c333"
+  },
+  {
+    "shape": "sphere",
+    "code": "v6:mfff-y2026-f2015-e1-fixture-38",
+    "starfield": "space",
+    "sha256": "64182241b997bc8cbbdacde160ca6a8e9a984115539ecf895ac3c24ff08687df"
+  },
+  {
+    "shape": "dome",
+    "code": "v6:m000-y2026-f2015-e1-fixture-47",
+    "starfield": "classic",
+    "sha256": "49014cdbaee53f46fab646e5bda697587471b8ac7e3318a418c171e6e065e43d"
+  },
+  {
+    "shape": "cylinder",
+    "code": "v6:mfff-y2026-f2015-e1-fixture-58",
+    "starfield": "classic",
+    "sha256": "9ef6858f57dd7dc3874483f82fbf7366da9c50dac86456c69cbd98b604e633aa"
+  },
+  {
+    "shape": "helix",
+    "code": "v6:mfff-y2026-f2015-e1-fixture-66",
+    "starfield": "milky-way",
+    "sha256": "df16d1d2dea96cbe36aa0a4c278c9e33daefdb6088ec3242627389f6f02e92a6"
+  }
+]

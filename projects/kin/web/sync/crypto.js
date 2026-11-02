@@ -44,6 +44,20 @@ export async function createHouseholdEpochKey({
   }
 }
 
+/**
+ * An epoch key taken from the member's account vault (ADR 0018, #570), in
+ * the shape saveEpoch stores: usable key, bytes sealed to this device's keys,
+ * fingerprint. `householdId` is the key family label ("<id>" or "chat:<id>").
+ * The caller zeroes `rawKey`.
+ */
+export async function importVaultEpochKey({ rawKey, householdId, keyEpoch, deviceKeys }) {
+  if (!(rawKey instanceof Uint8Array) || rawKey.length !== 32)
+    throw new SyncCryptoError("provisioning_key_invalid", "The household key could not be provisioned.");
+  const householdKey = await crypto.subtle.importKey("raw", rawKey, { name: "AES-GCM" }, false, ["encrypt", "decrypt"]);
+  const sealed = await sealKeyBytes({ rawKey, householdId, keyEpoch, deviceKeys });
+  return { householdKey, sealed, fingerprint: await fingerprintKey(rawKey) };
+}
+
 export async function createProvisionedHouseholdEpoch({
   householdId,
   keyEpoch,
@@ -122,6 +136,22 @@ export async function verifyStoredHouseholdEpoch({ record, deviceKeys }) {
       throw new SyncCryptoError("stored_key_mismatch", "The epoch fingerprint does not match its sealed key.");
     return await crypto.subtle.importKey("raw", rawKey, { name: "AES-GCM" }, false, ["encrypt", "decrypt"]);
   } finally { rawKey.fill(0); }
+}
+
+/**
+ * The raw bytes of a stored epoch key, checked against its fingerprint, for
+ * the member's account vault (ADR 0018, web/security/account-vault.js). The
+ * caller zeroes them as soon as they are sealed into the vault.
+ */
+export async function exportStoredEpochKey({ record, deviceKeys }) {
+  if (record?.sealed?.householdId !== record.householdId || record?.sealed?.keyEpoch !== record.keyEpoch)
+    throw new SyncCryptoError("stored_key_mismatch", "The epoch metadata does not match its sealed key.");
+  const rawKey = await openSealedKey({ sealed: record.sealed, deviceKeys });
+  if (rawKey.length !== 32 || await fingerprintKey(rawKey) !== record.fingerprint) {
+    rawKey.fill(0);
+    throw new SyncCryptoError("stored_key_mismatch", "The epoch fingerprint does not match its sealed key.");
+  }
+  return rawKey;
 }
 
 export async function wrapEpochKey({
@@ -249,6 +279,7 @@ export async function unwrapEpochKey({
   deviceId,
   deviceFingerprint,
   senderSigningKey,
+  allowExpiredCommittedRotation = false,
   now = Date.now(),
 }) {
   validateProvisioningPackage(keyPackage);
@@ -262,7 +293,10 @@ export async function unwrapEpochKey({
       "This key transfer was not created for this trusted device.",
     );
   }
-  if (!Number.isSafeInteger(now) || keyPackage.expiresAt <= now) {
+  if (
+    !Number.isSafeInteger(now) ||
+    (keyPackage.expiresAt <= now && allowExpiredCommittedRotation !== true)
+  ) {
     throw new SyncCryptoError(
       "provisioning_expired",
       "This key transfer expired. Ask an active trusted device to try again.",
@@ -720,6 +754,27 @@ export async function decryptEvent({ envelope, householdKey, signingKey }) {
       "The received event could not be decrypted.",
       error,
     );
+  }
+}
+
+/**
+ * Decrypts an envelope this device already authenticated when it arrived
+ * and then kept as it was (the chat log, #111). The household key's AES-GCM
+ * tag still binds the bytes to their metadata; the signature was checked
+ * once, on receipt, so reopening the log doesn't verify every event again.
+ */
+export async function decryptStoredEvent({ envelope, householdKey }) {
+  validateEnvelope(envelope);
+  try {
+    return new Uint8Array(
+      await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: fromBase64Url(envelope.nonce), additionalData: associatedData(envelope), tagLength: 128 },
+        householdKey,
+        fromBase64Url(envelope.ciphertext),
+      ),
+    );
+  } catch (error) {
+    throw new SyncCryptoError("decrypt_failed", "A stored event could not be decrypted.", error);
   }
 }
 

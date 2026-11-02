@@ -5,6 +5,7 @@ import { join } from "node:path";
 import test from "node:test";
 import { DurableStore, DurableStoreError, hasDatabaseProcessLock } from "./durable-store.mjs";
 import { MAX_TRUSTED_DEVICES, PairingService } from "./pairing-service.mjs";
+import { sqlitePragma } from "./sqlite-test-utils.mjs";
 import {
   createDeviceAuthorizationCertificate,
   createDeviceKeyTransition,
@@ -57,8 +58,8 @@ function changeCredential(f, edit) {
 }
 
 function assertCorrupt(f) {
-  assert.equal(f.store.db.pragma("quick_check", { simple: true }), "ok");
-  assert.deepEqual(f.store.db.pragma("foreign_key_check"), []);
+  assert.equal(sqlitePragma(f.store.db, "quick_check", { simple: true }), "ok");
+  assert.deepEqual(sqlitePragma(f.store.db, "foreign_key_check"), []);
   const safeError = (error) => {
     assert.ok(error instanceof DurableStoreError);
     assert.doesNotMatch(error.message, /SELECT|UPDATE|sqlite|synthetic-key/);
@@ -74,11 +75,13 @@ function assertCorrupt(f) {
   assert.equal(hasDatabaseProcessLock(f.databasePath), false);
 }
 
-test("three active adults fail identity load and startup without repairing membership", (t) => {
+test("four active adults remain valid while a fifth fails identity load and startup", (t) => {
   const f = fixture(t);
   const removed = f.joinMember("removed");
   f.pairing.removeOtherAdult(f.adult.sessionToken, removed.memberId, f.adult.memberId);
   f.joinMember("replacement");
+  f.joinMember("third");
+  f.joinMember("fourth");
   assert.equal(f.store.validate(), true);
   // Only this synthetic database drops its trigger to represent restored or
   // manually corrupted state; production constraints are unchanged.
@@ -93,7 +96,7 @@ test("too many non-revoked devices fail identity load and startup", (t) => {
   for (let index = 1; index < MAX_TRUSTED_DEVICES; index += 1)
     devices.push(f.joinMember(`device-${index}`, "device"));
   const revoked = devices[0];
-  f.pairing.revokeDevice(f.adult.sessionToken, revoked.deviceId);
+  f.pairing.revokeDevice(f.adult.sessionToken, revoked.deviceId, f.adult.memberId);
   f.joinMember("replacement-device", "device");
   assert.equal(f.store.validate(), true);
   f.store.db.exec("DROP TRIGGER devices_active_limit_update");
@@ -281,7 +284,9 @@ test(`retained approval certificates with ${noncanonicalSignature ? "noncanonica
     );
     f.pairing.transitionSyncPublicKeys(identity.sessionToken, transition);
   }
-  f.pairing.revokeDevice(recipient.sessionToken, f.adult.deviceId);
+  // Revoking another member's device is household-admin authority.
+  f.pairing.members.get(recipient.memberId).householdAdmin = true;
+  f.pairing.revokeDevice(recipient.sessionToken, f.adult.deviceId, recipient.memberId);
   assert.equal(f.store.validate(), true);
   const peer = new DurableStore(f.databasePath, { acquireProcessLock: false });
   try {

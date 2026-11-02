@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The app icon's tile colour (web/icon.svg, scripts/render-icons.mjs).
+         The theme and splash colours come from web/manifest.webmanifest. -->
+    <color name="ic_launcher_background">#8A5B4B</color>
+</resources>

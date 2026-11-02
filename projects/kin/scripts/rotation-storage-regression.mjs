@@ -82,7 +82,51 @@ export async function rotationStorageRegression() {
       "a delayed refresh cannot replace the next rotation");
     check((await store.getSyncState()).pendingRotation.proposalId === newer.proposalId,
       "the current rotation survives all stale operations");
-    return `PASS ${checks} encrypted rotation storage, concurrent refresh, stale proposal and post-revocation append assertions`;
+    // A device whose first sync finds a rotation pending queues its earlier
+    // local history without an epoch, like a new change, so it is sealed
+    // under the new epoch rather than the one being retired.
+    {
+      const prejoinName = `${name}-prejoin`;
+      const prejoinDatabase = await new Promise((resolve, reject) => {
+        const request = indexedDB.open(prejoinName, 1);
+        request.onupgradeneeded = () => {
+          for (const [storeName, definition] of Object.entries(EVENT_STORE_DEFINITIONS)) {
+            const created = request.result.createObjectStore(storeName, {
+              keyPath: definition.keyPath, ...(storeName === "events" ? { autoIncrement: true } : {}),
+            });
+            for (const [index, path] of Object.entries(definition.indexes ?? {}))
+              created.createIndex(index, path, { unique: true });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      const prejoin = new EventStore(encryptedDatabase(prejoinDatabase, vault, EVENT_STORE_DEFINITIONS));
+      try {
+        await prejoin.ensureContext();
+        await prejoin.append({ type: "add", text: "Before joining", classification: "need" }, engine);
+        await prejoin.initializeSync({
+          identity: { householdId: "11".repeat(16), memberId: "22".repeat(16), deviceId: "88".repeat(16) },
+          serverStatus: { currentEpoch: 1, pendingEpoch: 2, rotationPending: true },
+          legacyBindingEnvelope: { test: "binding sealed later" },
+        });
+        const queued = await prejoin.getPendingOutbox();
+        check(queued.length === 1 && queued[0].keyEpoch === null && queued[0].envelope === null,
+          "history queued during a pending rotation waits for the new epoch");
+        await prejoin.updateSyncServerState({ currentEpoch: 2, pendingEpoch: null, rotationPending: false });
+        check((await prejoin.getPendingOutbox())[0].keyEpoch === 2,
+          "the completed rotation releases earlier history into the new epoch");
+      } finally {
+        prejoin.close();
+        await new Promise((resolve, reject) => {
+          const request = indexedDB.deleteDatabase(prejoinName);
+          request.onsuccess = resolve;
+          request.onerror = () => reject(request.error);
+          request.onblocked = () => reject(new Error("Pre-join regression database remained open."));
+        });
+      }
+    }
+    return `PASS ${checks} encrypted rotation storage, concurrent refresh, stale proposal, post-revocation append and pre-join history assertions`;
   } finally {
     store.close();
     vault.lock();

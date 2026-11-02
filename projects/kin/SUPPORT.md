@@ -1,21 +1,46 @@
 # Support
 
-Kin's last published release is v0.10.3, an incubation prototype with passkey-authenticated pairing and optional encrypted cross-device event sync. An unreleased v0.11.7 durable-service implementation candidate is awaiting human review. There is no staffed runtime support channel or guaranteed response time.
+Kin is a volunteer project built for the ZTM Build Fest. Questions and
+reports are read, but there is no staffed support channel, support contract
+or guaranteed response time. The current release is v1.6.0 — Kin for
+Everyone (`kin-v1.6.0`, 2026-10-21).
 
-## Questions and proposals
+## First, the docs
 
-For questions about the project direction or documentation, use the issue or discussion mechanism available in the hosting ZTM Build Fest repository and mention `projects/kin/` in the title or description. Keep reports focused and use synthetic examples. Do not include real household messages, health details, passwords, passkeys, tokens, or private keys.
+- Running it on your computer: [the README](README.md#run-kin-locally).
+- Running it on a server: [SELF-HOSTING](docs/SELF-HOSTING.md), then
+  [deploy/](deploy/README.md) for Docker Compose or
+  [deploy/railway/](deploy/railway/README.md) for Railway.
+- What a screen does: the Help button on every screen inside Kin, or
+  [UX](docs/UX.md).
+- Everything else: the [documentation map](docs/README.md).
 
-Feature proposals should describe the household problem, who experiences it, the smallest useful interaction, privacy/accessibility considerations, and why it belongs in the stated release scope. See [CONTRIBUTING](CONTRIBUTING.md).
+## Where to ask
 
-## Bug reports
+Kin lives inside the ZTM Build Fest repository, so use that repository's
+issues and put `Kin:` at the start of the title.
 
-For a prototype bug, use the Kin issue form if available; include the commit/version, operating system and browser, minimal reproduction steps, expected and actual behavior, and redacted error codes. Never attach real household data or unreviewed browser-storage dumps.
+| For | Use |
+| --- | --- |
+| A reproducible bug | The [bug report form](.github/ISSUE_TEMPLATE/bug_report.yml), or **Report a problem** inside Kin (also available from the lock screen) |
+| Trouble running your own server | The [self-hosting form](.github/ISSUE_TEMPLATE/self_hosting.yml) |
+| A proposal | The [feature proposal form](.github/ISSUE_TEMPLATE/feature_request.yml), or **Suggest something** inside Kin (household admins) |
+| A security problem | [SECURITY](SECURITY.md). Never a public issue. |
+| A conduct concern | [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) |
 
-## Security reports
+GitHub does not apply nested issue forms automatically; if the form does not
+appear, copy its headings into a plain issue.
 
-Do not report vulnerabilities publicly. Follow [SECURITY](SECURITY.md) for private reporting guidance and its current availability caveat.
+## What to include
 
-## Response expectations
+The release or commit (the Report a problem preview inside Kin shows the
+version), your operating
+system and browser (or that it is the installed app), the smallest steps that
+reproduce it, what you expected and what happened, and any error text with
+household details removed. For a self-hosting problem, add how you run Kin
+(Compose, Railway or Node directly), the `KIN_*` settings with secrets
+removed, and the `service_ready` or `startup_failed` log line.
 
-Kin is a volunteer project entry hosted in a larger repository. There is no guaranteed response time, support contract, or staffed operations team. For repository-wide process or moderation matters, the ZTM Build Fest maintainers control the applicable support channels.
+Never attach real household messages, names, passwords, passkeys, tokens,
+recovery keys or browser-storage dumps. Reports from inside Kin already strip
+household text; a screenshot is sent only if you choose one.

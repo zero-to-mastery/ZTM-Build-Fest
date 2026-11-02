@@ -68,7 +68,7 @@ class KinPulse extends HTMLElement {
     this.render();
   }
 
-  set pulse(value) { this.record = value; this.render(); }
+  set pulse(value) { if (value === this.record) return; this.record = value; this.render(); }
   set disabled(value) {
     this.isDisabled = value;
     for (const control of this.querySelectorAll("button, select")) control.disabled = value;

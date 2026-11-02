@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "theme": "solarized",
+  "seedMode": "custom",
+  "seed": "solar-system-v1",
+  "arrangement": "solar-system",
+  "majorMetric": "stars",
+  "nodeSize": "stars",
+  "nodeColorMode": "language",
+  "nodeGlowMode": "activity",
+  "connectionWeight": "languages",
+  "nodeShape": "mixed",
+  "legend": true,
+  "exportProfile": "hero"
+}

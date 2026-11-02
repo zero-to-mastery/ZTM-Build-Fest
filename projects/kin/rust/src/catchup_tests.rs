@@ -3,10 +3,23 @@ use crate::event::{
     ActorId, DeviceId, EventEnvelope, EventId, EventKind, HandoffId, HouseholdId,
     ItemClassification, ItemId, PulseValue, TalkId,
 };
-use crate::protocol::encode_state_v6;
+
 use crate::state::{
-    summarize, CatchUpSummary, SummaryEntityKind, SummaryEntry, SummaryKind, MAX_SUMMARY_ENTRIES,
+    rebuild, summarize_validated, CatchUpSummary, SummaryEntityKind, SummaryEntry, SummaryKind,
+    MAX_SUMMARY_ENTRIES,
 };
+
+fn summarize(
+    events: &[EventEnvelope],
+    cursor: Option<EventId>,
+) -> Result<CatchUpSummary, KinError> {
+    let state = rebuild(
+        events,
+        0,
+        crate::recurrence::CivilDate::from_encoded(20261003).unwrap(),
+    )?;
+    summarize_validated(events, cursor, &state)
+}
 
 fn id(value: u8) -> [u8; 16] {
     [value; 16]
@@ -162,6 +175,45 @@ fn lifecycle_summaries_use_the_referenced_entity_without_actor_data() {
 }
 
 #[test]
+fn item_lifecycle_summaries_keep_the_current_classification() {
+    let item_id = ItemId(id(33));
+    let mut added = item_added(1, "Milk");
+    if let EventKind::ItemAdded { classification, .. } = &mut added.kind {
+        *classification = ItemClassification::Shopping;
+    }
+    let events = vec![
+        added,
+        event(2, EventKind::ItemCompleted { item_id }),
+        event(3, EventKind::ItemReopened { item_id }),
+        event(4, EventKind::ItemArchived { item_id }),
+    ];
+
+    let summary = summarize(&events, Some(EventId(id(1)))).unwrap();
+
+    assert_eq!(
+        summary
+            .entries
+            .iter()
+            .map(|entry| (entry.kind, entry.classification))
+            .collect::<Vec<_>>(),
+        [
+            (
+                SummaryKind::ItemCompleted,
+                Some(ItemClassification::Shopping)
+            ),
+            (
+                SummaryKind::ItemReopened,
+                Some(ItemClassification::Shopping)
+            ),
+            (
+                SummaryKind::ItemArchived,
+                Some(ItemClassification::Shopping)
+            ),
+        ]
+    );
+}
+
+#[test]
 fn exact_duplicate_delivery_does_not_duplicate_a_summary_entry() {
     let added = item_added(1, "Milk");
     let summary = summarize(&[added.clone(), added], None).unwrap();
@@ -248,7 +300,12 @@ fn conflicting_event_id_reuse_rejects_the_entire_summary() {
 
 #[test]
 fn v6_result_encoder_rejects_invalid_summary_counts_and_record_combinations() {
-    let state = crate::state::rebuild_at(&[], 0).unwrap();
+    let state = crate::state::rebuild(
+        &[],
+        0,
+        crate::recurrence::CivilDate::from_encoded(20261003).unwrap(),
+    )
+    .unwrap();
     let added = SummaryEntry {
         event_id: EventId(id(1)),
         kind: SummaryKind::ItemAdded,
@@ -260,12 +317,12 @@ fn v6_result_encoder_rejects_invalid_summary_counts_and_record_combinations() {
     wrong_entity.entity_kind = SummaryEntityKind::Talk;
     let mut missing_classification = added.clone();
     missing_classification.classification = None;
-    let invalid_completion = SummaryEntry {
+    let missing_completion_classification = SummaryEntry {
         event_id: EventId(id(2)),
         kind: SummaryKind::ItemCompleted,
         entity_kind: SummaryEntityKind::Item,
         text: "Milk".to_owned(),
-        classification: Some(ItemClassification::Need),
+        classification: None,
     };
     let invalid_summaries = [
         CatchUpSummary {
@@ -299,7 +356,7 @@ fn v6_result_encoder_rejects_invalid_summary_counts_and_record_combinations() {
             through_event_id: Some(EventId(id(1))),
         },
         CatchUpSummary {
-            entries: vec![invalid_completion],
+            entries: vec![missing_completion_classification],
             total_count: 1,
             through_event_id: Some(EventId(id(2))),
         },
@@ -323,7 +380,7 @@ fn v6_result_encoder_rejects_invalid_summary_counts_and_record_combinations() {
 
     for summary in invalid_summaries {
         assert_eq!(
-            encode_state_v6(&state, &summary),
+            crate::state_encode::encode_state(&state, &summary),
             Err(KinError::MalformedProtocol)
         );
     }

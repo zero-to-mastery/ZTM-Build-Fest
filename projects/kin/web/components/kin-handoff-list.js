@@ -14,7 +14,7 @@ class KinHandoffList extends HTMLElement {
     heading.textContent = "Handoff";
     const hint = document.createElement("p");
     hint.className = "handoff-hint";
-    hint.textContent = "A little context for picking things up.";
+    hint.textContent = "Context one person passes to another. Got it means the other person has seen it; nothing is tracked passively.";
     const form = document.createElement("form");
     form.className = "compose-form handoff-form";
     const label = document.createElement("label");
@@ -41,7 +41,7 @@ class KinHandoffList extends HTMLElement {
       if (this.isDisabled) return;
       const text = this.input.value;
       if (!text.trim() || new TextEncoder().encode(text).length > 4096) {
-        this.message.textContent = "Add a few words, up to 4096 UTF-8 bytes.";
+        this.message.textContent = text.trim() ? "That's too long for one handoff. Shorten it to roughly 4,000 characters or fewer." : "Add a few words first.";
         this.focusInput();
         return;
       }
@@ -57,6 +57,7 @@ class KinHandoffList extends HTMLElement {
   }
 
   set handoffs(value) {
+    if (value === this.records) return; // unchanged projection section
     this.records = value;
     this.render();
   }
@@ -94,10 +95,10 @@ class KinHandoffList extends HTMLElement {
     if (!visible.length) {
       const empty = document.createElement("p");
       empty.className = "empty-state";
-      empty.textContent = "No handoffs yet. Leave a few words for later.";
+      empty.textContent = "No handoffs yet. Leave a few words for whoever picks things up next.";
       this.lists.append(empty);
     }
-    for (const [status, title] of [["unacknowledged", "Needs attention"], ["acknowledged", "Recent — acknowledged"]]) {
+    for (const [status, title] of [["unacknowledged", "Waiting for a Got it"], ["acknowledged", "Seen"]]) {
       const records = visible.filter(record => record.status === status).reverse();
       if (!records.length) continue;
       const heading = document.createElement("h3");
@@ -108,6 +109,8 @@ class KinHandoffList extends HTMLElement {
       for (const record of records) {
         const row = document.createElement("li");
         row.className = "item-row handoff-row";
+        row.dataset.handoffId = record.handoffId;
+        row.tabIndex = -1;
         const text = document.createElement("p");
         text.className = "item-text";
         text.textContent = record.text;
@@ -116,10 +119,10 @@ class KinHandoffList extends HTMLElement {
         if (status === "acknowledged") {
           const label = document.createElement("span");
           label.className = "completed-label";
-          label.textContent = "Acknowledged";
+          label.textContent = "Seen";
           actions.append(label);
         } else {
-          actions.append(this.actionButton("Acknowledge", "acknowledge", record));
+          actions.append(this.actionButton("Got it", "acknowledge", record));
         }
         actions.append(this.actionButton("Archive", "archive", record));
         row.append(text, actions);
@@ -134,7 +137,8 @@ class KinHandoffList extends HTMLElement {
     button.type = "button";
     button.className = action === "archive" ? "archive-button" : "complete-button";
     button.textContent = label;
-    button.setAttribute("aria-label", `${label} ${record.text}`);
+    // "Got it" is the visible verb; the accessible name keeps the plain action.
+    button.setAttribute("aria-label", `${action === "acknowledge" ? "Acknowledge" : label} ${record.text}`);
     button.disabled = this.isDisabled;
     button.addEventListener("click", () => this.dispatchCommand(action, { handoffId: record.handoffId }));
     return button;

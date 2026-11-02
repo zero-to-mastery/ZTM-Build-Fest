@@ -1,0 +1,45 @@
+# Kin test server: Kin plus Caddy for HTTPS (deploy/README.md).
+#   cd projects/kin/deploy && cp .env.example .env   # then edit .env
+#   docker compose up -d --build
+name: kin
+
+services:
+  kin:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    environment:
+      KIN_ORIGIN: https://${KIN_DOMAIN:?Set KIN_DOMAIN in deploy/.env}
+      # Caddy runs in this container's network namespace, so every request
+      # arrives from loopback; trust it to report the real client address.
+      KIN_TRUSTED_PROXIES: "127.0.0.1,::1"
+      KIN_MAX_HOUSEHOLDS: ${KIN_MAX_HOUSEHOLDS:-10}
+      KIN_ALLOW_NEW_HOUSEHOLDS: ${KIN_ALLOW_NEW_HOUSEHOLDS:-true}
+    volumes:
+      - kin-data:/data
+    # Caddy's ports are published here because Caddy shares this namespace.
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+
+  caddy:
+    image: caddy:2.10.2-alpine
+    restart: unless-stopped
+    # Share Kin's network namespace: Caddy reaches Kin on 127.0.0.1:8000 and
+    # Kin stays unreachable from anywhere else.
+    network_mode: service:kin
+    depends_on:
+      - kin
+    environment:
+      KIN_DOMAIN: ${KIN_DOMAIN:?Set KIN_DOMAIN in deploy/.env}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  kin-data:
+  caddy-data:
+  caddy-config:

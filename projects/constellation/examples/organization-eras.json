@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "account": "example-community",
+  "accountType": "organization",
+  "organizationScope": "all-metadata",
+  "organizationView": "history",
+  "arrangement": "era-rings",
+  "animate": false,
+  "identityRing": false,
+  "organization": { "contributors": { "strategy": "off" }, "grouping": { "mode": "regex", "pattern": "^v(?<voyage>\\d+)-" } }
+}

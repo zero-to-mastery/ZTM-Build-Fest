@@ -1,0 +1,6 @@
+// The Android Gradle Plugin version Bubblewrap's template uses with
+// androidbrowserhelper 2.7.4 (compileSdk 36). Needs Gradle 8.11.1 or newer
+// and Java 17 or newer to run.
+plugins {
+    id 'com.android.application' version '8.9.1' apply false
+}

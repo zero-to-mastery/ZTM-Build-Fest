@@ -1,6 +1,51 @@
 # Household Domain
 
-**Status:** Current through v0.7.0 Routines; earlier version sections are historical contracts. See v0.7.0 below.
+## v0.17.0 Checklist Steps
+
+An Item may contain up to 16 ordered Steps over its lifetime, including
+archived Steps. Each Step has a stable household-unique `StepId`, trimmed
+plain-text label, completion state, and terminal archive state. Labels contain
+1–80 Unicode scalar values, at most 256 UTF-8 bytes, and no control characters.
+Step order is creation/replay order; reordering, nesting, assignment, due dates,
+and independent Step scheduling are not part of this capability.
+
+Step completion is independent from parent Item completion. Completing every
+Step never completes the Item. Step mutations require an active parent Item;
+reopen a completed Item before changing its Steps. Archiving an Item preserves
+its Step history. Archiving a Step hides it from the active checklist but does
+not release its lifetime capacity or erase its events.
+
+Concurrent equal-logical-time Step archive and Step completion/reopen events
+from different devices resolve to the terminal archive. A same-time parent
+Item archive suppresses Step mutations regardless of replay order. Later
+non-concurrent mutation after either terminal archive is invalid.
+
+**Status:** v0.17.0 Checklist Steps is implemented and validated; this section
+records the delivered contract.
+
+## v0.16.0 Notes
+
+A Note is durable plain-text reference context with a stable `NoteId`, trimmed
+required title, body, optional `AreaId`, terminal archived state, and event
+provenance (`created_by/at`, `updated_by/at`). Notes are not tasks, chat,
+comments, documents, reminders, or rich text. There are no folders, tags, or
+second taxonomy. The lifetime household cap is 128 Notes; titles allow 1–80
+Unicode scalar values and at most 256 UTF-8 bytes; bodies allow 0–4096 UTF-8
+bytes. The bounds keep one canonical event below the existing 8 KiB encrypted
+sync envelope after framing and base64 expansion. Titles reject controls; bodies
+reject controls other than tab and line breaks. Archive is terminal.
+
+An optional Area points to the stable existing Area ID. New assignments require
+a known active Area. Existing association remains visible after that Area is
+renamed or archived; replay preserves stale events authored before archival.
+
+Concurrent equal-logical-time `NOTE_UPDATED` and `NOTE_ARCHIVED` events from
+different devices resolve to the terminal archive. The update is ignored in
+either device ordering, so the projected archived title/body remain the same
+regardless of the replay input order. A later non-concurrent update after
+archive remains invalid.
+
+**Status:** Current through the v0.17.0 Checklist Steps capability; earlier version sections are historical contracts.
 
 ## Scope and relationships
 
@@ -21,7 +66,7 @@ The event stream records changes; current domain state is a projection of valid 
 
 A household is one private coordination space with a stable, opaque `household_id`. The ID remains stable when a member replaces a device. It is included in each event so data from different households cannot be silently mixed.
 
-The initial product assumption is two adult members. This is a scope constraint, not a role/permission system. A household is created, active, and eventually may be closed or deleted through an explicit lifecycle; there is no implicit transfer of ownership when a device changes.
+The initial product assumption was two adult members. Membership is now bounded by member class (Adult, Limited, Temporary), and one narrow server-recorded flag, household admin, marks the Adults who manage membership and shared settings. This is not a general role/permission system. A household is created, active, and eventually may be closed or deleted through an explicit lifecycle; there is no implicit transfer of ownership when a device changes.
 
 In v0.1.x, the household ID is a local placeholder created for the browser installation. It does not represent a remotely registered household and does not establish membership or authentication. Household creation, membership, closure, recovery, and deletion protocols remain future work.
 
@@ -37,6 +82,8 @@ A device is one browser/application installation with an opaque, stable `device_
 
 Conceptual authorization states are unregistered, trusted, and revoked. Only an authorized device may participate in future sync. Revocation blocks future authorization/sync but cannot erase plaintext or keys already copied to a device. v0.1.0 has only a local installation placeholder; trusted-device enrollment and revocation are not implemented.
 
+A device carried over from the old address is a trusted device record that arrived with a household move ([ADR 0026](decisions/0026-moving-a-household.md) §6). It keeps its keys and certificate, so the history it signed still verifies, but it has no token and can't sign in at the new address. A household admin revokes such devices together once everyone has re-joined; they are revoked, never deleted.
+
 ## Credential
 
 A credential is an authenticator associated with a member, such as a future passkey. It proves control of an authentication credential; it is not the member, household, device, or household encryption key. A credential may be used on or to authorize a device according to the identity protocol planned for v0.0.5.
@@ -49,9 +96,51 @@ Items are not project-management tasks. The initial model deliberately avoids pr
 
 v0.2.0 includes adding an item as Today or Need, completion, reopening, and archival. A legacy v0.1.x add has no classification and normalizes to Today without changing its stored bytes. Archive is a terminal state/tombstone, not physical deletion of historical events. Priority, labels, assignment, and project metadata are not part of the Item model.
 
+## v0.19.0 Shared Shopping Lists
+
+Shopping is a third classification of the existing Item entity. It uses the
+same identity, completion, reopening, and archival lifecycle as Today and
+Needs Items; it does not add quantity, price, purchase assignment, or
+inventory state. See [V0.19.0](planning/releases/V0.19.0.md).
+
+## v0.20.0 Staples & Replenishment
+
+Staples are reusable Items on a dedicated list. A household member explicitly
+adds a staple to Shopping when needed; the app does not infer stock, quantity,
+or timing, and the staple remains active. The resulting Shopping Item is
+independent and follows the regular Shopping lifecycle. See
+[V0.20.0](planning/releases/V0.20.0.md).
+
+## v0.21.0 Household Modes
+
+Household mode is Normal, Vacation, Guests, or Rest. Normal is the default.
+Explicit changes are shared canonical events; non-Normal modes pause routine
+occurrences while leaving routine definitions and archival intact. Modes do
+not infer location, presence, schedules, or member activity.
+
+## v0.22.0 Lightweight Planning Dates
+
+An Item may have one optional civil planning date. Today and Tomorrow are
+convenience choices resolved in the member's local calendar when selected;
+the stored date is thereafter fixed. Dates are not deadlines, reminders, or
+calendar events, and Kin does not infer urgency or roll them forward.
+
+## Meals (#333)
+
+A **Recipe** is a household's own: a name, up to 40 ingredient lines (each
+optionally linked to a Staple) and notes. Recipes are saved whole and
+archived, never deleted. A **Dinner** is at most one per civil date: a recipe
+(with its name copied) or "something else" by name, plus an optional **cook**
+— any household member, chosen by people, never counted or ranked. Adding a
+recipe's ingredients to Shopping makes ordinary Shopping Items: a linked
+Staple is re-added, a line already on Shopping (same text, ignoring case and
+spacing) is skipped, and the rest are added, so repeating it adds nothing
+twice. Kin doesn't track quantities, pantry stock or nutrition. See
+[ADR 0012](decisions/0012-meals.md) and [EVENTS](EVENTS.md#meals).
+
 ## Handoff
 
-A Handoff is a short context transfer one household member wants another to know. Its conceptual lifecycle is created, unacknowledged, acknowledged, and archived. Acknowledgement means receipt, not agreement, approval, or evaluation. Handoffs are implemented in v0.3.0 as a separate typed entity; see [V0.3.0](V0.3.0.md). Repeated acknowledgement is a valid no-op. Creator and acknowledger may be the same local actor; no verified identity is inferred.
+A Handoff is a short context transfer one household member wants another to know. Its conceptual lifecycle is created, unacknowledged, acknowledged, and archived. Acknowledgement means receipt, not agreement, approval, or evaluation. Handoffs are implemented in v0.3.0 as a separate typed entity; see [V0.3.0](planning/V0.3.0.md). Repeated acknowledgement is a valid no-op. Creator and acknowledger may be the same local actor; no verified identity is inferred.
 
 ## Talk
 
@@ -75,12 +164,19 @@ An Event is an immutable, identified fact describing a domain change. The v0.2.0
 
 ## v0.5.0 Pulse
 
-Pulse is the latest capacity per actor: enum Good/Okay/Drained/RoughDay/NeedQuiet, set_at, expires_at, active/expired status. No PulseId, arbitrary text, name or acknowledgement. Actor IDs remain unverified placeholders. See [V0.5.0](V0.5.0.md).
+Pulse is the latest capacity per actor: enum Good/Okay/Drained/RoughDay/NeedQuiet, set_at, expires_at, active/expired status. No PulseId, arbitrary text, name or acknowledgement. Actor IDs remain unverified placeholders. See [V0.5.0](planning/V0.5.0.md).
 
 ## v0.6.0 Since You Last Looked
 
-The summary is a derived household projection over existing Item, Handoff and Talk events. It adds no domain entity or event kind. The catch-up cursor belongs to one browser installation's local UI context; it does not represent a member, device identity claim, acknowledgement, or read receipt. Pulse events advance the snapshot boundary but do not create summary entries. See [V0.6.0](V0.6.0.md).
+The summary is a derived household projection over existing Item, Handoff and Talk events. It adds no domain entity or event kind. The catch-up cursor belongs to one browser installation's local UI context; it does not represent a member, device identity claim, acknowledgement, or read receipt. Pulse events advance the snapshot boundary but do not create summary entries. See [V0.6.0](planning/V0.6.0.md).
 
 ## v0.7.0 Routines
 
-Routines are immutable Daily/Weekly definitions with derived occurrences. Monday starts a week. Complete/reopen applies to the current occurrence; archive ends the definition. Editing means archive and create anew. No reminders, missed counts, assignments or history UI. See [V0.7.0](V0.7.0.md).
+Routines are immutable Daily/Weekly definitions with derived occurrences. Monday starts a week. Complete/reopen applies to the current occurrence; archive ends the definition. Editing means archive and create anew. No reminders, missed counts, assignments or history UI. See [V0.7.0](planning/V0.7.0.md).
+
+## v0.15.0 Areas
+
+An Area is optional, flat place/context for supported household content. It has
+a stable ID, user-controlled display name, and archived flag. Item assignment
+is optional; there are no Area permissions, nested Areas, projects, or hard
+deletion. See [v0.15.0](planning/releases/V0.15.0.md).

@@ -230,7 +230,7 @@ export async function keyMigrationRegression() {
 
   async function rawRows() {
     const db = await new Promise((resolve, reject) => {
-      const request = indexedDB.open(name, 4);
+      const request = indexedDB.open(name);
       request.onsuccess = () => resolve(request.result); request.onerror = () => reject(request.error);
     });
     try {
