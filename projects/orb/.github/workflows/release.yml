@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: macos-latest, target: aarch64-apple-darwin, asset: macos-aarch64 }
+          - { runner: macos-latest, target: x86_64-apple-darwin, asset: macos-x86_64 }
+          - { runner: ubuntu-24.04, target: x86_64-unknown-linux-musl, asset: linux-x86_64 }
+          - { runner: ubuntu-24.04-arm, target: aarch64-unknown-linux-musl, asset: linux-aarch64 }
+    runs-on: ${{ matrix.runner }}
+    env:
+      TARGET: ${{ matrix.target }}
+      ASSET: ${{ matrix.asset }}
+      CC_x86_64_unknown_linux_musl: musl-gcc
+      CC_aarch64_unknown_linux_musl: musl-gcc
+    steps:
+      - uses: actions/checkout@v7
+      - name: Rust toolchain from rust-toolchain.toml
+        run: rustup toolchain install && rustup target add "$TARGET"
+      - name: musl-gcc
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y musl-tools
+      - run: cargo build --release --locked --target "$TARGET"
+      - name: Package
+        shell: bash
+        run: |
+          set -eu
+          ver=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
+          case "$GITHUB_REF" in refs/tags/v*) test "${GITHUB_REF_NAME#v}" = "$ver" ;; esac
+          bin=target/$TARGET/release/orb
+          if [ "$TARGET" != x86_64-apple-darwin ]; then test "$("$bin" --version)" = "orb $ver"; fi
+          name=orb-$ver-$ASSET.tar.gz
+          tar -czf "$name" -C "$(dirname "$bin")" orb
+          shasum -a 256 "$name" > "$name.sha256"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ${{ matrix.asset }}
+          path: orb-*.tar.gz*
+          if-no-files-found: error
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          merge-multiple: true
+      - run: gh release create "$GITHUB_REF_NAME" orb-* --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}

@@ -1,0 +1,5 @@
+# raw data may contain IPs and user agents
+data/
+# tokens, sourced by scripts only
+.env
+.claude/settings.local.json

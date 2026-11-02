@@ -1,0 +1,8 @@
+# Test timeout for rstest-generated tests. rstest reads this variable at
+# COMPILE TIME (the proc macro bakes Duration::from_secs(N) into each test
+# body), so it must be present for every rustc invocation — hence here,
+# where cargo injects it into every build, rather than an entrypoint-only
+# justfile export. 10 seconds bounds any single test from any entrypoint
+# (just test, plain cargo test, rust-analyzer, CI).
+[env]
+RSTEST_TIMEOUT = "10"
