@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calm Reader</title>
+  <link rel="stylesheet" href="ui.css">
+  <style>body { width: 320px; }</style>
+</head>
+<body>
+  <h1>Calm Reader</h1>
+  <label class="row"><input type="checkbox" id="enabled"> <strong>Use a reading profile</strong></label>
+  <fieldset>
+    <legend>Profile</legend>
+    <div id="profiles"></div>
+  </fieldset>
+  <label class="row" id="site-row"><input type="checkbox" id="site-off"> <span id="site-label"></span></label>
+  <button type="button" id="simplify">Simplify this page</button>
+  <p class="hint">Select text first to simplify just that part.</p>
+  <p id="status" class="error" aria-live="polite"></p>
+  <p><a href="#" id="settings">Settings and API key</a></p>
+  <script src="popup.js"></script>
+</body>
+</html>
