@@ -1,0 +1,71 @@
+{
+  "about": "Shared relationship trail fixtures (ADR 0175). `atlas` is the published atlas the Rust test renders; `start` is the entry whose page holds the trail; `steps` is what the real bounded walk (ADR 0170) and the page's data attributes say about it, which crates/openblog-core/tests/atlas_trail.rs checks against the real renderer; `filters` is read by tests/web/atlas-trail.test.mjs and checks the component's filterSteps against the ids each filter must show.",
+  "library": { "version": 1, "sources": [{ "id": "plato-republic", "kind": "work", "title": "Politeia" }] },
+  "atlas": {
+    "version": 1,
+    "entries": [
+      { "id": "plato", "kind": "person", "label": "Plato", "visibility": "approved" },
+      { "id": "republic", "kind": "work", "label": "Republic", "visibility": "approved", "source": "plato-republic" },
+      { "id": "cave", "kind": "concept", "label": "Allegory of the cave", "visibility": "approved" },
+      { "id": "socrates", "kind": "person", "label": "Socrates", "visibility": "approved" },
+      { "id": "secret", "kind": "concept", "label": "PRIVATE-TRAIL-MARKER label", "visibility": "private" }
+    ],
+    "relationships": [
+      {
+        "id": "r-authored", "kind": "authored", "from": "plato", "to": "republic", "visibility": "approved",
+        "assertedBy": { "kind": "author" }, "confidence": "plausible",
+        "evidence": [{ "source": "plato-republic", "locators": [{ "kind": "canonical", "value": "514a" }] }],
+        "uncertainty": "The dating is unsettled.",
+        "contestedBy": [{ "by": { "kind": "named", "name": "A later editor" }, "note": "Dates it later.", "evidence": [{ "source": "plato-republic" }] }]
+      },
+      {
+        "id": "r-developed", "kind": "developed", "from": "plato", "to": "cave", "visibility": "approved",
+        "assertedBy": { "kind": "author" }, "confidence": "tentative",
+        "evidence": [{ "source": "plato-republic" }]
+      },
+      {
+        "id": "r-discusses", "kind": "discusses", "from": "republic", "to": "cave", "visibility": "approved",
+        "assertedBy": { "kind": "author" }, "confidence": "strong",
+        "evidence": [{ "source": "plato-republic", "locators": [{ "kind": "canonical", "value": "514a" }] }]
+      },
+      {
+        "id": "r-influenced", "kind": "influenced", "from": "cave", "to": "plato", "visibility": "approved",
+        "assertedBy": { "kind": "author" }, "confidence": "plausible",
+        "evidence": [{ "source": "plato-republic" }]
+      },
+      {
+        "id": "r-related", "kind": "related-to", "from": "socrates", "to": "plato", "visibility": "approved",
+        "assertedBy": { "kind": "author" }, "confidence": "tentative",
+        "evidence": [{ "source": "plato-republic" }],
+        "uncertainty": "Only the dialogues record it."
+      },
+      {
+        "id": "r-private", "kind": "influenced", "from": "plato", "to": "secret", "visibility": "private",
+        "assertedBy": { "kind": "author" }, "confidence": "plausible",
+        "evidence": [{ "source": "plato-republic" }], "uncertainty": "PRIVATE-TRAIL-MARKER relationship"
+      }
+    ]
+  },
+  "start": "plato",
+  "steps": [
+    { "id": "r-authored", "depth": 1, "kind": "authored", "kindLabel": "authored", "direction": "forward", "contested": true, "uncertain": true, "again": false, "reached": "republic" },
+    { "id": "r-developed", "depth": 1, "kind": "developed", "kindLabel": "developed", "direction": "forward", "contested": false, "uncertain": false, "again": false, "reached": "cave" },
+    { "id": "r-influenced", "depth": 1, "kind": "influenced", "kindLabel": "influenced", "direction": "backward", "contested": false, "uncertain": false, "again": true, "reached": "cave" },
+    { "id": "r-related", "depth": 1, "kind": "related-to", "kindLabel": "related to", "direction": "symmetric", "contested": false, "uncertain": true, "again": false, "reached": "socrates" },
+    { "id": "r-discusses", "depth": 2, "kind": "discusses", "kindLabel": "discusses", "direction": "forward", "contested": false, "uncertain": false, "again": true, "reached": "cave" }
+  ],
+  "filters": [
+    { "name": "no filter shows every step", "filters": {}, "shown": ["r-authored", "r-developed", "r-influenced", "r-related", "r-discusses"] },
+    { "name": "one type", "filters": { "kind": "authored" }, "shown": ["r-authored"] },
+    { "name": "a type the trail does not have", "filters": { "kind": "nope" }, "shown": [] },
+    { "name": "along the stated direction (a symmetric relationship is shown under either direction)", "filters": { "direction": "forward" }, "shown": ["r-authored", "r-developed", "r-related", "r-discusses"] },
+    { "name": "against the stated direction (a symmetric relationship is shown under either direction)", "filters": { "direction": "backward" }, "shown": ["r-influenced", "r-related"] },
+    { "name": "an unknown direction shows nothing", "filters": { "direction": "sideways" }, "shown": [] },
+    { "name": "within one step", "filters": { "depth": 1 }, "shown": ["r-authored", "r-developed", "r-influenced", "r-related"] },
+    { "name": "within two steps", "filters": { "depth": 2 }, "shown": ["r-authored", "r-developed", "r-influenced", "r-related", "r-discusses"] },
+    { "name": "a depth that is not a number is any depth", "filters": { "depth": "1" }, "shown": ["r-authored", "r-developed", "r-influenced", "r-related", "r-discusses"] },
+    { "name": "only contested or uncertain", "filters": { "doubtful": true }, "shown": ["r-authored", "r-related"] },
+    { "name": "filters combine", "filters": { "direction": "backward", "doubtful": true }, "shown": ["r-related"] },
+    { "name": "filters that exclude each other show nothing", "filters": { "kind": "influenced", "direction": "forward" }, "shown": [] }
+  ]
+}

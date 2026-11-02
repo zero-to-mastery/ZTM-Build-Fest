@@ -1,0 +1,20 @@
+[package]
+name = "openblog-wasm"
+description = "WebAssembly bindings for openblog-core: live Markdown rendering, search, and theme CSS in the browser."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+openblog-core = { path = "../openblog-core" }
+wasm-bindgen = "0.2"
+serde_json = { workspace = true }
+
+[package.metadata.wasm-pack.profile.release]
+# The wasm-opt that wasm-pack bundles rejects instructions current rustc emits.
+# Rust's own release optimization (opt-level "s", LTO) is enough for this module.
+wasm-opt = false

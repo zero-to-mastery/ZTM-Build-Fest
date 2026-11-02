@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<channel>
+<title>T</title>
+<link>https://example.test/</link>
+<description>A blog built with open.blog</description>
+<language>en</language>
+<atom:link href="https://example.test/rss.xml" rel="self" type="application/rss+xml"/>
+<generator>open.blog</generator>
+<lastBuildDate>Wed, 01 Jul 2026 00:00:00 GMT</lastBuildDate>
+<item>
+<title>Part l4</title>
+<link>https://example.test/l4/</link>
+<guid isPermaLink="true">https://example.test/l4/</guid>
+<pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+<dc:creator>Site Owner</dc:creator>
+<category>notes</category>
+<description>About l4.</description>
+<content:encoded><![CDATA[<p>Body of l4.</p>
+]]></content:encoded>
+</item>
+<item>
+<title>Part l3</title>
+<link>https://example.test/l3/</link>
+<guid isPermaLink="true">https://example.test/l3/</guid>
+<pubDate>Mon, 01 Jun 2026 00:00:00 GMT</pubDate>
+<dc:creator>Site Owner</dc:creator>
+<category>notes</category>
+<description>About l3.</description>
+<content:encoded><![CDATA[<p>Body of l3.</p>
+]]></content:encoded>
+</item>
+<item>
+<title>Part l2</title>
+<link>https://example.test/l2/</link>
+<guid isPermaLink="true">https://example.test/l2/</guid>
+<pubDate>Fri, 01 May 2026 00:00:00 GMT</pubDate>
+<dc:creator>Site Owner</dc:creator>
+<category>notes</category>
+<description>About l2.</description>
+<content:encoded><![CDATA[<p>Body of l2.</p>
+]]></content:encoded>
+</item>
+<item>
+<title>Part l1</title>
+<link>https://example.test/l1/</link>
+<guid isPermaLink="true">https://example.test/l1/</guid>
+<pubDate>Wed, 01 Apr 2026 00:00:00 GMT</pubDate>
+<dc:creator>Site Owner</dc:creator>
+<category>notes</category>
+<description>About l1.</description>
+<content:encoded><![CDATA[<p>Body of l1.</p>
+]]></content:encoded>
+</item>
+<item>
+<title>Part loose</title>
+<link>https://example.test/loose/</link>
+<guid isPermaLink="true">https://example.test/loose/</guid>
+<pubDate>Sun, 01 Mar 2026 00:00:00 GMT</pubDate>
+<dc:creator>Site Owner</dc:creator>
+<category>notes</category>
+<description>About loose.</description>
+<content:encoded><![CDATA[<p>Body of loose.</p>
+]]></content:encoded>
+</item>
+<item>
+<title>Part g2</title>
+<link>https://example.test/g2/</link>
+<guid isPermaLink="true">https://example.test/g2/</guid>
+<pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate>
+<dc:creator>Cy</dc:creator>
+<category>notes</category>
+<description>About g2.</description>
+<content:encoded><![CDATA[<aside class="ob-contributions" aria-labelledby="ob-contributions-title">
+<h2 id="ob-contributions-title" class="ob-contributions-title">Contributions</h2>
+<ul>
+<li><div><span class="ob-contributor-name">Cy</span><span class="ob-contributor-roles">Author</span></div></li>
+</ul>
+</aside>
+<p>Body of g2.</p>
+]]></content:encoded>
+</item>
+<item>
+<title>Part g1</title>
+<link>https://example.test/g1/</link>
+<guid isPermaLink="true">https://example.test/g1/</guid>
+<pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+<dc:creator>Site Owner</dc:creator>
+<category>notes</category>
+<description>About g1.</description>
+<content:encoded><![CDATA[<p>Body of g1.</p>
+]]></content:encoded>
+</item>
+</channel>
+</rss>

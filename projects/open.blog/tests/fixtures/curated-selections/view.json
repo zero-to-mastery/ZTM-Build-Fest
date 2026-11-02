@@ -1,0 +1,636 @@
+{
+  "revision": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "file": ".openblog/private/research/selections.json",
+  "publish": true,
+  "post": "cave",
+  "selections": [
+    {
+      "id": "relationship-authored",
+      "kind": "relationship",
+      "target": "r-authored",
+      "label": "Plato authored Republic",
+      "state": "selected",
+      "status": "published",
+      "appliesToPost": true,
+      "fields": [
+        "assertedBy",
+        "confidence",
+        "contestedBy",
+        "evidence",
+        "standing",
+        "uncertainty"
+      ],
+      "provenance": {
+        "origin": "unrecorded"
+      },
+      "posts": [
+        "cave"
+      ],
+      "positions": {
+        "cave": 1
+      }
+    },
+    {
+      "id": "entry-plato",
+      "kind": "contextual-entry",
+      "target": "plato",
+      "label": "Plato",
+      "state": "selected",
+      "status": "published",
+      "appliesToPost": true,
+      "fields": [
+        "summary"
+      ],
+      "provenance": {
+        "origin": "unrecorded"
+      },
+      "posts": [
+        "cave"
+      ],
+      "positions": {
+        "cave": 2
+      }
+    },
+    {
+      "id": "dating-birth-a",
+      "kind": "timeline",
+      "target": "plato-birth-a",
+      "label": "birth: 428 BCE",
+      "state": "selected",
+      "status": "published",
+      "appliesToPost": true,
+      "fields": [
+        "assertedBy",
+        "confidence",
+        "date",
+        "evidence",
+        "note",
+        "placement",
+        "text"
+      ],
+      "provenance": {
+        "origin": "unrecorded"
+      },
+      "posts": [
+        "cave"
+      ],
+      "positions": {
+        "cave": 3
+      },
+      "notices": [
+        {
+          "code": "competing-unselected",
+          "message": "Selection `dating-birth-a`: competing datings of the same aspect are published but not selected: plato-birth-b."
+        }
+      ]
+    },
+    {
+      "id": "entry-academy",
+      "kind": "contextual-entry",
+      "target": "academy",
+      "label": "The Academy <b>x</b>",
+      "state": "selected",
+      "status": "published",
+      "appliesToPost": true,
+      "fields": [],
+      "provenance": {
+        "origin": "unrecorded"
+      }
+    },
+    {
+      "id": "reference-undated",
+      "kind": "reference",
+      "target": "undated",
+      "label": "Undated",
+      "state": "selected",
+      "status": "published",
+      "appliesToPost": true,
+      "fields": [
+        "creators",
+        "issued",
+        "title"
+      ],
+      "provenance": {
+        "origin": "unrecorded"
+      },
+      "posts": [
+        "cave"
+      ],
+      "notices": [
+        {
+          "code": "provenance-unrecorded",
+          "field": "provenance",
+          "message": "Selection `reference-undated`: where this metadata came from is not recorded, and is published as unrecorded."
+        },
+        {
+          "code": "missing-detail",
+          "field": "creators",
+          "message": "Selection `reference-undated`: `creators` is selected but the source has none; it is left out, not invented."
+        },
+        {
+          "code": "missing-detail",
+          "field": "issued",
+          "message": "Selection `reference-undated`: `issued` is selected but the source has none; it is left out, not invented."
+        }
+      ]
+    },
+    {
+      "id": "comparison-cave",
+      "kind": "comparison",
+      "target": "cave",
+      "label": "The cave",
+      "state": "withdrawn",
+      "status": "withheld",
+      "why": "withdrawn",
+      "message": "Selection `comparison-cave` is withdrawn, so it publishes nothing.",
+      "appliesToPost": true,
+      "fields": [
+        "confidence",
+        "correspondence",
+        "correspondenceLabel",
+        "evidence",
+        "rationale",
+        "recordedBy",
+        "uncertainty",
+        "versions"
+      ],
+      "provenance": {
+        "origin": "unrecorded"
+      },
+      "posts": [
+        "cave"
+      ],
+      "withdrawnReason": "rethinking the wording"
+    },
+    {
+      "id": "entry-republic",
+      "kind": "contextual-entry",
+      "target": "republic",
+      "label": "Republic",
+      "state": "selected",
+      "status": "withheld",
+      "why": "stale",
+      "message": "Selection `entry-republic` was selected before the contextual-entry `republic` or something it depends on changed. Check it, then select it again to publish it as it now stands.",
+      "appliesToPost": true,
+      "fields": [],
+      "provenance": {
+        "origin": "unrecorded"
+      },
+      "posts": [
+        "cave"
+      ]
+    },
+    {
+      "id": "annotation-other",
+      "kind": "source-annotation",
+      "target": "burnet",
+      "label": "Platonis Opera",
+      "state": "selected",
+      "status": "published",
+      "appliesToPost": false,
+      "fields": [
+        "by",
+        "text"
+      ],
+      "text": "A comment for another post.",
+      "by": "The author",
+      "provenance": {
+        "origin": "unrecorded"
+      },
+      "posts": [
+        "other"
+      ]
+    }
+  ],
+  "preview": {
+    "format": "openblog-curated-context",
+    "formatVersion": 1,
+    "post": "cave",
+    "items": [
+      {
+        "id": "relationship-authored",
+        "kind": "relationship",
+        "target": "r-authored",
+        "revision": "93a2ffaed3a8dc8b",
+        "content": {
+          "assertedBy": {
+            "kind": "source",
+            "source": "scholar"
+          },
+          "confidence": "plausible",
+          "contestedBy": [
+            {
+              "by": {
+                "kind": "named",
+                "name": "A later editor"
+              },
+              "evidence": [
+                {
+                  "source": "republic"
+                }
+              ],
+              "note": "Dates it later."
+            }
+          ],
+          "evidence": [
+            {
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "514"
+                }
+              ],
+              "source": "burnet"
+            }
+          ],
+          "from": "plato",
+          "id": "r-authored",
+          "inverseLabel": "authored by",
+          "kind": "authored",
+          "label": "authored",
+          "standing": "contested",
+          "to": "republic",
+          "uncertainty": "The dating is unsettled."
+        },
+        "provenance": {
+          "origin": "unrecorded"
+        },
+        "posts": [
+          "cave"
+        ],
+        "positions": {
+          "cave": 1
+        }
+      },
+      {
+        "id": "entry-plato",
+        "kind": "contextual-entry",
+        "target": "plato",
+        "revision": "d2ee698f5d742919",
+        "content": {
+          "id": "plato",
+          "kind": "person",
+          "label": "Plato",
+          "summary": "An Athenian philosopher.",
+          "url": "/atlas/plato/"
+        },
+        "provenance": {
+          "origin": "unrecorded"
+        },
+        "posts": [
+          "cave"
+        ],
+        "positions": {
+          "cave": 2
+        }
+      },
+      {
+        "id": "dating-birth-a",
+        "kind": "timeline",
+        "target": "plato-birth-a",
+        "revision": "f68906b5f4631cbb",
+        "content": {
+          "aspect": "birth",
+          "assertedBy": {
+            "kind": "source",
+            "source": "scholar"
+          },
+          "confidence": "plausible",
+          "date": {
+            "at": {
+              "year": -428
+            }
+          },
+          "evidence": [
+            {
+              "locators": [
+                {
+                  "kind": "chapter",
+                  "value": "3"
+                }
+              ],
+              "source": "scholar"
+            }
+          ],
+          "id": "plato-birth-a",
+          "owner": "plato",
+          "ownerType": "entry",
+          "placement": "dated",
+          "text": "428 BCE"
+        },
+        "provenance": {
+          "origin": "unrecorded"
+        },
+        "posts": [
+          "cave"
+        ],
+        "positions": {
+          "cave": 3
+        },
+        "notices": [
+          {
+            "code": "competing-unselected",
+            "message": "Selection `dating-birth-a`: competing datings of the same aspect are published but not selected: plato-birth-b."
+          }
+        ]
+      },
+      {
+        "id": "entry-academy",
+        "kind": "contextual-entry",
+        "target": "academy",
+        "revision": "fd6878b307df733e",
+        "content": {
+          "id": "academy",
+          "kind": "movement",
+          "label": "The Academy <b>x</b>",
+          "url": "/atlas/academy/"
+        },
+        "provenance": {
+          "origin": "unrecorded"
+        }
+      },
+      {
+        "id": "reference-undated",
+        "kind": "reference",
+        "target": "undated",
+        "revision": "104bb799408f4596",
+        "content": {
+          "key": "undated",
+          "kind": "work",
+          "title": "Undated"
+        },
+        "provenance": {
+          "origin": "unrecorded"
+        },
+        "missing": [
+          "creators",
+          "issued"
+        ],
+        "posts": [
+          "cave"
+        ],
+        "notices": [
+          {
+            "code": "provenance-unrecorded",
+            "field": "provenance",
+            "message": "Selection `reference-undated`: where this metadata came from is not recorded, and is published as unrecorded."
+          },
+          {
+            "code": "missing-detail",
+            "field": "creators",
+            "message": "Selection `reference-undated`: `creators` is selected but the source has none; it is left out, not invented."
+          },
+          {
+            "code": "missing-detail",
+            "field": "issued",
+            "message": "Selection `reference-undated`: `issued` is selected but the source has none; it is left out, not invented."
+          }
+        ]
+      }
+    ],
+    "context": [
+      {
+        "kind": "entry",
+        "id": "republic",
+        "label": "Republic",
+        "url": "/atlas/republic/",
+        "via": [
+          "relationship-authored"
+        ]
+      },
+      {
+        "kind": "source",
+        "id": "burnet",
+        "label": "Platonis Opera",
+        "source": {
+          "key": "burnet",
+          "kind": "edition",
+          "title": "Platonis Opera",
+          "text": "Platonis Opera"
+        },
+        "via": [
+          "annotation-other",
+          "relationship-authored"
+        ]
+      },
+      {
+        "kind": "source",
+        "id": "republic",
+        "label": "Politeia",
+        "source": {
+          "key": "republic",
+          "kind": "work",
+          "title": "Politeia",
+          "creators": [
+            {
+              "name": "Plato",
+              "role": "author"
+            }
+          ],
+          "identifiers": [
+            [
+              "doi",
+              "10.1000/republic"
+            ]
+          ],
+          "text": "Plato. Politeia. doi:10.1000/republic"
+        },
+        "via": [
+          "relationship-authored"
+        ]
+      },
+      {
+        "kind": "source",
+        "id": "scholar",
+        "label": "A study of the dialogues",
+        "source": {
+          "key": "scholar",
+          "kind": "work",
+          "title": "A study of the dialogues",
+          "text": "A study of the dialogues"
+        },
+        "via": [
+          "dating-birth-a",
+          "relationship-authored"
+        ]
+      }
+    ]
+  },
+  "candidates": {
+    "entries": [
+      {
+        "id": "academy",
+        "label": "The Academy <b>x</b>",
+        "url": "/atlas/academy/"
+      },
+      {
+        "id": "plato",
+        "label": "Plato",
+        "url": "/atlas/plato/"
+      },
+      {
+        "id": "republic",
+        "label": "Republic",
+        "url": "/atlas/republic/"
+      }
+    ],
+    "relationships": [
+      {
+        "id": "r-authored",
+        "label": "Plato authored Republic",
+        "about": [
+          "plato",
+          "republic"
+        ]
+      },
+      {
+        "id": "r-member",
+        "label": "Plato member of The Academy <b>x</b>",
+        "about": [
+          "plato",
+          "academy"
+        ]
+      }
+    ],
+    "datings": [
+      {
+        "id": "plato-birth-a",
+        "label": "birth: 428 BCE",
+        "about": [
+          "plato"
+        ]
+      },
+      {
+        "id": "plato-birth-b",
+        "label": "birth: 424 BCE",
+        "about": [
+          "plato"
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "id": "cave",
+        "label": "The cave",
+        "url": "/comparisons/cave/"
+      }
+    ],
+    "sources": [
+      {
+        "id": "burnet",
+        "label": "Platonis Opera"
+      },
+      {
+        "id": "grube",
+        "label": "Republic"
+      },
+      {
+        "id": "republic",
+        "label": "Politeia"
+      },
+      {
+        "id": "scholar",
+        "label": "A study of the dialogues"
+      },
+      {
+        "id": "undated",
+        "label": "Undated"
+      }
+    ]
+  },
+  "kinds": [
+    {
+      "kind": "reference",
+      "required": [
+        "creators",
+        "title"
+      ],
+      "optional": [
+        "csl",
+        "identifiers",
+        "issued",
+        "language"
+      ],
+      "text": false
+    },
+    {
+      "kind": "contextual-entry",
+      "required": [],
+      "optional": [
+        "aliases",
+        "source",
+        "summary"
+      ],
+      "text": false
+    },
+    {
+      "kind": "relationship",
+      "required": [
+        "assertedBy",
+        "confidence",
+        "contestedBy",
+        "evidence",
+        "standing",
+        "uncertainty"
+      ],
+      "optional": [],
+      "text": false
+    },
+    {
+      "kind": "timeline",
+      "required": [
+        "assertedBy",
+        "confidence",
+        "date",
+        "evidence",
+        "note",
+        "placement",
+        "text"
+      ],
+      "optional": [
+        "endYear",
+        "startYear"
+      ],
+      "text": false
+    },
+    {
+      "kind": "comparison",
+      "required": [
+        "confidence",
+        "correspondence",
+        "correspondenceLabel",
+        "evidence",
+        "rationale",
+        "recordedBy",
+        "uncertainty",
+        "versions"
+      ],
+      "optional": [
+        "wording"
+      ],
+      "text": false
+    },
+    {
+      "kind": "source-annotation",
+      "required": [
+        "by",
+        "text"
+      ],
+      "optional": [
+        "locator"
+      ],
+      "text": true
+    },
+    {
+      "kind": "explanation",
+      "required": [
+        "by",
+        "text"
+      ],
+      "optional": [
+        "locator"
+      ],
+      "text": true
+    }
+  ]
+}

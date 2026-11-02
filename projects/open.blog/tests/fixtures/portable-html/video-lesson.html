@@ -1,0 +1,55 @@
+<aside class="ob-video-production" aria-label="Video production summary"><h2>Production notes</h2><dl><div><dt>Production</dt><dd>Season 1, episode 3</dd></div><div><dt>Credits</dt><dd>Writing by Mira &amp; &lt;Lantern&gt; Team</dd></div></dl></aside>
+<p class="ob-embed-link ob-embed-youtube"><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Gate of Embers — a lesson on YouTube</a></p>
+<p>A lesson about the café gate, with a <a href="https://example.test/blog/reference/">relative link</a> and a <a href="https://example.test/blog/video-lesson/#chapters">section link</a>.</p>
+<h2 id="chapters">Chapters<a class="ob-heading-anchor" href="https://example.test/blog/video-lesson/#chapters" aria-label="Link to this section">#</a></h2>
+<ol class="ob-chapters" aria-label="Video chapters">
+<li><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&amp;t=0s"><time datetime="PT0S">00:00</time></a> The gate opens</li>
+<li><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&amp;t=14s"><time datetime="PT14S">00:14</time></a> A warning &amp; a <code>&lt;script&gt;</code> in the <em>dark</em></li>
+<li><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&amp;t=3723s"><time datetime="PT3723S">1:02:03</time></a> Into the ruin — Ünter</li>
+</ol>
+<aside class="ob-callout ob-callout-note" role="note"><p class="ob-callout-title"><strong>Note</strong></p>
+<p>Nested inside a callout:</p>
+<figure class="ob-code-block ob-runnable-code"><figcaption class="ob-code-title">src/&lt;main&gt; &amp; &#39;lib&#39;.rs</figcaption><pre><code class="language-rust">fn main() { println!(&quot;&lt;/code&gt;&lt;/pre&gt;&lt;script&gt;alert(1)&lt;/script&gt;&quot;); }
+</code></pre><p class="ob-playground-link"><a href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2021&amp;code=fn+main%28%29+%7B+println%21%28%22%3C%2Fcode%3E%3C%2Fpre%3E%3Cscript%3Ealert%281%29%3C%2Fscript%3E%22%29%3B+%7D%0A">Open in Rust Playground</a>.</p><p class="ob-portable-note">Run and edit this example on <a href="https://example.test/blog/video-lesson/">the original article</a>.</p></figure>
+</aside>
+<p>An indented block after a titled runnable fence stays plain code:</p>
+<pre><code>cargo run --release
+</code></pre>
+<section class="ob-knowledge-check" aria-label="Knowledge check">
+<div class="ob-quiz">
+<p class="ob-quiz-prompt"><strong>Which tag opens a <strong>disclosure</strong> without <code>&lt;script&gt;</code>?</strong></p>
+<ol class="ob-quiz-choices" type="A">
+<li><code>&lt;dialog onclick="alert(1)"&gt;</code></li>
+<li><code>&lt;details&gt;</code></li>
+<li><code>&lt;ob-quiz&gt;</code></li>
+</ol>
+<div class="ob-quiz-answer">
+<p>Answer: B. <code>&lt;details&gt;</code></p>
+<p>Native disclosure works without JavaScript — even in Zürich.</p>
+</div>
+</div>
+<div class="ob-quiz">
+<p class="ob-quiz-prompt"><strong>Is the answer shown before the reader asks?</strong></p>
+<ol class="ob-quiz-choices" type="A">
+<li>No</li>
+<li>Yes</li>
+</ol>
+<div class="ob-quiz-answer">
+<p>Answer: A. No</p>
+</div>
+</div>
+</section>
+<figure class="ob-code-block ob-web-sandbox"><figcaption class="ob-code-title">Try it</figcaption><p class="ob-web-sandbox-label">HTML</p><pre><code class="language-html">&lt;button onclick=&quot;alert(1)&quot;&gt;Hi&lt;/button&gt;
+</code></pre><p class="ob-web-sandbox-label">CSS</p><pre><code class="language-css">button { color: red; }
+</code></pre><p class="ob-web-sandbox-label">JavaScript</p><pre><code class="language-js">document.body.append(&#39;&lt;/script&gt;&lt;img src=x onerror=alert(1)&gt;&#39;);
+</code></pre><p class="ob-portable-note">Open the live preview on <a href="https://example.test/blog/video-lesson/">the original article</a>.</p></figure>
+<figure class="ob-code-block ob-runnable-code"><pre><code class="language-python" data-line-numbers="true" data-highlight-lines="1">print(&quot;runs on the canonical page&quot;)
+</code></pre><p class="ob-portable-note">Run and edit this example on <a href="https://example.test/blog/video-lesson/">the original article</a>.</p></figure>
+<ul>
+<li><p class="ob-embed-link ob-embed-codepen"><a href="https://codepen.io/u/pen/abc">A pen about gates &lt;3</a> (See the Pen on CodePen)</p>
+<p>A loose list item keeps its embed link.</p>
+</li>
+</ul>
+<p class="ob-embed-link ob-embed-codepen"><a href="https://codepen.io/team/acme/pen/xyz">See the Pen on CodePen</a></p>
+<p><img loading="lazy" decoding="async" src="https://example.test/blog/images/caf%C3%A9-gate.png" alt="The café gate" /></p>
+<p class="ob-participation"><a href="https://example.test/blog/video-lesson/#ob-discussion">Join the discussion on the original article</a>.</p>

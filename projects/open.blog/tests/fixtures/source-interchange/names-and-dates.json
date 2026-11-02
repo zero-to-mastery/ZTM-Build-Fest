@@ -1,0 +1,39 @@
+[
+  {
+    "id": "van-beethoven-letters",
+    "type": "book",
+    "title": "Briefe",
+    "author": [
+      { "family": "Beethoven", "given": "Ludwig", "non-dropping-particle": "van" },
+      { "family": "King", "given": "Martin Luther", "suffix": "Jr." },
+      { "literal": "World Health Organization", "comma-suffix": true }
+    ],
+    "editor": [{ "family": "Müller", "given": "Jürgen" }],
+    "issued": { "date-parts": [[1810, 3, 7]] },
+    "DOI": "10.1000/xyz123",
+    "ISSN": "2049-3630",
+    "URL": "https://example.org/letters"
+  },
+  {
+    "id": "Πολιτεία",
+    "type": "book",
+    "title": "Πολιτεία",
+    "language": "grc",
+    "issued": { "literal": "c. 375 BCE" }
+  },
+  {
+    "id": "span",
+    "type": "article-journal",
+    "title": "A span of years",
+    "container-title": "Journal of Tests",
+    "volume": "12",
+    "issue": 3,
+    "page": "11-20",
+    "issued": { "date-parts": [["2003"], ["2005", "6"]], "season": 2 }
+  },
+  {
+    "id": "raw-date",
+    "title": "Raw date",
+    "issued": { "raw": "Spring 1999" }
+  }
+]

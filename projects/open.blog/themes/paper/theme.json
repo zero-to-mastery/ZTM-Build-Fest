@@ -1,0 +1,57 @@
+{
+  "label": "Paper (example series theme)",
+  "extends": "base",
+  "colorScheme": "light",
+  "colors": {
+    "light": {
+      "page": "#fbf7ef",
+      "outer": "#f3ecdd",
+      "surface": "#fffdf8",
+      "surfaceRaised": "#f3ecdd",
+      "text": "#2b2118",
+      "muted": "#5d4f41",
+      "subtle": "#7a6a59",
+      "border": "#dccfb8",
+      "accent": "#b5451b",
+      "accentSoft": "#b5451b",
+      "accentBorder": "#e0a98f",
+      "accentContrast": "#ffffff",
+      "link": "#9c3a15",
+      "glow": "#f6e3d8",
+      "codeBg": "#f3ecdd",
+      "codeText": "#2b2118"
+    },
+    "dark": {
+      "page": "#1d1812",
+      "outer": "#15110c",
+      "surface": "#262019",
+      "surfaceRaised": "#30281f",
+      "text": "#f2e9da",
+      "muted": "#cbbda6",
+      "subtle": "#a39580",
+      "border": "#473c2e",
+      "accent": "#e8875a",
+      "accentSoft": "#e8875a",
+      "accentBorder": "#7a4a32",
+      "accentContrast": "#1d1812",
+      "link": "#f0a07a",
+      "glow": "#3a2a20",
+      "codeBg": "#30281f",
+      "codeText": "#f2e9da"
+    }
+  },
+  "fonts": {
+    "body": "Georgia, \"Iowan Old Style\", \"Palatino Linotype\", serif",
+    "heading": "Georgia, \"Iowan Old Style\", \"Palatino Linotype\", serif"
+  },
+  "tokens": {
+    "readingWidth": "40rem",
+    "bodySize": "1.1875rem",
+    "bodyLeading": "1.8",
+    "headingWeight": "700",
+    "radius": "4px"
+  },
+  "options": {
+    "listStyle": "cards"
+  }
+}

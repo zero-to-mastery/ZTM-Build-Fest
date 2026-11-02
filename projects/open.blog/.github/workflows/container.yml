@@ -1,0 +1,37 @@
+name: Container
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build runtime image without inherited Git metadata
+        run: |
+          tar --exclude=.git --exclude=target --exclude=dist -czf - . | docker build -t openblog-smoke -
+      - name: Check runtime libc compatibility and recover exact shipped Git metadata
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+          SOURCE_SLUG: ${{ github.repository }}
+          SOURCE_BRANCH: ${{ github.head_ref || github.ref_name }}
+          OPENBLOG_GIT_TOKEN: ${{ github.token }}
+        run: |
+          docker run --rm --entrypoint openblog openblog-smoke help
+          docker run --rm --entrypoint sh \
+            -e RENDER_GIT_COMMIT="$SOURCE_SHA" \
+            -e RENDER_GIT_REPO_SLUG="$SOURCE_SLUG" \
+            -e RENDER_GIT_BRANCH="$SOURCE_BRANCH" \
+            -e OPENBLOG_GIT_TOKEN \
+            -e GIT_CONFIG_COUNT=1 \
+            -e GIT_CONFIG_KEY_0=credential.https://github.com.helper \
+            -e 'GIT_CONFIG_VALUE_0=!f() { if [ "$1" = get ]; then printf "username=x-access-token\npassword=%s\n" "$OPENBLOG_GIT_TOKEN"; fi; }; f' \
+            openblog-smoke -c 'sh scripts/container-git.sh && test "$(git rev-parse HEAD)" = "$RENDER_GIT_COMMIT" && git diff --exit-code HEAD'

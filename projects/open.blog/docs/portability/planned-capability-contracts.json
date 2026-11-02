@@ -1,0 +1,340 @@
+{
+  "version": 1,
+  "completion_gate": "A capability is not complete until its authored semantics, static fallback, participation path, privacy exclusions, and required tests are defined and verified by its owning story.",
+  "global_invariants": [
+    "Native pages and legacy posts remain backward compatible unless an explicit migration is approved.",
+    "Derived output never rewrites canonical authored content.",
+    "Failures are scoped to the source and capability or object; they do not publish private data or mutate remote state.",
+    "Portable output excludes drafts, private notes, private participant revisions, credentials, and unapproved material.",
+    "Every interactive or graphical representation has a useful static equivalent or an explicit decision to remain unavailable."
+  ],
+  "contracts": [
+    {
+      "id": "edition-translation-comparisons",
+      "status": "defined",
+      "owner_story": 22,
+      "portability_owner_issue": 52,
+      "implementation_issues": [53, 54, 55],
+      "authored_data": [
+        "Stable work and edition identities, including translation and witness relationships",
+        "Source-specific text or bounded passage references",
+        "Translator/editor/contributor attribution, rights, and uncertainty"
+      ],
+      "static_fallback": "A labeled sequence or table of the available passages with edition/translation identity, attribution, rights notice, and source links. Do not imply that a translation is an original work or merge separate witnesses into one text.",
+      "participation_path": "Link each passage and attribution to its identified source; comparison controls are optional enhancements.",
+      "privacy_exclusions": [
+        "Private research notes and unpublished comparisons",
+        "Unlicensed source text beyond the explicitly approved quotation"
+      ],
+      "required_tests": [
+        "Round-trip edition, translation, work, witness, attribution, rights, and uncertainty without collapsing identities",
+        "Render a readable labeled comparison with JavaScript and CSS disabled",
+        "Reject or omit private and unlicensed material without changing canonical source data"
+      ],
+      "scope_boundary": "The owner story defines the semantic model and rights boundary; the comparison workspace and public renderer are owned by its child tasks."
+    },
+    {
+      "id": "historical-timelines",
+      "status": "defined",
+      "owner_story": 23,
+      "portability_owner_issue": 56,
+      "implementation_issues": [57, 58, 59],
+      "authored_data": [
+        "Events and temporal relations with source attribution",
+        "Precision, ranges, uncertainty, and competing dates"
+      ],
+      "static_fallback": "A deterministic ordered list or table of events, retaining date precision, uncertainty, competing dates, and source links. A visual timeline may enhance but never replace that list.",
+      "participation_path": "Provide ordinary links to source evidence and related published articles; timeline controls are optional.",
+      "privacy_exclusions": [
+        "Draft events and unpublished research",
+        "Private annotations and unapproved chronology proposals"
+      ],
+      "required_tests": [
+        "Round-trip exact, ranged, approximate, and unknown dates without coercing uncertainty",
+        "Preserve competing dates and their source attribution",
+        "Verify deterministic list order, accessible labels, and working source links without JavaScript"
+      ],
+      "scope_boundary": "Temporal modeling and uncertainty are owned by the contract task; the Admin explorer and public timeline remain separate child tasks."
+    },
+    {
+      "id": "research-workspace-publication-boundary",
+      "status": "defined",
+      "owner_story": 24,
+      "portability_owner_issue": 63,
+      "implementation_issues": [60, 61, 62],
+      "authored_data": [
+        "Stable source and reference identities",
+        "Author-selected passages, citations, and publication context",
+        "Explicit publication decisions for research material"
+      ],
+      "static_fallback": "Published citations and selected context render as attributed text with source links. Private research workspace state has no public fallback and is omitted until explicitly selected for publication.",
+      "participation_path": "Each public citation links to the source or reference; workspace controls are author-only and are not required for reading.",
+      "privacy_exclusions": [
+        "Private notes, imported source caches, unsaved drafts, and source credentials",
+        "Unselected or unapproved research material"
+      ],
+      "required_tests": [
+        "Build feeds, exports, search, and pages from the same explicit public manifest",
+        "Prove private and draft material is absent from every public surface",
+        "Verify failed selection or publication leaves canonical content and private workspace state unchanged"
+      ],
+      "scope_boundary": "The research story owns workflow integration; the private-to-public manifest task owns disclosure policy, and citation/source identities are reused rather than redefined."
+    },
+    {
+      "id": "citation-source-previews",
+      "status": "defined",
+      "owner_story": 25,
+      "portability_owner_issue": 64,
+      "implementation_issues": [65, 66, 67],
+      "authored_data": [
+        "A stable citation/reference identity and source URL",
+        "Version identity and precise page, section, or passage location where available",
+        "Visible citation label and attribution"
+      ],
+      "static_fallback": "Every citation resolves to a visible reference entry and ordinary source link. If preview loading fails or is unavailable, retain the citation, location, and link; do not require an embedded preview.",
+      "participation_path": "The source link is the canonical path; preview activation is optional and must not be the only route to the cited material.",
+      "privacy_exclusions": [
+        "Remote page bodies, credentials, reader identifiers, and tracking state",
+        "Private research references not selected for publication"
+      ],
+      "required_tests": [
+        "Resolve citations to visible reference entries with distinguishable version and location identity",
+        "Test keyboard/screen-reader access and no-JavaScript anchor navigation",
+        "Test URL scheme validation, hostile responses, source failure, Unicode labels, and fragment anchors"
+      ],
+      "scope_boundary": "The citation contract and existing reference identity are owned by the reader story; preview transport and component behavior remain in its child tasks."
+    },
+    {
+      "id": "guided-reading-supplements",
+      "status": "defined",
+      "implementation_status": "implemented",
+      "implemented_fallback": "labeled-static-group",
+      "owner_story": 26,
+      "portability_owner_issue": 68,
+      "implementation_issues": [69, 70, 71],
+      "authored_data": [
+        "Canonical prose and citations",
+        "Author-approved supplemental blocks with kind, label, order, and intended reading depth"
+      ],
+      "static_fallback": "Canonical prose remains unchanged. All approved supplements appear as labeled, ordered static sections; reading-mode controls may change visibility only and cannot replace or rewrite the canonical argument.",
+      "participation_path": "Ordinary citation/source links remain available in every mode; mode selection is a local presentation control.",
+      "privacy_exclusions": [
+        "Unapproved supplements, private author notes, and hidden drafting state",
+        "AI-generated commentary without explicit human review and approval"
+      ],
+      "required_tests": [
+        "Assert canonical prose and citations are byte-identical across modes",
+        "Verify supplement labels, order, links, and readable static output without JavaScript",
+        "Verify unknown supplement kinds degrade to visible text and failures stay scoped to that block"
+      ],
+      "scope_boundary": "The contract task owns supplement semantics and mode invariants; controls and rendering are implemented by separate child tasks."
+    },
+    {
+      "id": "knowledge-relationships",
+      "status": "defined",
+      "owner_story": 27,
+      "portability_owner_issue": 72,
+      "implementation_issues": [73, 74, 75],
+      "authored_data": [
+        "Stable concept/entity identity and typed, directed relationships",
+        "Evidence/source attribution for each relationship",
+        "Public visibility and publication status"
+      ],
+      "static_fallback": "Every graph view has an equivalent labeled list or table of published entities and directed relationships, with evidence links and relationship direction stated in text.",
+      "participation_path": "Entity and evidence links resolve to published canonical pages or sources; graph interaction is optional.",
+      "privacy_exclusions": [
+        "Private or draft Atlas records and unpublished relationship edges",
+        "Queries or traversal paths outside the published projection"
+      ],
+      "required_tests": [
+        "Prove public queries cannot traverse to private or draft nodes",
+        "Round-trip relationship direction, source identity, labels, and ordering",
+        "Compare graph and static-list semantics and test useful no-JavaScript output"
+      ],
+      "scope_boundary": "The projection contract owns public query boundaries; concept authoring, previews, and relationship trails belong to the linked child tasks."
+    },
+    {
+      "id": "curated-reading-paths",
+      "status": "defined",
+      "owner_story": 28,
+      "portability_owner_issue": 76,
+      "implementation_issues": [77, 78, 79],
+      "authored_data": [
+        "Ordered published works and author-authored transitions",
+        "A reason or learning purpose for each transition"
+      ],
+      "static_fallback": "Render the path as an ordered list with each transition reason and ordinary links to the selected works. A path remains distinct from a series.",
+      "participation_path": "Each step links to its canonical work; missing or unavailable works retain an explicit, non-broken explanation.",
+      "privacy_exclusions": [
+        "Private or draft works, reader-specific annotations, and unpublished curation",
+        "Inferred transitions presented as author-approved"
+      ],
+      "required_tests": [
+        "Verify order, transition reasons, source links, and distinction from series",
+        "Test missing steps degrade with a scoped diagnostic and readable static output",
+        "Prove reader-private state is not included in public path metadata"
+      ],
+      "scope_boundary": "The reading-path contract owns author intent and transition semantics; curation UI and public discovery remain separate tasks."
+    },
+    {
+      "id": "passage-questions-and-corrections",
+      "status": "defined",
+      "owner_story": 29,
+      "portability_owner_issue": 80,
+      "implementation_issues": [81, 82, 83],
+      "authored_data": [
+        "Stable passage target and stale-target state",
+        "Bounded quoted context, feedback type, source evidence, and submitter provenance",
+        "Moderation and response status"
+      ],
+      "static_fallback": "Published, approved feedback and revision notes render as attributed text linked to the passage. Without a submission backend, reading remains complete and the form gives a clear explanation or canonical contact path.",
+      "participation_path": "A submission control targets the stable passage and optional hosted endpoint; a failed or absent endpoint must not change the article or lose the source link.",
+      "privacy_exclusions": [
+        "Pending, rejected, removed, or private submissions from public feeds and exports",
+        "Authentication tokens, reader identifiers, abuse reports, and private moderation notes"
+      ],
+      "required_tests": [
+        "Resolve current and stale passage targets without mutating prose",
+        "Bound and escape quoted context and preserve feedback provenance separately from research notes",
+        "Verify pending-by-default moderation, rate limits, no-JavaScript reading, and no private-data leakage"
+      ],
+      "scope_boundary": "The passage/provenance contract is owned by this task; transport, form, and moderation reuse the shared participation and moderation policy."
+    },
+    {
+      "id": "local-reader-annotations",
+      "status": "defined",
+      "owner_story": 30,
+      "portability_owner_issue": 84,
+      "implementation_issues": [85, 86, 87],
+      "authored_data": [
+        "Reader-owned highlight/note content and a stable text selector",
+        "Selector exact/prefix/suffix context and current/stale resolution state",
+        "Explicit user-initiated export scope"
+      ],
+      "static_fallback": "Annotations are private local enhancements, not canonical article content. The article remains fully readable without them; an explicit export is a separate user-controlled file, not a public page/feed representation.",
+      "participation_path": "The article remains the canonical reading destination; annotation controls are optional and local.",
+      "privacy_exclusions": [
+        "Annotations from generated pages, feeds, search indexes, syndication, and shared moderation",
+        "Cross-device or remote sync unless a separately approved contract adds it"
+      ],
+      "required_tests": [
+        "Verify annotations do not mutate source Markdown or rendered canonical content",
+        "Test exact/prefix/suffix resolution, stale state, Unicode, and selector mismatch",
+        "Verify import/export validation and explicit privacy scope, with no automatic network transmission"
+      ],
+      "scope_boundary": "The local annotation contract owns storage and selector semantics; it is separate from research notes, citations, and public feedback."
+    },
+    {
+      "id": "scholarly-interpretations",
+      "status": "defined",
+      "owner_story": 31,
+      "portability_owner_issue": 88,
+      "implementation_issues": [89, 90, 91],
+      "authored_data": [
+        "Attributed interpretations, evidence links, audience level, and provenance",
+        "Explicit human approval state for generated or assisted explanations"
+      ],
+      "static_fallback": "Render interpretations as separately labeled, attributed sections with citations. Preserve disagreements side by side; audience level supplements and never replaces canonical prose.",
+      "participation_path": "Each interpretation links to its cited evidence and contributor identity; comparison controls are optional.",
+      "privacy_exclusions": [
+        "Unapproved AI output, private drafts, hidden prompts, and participant identity data",
+        "Any presentation that marks one interpretation correct without an explicit, attributable editorial decision"
+      ],
+      "required_tests": [
+        "Verify contradictory interpretations can coexist with their attribution and evidence",
+        "Assert audience modes leave canonical prose unchanged and provide static labeled output",
+        "Verify AI provenance, human approval, and private-draft exclusion across pages, feeds, and exports"
+      ],
+      "scope_boundary": "The attribution and explanation contract is owned by this task; authoring and comparison interfaces are delegated to the child stories."
+    },
+    {
+      "id": "shared-source-led-reflections",
+      "status": "defined",
+      "owner_story": 144,
+      "portability_owner_issue": 158,
+      "implementation_issues": [153, 156, 157],
+      "authored_data": [
+        "Original source title, URL, type, and stable identity",
+        "Exact approved reflection revisions, contributor credits, takeaways, and open questions"
+      ],
+      "static_fallback": "Publish approved reflections, credits, source attribution, takeaways, and open questions as ordinary readable sections. Unsupported embeds degrade to a visible source link; feeds and exports contain approved public data only.",
+      "participation_path": "Provide a working link to the original source. Participation and invitations are not required to read the published assembly.",
+      "privacy_exclusions": [
+        "Protected contribution drafts, reveal state, invitations, approval metadata, and private collaboration identifiers",
+        "Unapproved revisions and optional provider metadata that would overwrite author input"
+      ],
+      "required_tests": [
+        "Verify title/link/type and attribution survive native, feed, Markdown, and HTML output",
+        "Test unsupported embeds degrade to ordinary links",
+        "Prove only exact approved revisions appear in pages, feeds, and exports"
+      ],
+      "scope_boundary": "The source-led reflection story owns the public assembly; source records and contributor credits reuse their existing identity contracts."
+    },
+    {
+      "id": "protected-reflection-drafts",
+      "status": "defined",
+      "owner_story": 146,
+      "portability_owner_issue": 162,
+      "implementation_issues": [163, 164, 165],
+      "authored_data": [
+        "Privately owned contribution revisions, author binding, and revision timestamp",
+        "Separate reveal and publication-approval state"
+      ],
+      "static_fallback": "No public fallback exists for a private draft. It is omitted from every public representation until an exact revision is approved and published through the shared-reflection contract.",
+      "participation_path": "The private editor is available only to an authorized participant; public readers receive no draft URL or preview.",
+      "privacy_exclusions": [
+        "All protected prose, reveal state, participant bindings, and private revision metadata from pages, feeds, exports, search, and public previews"
+      ],
+      "required_tests": [
+        "Verify one participant cannot read or overwrite another protected revision",
+        "Test server-enforced reveal separately from exact-revision publication approval",
+        "Prove private prose never appears in previews, feeds, exports, or error messages"
+      ],
+      "scope_boundary": "The privacy/revision contract is owned by this task; protected draft UX and approval workflow remain with their separate child stories."
+    },
+    {
+      "id": "third-perspectives",
+      "status": "defined",
+      "owner_story": 201,
+      "portability_owner_issue": 222,
+      "implementation_issues": [210, 221],
+      "authored_data": [
+        "A reader's approved reflection on a published work or one of its sections, with its optional prompt category",
+        "The passage revision and target the reader wrote about, and the target's standing in the work now",
+        "The reader's name only while the approved and the current consent show it and it matches no credited name"
+      ],
+      "static_fallback": "The canonical page lists approved Third Perspectives as static, semantic text after the authors' work, each headed as a reader's and never an author's. Portable copies, feeds and llms files carry only a labelled link to the canonical page, never the reflections. Without a hosted service the page keeps what was approved and the form's static text is a copy-and-contact path.",
+      "participation_path": "The canonical page offers the progressive form where the kind is open; elsewhere the labelled canonical link is the only participation path, and a reader checks on a reflection only through their private receipt.",
+      "privacy_exclusions": [
+        "Pending, clarification, rejected, removed, withdrawn and deleted reflections, and any reflection whose consent no longer allows publication",
+        "Receipts and their digests, consent records, private names, moderators, reasons, the reader's clock, channel and hosted ids beyond the public report handle"
+      ],
+      "required_tests": [
+        "Prove the published file and every portable, feed, search and llms output carry no private field and no reflection text",
+        "Verify the name follows the approved and current consent and is withheld when it matches a credited name, including look-alike spellings",
+        "Verify published-mode gating without a transport, stale and moved section targets, and the receipt's status without enumeration"
+      ],
+      "scope_boundary": "Story #201 owns the reflection, consent, moderation and canonical rendering; issue #222 owns this portability gate. Featured placement belongs to RD14."
+    },
+    {
+      "id": "diagrams",
+      "status": "blocked-unscoped",
+      "owner_story": null,
+      "portability_owner_issue": 110,
+      "implementation_issues": [],
+      "authored_data": [
+        "No diagram data model or authored syntax is defined; a future owner story must name nodes, relationships, labels, evidence, and rights before implementation."
+      ],
+      "static_fallback": "Do not add a diagram-specific syntax or public renderer without an owner story. Existing Markdown images/raw HTML remain unchanged; any future graphical interaction must provide an equivalent labeled list or table.",
+      "participation_path": "Not applicable until a diagram owner story defines whether the diagram links to published entities or sources.",
+      "privacy_exclusions": [
+        "Do not publish diagrams derived from private/draft graph data or unapproved remote/AI content."
+      ],
+      "required_tests": [
+        "Before unblocking, create an owning story and portability task with substantive data, fallback, participation, privacy, and test requirements",
+        "Verify no diagram-specific public syntax or portability claim is introduced while this contract remains blocked"
+      ],
+      "scope_boundary": "This record is a scope guard only. Issue #110 is the sole owner of the unscoped gate; it does not authorize diagram implementation."
+    }
+  ]
+}

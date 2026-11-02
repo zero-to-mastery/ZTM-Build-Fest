@@ -1,0 +1,1997 @@
+{
+  "description": "Third Perspective state fixtures (ADRs 0109 to 0112): a stored record, its moderation facts, whether the kind is shown on the post, the published work and how its target resolves, an optional editorial feature selection, and the expected stage and public projection. Defaults: shown true, the work /posts/tides/ at the revision the reader saw, credited to Ada Lovelace and Grace Hopper, the target current at its own section, no feature.",
+  "cases": [
+    {
+      "name": "a pending submission is private",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "pending",
+        "revision": 1,
+        "approvedRevision": null,
+        "approvedConsent": null,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "submitted",
+        "public": null
+      }
+    },
+    {
+      "name": "a clarification request is private",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "clarification",
+        "revision": 1,
+        "approvedRevision": null,
+        "approvedConsent": null,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "clarification",
+        "public": null
+      }
+    },
+    {
+      "name": "an approved anonymous reflection on the whole work",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        }
+      }
+    },
+    {
+      "name": "an approved reflection keeps a private name private",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Mina Okafor",
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        }
+      }
+    },
+    {
+      "name": "an approved reflection shows a name the reader agreed to show",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Mina Okafor",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26",
+          "name": "Mina Okafor"
+        }
+      }
+    },
+    {
+      "name": "a manual entry may be anonymous and still names who entered it",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "manual",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "enteredBy": "mikey"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        }
+      }
+    },
+    {
+      "name": "withdrawal after approval hides the reflection",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Mina Okafor",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-27T09:30:00Z",
+            "publish": false,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false
+          }
+        ]
+      },
+      "moderation": {
+        "state": "withdrawn",
+        "revision": 1,
+        "approvedRevision": null,
+        "approvedConsent": null,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "withdrawn",
+        "public": null
+      }
+    },
+    {
+      "name": "revoked publication hides the reflection even before the withdrawal is applied",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-27T09:30:00Z",
+            "publish": false,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": false
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": null
+      }
+    },
+    {
+      "name": "revised consent hides the name after approval",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Mina Okafor",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-27T09:30:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        }
+      }
+    },
+    {
+      "name": "a name added after approval is never shown without a new approval",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Mina Okafor",
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-27T09:30:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        }
+      }
+    },
+    {
+      "name": "a name changed before approval is shown as approved",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "M.",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-27T09:30:00Z",
+            "publish": true,
+            "attribution": {
+              "name": "Mina Okafor",
+              "publishName": true
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 2,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26",
+          "name": "Mina Okafor"
+        }
+      }
+    },
+    {
+      "name": "deleted: retention purged the text",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": false
+      },
+      "expect": {
+        "stage": "deleted",
+        "public": null
+      }
+    },
+    {
+      "name": "a withdrawn reflection whose text was purged is deleted",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "withdrawn",
+        "revision": 1,
+        "approvedRevision": null,
+        "approvedConsent": null,
+        "contentRetained": false
+      },
+      "expect": {
+        "stage": "deleted",
+        "public": null
+      }
+    },
+    {
+      "name": "rejected content is never public",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "rejected",
+        "revision": 1,
+        "approvedRevision": null,
+        "approvedConsent": null,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "rejected",
+        "public": null
+      }
+    },
+    {
+      "name": "removed content is never public",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "removed",
+        "revision": 1,
+        "approvedRevision": null,
+        "approvedConsent": null,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "removed",
+        "public": null
+      }
+    },
+    {
+      "name": "an approval of the text a clarification replaced does not publish the new text",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read both perspectives as one conversation about patience, as the ending shows.",
+        "revision": 2,
+        "revisedAt": "2026-10-27T09:30:00Z",
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 2,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": null
+      }
+    },
+    {
+      "name": "the clarified text is public once approved",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read both perspectives as one conversation about patience, as the ending shows.",
+        "revision": 2,
+        "revisedAt": "2026-10-27T09:30:00Z",
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 2,
+        "approvedRevision": 2,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read both perspectives as one conversation about patience, as the ending shows.",
+          "received": "2026-10-26"
+        }
+      }
+    },
+    {
+      "name": "the kind hidden on the post hides approved reflections",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "shown": false,
+      "expect": {
+        "stage": "approved",
+        "public": null
+      }
+    },
+    {
+      "name": "a reflection is shown only with its own work",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "work": {
+        "path": "/posts/other/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "credited": []
+      },
+      "expect": {
+        "stage": "approved",
+        "public": null
+      }
+    },
+    {
+      "name": "stale article: a whole-work reflection on a since-updated post",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "work": {
+        "path": "/posts/tides/",
+        "revision": "p1:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "credited": [
+          "Ada Lovelace",
+          "Grace Hopper"
+        ]
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": true,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        }
+      }
+    },
+    {
+      "name": "stale article: the section is current",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "methods",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "target": {
+        "state": "current",
+        "section": "methods"
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "section",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26",
+          "section": "methods"
+        }
+      }
+    },
+    {
+      "name": "stale article: the section moved under a new heading",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "methods",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "work": {
+        "path": "/posts/tides/",
+        "revision": "p1:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "credited": [
+          "Ada Lovelace",
+          "Grace Hopper"
+        ]
+      },
+      "target": {
+        "state": "current",
+        "section": "how-we-measured"
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "section",
+          "stale": false,
+          "earlierRevision": true,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26",
+          "section": "how-we-measured"
+        }
+      }
+    },
+    {
+      "name": "stale article: the section has changed",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "methods",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "work": {
+        "path": "/posts/tides/",
+        "revision": "p1:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "credited": [
+          "Ada Lovelace",
+          "Grace Hopper"
+        ]
+      },
+      "target": {
+        "state": "stale",
+        "sectionPresent": true
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "section",
+          "stale": true,
+          "earlierRevision": true,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26",
+          "section": "methods"
+        }
+      }
+    },
+    {
+      "name": "stale article: the section was removed",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "methods",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "work": {
+        "path": "/posts/tides/",
+        "revision": "p1:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "credited": [
+          "Ada Lovelace",
+          "Grace Hopper"
+        ]
+      },
+      "target": {
+        "state": "stale",
+        "sectionPresent": false
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "section",
+          "stale": true,
+          "earlierRevision": true,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        }
+      }
+    },
+    {
+      "name": "group-authored work: a reader is never shown under a credited member's name",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "grace hopper",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "work": {
+        "path": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "credited": [
+          "The Tuesday Circle",
+          "Ada Lovelace",
+          "Grace Hopper"
+        ]
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        },
+        "nameMatchesCredit": true
+      }
+    },
+    {
+      "name": "group-authored work: a reader is never shown under the group's name",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "The Tuesday Circle",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "work": {
+        "path": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "credited": [
+          "The Tuesday Circle",
+          "Ada Lovelace",
+          "Grace Hopper"
+        ]
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        },
+        "nameMatchesCredit": true
+      }
+    },
+    {
+      "name": "group-authored work: a reader's own name is shown as a reader's",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "name": "Mina Okafor",
+            "publishName": true
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": true
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "work": {
+        "path": "/posts/tides/",
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "credited": [
+          "The Tuesday Circle",
+          "Ada Lovelace",
+          "Grace Hopper"
+        ]
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26",
+          "name": "Mina Okafor"
+        },
+        "nameMatchesCredit": false
+      }
+    },
+    {
+      "name": "featured with consent for the approved revision",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true,
+            "featureRevision": 1
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "feature": {
+        "selectedBy": "mikey",
+        "revision": 1
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        },
+        "featured": true
+      }
+    },
+    {
+      "name": "not featured without feature consent",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "feature": {
+        "selectedBy": "mikey",
+        "revision": 1
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        },
+        "featured": false
+      }
+    },
+    {
+      "name": "feature consent for the text a clarification replaced does not cover the new text",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read both perspectives as one conversation about patience, as the ending shows.",
+        "revision": 2,
+        "revisedAt": "2026-10-27T09:30:00Z",
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true,
+            "featureRevision": 1
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 2,
+        "approvedRevision": 2,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "feature": {
+        "selectedBy": "mikey",
+        "revision": 2
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read both perspectives as one conversation about patience, as the ending shows.",
+          "received": "2026-10-26"
+        },
+        "featured": false
+      }
+    },
+    {
+      "name": "feature consent revoked after approval",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true,
+            "featureRevision": 1
+          },
+          {
+            "number": 2,
+            "givenAt": "2026-10-28T08:15:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true
+          }
+        ]
+      },
+      "moderation": {
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "approvedConsent": 1,
+        "contentRetained": true
+      },
+      "feature": {
+        "selectedBy": "mikey",
+        "revision": 1
+      },
+      "expect": {
+        "stage": "approved",
+        "public": {
+          "kind": "third-perspective",
+          "role": "reader",
+          "work": "/posts/tides/",
+          "about": "work",
+          "stale": false,
+          "earlierRevision": false,
+          "category": "another-reading",
+          "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+          "received": "2026-10-26"
+        },
+        "featured": false
+      }
+    },
+    {
+      "name": "a removed reflection is never featured",
+      "record": {
+        "version": 1,
+        "kind": "third-perspective",
+        "category": "another-reading",
+        "body": "I read the two perspectives as one conversation about patience.\n\nThe second section changed how I read the first.",
+        "revision": 1,
+        "provenance": {
+          "version": 1,
+          "work": "/posts/tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "seenAt": "2026-10-26T09:41:00Z",
+          "receivedAt": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "attribution": {
+            "publishName": false
+          }
+        },
+        "intake": {
+          "receiptDigest": "5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e5e"
+        },
+        "consents": [
+          {
+            "number": 1,
+            "givenAt": "2026-10-26T10:00:00Z",
+            "publish": true,
+            "attribution": {
+              "publishName": false
+            },
+            "clarification": true,
+            "featureRevision": 1
+          }
+        ]
+      },
+      "moderation": {
+        "state": "removed",
+        "revision": 1,
+        "approvedRevision": null,
+        "approvedConsent": null,
+        "contentRetained": true
+      },
+      "feature": {
+        "selectedBy": "mikey",
+        "revision": 1
+      },
+      "expect": {
+        "stage": "removed",
+        "public": null,
+        "featured": false
+      }
+    }
+  ]
+}

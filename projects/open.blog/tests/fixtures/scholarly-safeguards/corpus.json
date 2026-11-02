@@ -1,0 +1,3221 @@
+{
+  "version": 1,
+  "synthetic": "Every work, person, passage, claim and witness here is invented. Nothing is an authoritative dataset, a real excerpt, or a judgement about any real scholarship.",
+  "distinctions": [
+    "original-work",
+    "edition",
+    "translation",
+    "witness",
+    "reference",
+    "citation",
+    "source-location",
+    "research-note",
+    "claim",
+    "evidence",
+    "interpretation",
+    "contextual-entry",
+    "scholarly-disagreement"
+  ],
+  "base": {
+    "config": {},
+    "files": {
+      ".openblog/private/research/sources.json": {
+        "version": 1,
+        "sources": [
+          {
+            "id": "lanterns",
+            "kind": "work",
+            "title": "A Treatise of Lanterns",
+            "creators": [
+              {
+                "name": "Ida Vale",
+                "role": "author"
+              }
+            ]
+          },
+          {
+            "id": "lanterns-first",
+            "kind": "edition",
+            "of": "lanterns",
+            "title": "The Treatise of Lanterns, first printing",
+            "issued": "1801",
+            "creators": [
+              {
+                "name": "Ned Orrin",
+                "role": "editor"
+              }
+            ],
+            "rights": {
+              "status": "publicDomain"
+            },
+            "csl": {
+              "publisher": "Orrin and Sons"
+            }
+          },
+          {
+            "id": "lanterns-en",
+            "kind": "translation",
+            "of": "lanterns",
+            "basedOn": "lanterns-first",
+            "language": "en",
+            "title": "The Lantern Treatise",
+            "issued": "1902",
+            "creators": [
+              {
+                "name": "Mara Quill",
+                "role": "translator"
+              }
+            ]
+          },
+          {
+            "id": "lanterns-ms",
+            "kind": "witness",
+            "of": "lanterns",
+            "title": "The Tower codex",
+            "repository": "Tower Archive",
+            "shelfmark": "T 12"
+          }
+        ]
+      }
+    }
+  },
+  "cases": [
+    {
+      "id": "clean-research-post",
+      "distinction": [
+        "original-work",
+        "edition",
+        "citation",
+        "reference"
+      ],
+      "summary": "A research post that cites one edition, with its abstract and references, raises nothing.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nA note on lanterns [@lanterns-first].\n\n## References\n"
+      },
+      "emits": []
+    },
+    {
+      "id": "work-identifiers",
+      "distinction": [
+        "original-work"
+      ],
+      "summary": "A research post whose DOI and license are not well-formed names them; no DOI at all is never prompted.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\ndoi: nope\nlicense: not a url\n---\n\n## Abstract\n\nA note on lanterns [@lanterns-first].\n\n## References\n"
+      },
+      "emits": [
+        "research-profile: doi-invalid",
+        "research-profile: license-url-invalid"
+      ]
+    },
+    {
+      "id": "work-structure",
+      "distinction": [
+        "original-work"
+      ],
+      "summary": "A research post with no abstract or references and a dangling footnote.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\nA note on lanterns[^1].\n"
+      },
+      "emits": [
+        "research-profile: abstract-missing",
+        "research-profile: references-missing",
+        "research-profile: footnote-unresolved"
+      ]
+    },
+    {
+      "id": "work-reference-section",
+      "distinction": [
+        "original-work",
+        "reference"
+      ],
+      "summary": "A reference entry with no link needs a person's eye, and a DOI link should use the preferred resolver.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nA note on lanterns.\n\n## References\n\n1. Vale, I. A treatise with no link at all.\n2. [Orrin, N., an older DOI link](http://dx.doi.org/10.1000/lamp)\n"
+      },
+      "emits": [
+        "research-profile: reference-link-review",
+        "research-profile: doi-link-non-preferred"
+      ]
+    },
+    {
+      "id": "work-identifier-conflict",
+      "distinction": [
+        "original-work"
+      ],
+      "summary": "One work holding two DOIs is prompted, never normalized.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ],
+              "identifiers": [
+                {
+                  "scheme": "doi",
+                  "value": "10.1000/preprint"
+                },
+                {
+                  "scheme": "doi",
+                  "value": "10.1000/published"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "emits": [
+        "source-review: identifier-conflict"
+      ]
+    },
+    {
+      "id": "identifier-shared",
+      "distinction": [
+        "original-work"
+      ],
+      "summary": "Two unrelated records sharing a DOI are prompted; neither is merged.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lantern-twin",
+              "kind": "work",
+              "title": "A Twin of Lanterns",
+              "identifiers": [
+                {
+                  "scheme": "doi",
+                  "value": "10.1000/lamp"
+                }
+              ]
+            },
+            {
+              "id": "lantern-other",
+              "kind": "work",
+              "title": "Another Treatise",
+              "identifiers": [
+                {
+                  "scheme": "doi",
+                  "value": "https://doi.org/10.1000/LAMP"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "emits": [
+        "source-review: identifier-shared"
+      ]
+    },
+    {
+      "id": "edition-isbn-on-work",
+      "distinction": [
+        "edition"
+      ],
+      "summary": "An ISBN on a work whose editions are recorded is prompted.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ],
+              "identifiers": [
+                {
+                  "scheme": "isbn",
+                  "value": "978-0-14-027536-0"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              }
+            }
+          ]
+        }
+      },
+      "emits": [
+        "source-review: identifier-on-work"
+      ]
+    },
+    {
+      "id": "edition-volume-missing",
+      "distinction": [
+        "edition",
+        "source-location"
+      ],
+      "summary": "A page in a five-volume edition that names no volume.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              },
+              "volumes": 5
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nSee [@lanterns-first, page 41].\n\n## References\n"
+      },
+      "emits": [
+        "source-review: volume-missing",
+        "citation-review: citation-location-review"
+      ]
+    },
+    {
+      "id": "edition-volume-unknown",
+      "distinction": [
+        "edition",
+        "source-location"
+      ],
+      "summary": "A volume the edition does not have.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              },
+              "volumes": 5
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nSee [@lanterns-first, x-csl-volume 6; page 41].\n\n## References\n"
+      },
+      "emits": [
+        "source-review: volume-unknown",
+        "citation-review: citation-location-review"
+      ]
+    },
+    {
+      "id": "edition-incomplete-reference",
+      "distinction": [
+        "edition",
+        "reference"
+      ],
+      "summary": "A cited edition with no publisher is named as incomplete, never filled in.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              }
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nA note on lanterns [@lanterns-first].\n\n## References\n"
+      },
+      "emits": [
+        "citation-review: citation-reference-incomplete"
+      ]
+    },
+    {
+      "id": "reference-edition-undated",
+      "distinction": [
+        "reference"
+      ],
+      "summary": "A cited edition with no date is named as incomplete, and no date is guessed.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              }
+            },
+            {
+              "id": "lanterns-en",
+              "kind": "translation",
+              "of": "lanterns",
+              "basedOn": "lanterns-first",
+              "language": "en",
+              "title": "The Lantern Treatise",
+              "issued": "1902",
+              "creators": [
+                {
+                  "name": "Mara Quill",
+                  "role": "translator"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-ms",
+              "kind": "witness",
+              "of": "lanterns",
+              "title": "The Tower codex",
+              "repository": "Tower Archive",
+              "shelfmark": "T 12"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nA note on lanterns [@lanterns-first].\n\n## References\n"
+      },
+      "emits": [
+        "citation-review: citation-reference-incomplete"
+      ]
+    },
+    {
+      "id": "translation-translator-missing",
+      "distinction": [
+        "translation"
+      ],
+      "summary": "A translation with no translator that is not marked anonymous.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              }
+            },
+            {
+              "id": "lanterns-en",
+              "kind": "translation",
+              "of": "lanterns",
+              "basedOn": "lanterns-first",
+              "language": "en",
+              "title": "The Lantern Treatise",
+              "issued": "1902"
+            }
+          ]
+        }
+      },
+      "emits": [
+        "source-review: translator-missing"
+      ]
+    },
+    {
+      "id": "translation-anonymous",
+      "distinction": [
+        "translation"
+      ],
+      "summary": "An anonymous translation is stated as such and unprompted.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              }
+            },
+            {
+              "id": "lanterns-en",
+              "kind": "translation",
+              "of": "lanterns",
+              "basedOn": "lanterns-first",
+              "language": "en",
+              "title": "The Lantern Treatise",
+              "issued": "1902",
+              "anonymous": true
+            }
+          ]
+        }
+      },
+      "emits": []
+    },
+    {
+      "id": "versions-mixed",
+      "distinction": [
+        "translation",
+        "citation"
+      ],
+      "summary": "A post that cites an edition and a translation of one work asks which is meant.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nSee [@lanterns-first] and [@lanterns-en].\n\n## References\n"
+      },
+      "emits": [
+        "source-review: citation-versions-mixed"
+      ]
+    },
+    {
+      "id": "witness-unidentified",
+      "distinction": [
+        "witness"
+      ],
+      "summary": "A witness with neither repository nor shelfmark.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-ms",
+              "kind": "witness",
+              "of": "lanterns",
+              "title": "A codex"
+            }
+          ]
+        }
+      },
+      "emits": [
+        "source-review: witness-unidentified"
+      ]
+    },
+    {
+      "id": "witness-identified",
+      "distinction": [
+        "witness"
+      ],
+      "summary": "A witness named by its repository and shelfmark raises nothing.",
+      "files": {},
+      "emits": []
+    },
+    {
+      "id": "citation-syntax",
+      "distinction": [
+        "citation"
+      ],
+      "summary": "A bracket the citation scanner cannot read, in a draft.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\ndraft: true\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nA note [@Not A Key].\n\n## References\n"
+      },
+      "emits": [
+        "citation-review: citation-syntax"
+      ]
+    },
+    {
+      "id": "citation-unresolved",
+      "distinction": [
+        "citation"
+      ],
+      "summary": "A key the library does not hold, in a draft.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\ndraft: true\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nA note [@nobody].\n\n## References\n"
+      },
+      "emits": [
+        "citation-review: citation-unresolved"
+      ]
+    },
+    {
+      "id": "citation-private-identifier",
+      "distinction": [
+        "citation",
+        "reference"
+      ],
+      "summary": "A reference whose only web address is not public is left out and prompted.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              },
+              "identifiers": [
+                {
+                  "scheme": "url",
+                  "value": "http://files.internal/lantern-scan"
+                }
+              ]
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nA note on lanterns [@lanterns-first].\n\n## References\n"
+      },
+      "emits": [
+        "citation-review: citation-identifier-unpublished"
+      ]
+    },
+    {
+      "id": "citation-same-identifier",
+      "distinction": [
+        "citation"
+      ],
+      "summary": "A post citing two records that share a DOI.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              }
+            },
+            {
+              "id": "lanterns-copy",
+              "kind": "work",
+              "title": "A Copy",
+              "identifiers": [
+                {
+                  "scheme": "doi",
+                  "value": "10.1000/lamp"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-copy2",
+              "kind": "work",
+              "title": "A Second Copy",
+              "identifiers": [
+                {
+                  "scheme": "doi",
+                  "value": "10.1000/lamp"
+                }
+              ]
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nSee [@lanterns-copy] and [@lanterns-copy2].\n\n## References\n"
+      },
+      "emits": [
+        "source-review: citation-same-identifier",
+        "source-review: identifier-shared",
+        "citation-review: citation-reference-incomplete"
+      ]
+    },
+    {
+      "id": "location-located-citation",
+      "distinction": [
+        "source-location"
+      ],
+      "summary": "A precise location is a prompt to check it against the source, never a claim that it is right.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nSee [@lanterns-first, page 12].\n\n## References\n"
+      },
+      "emits": [
+        "citation-review: citation-location-review"
+      ]
+    },
+    {
+      "id": "quotation-without-location",
+      "distinction": [
+        "source-location"
+      ],
+      "summary": "A quotation whose citation gives no location.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\n> Light the lamp.\n> [@lanterns-first]\n\n## References\n"
+      },
+      "emits": [
+        "source-review: quotation-locator-missing"
+      ]
+    },
+    {
+      "id": "quotation-broad-location",
+      "distinction": [
+        "source-location"
+      ],
+      "summary": "A quotation located only by chapter.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\n> Light the lamp.\n> [@lanterns-first, chapter 7]\n\n## References\n"
+      },
+      "emits": [
+        "source-review: quotation-location-broad",
+        "citation-review: citation-location-review"
+      ]
+    },
+    {
+      "id": "quotation-version-unspecified",
+      "distinction": [
+        "source-location",
+        "original-work"
+      ],
+      "summary": "A quotation of a work whose versions are recorded asks which version.",
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\n> Light the lamp.\n> [@lanterns, canonical 514a]\n\n## References\n"
+      },
+      "emits": [
+        "source-review: version-unspecified",
+        "citation-review: citation-location-review"
+      ]
+    },
+    {
+      "id": "note-passage-without-location",
+      "distinction": [
+        "research-note"
+      ],
+      "summary": "A notebook passage with no location.",
+      "files": {
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-open",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Synthetic passage p-open."
+              },
+              "locators": []
+            }
+          ],
+          "notes": [
+            {
+              "id": "n1",
+              "kind": "question",
+              "text": "Synthetic question.",
+              "passages": [
+                "p-open"
+              ]
+            }
+          ]
+        }
+      },
+      "emits": [
+        "source-review: passage-locator-missing"
+      ]
+    },
+    {
+      "id": "note-located-passage",
+      "distinction": [
+        "research-note",
+        "source-location"
+      ],
+      "summary": "A passage located by page, with a note linking it, raises nothing.",
+      "files": {
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-located",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Synthetic passage p-located."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "12"
+                }
+              ]
+            }
+          ],
+          "notes": [
+            {
+              "id": "n1",
+              "kind": "question",
+              "text": "Synthetic question.",
+              "passages": [
+                "p-located"
+              ]
+            }
+          ]
+        }
+      },
+      "emits": []
+    },
+    {
+      "id": "note-passage-volume-missing",
+      "distinction": [
+        "research-note",
+        "source-location"
+      ],
+      "summary": "A notebook passage page in a multi-volume edition that names no volume.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              },
+              "volumes": 3
+            }
+          ]
+        },
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-vol",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Synthetic passage p-vol."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "12"
+                }
+              ]
+            }
+          ],
+          "notes": []
+        }
+      },
+      "emits": [
+        "source-review: volume-missing"
+      ]
+    },
+    {
+      "id": "claim-post-missing",
+      "distinction": [
+        "claim"
+      ],
+      "summary": "A claim naming a post no saved post has.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "nowhere",
+              "statement": "Synthetic claim c1."
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "12"
+                  }
+                ]
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "reviewed"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-post-missing"
+      ]
+    },
+    {
+      "id": "claim-anchors",
+      "distinction": [
+        "claim"
+      ],
+      "summary": "Words that moved, vanished, or occur twice since they were anchored.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "moved",
+              "post": "lanterns",
+              "statement": "Synthetic claim moved.",
+              "anchor": {
+                "start": 3,
+                "end": 13,
+                "text": "References"
+              }
+            },
+            {
+              "id": "gone",
+              "post": "lanterns",
+              "statement": "Synthetic claim gone.",
+              "anchor": {
+                "start": 0,
+                "end": 4,
+                "text": "gone"
+              }
+            },
+            {
+              "id": "twice",
+              "post": "lanterns",
+              "statement": "Synthetic claim twice.",
+              "anchor": {
+                "start": 500,
+                "end": 514,
+                "text": "Light the lamp"
+              }
+            }
+          ],
+          "links": []
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-anchor-moved",
+        "claim-review: claim-anchor-stale",
+        "claim-review: claim-anchor-ambiguous",
+        "claim-review: claim-evidence-missing"
+      ]
+    },
+    {
+      "id": "claim-without-evidence",
+      "distinction": [
+        "claim",
+        "evidence"
+      ],
+      "summary": "A claim with no evidence link: a gap in the record, not a judgement.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1."
+            }
+          ],
+          "links": []
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-evidence-missing"
+      ]
+    },
+    {
+      "id": "claim-support-only",
+      "distinction": [
+        "evidence",
+        "interpretation"
+      ],
+      "summary": "An uncertain claim whose every link supports it.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1.",
+              "uncertainty": "Synthetic doubt."
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "12"
+                  }
+                ]
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "reviewed"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-support-only"
+      ]
+    },
+    {
+      "id": "interpretation-missing-record",
+      "distinction": [
+        "interpretation"
+      ],
+      "summary": "A comparison member that names an interpretation the library does not hold stops the next build, and no rendering is invented in its place.",
+      "files": {
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-first",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Synthetic passage p-first."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "3"
+                }
+              ]
+            },
+            {
+              "id": "p-en",
+              "source": "lanterns-en",
+              "excerpt": {
+                "text": "Synthetic passage p-en."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "9"
+                }
+              ]
+            }
+          ],
+          "notes": []
+        },
+        ".openblog/private/research/alignments.json": {
+          "version": 1,
+          "alignments": [
+            {
+              "id": "lamp",
+              "label": "The lamp",
+              "correspondence": "partial",
+              "members": [
+                {
+                  "source": "lanterns-first",
+                  "passage": "p-first"
+                },
+                {
+                  "interpretation": "ghost-rendering"
+                }
+              ],
+              "rationale": "Synthetic rationale.",
+              "confidence": "plausible"
+            }
+          ]
+        }
+      },
+      "config": {
+        "comparisons": {
+          "publish": true
+        }
+      },
+      "emits": [
+        "alignments: unknown-interpretation"
+      ]
+    },
+    {
+      "id": "claim-contradiction-undiscussed",
+      "distinction": [
+        "evidence",
+        "scholarly-disagreement"
+      ],
+      "summary": "Contradicting evidence with no note on how the post meets it.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1."
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "contradicts",
+              "evidence": {
+                "source": "lanterns-first",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "12"
+                  }
+                ]
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "reviewed"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-contradiction-undiscussed"
+      ]
+    },
+    {
+      "id": "disagreement-private-endpoint",
+      "distinction": [
+        "scholarly-disagreement"
+      ],
+      "summary": "An approved dispute with a person who stays private is left out of the atlas, and says so.",
+      "files": {
+        ".openblog/private/research/atlas.json": {
+          "version": 2,
+          "entries": [
+            {
+              "id": "ida",
+              "kind": "person",
+              "label": "Ida Vale",
+              "visibility": "approved"
+            },
+            {
+              "id": "rival",
+              "kind": "person",
+              "label": "A private rival"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "ida-disputes-rival",
+              "kind": "disputes",
+              "from": "ida",
+              "to": "rival",
+              "assertedBy": {
+                "kind": "author"
+              },
+              "evidence": [
+                {
+                  "source": "lanterns"
+                }
+              ],
+              "visibility": "approved"
+            }
+          ]
+        }
+      },
+      "emits": [
+        "atlas: private-endpoint"
+      ]
+    },
+    {
+      "id": "claim-suggestion-unreviewed",
+      "distinction": [
+        "claim",
+        "evidence"
+      ],
+      "summary": "A suggested claim and a suggested link nobody has made their own.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1.",
+              "origin": "suggested"
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "12"
+                  }
+                ]
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "unreviewed",
+              "origin": "suggested"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-suggestion-unreviewed"
+      ]
+    },
+    {
+      "id": "evidence-without-location",
+      "distinction": [
+        "evidence",
+        "source-location"
+      ],
+      "summary": "A link that names a source but no place in it.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1."
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first"
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "reviewed"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-locator-missing"
+      ]
+    },
+    {
+      "id": "evidence-location-unchecked",
+      "distinction": [
+        "evidence",
+        "source-location"
+      ],
+      "summary": "A located link nobody has recorded checking.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1."
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "12"
+                  }
+                ]
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "unreviewed"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-location-unreviewed"
+      ]
+    },
+    {
+      "id": "evidence-without-rationale",
+      "distinction": [
+        "evidence",
+        "interpretation"
+      ],
+      "summary": "A link that does not say why the author reads the source that way.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1."
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "12"
+                  }
+                ]
+              },
+              "reviewState": "reviewed"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-rationale-missing"
+      ]
+    },
+    {
+      "id": "evidence-on-archived-source",
+      "distinction": [
+        "evidence"
+      ],
+      "summary": "A link resting on a source archived in the library.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              },
+              "archived": true
+            }
+          ]
+        },
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1."
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "12"
+                  }
+                ]
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "reviewed"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-source-archived"
+      ]
+    },
+    {
+      "id": "evidence-on-archived-passage",
+      "distinction": [
+        "evidence",
+        "research-note"
+      ],
+      "summary": "A link pointing at an archived notebook passage.",
+      "files": {
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-old",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Synthetic passage p-old."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "12"
+                }
+              ],
+              "archived": true
+            }
+          ],
+          "notes": []
+        },
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1."
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first",
+                "passage": "p-old"
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "reviewed"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claim-review: claim-passage-archived"
+      ]
+    },
+    {
+      "id": "context-private-endpoint",
+      "distinction": [
+        "contextual-entry"
+      ],
+      "summary": "An approved relationship to an entry that stays private is left out of the atlas, and says so.",
+      "files": {
+        ".openblog/private/research/atlas.json": {
+          "version": 2,
+          "entries": [
+            {
+              "id": "ida",
+              "kind": "person",
+              "label": "Ida Vale",
+              "visibility": "approved"
+            },
+            {
+              "id": "treatise",
+              "kind": "work",
+              "label": "A private work"
+            }
+          ],
+          "relationships": [
+            {
+              "id": "ida-wrote-treatise",
+              "kind": "authored",
+              "from": "ida",
+              "to": "treatise",
+              "assertedBy": {
+                "kind": "author"
+              },
+              "evidence": [
+                {
+                  "source": "lanterns"
+                }
+              ],
+              "visibility": "approved"
+            }
+          ]
+        }
+      },
+      "emits": [
+        "atlas: private-endpoint"
+      ]
+    },
+    {
+      "id": "context-unpublished-datings",
+      "distinction": [
+        "contextual-entry"
+      ],
+      "summary": "An approved entry whose datings are not approved publishes without them.",
+      "files": {
+        ".openblog/private/research/atlas.json": {
+          "version": 2,
+          "entries": [
+            {
+              "id": "ida",
+              "kind": "person",
+              "label": "Ida Vale",
+              "visibility": "approved",
+              "dates": [
+                {
+                  "id": "ida-born",
+                  "aspect": "birth",
+                  "date": {
+                    "at": {
+                      "year": 1700
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "relationships": []
+        }
+      },
+      "emits": [
+        "atlas: unpublished-datings"
+      ]
+    },
+    {
+      "id": "context-link-unpublished",
+      "distinction": [
+        "contextual-entry"
+      ],
+      "summary": "A post linking to an atlas entry the next build does not publish.",
+      "files": {
+        ".openblog/private/research/atlas.json": {
+          "version": 2,
+          "entries": [
+            {
+              "id": "hush",
+              "kind": "concept",
+              "label": "A private concept"
+            }
+          ],
+          "relationships": []
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\n---\n\nSee [the concept](/atlas/hush/).\n"
+      },
+      "emits": [
+        "publication-context: context-link-unpublished"
+      ]
+    },
+    {
+      "id": "chronology-death-before-birth",
+      "distinction": [
+        "contextual-entry"
+      ],
+      "summary": "A death dated before a birth, as recorded.",
+      "files": {
+        ".openblog/private/research/atlas.json": {
+          "version": 2,
+          "entries": [
+            {
+              "id": "ida",
+              "kind": "person",
+              "label": "Person ida",
+              "dates": [
+                {
+                  "id": "born",
+                  "aspect": "birth",
+                  "date": {
+                    "notBefore": {
+                      "year": 1700
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                },
+                {
+                  "id": "died",
+                  "aspect": "death",
+                  "date": {
+                    "notAfter": {
+                      "year": 1690
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "relationships": []
+        }
+      },
+      "emits": [
+        "chronology-index: death-before-birth"
+      ]
+    },
+    {
+      "id": "chronology-work-and-life",
+      "distinction": [
+        "contextual-entry"
+      ],
+      "summary": "A work dated after its author's death or before their birth, and a publication before its composition.",
+      "files": {
+        ".openblog/private/research/atlas.json": {
+          "version": 2,
+          "entries": [
+            {
+              "id": "ida",
+              "kind": "person",
+              "label": "Person ida",
+              "dates": [
+                {
+                  "id": "ida-born",
+                  "aspect": "birth",
+                  "date": {
+                    "at": {
+                      "year": 1700
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                },
+                {
+                  "id": "ida-died",
+                  "aspect": "death",
+                  "date": {
+                    "at": {
+                      "year": 1760
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                },
+                {
+                  "id": "ida-active",
+                  "aspect": "active",
+                  "date": {
+                    "from": {
+                      "year": 1780
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "treatise",
+              "kind": "work",
+              "label": "Work treatise",
+              "dates": [
+                {
+                  "id": "t-late",
+                  "aspect": "composition",
+                  "date": {
+                    "from": {
+                      "year": 1790
+                    },
+                    "to": {
+                      "year": 1795
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                },
+                {
+                  "id": "t-early",
+                  "aspect": "composition",
+                  "date": {
+                    "to": {
+                      "year": 1600
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                },
+                {
+                  "id": "t-printed",
+                  "aspect": "publication",
+                  "date": {
+                    "notAfter": {
+                      "year": 1700
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "relationships": [
+            {
+              "id": "ida-wrote-treatise",
+              "kind": "authored",
+              "from": "ida",
+              "to": "treatise",
+              "assertedBy": {
+                "kind": "author"
+              },
+              "evidence": [
+                {
+                  "source": "lanterns"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "emits": [
+        "chronology-index: composition-before-birth",
+        "chronology-index: composition-after-death",
+        "chronology-index: publication-before-composition",
+        "chronology-index: outside-lifetime"
+      ]
+    },
+    {
+      "id": "chronology-relative",
+      "distinction": [
+        "contextual-entry"
+      ],
+      "summary": "Relative datings that oppose each other or loop.",
+      "files": {
+        ".openblog/private/research/atlas.json": {
+          "version": 2,
+          "entries": [
+            {
+              "id": "a",
+              "kind": "work",
+              "label": "Work a",
+              "dates": [
+                {
+                  "id": "a-before-b",
+                  "aspect": "composition",
+                  "date": {
+                    "relative": {
+                      "order": "before",
+                      "entry": "b",
+                      "aspect": "composition"
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "b",
+              "kind": "work",
+              "label": "Work b",
+              "dates": [
+                {
+                  "id": "b-before-c",
+                  "aspect": "composition",
+                  "date": {
+                    "relative": {
+                      "order": "before",
+                      "entry": "c",
+                      "aspect": "composition"
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "c",
+              "kind": "work",
+              "label": "Work c",
+              "dates": [
+                {
+                  "id": "c-before-a",
+                  "aspect": "composition",
+                  "date": {
+                    "relative": {
+                      "order": "before",
+                      "entry": "a",
+                      "aspect": "composition"
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "d",
+              "kind": "work",
+              "label": "Work d",
+              "dates": [
+                {
+                  "id": "d-after-e",
+                  "aspect": "composition",
+                  "date": {
+                    "relative": {
+                      "order": "after",
+                      "entry": "e",
+                      "aspect": "composition"
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "e",
+              "kind": "work",
+              "label": "Work e",
+              "dates": [
+                {
+                  "id": "e-after-d",
+                  "aspect": "composition",
+                  "date": {
+                    "relative": {
+                      "order": "after",
+                      "entry": "d",
+                      "aspect": "composition"
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "relationships": []
+        }
+      },
+      "emits": [
+        "chronology-index: relative-cycle",
+        "chronology-index: opposed-relative"
+      ]
+    },
+    {
+      "id": "chronology-relative-against-dates",
+      "distinction": [
+        "contextual-entry"
+      ],
+      "summary": "A relative dating that disagrees with the absolute datings it orders.",
+      "files": {
+        ".openblog/private/research/atlas.json": {
+          "version": 2,
+          "entries": [
+            {
+              "id": "f",
+              "kind": "work",
+              "label": "Work f",
+              "dates": [
+                {
+                  "id": "f-dated",
+                  "aspect": "composition",
+                  "date": {
+                    "at": {
+                      "year": 1800
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                },
+                {
+                  "id": "f-before-g",
+                  "aspect": "composition",
+                  "date": {
+                    "relative": {
+                      "order": "before",
+                      "entry": "g",
+                      "aspect": "composition"
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "g",
+              "kind": "work",
+              "label": "Work g",
+              "dates": [
+                {
+                  "id": "g-dated",
+                  "aspect": "composition",
+                  "date": {
+                    "at": {
+                      "year": 1700
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "relationships": []
+        }
+      },
+      "emits": [
+        "chronology-index: relative-against-dates"
+      ]
+    },
+    {
+      "id": "similarity-is-not-influence",
+      "distinction": [
+        "contextual-entry",
+        "evidence",
+        "translation"
+      ],
+      "summary": "Two passages that read exactly alike, two people born a year apart, one approved comparison: nothing says one influenced the other.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              }
+            },
+            {
+              "id": "lanterns-en",
+              "kind": "translation",
+              "of": "lanterns",
+              "basedOn": "lanterns-first",
+              "language": "en",
+              "title": "The Lantern Treatise",
+              "issued": "1902",
+              "creators": [
+                {
+                  "name": "Mara Quill",
+                  "role": "translator"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              }
+            }
+          ]
+        },
+        ".openblog/private/research/atlas.json": {
+          "version": 2,
+          "entries": [
+            {
+              "id": "ida",
+              "kind": "person",
+              "label": "Person ida",
+              "dates": [
+                {
+                  "id": "ida-born",
+                  "aspect": "birth",
+                  "date": {
+                    "at": {
+                      "year": 1700
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "ned",
+              "kind": "person",
+              "label": "Person ned",
+              "dates": [
+                {
+                  "id": "ned-born",
+                  "aspect": "birth",
+                  "date": {
+                    "at": {
+                      "year": 1701
+                    }
+                  },
+                  "assertedBy": {
+                    "kind": "source",
+                    "source": "lanterns"
+                  },
+                  "evidence": [
+                    {
+                      "source": "lanterns"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "relationships": []
+        },
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-vale",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Light the lamp before the dark comes."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "3"
+                }
+              ]
+            },
+            {
+              "id": "p-orrin",
+              "source": "lanterns-en",
+              "excerpt": {
+                "text": "Light the lamp before the dark comes."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "9"
+                }
+              ]
+            }
+          ],
+          "notes": []
+        },
+        ".openblog/private/research/alignments.json": {
+          "version": 1,
+          "alignments": [
+            {
+              "id": "alike",
+              "label": "The same line",
+              "correspondence": "corresponding",
+              "members": [
+                {
+                  "source": "lanterns-first",
+                  "passage": "p-vale"
+                },
+                {
+                  "source": "lanterns-en",
+                  "passage": "p-orrin"
+                }
+              ],
+              "rationale": "The wording is the same.",
+              "confidence": "tentative",
+              "visibility": "approved"
+            }
+          ]
+        }
+      },
+      "config": {
+        "comparisons": {
+          "publish": true
+        }
+      },
+      "emits": []
+    },
+    {
+      "id": "claims-private-endpoint",
+      "distinction": [
+        "claim",
+        "evidence"
+      ],
+      "summary": "An approved link on a claim that is still private stays private.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1.",
+              "visibility": "private"
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "12"
+                  }
+                ]
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "reviewed",
+              "visibility": "approved"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claims: private-endpoint"
+      ]
+    },
+    {
+      "id": "claims-undisclosed-contradiction",
+      "distinction": [
+        "evidence",
+        "scholarly-disagreement"
+      ],
+      "summary": "Approved support beside a contradiction the author kept private is not published alone.",
+      "files": {
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "c1",
+              "post": "lanterns",
+              "statement": "Synthetic claim c1.",
+              "visibility": "approved",
+              "uncertainty": "Synthetic doubt."
+            }
+          ],
+          "links": [
+            {
+              "id": "l1",
+              "claim": "c1",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "12"
+                  }
+                ]
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "reviewed",
+              "visibility": "approved"
+            },
+            {
+              "id": "l2",
+              "claim": "c1",
+              "relation": "contradicts",
+              "evidence": {
+                "source": "lanterns-en",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "9"
+                  }
+                ]
+              },
+              "rationale": "Synthetic rationale.",
+              "reviewState": "reviewed"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": [
+        "claims: undisclosed-contradiction"
+      ],
+      "config": {
+        "claimEvidence": {
+          "publish": true
+        }
+      }
+    },
+    {
+      "id": "comparison-stale-locator",
+      "distinction": [
+        "source-location",
+        "edition",
+        "translation"
+      ],
+      "summary": "A member's recorded place no longer matches its passage.",
+      "files": {
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-first",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Synthetic passage p-first."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "3"
+                }
+              ]
+            },
+            {
+              "id": "p-en",
+              "source": "lanterns-en",
+              "excerpt": {
+                "text": "Synthetic passage p-en."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "9"
+                }
+              ]
+            }
+          ],
+          "notes": []
+        },
+        ".openblog/private/research/alignments.json": {
+          "version": 1,
+          "alignments": [
+            {
+              "id": "lamp",
+              "label": "The lamp",
+              "correspondence": "partial",
+              "members": [
+                {
+                  "source": "lanterns-first",
+                  "passage": "p-first",
+                  "locators": [
+                    {
+                      "kind": "page",
+                      "value": "4"
+                    }
+                  ]
+                },
+                {
+                  "source": "lanterns-en",
+                  "passage": "p-en"
+                }
+              ],
+              "rationale": "Synthetic rationale.",
+              "confidence": "plausible"
+            }
+          ]
+        }
+      },
+      "emits": [
+        "alignments: stale-locator"
+      ]
+    },
+    {
+      "id": "comparison-archived-member",
+      "distinction": [
+        "research-note",
+        "translation"
+      ],
+      "summary": "A member resting on an archived passage.",
+      "files": {
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-first",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Synthetic passage p-first."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "3"
+                }
+              ]
+            },
+            {
+              "id": "p-en",
+              "source": "lanterns-en",
+              "excerpt": {
+                "text": "Synthetic passage p-en."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "9"
+                }
+              ],
+              "archived": true
+            }
+          ],
+          "notes": []
+        },
+        ".openblog/private/research/alignments.json": {
+          "version": 1,
+          "alignments": [
+            {
+              "id": "lamp",
+              "label": "The lamp",
+              "correspondence": "partial",
+              "members": [
+                {
+                  "source": "lanterns-first",
+                  "passage": "p-first"
+                },
+                {
+                  "source": "lanterns-en",
+                  "passage": "p-en"
+                }
+              ],
+              "rationale": "Synthetic rationale.",
+              "confidence": "plausible"
+            }
+          ]
+        }
+      },
+      "emits": [
+        "alignments: archived-member"
+      ]
+    },
+    {
+      "id": "comparison-stale-approval",
+      "distinction": [
+        "source-location",
+        "translation"
+      ],
+      "summary": "A passage moved after the comparison was approved, so the comparison is withheld.",
+      "files": {
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-first",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Synthetic passage p-first."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "3"
+                }
+              ]
+            },
+            {
+              "id": "p-en",
+              "source": "lanterns-en",
+              "excerpt": {
+                "text": "Synthetic passage p-en."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "9"
+                }
+              ]
+            }
+          ],
+          "notes": []
+        },
+        ".openblog/private/research/alignments.json": {
+          "version": 1,
+          "alignments": [
+            {
+              "id": "lamp",
+              "label": "The lamp",
+              "correspondence": "partial",
+              "members": [
+                {
+                  "source": "lanterns-first",
+                  "passage": "p-first"
+                },
+                {
+                  "source": "lanterns-en",
+                  "passage": "p-en"
+                }
+              ],
+              "rationale": "Synthetic rationale.",
+              "confidence": "plausible",
+              "visibility": "approved",
+              "approvedPassages": {
+                "p-first": "0000000000000000"
+              }
+            }
+          ]
+        }
+      },
+      "emits": [
+        "alignments: stale-approval"
+      ],
+      "config": {
+        "comparisons": {
+          "publish": true
+        }
+      }
+    },
+    {
+      "id": "comparison-withheld-rights",
+      "distinction": [
+        "translation",
+        "edition"
+      ],
+      "summary": "A version whose rights are not declared open keeps its wording out of a published comparison.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              }
+            },
+            {
+              "id": "lanterns-en",
+              "kind": "translation",
+              "of": "lanterns",
+              "basedOn": "lanterns-first",
+              "language": "en",
+              "title": "The Lantern Treatise",
+              "issued": "1902",
+              "creators": [
+                {
+                  "name": "Mara Quill",
+                  "role": "translator"
+                }
+              ],
+              "rights": {
+                "status": "rightsReserved"
+              }
+            }
+          ]
+        },
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-first",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Synthetic passage p-first."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "3"
+                }
+              ]
+            },
+            {
+              "id": "p-en",
+              "source": "lanterns-en",
+              "excerpt": {
+                "text": "Synthetic passage p-en."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "9"
+                }
+              ]
+            }
+          ],
+          "notes": []
+        },
+        ".openblog/private/research/alignments.json": {
+          "version": 1,
+          "alignments": [
+            {
+              "id": "lamp",
+              "label": "The lamp",
+              "correspondence": "partial",
+              "members": [
+                {
+                  "source": "lanterns-first",
+                  "passage": "p-first"
+                },
+                {
+                  "source": "lanterns-en",
+                  "passage": "p-en"
+                }
+              ],
+              "rationale": "Synthetic rationale.",
+              "confidence": "plausible",
+              "visibility": "approved"
+            }
+          ]
+        }
+      },
+      "emits": [
+        "comparison-projection: withheld-rights"
+      ],
+      "config": {
+        "comparisons": {
+          "publish": true
+        }
+      }
+    },
+    {
+      "id": "comparison-withheld-length",
+      "distinction": [
+        "edition"
+      ],
+      "summary": "An excerpt longer than a public comparison may quote stays out.",
+      "files": {
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-first",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. Light the lamp. "
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "3"
+                }
+              ]
+            },
+            {
+              "id": "p-en",
+              "source": "lanterns-en",
+              "excerpt": {
+                "text": "Synthetic passage p-en."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "9"
+                }
+              ]
+            }
+          ],
+          "notes": []
+        },
+        ".openblog/private/research/alignments.json": {
+          "version": 1,
+          "alignments": [
+            {
+              "id": "lamp",
+              "label": "The lamp",
+              "correspondence": "partial",
+              "members": [
+                {
+                  "source": "lanterns-first",
+                  "passage": "p-first"
+                },
+                {
+                  "source": "lanterns-en",
+                  "passage": "p-en"
+                }
+              ],
+              "rationale": "Synthetic rationale.",
+              "confidence": "plausible",
+              "visibility": "approved"
+            }
+          ]
+        }
+      },
+      "emits": [
+        "comparison-projection: withheld-length",
+        "comparison-projection: withheld-rights"
+      ],
+      "config": {
+        "comparisons": {
+          "publish": true
+        }
+      }
+    },
+    {
+      "id": "lecture-distinctions-held-apart",
+      "distinction": [
+        "claim",
+        "evidence",
+        "interpretation",
+        "scholarly-disagreement",
+        "source-location"
+      ],
+      "summary": "A speaker's statement, the source the speaker names, the source text, the author's interpretation and a scholarly disagreement stay four different records, and none is flagged.",
+      "files": {
+        ".openblog/private/research/sources.json": {
+          "version": 1,
+          "sources": [
+            {
+              "id": "lanterns",
+              "kind": "work",
+              "title": "A Treatise of Lanterns",
+              "creators": [
+                {
+                  "name": "Ida Vale",
+                  "role": "author"
+                }
+              ]
+            },
+            {
+              "id": "lanterns-first",
+              "kind": "edition",
+              "of": "lanterns",
+              "title": "The Treatise of Lanterns, first printing",
+              "issued": "1801",
+              "creators": [
+                {
+                  "name": "Ned Orrin",
+                  "role": "editor"
+                }
+              ],
+              "rights": {
+                "status": "publicDomain"
+              },
+              "csl": {
+                "publisher": "Orrin and Sons"
+              }
+            },
+            {
+              "id": "lanterns-en",
+              "kind": "translation",
+              "of": "lanterns",
+              "basedOn": "lanterns-first",
+              "language": "en",
+              "title": "The Lantern Treatise",
+              "issued": "1902",
+              "creators": [
+                {
+                  "name": "Mara Quill",
+                  "role": "translator"
+                }
+              ]
+            },
+            {
+              "id": "keeper-lecture",
+              "kind": "work",
+              "title": "A lecture on keeping lamps",
+              "creators": [
+                {
+                  "name": "Wren Alder",
+                  "role": "author"
+                }
+              ]
+            }
+          ],
+          "interpretations": [
+            {
+              "id": "my-reading",
+              "kind": "reading",
+              "source": "lanterns-first",
+              "text": "Synthetic reading of the opening.",
+              "interpreters": [
+                {
+                  "name": "The author"
+                }
+              ]
+            }
+          ]
+        },
+        ".openblog/private/research/notebook.json": {
+          "version": 1,
+          "passages": [
+            {
+              "id": "p-text",
+              "source": "lanterns-first",
+              "excerpt": {
+                "text": "Synthetic passage p-text."
+              },
+              "locators": [
+                {
+                  "kind": "page",
+                  "value": "3"
+                }
+              ]
+            }
+          ],
+          "notes": []
+        },
+        ".openblog/private/research/claims.json": {
+          "version": 1,
+          "claims": [
+            {
+              "id": "said",
+              "post": "lanterns",
+              "statement": "Synthetic claim said.",
+              "uncertainty": "The speaker may be summarizing."
+            },
+            {
+              "id": "reads",
+              "post": "lanterns",
+              "statement": "Synthetic claim reads.",
+              "uncertainty": "One reading among others."
+            }
+          ],
+          "links": [
+            {
+              "id": "l-speaker",
+              "claim": "said",
+              "relation": "supports",
+              "evidence": {
+                "source": "keeper-lecture",
+                "locators": [
+                  {
+                    "kind": "timestamp",
+                    "value": "12:30"
+                  }
+                ]
+              },
+              "rationale": "The speaker says it at this point.",
+              "reviewState": "reviewed"
+            },
+            {
+              "id": "l-source",
+              "claim": "said",
+              "relation": "contextualizes",
+              "evidence": {
+                "source": "lanterns-first",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "3"
+                  }
+                ]
+              },
+              "rationale": "The speaker refers to this edition.",
+              "reviewState": "reviewed"
+            },
+            {
+              "id": "l-text",
+              "claim": "reads",
+              "relation": "supports",
+              "evidence": {
+                "source": "lanterns-first",
+                "passage": "p-text"
+              },
+              "rationale": "The passage itself.",
+              "reviewState": "reviewed"
+            },
+            {
+              "id": "l-disagree",
+              "claim": "reads",
+              "relation": "contradicts",
+              "evidence": {
+                "source": "lanterns-en",
+                "locators": [
+                  {
+                    "kind": "page",
+                    "value": "9"
+                  }
+                ]
+              },
+              "rationale": "A translator reads it otherwise.",
+              "reviewState": "reviewed"
+            }
+          ]
+        },
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nLight the lamp, said the keeper. Light the lamp, said the keeper.\n\n## References\n"
+      },
+      "emits": []
+    },
+    {
+      "id": "unreadable-library",
+      "distinction": [
+        "original-work",
+        "edition",
+        "translation",
+        "witness"
+      ],
+      "summary": "A source library that cannot be read stops the next build and is named once.",
+      "dirs": [
+        ".openblog/private/research/sources.json"
+      ],
+      "config": {
+        "knowledgeAtlas": {
+          "publish": true
+        }
+      },
+      "emits": [
+        "source-library: file-unreadable"
+      ]
+    },
+    {
+      "id": "unreadable-notebook",
+      "distinction": [
+        "research-note"
+      ],
+      "summary": "A notebook that cannot be read stops the next build and is named once.",
+      "dirs": [
+        ".openblog/private/research/notebook.json"
+      ],
+      "config": {
+        "knowledgeAtlas": {
+          "publish": true
+        }
+      },
+      "emits": [
+        "notebook: file-unreadable"
+      ]
+    },
+    {
+      "id": "unreadable-atlas",
+      "distinction": [
+        "contextual-entry"
+      ],
+      "summary": "An atlas that cannot be read stops the next build and is named once.",
+      "dirs": [
+        ".openblog/private/research/atlas.json"
+      ],
+      "config": {
+        "knowledgeAtlas": {
+          "publish": true
+        }
+      },
+      "emits": [
+        "atlas: file-unreadable"
+      ]
+    },
+    {
+      "id": "unreadable-claims",
+      "distinction": [
+        "claim"
+      ],
+      "summary": "A claims file that cannot be read is named once, and stops the next build.",
+      "dirs": [
+        ".openblog/private/research/claims.json"
+      ],
+      "config": {
+        "claimEvidence": {
+          "publish": true
+        }
+      },
+      "files": {
+        "content/posts/lanterns.md": "---\ntitle: Lanterns\ndate: 2026-10-01\nprofile: research\ncitations: notes\n---\n\n## Abstract\n\nA note on lanterns [@lanterns-first].\n\n## References\n"
+      },
+      "emits": [
+        "claims: file-unreadable"
+      ]
+    },
+    {
+      "id": "unreadable-alignments",
+      "distinction": [
+        "translation",
+        "edition"
+      ],
+      "summary": "An alignments file that cannot be read stops the next build and is named once.",
+      "dirs": [
+        ".openblog/private/research/alignments.json"
+      ],
+      "config": {
+        "comparisons": {
+          "publish": true
+        }
+      },
+      "emits": [
+        "alignments: file-unreadable"
+      ]
+    },
+    {
+      "id": "unreadable-selections",
+      "distinction": [
+        "contextual-entry",
+        "reference"
+      ],
+      "summary": "A curated selections file that cannot be read stops the next build, while the site publishes curated context, and is named once.",
+      "dirs": [
+        ".openblog/private/research/selections.json"
+      ],
+      "config": {
+        "curatedContext": {
+          "publish": true
+        }
+      },
+      "emits": [
+        "selections: file-unreadable"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+/* Styles for the <demo-reveal> heading effect. The element itself is in
+   reveal.js. Words start slightly lowered and transparent, then rise. */
+
+demo-reveal {
+  display: inline-block;
+}
+
+demo-reveal .demo-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.35em);
+  transition:
+    opacity 420ms ease-out,
+    transform 420ms ease-out;
+}
+
+demo-reveal[revealed] .demo-word {
+  opacity: 1;
+  transform: none;
+}
+
+/* Before JavaScript runs (or when it never does), the heading is plain text:
+   nothing is hidden, so the page is complete without the effect. */

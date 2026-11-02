@@ -1,0 +1,105 @@
+{
+  "authors": [
+    {
+      "name": "Site Owner",
+      "url": "https://example.test/about/"
+    }
+  ],
+  "description": "A blog built with open.blog",
+  "feed_url": "https://example.test/feed.json",
+  "home_page_url": "https://example.test/",
+  "items": [
+    {
+      "content_html": "<p>Body of l4.</p>\n",
+      "content_text": "Part l4\nCanonical: https://example.test/l4/\nBody of l4.",
+      "date_published": "2026-07-01T00:00:00Z",
+      "id": "https://example.test/l4/",
+      "summary": "About l4.",
+      "tags": [
+        "notes"
+      ],
+      "title": "Part l4",
+      "url": "https://example.test/l4/"
+    },
+    {
+      "content_html": "<p>Body of l3.</p>\n",
+      "content_text": "Part l3\nCanonical: https://example.test/l3/\nBody of l3.",
+      "date_published": "2026-06-01T00:00:00Z",
+      "id": "https://example.test/l3/",
+      "summary": "About l3.",
+      "tags": [
+        "notes"
+      ],
+      "title": "Part l3",
+      "url": "https://example.test/l3/"
+    },
+    {
+      "content_html": "<p>Body of l2.</p>\n",
+      "content_text": "Part l2\nCanonical: https://example.test/l2/\nBody of l2.",
+      "date_published": "2026-05-01T00:00:00Z",
+      "id": "https://example.test/l2/",
+      "summary": "About l2.",
+      "tags": [
+        "notes"
+      ],
+      "title": "Part l2",
+      "url": "https://example.test/l2/"
+    },
+    {
+      "content_html": "<p>Body of l1.</p>\n",
+      "content_text": "Part l1\nCanonical: https://example.test/l1/\nBody of l1.",
+      "date_published": "2026-04-01T00:00:00Z",
+      "id": "https://example.test/l1/",
+      "summary": "About l1.",
+      "tags": [
+        "notes"
+      ],
+      "title": "Part l1",
+      "url": "https://example.test/l1/"
+    },
+    {
+      "content_html": "<p>Body of loose.</p>\n",
+      "content_text": "Part loose\nCanonical: https://example.test/loose/\nBody of loose.",
+      "date_published": "2026-03-01T00:00:00Z",
+      "id": "https://example.test/loose/",
+      "summary": "About loose.",
+      "tags": [
+        "notes"
+      ],
+      "title": "Part loose",
+      "url": "https://example.test/loose/"
+    },
+    {
+      "authors": [
+        {
+          "name": "Cy"
+        }
+      ],
+      "content_html": "<aside class=\"ob-contributions\" aria-labelledby=\"ob-contributions-title\">\n<h2 id=\"ob-contributions-title\" class=\"ob-contributions-title\">Contributions</h2>\n<ul>\n<li><div><span class=\"ob-contributor-name\">Cy</span><span class=\"ob-contributor-roles\">Author</span></div></li>\n</ul>\n</aside>\n<p>Body of g2.</p>\n",
+      "content_text": "Part g2\nCanonical: https://example.test/g2/\nBody of g2.\nContributions\nCy — Author",
+      "date_published": "2026-02-01T00:00:00Z",
+      "id": "https://example.test/g2/",
+      "summary": "About g2.",
+      "tags": [
+        "notes"
+      ],
+      "title": "Part g2",
+      "url": "https://example.test/g2/"
+    },
+    {
+      "content_html": "<p>Body of g1.</p>\n",
+      "content_text": "Part g1\nCanonical: https://example.test/g1/\nBody of g1.",
+      "date_published": "2026-01-01T00:00:00Z",
+      "id": "https://example.test/g1/",
+      "summary": "About g1.",
+      "tags": [
+        "notes"
+      ],
+      "title": "Part g1",
+      "url": "https://example.test/g1/"
+    }
+  ],
+  "language": "en",
+  "title": "T",
+  "version": "https://jsonfeed.org/version/1.1"
+}

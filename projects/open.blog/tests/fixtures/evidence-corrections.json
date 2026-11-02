@@ -1,0 +1,2700 @@
+{
+  "about": "Shared evidence-submission and correction-decision fixtures (ADRs 0116 and 0117), read by crates/openblog-core/tests/evidence_corrections.rs. `submissions` are evidence submissions (B5 typed feedback with an optional version 2 evidence block) and the records a receiver keeps. `decisions.items` are the server's facts about stored items; each case decides one, with its earlier decisions (`log`) and the log of the item `addressedBy` names (`addressed`, with an optional `revision`, default 1, the addressing item's text revision), and gives the stored decision or the error code, how the item stands before and after, and its public decision while the reader's note is (or is not) public, against `decisions.published`.",
+  "receivedAt": "2026-10-26T10:00:00Z",
+  "submissions": {
+    "accepted": [
+      {
+        "name": "a suggested correction without evidence stays a version 1 submission, byte for byte B5's",
+        "submission": {
+          "version": 1,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "details": {
+            "suggestedText": "The tide rises 3.1 m"
+          }
+        },
+        "record": {
+          "version": 1,
+          "kind": "correction-suggestion",
+          "body": "The height is wrong.",
+          "details": {
+            "suggestedText": "The tide rises 3.1 m"
+          },
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "target": {
+              "version": 1,
+              "kind": "section",
+              "section": "tides"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          }
+        }
+      },
+      {
+        "name": "a suggested correction that questions a published evidence link, with a published source and locators",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "tide-height",
+            "evidenceLink": "tide-height-noaa",
+            "source": "admiralty-1990",
+            "locators": [
+              {
+                "kind": "page",
+                "value": " 40 ",
+                "to": "41"
+              },
+              {
+                "kind": "x-table",
+                "value": "T3"
+              }
+            ],
+            "stance": "contradicts"
+          },
+          "attribution": {
+            "name": "Ada",
+            "publishName": false
+          }
+        },
+        "record": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "body": "The height is wrong.",
+          "details": {},
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "target": {
+              "version": 1,
+              "kind": "section",
+              "section": "tides"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "name": "Ada",
+              "publishName": false
+            }
+          },
+          "evidence": {
+            "claim": "tide-height",
+            "evidenceLink": "tide-height-noaa",
+            "source": "admiralty-1990",
+            "locators": [
+              {
+                "kind": "page",
+                "value": "40",
+                "to": "41"
+              },
+              {
+                "kind": "x-table",
+                "value": "T3"
+              }
+            ],
+            "stance": "contradicts"
+          }
+        }
+      },
+      {
+        "name": "a suggested source for a claim, with a stance about its link",
+        "submission": {
+          "version": 2,
+          "kind": "source-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "body": "This survey measured it.",
+          "details": {
+            "sourceUrl": "https://example.org/survey"
+          },
+          "evidence": {
+            "claim": "tide-height",
+            "stance": "supports"
+          }
+        },
+        "record": {
+          "version": 2,
+          "kind": "source-suggestion",
+          "body": "This survey measured it.",
+          "details": {
+            "sourceUrl": "https://example.org/survey"
+          },
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "target": {
+              "version": 1,
+              "kind": "work"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          },
+          "evidence": {
+            "claim": "tide-height",
+            "stance": "supports"
+          }
+        }
+      },
+      {
+        "name": "a suggested source that questions a citation the post makes",
+        "submission": {
+          "version": 2,
+          "kind": "source-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "details": {
+            "sourceUrl": "https://example.org/errata"
+          },
+          "evidence": {
+            "citation": "noaa-2020"
+          }
+        },
+        "record": {
+          "version": 2,
+          "kind": "source-suggestion",
+          "body": "The height is wrong.",
+          "details": {
+            "sourceUrl": "https://example.org/errata"
+          },
+          "provenance": {
+            "version": 1,
+            "work": "/posts/tides/",
+            "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "target": {
+              "version": 1,
+              "kind": "section",
+              "section": "tides"
+            },
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "channel": "hosted",
+            "attribution": {
+              "publishName": false
+            }
+          },
+          "evidence": {
+            "citation": "noaa-2020"
+          }
+        }
+      }
+    ],
+    "refused": [
+      {
+        "name": "a newer version",
+        "submission": {
+          "version": 3,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong."
+        },
+        "code": "unsupportedVersion"
+      },
+      {
+        "name": "evidence in a version 1 submission",
+        "submission": {
+          "version": 1,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "a"
+          }
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a version 2 submission without evidence",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong."
+        },
+        "code": "missingEvidence"
+      },
+      {
+        "name": "a B5 rule still applies first: a suggested correction of the whole post",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "work"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "a"
+          }
+        },
+        "code": "feedback",
+        "feedbackCode": "targetNotAllowed"
+      },
+      {
+        "name": "a suggested source still needs its link",
+        "submission": {
+          "version": 2,
+          "kind": "source-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "source": "admiralty-1990"
+          }
+        },
+        "code": "feedback",
+        "feedbackCode": "missingSource"
+      },
+      {
+        "name": "a question offers no evidence",
+        "submission": {
+          "version": 2,
+          "kind": "question",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "a"
+          }
+        },
+        "code": "notEvidenceKind"
+      },
+      {
+        "name": "a question is not an evidence submission even without a block",
+        "submission": {
+          "version": 1,
+          "kind": "question",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong."
+        },
+        "code": "notEvidenceKind"
+      },
+      {
+        "name": "another interpretation offers no evidence",
+        "submission": {
+          "version": 2,
+          "kind": "alternative-interpretation",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "a"
+          }
+        },
+        "code": "notEvidenceKind"
+      },
+      {
+        "name": "an empty evidence block",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {}
+        },
+        "code": "emptyEvidence"
+      },
+      {
+        "name": "evidence as an array",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": [
+            "claim"
+          ]
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a vote rides along in the evidence block",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "a",
+            "votes": 12
+          }
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a score rides along in the evidence block",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "a",
+            "score": 0.9
+          }
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a verified flag rides along in the evidence block",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "a",
+            "verified": true
+          }
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a vote rides along at the top level",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "a"
+          },
+          "upvotes": 3
+        },
+        "code": "feedback",
+        "feedbackCode": "malformed"
+      },
+      {
+        "name": "an uppercase claim id",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "Tide"
+          }
+        },
+        "code": "invalidReference"
+      },
+      {
+        "name": "a source id with traversal",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "source": "../library"
+          }
+        },
+        "code": "invalidReference"
+      },
+      {
+        "name": "a citation id that is a URL",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "citation": "https://example.org"
+          }
+        },
+        "code": "invalidReference"
+      },
+      {
+        "name": "an evidence link without its claim",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "evidenceLink": "tide-height-noaa"
+          }
+        },
+        "code": "linkWithoutClaim"
+      },
+      {
+        "name": "locators without a source",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "locators": [
+              {
+                "kind": "page",
+                "value": "4"
+              }
+            ]
+          }
+        },
+        "code": "locatorsWithoutSource"
+      },
+      {
+        "name": "nine locators",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "source": "s",
+            "locators": [
+              {
+                "kind": "page",
+                "value": "0"
+              },
+              {
+                "kind": "page",
+                "value": "1"
+              },
+              {
+                "kind": "page",
+                "value": "2"
+              },
+              {
+                "kind": "page",
+                "value": "3"
+              },
+              {
+                "kind": "page",
+                "value": "4"
+              },
+              {
+                "kind": "page",
+                "value": "5"
+              },
+              {
+                "kind": "page",
+                "value": "6"
+              },
+              {
+                "kind": "page",
+                "value": "7"
+              },
+              {
+                "kind": "page",
+                "value": "8"
+              }
+            ]
+          }
+        },
+        "code": "tooManyLocators"
+      },
+      {
+        "name": "a block valid field by field but larger than the hosted store keeps",
+        "submission": {
+          "version": 2,
+          "kind": "source-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "details": {
+            "sourceUrl": "https://example.org/"
+          },
+          "evidence": {
+            "claim": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "evidenceLink": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "citation": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "source": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "locators": [
+              {
+                "kind": "x-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "value": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c",
+                "to": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c"
+              },
+              {
+                "kind": "x-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "value": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c",
+                "to": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c"
+              },
+              {
+                "kind": "x-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "value": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c",
+                "to": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c"
+              },
+              {
+                "kind": "x-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "value": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c",
+                "to": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c"
+              },
+              {
+                "kind": "x-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "value": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c",
+                "to": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c"
+              },
+              {
+                "kind": "x-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "value": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c",
+                "to": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c"
+              },
+              {
+                "kind": "x-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "value": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c",
+                "to": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c"
+              },
+              {
+                "kind": "x-bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                "value": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c",
+                "to": "\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c\ud835\udc9c"
+              }
+            ],
+            "stance": "supports"
+          }
+        },
+        "code": "evidenceTooLarge"
+      },
+      {
+        "name": "an unknown locator kind",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "source": "s",
+            "locators": [
+              {
+                "kind": "paragraph",
+                "value": "4"
+              }
+            ]
+          }
+        },
+        "code": "invalidLocator"
+      },
+      {
+        "name": "an empty locator value",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "source": "s",
+            "locators": [
+              {
+                "kind": "page",
+                "value": "  "
+              }
+            ]
+          }
+        },
+        "code": "invalidLocator"
+      },
+      {
+        "name": "a locator value with a line break",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "source": "s",
+            "locators": [
+              {
+                "kind": "page",
+                "value": "4\n5"
+              }
+            ]
+          }
+        },
+        "code": "invalidLocator"
+      },
+      {
+        "name": "a locator with a text-direction override",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "source": "s",
+            "locators": [
+              {
+                "kind": "page",
+                "value": "4‮"
+              }
+            ]
+          }
+        },
+        "code": "invalidLocator"
+      },
+      {
+        "name": "a locator with an unknown field",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "source": "s",
+            "locators": [
+              {
+                "kind": "page",
+                "value": "4",
+                "url": "x"
+              }
+            ]
+          }
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "an unknown stance",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "a",
+            "stance": "refutes"
+          }
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a stance with nothing offered",
+        "submission": {
+          "version": 2,
+          "kind": "correction-suggestion",
+          "work": "/posts/tides/",
+          "revision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "tides"
+          },
+          "body": "The height is wrong.",
+          "evidence": {
+            "claim": "a",
+            "stance": "contradicts"
+          }
+        },
+        "code": "stanceWithoutEvidence"
+      }
+    ]
+  },
+  "decisions": {
+    "items": {
+      "accepted": {
+        "id": "a1111111-1111-4111-8111-11111111111a",
+        "kind": "correction-suggestion",
+        "state": "approved",
+        "revision": 1,
+        "received": "2026-10-26",
+        "post": "posts/tides.md",
+        "check": "current",
+        "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4"
+      },
+      "duplicate": {
+        "id": "22222222-2222-4222-8222-222222222222",
+        "kind": "correction-suggestion",
+        "state": "pending",
+        "revision": 1,
+        "received": "2026-10-28",
+        "post": "posts/tides.md",
+        "check": "stale:quoteNotFound",
+        "passageRevision": "p1:9b0c1d2e3f405162738495a6b7c8d9e0"
+      },
+      "withdrawn": {
+        "id": "33333333-3333-4333-8333-333333333333",
+        "kind": "correction-suggestion",
+        "state": "withdrawn",
+        "revision": 1,
+        "received": "2026-10-26",
+        "post": "posts/tides.md",
+        "check": "current",
+        "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4"
+      },
+      "conflicting-higher": {
+        "id": "44444444-4444-4444-8444-444444444444",
+        "kind": "correction-suggestion",
+        "state": "approved",
+        "revision": 1,
+        "received": "2026-10-26",
+        "post": "posts/tides.md",
+        "check": "current",
+        "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+        "evidence": {
+          "source": "admiralty-1990",
+          "stance": "contradicts"
+        }
+      },
+      "conflicting-lower": {
+        "id": "55555555-5555-4555-8555-555555555555",
+        "kind": "correction-suggestion",
+        "state": "approved",
+        "revision": 1,
+        "received": "2026-10-26",
+        "post": "posts/tides.md",
+        "check": "current",
+        "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4"
+      },
+      "source": {
+        "id": "66666666-6666-4666-8666-666666666666",
+        "kind": "source-suggestion",
+        "state": "approved",
+        "revision": 1,
+        "received": "2026-10-26",
+        "post": "posts/tides.md",
+        "check": "reanchored",
+        "passageRevision": "p1:9b0c1d2e3f405162738495a6b7c8d9e0",
+        "evidence": {
+          "claim": "tide-height",
+          "evidenceLink": "tide-height-noaa"
+        }
+      },
+      "question": {
+        "id": "77777777-7777-4777-8777-777777777777",
+        "kind": "question",
+        "state": "approved",
+        "revision": 1,
+        "received": "2026-10-26",
+        "post": "posts/tides.md",
+        "check": "current",
+        "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4"
+      }
+    },
+    "published": {
+      "claims": {
+        "tide-height": [
+          "tide-height-noaa",
+          "tide-height-ada"
+        ]
+      },
+      "sources": [
+        "noaa-2020",
+        "admiralty-1990"
+      ]
+    },
+    "cases": [
+      {
+        "name": "accepted: a suggested correction accepted as a correction, linked to its revision note",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "  2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note. "
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "a1111111-1111-4111-8111-11111111111a",
+            "sequence": 1,
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "standing": {
+          "before": "possible-error",
+          "after": "accepted-as-correction"
+        },
+        "public": {
+          "itemPublic": true,
+          "decision": {
+            "outcome": "accepted-as-correction",
+            "label": "Correction",
+            "extent": "full",
+            "revisionNote": {
+              "date": "2026-10-27",
+              "claim": "tide-height",
+              "note": "Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            },
+            "decided": "2026-10-27",
+            "superseded": 0
+          }
+        }
+      },
+      {
+        "name": "accepted: a correction is never accepted without the revision note saying what changed",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full"
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "revisionNoteRequired"
+        }
+      },
+      {
+        "name": "accepted: a clarification is not a correction",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-clarification",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27: Said which tide gauge the height comes from."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "a1111111-1111-4111-8111-11111111111a",
+            "sequence": 1,
+            "outcome": "accepted-as-clarification",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27: Said which tide gauge the height comes from."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "standing": {
+          "before": "possible-error",
+          "after": "accepted-as-clarification"
+        }
+      },
+      {
+        "name": "accepted: a suggested source accepted as evidence names the A4 link the author recorded, on a re-anchored passage the author confirmed",
+        "item": "source",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-evidence",
+            "extent": "full",
+            "claimEvidence": {
+              "claim": "tide-height",
+              "link": "tide-height-ada"
+            },
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Added a reader-suggested survey as supporting evidence."
+            }
+          },
+          "account": "mikey",
+          "confirmedCheck": "reanchored"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "66666666-6666-4666-8666-666666666666",
+            "sequence": 1,
+            "outcome": "accepted-as-evidence",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Added a reader-suggested survey as supporting evidence."
+            },
+            "claimEvidence": {
+              "claim": "tide-height",
+              "link": "tide-height-ada"
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:9b0c1d2e3f405162738495a6b7c8d9e0",
+            "passageCheck": "reanchored",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "standing": {
+          "before": "challenged-citation",
+          "after": "accepted-as-evidence"
+        },
+        "public": {
+          "itemPublic": true,
+          "decision": {
+            "outcome": "accepted-as-evidence",
+            "label": "Added as evidence",
+            "extent": "full",
+            "revisionNote": {
+              "date": "2026-10-27",
+              "claim": "tide-height",
+              "note": "Added a reader-suggested survey as supporting evidence."
+            },
+            "claimEvidence": {
+              "claim": "tide-height",
+              "link": "tide-height-ada"
+            },
+            "decided": "2026-10-27",
+            "superseded": 0
+          }
+        }
+      },
+      {
+        "name": "accepted: accepting as evidence needs the evidence link",
+        "item": "source",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-evidence",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27: Added a source."
+            }
+          },
+          "account": "mikey",
+          "confirmedCheck": "reanchored"
+        },
+        "expect": {
+          "error": "claimEvidenceRequired"
+        }
+      },
+      {
+        "name": "accepted: the revision note and the evidence link must name the same claim",
+        "item": "source",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-evidence",
+            "extent": "full",
+            "claimEvidence": {
+              "claim": "tide-height",
+              "link": "tide-height-ada"
+            },
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 moon-phase: Added a source."
+            }
+          },
+          "account": "mikey",
+          "confirmedCheck": "reanchored"
+        },
+        "expect": {
+          "error": "claimMismatch"
+        }
+      },
+      {
+        "name": "accepted: the revision note is in the post the item is about",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/moon.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "revisionNoteElsewhere"
+        }
+      },
+      {
+        "name": "accepted: an item whose post is unknown can link no post's revision note",
+        "item": "accepted",
+        "itemOverrides": {
+          "post": null,
+          "check": "unknown-work",
+          "passageRevision": null
+        },
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey",
+          "confirmedCheck": "unknown-work"
+        },
+        "expect": {
+          "error": "revisionNoteElsewhere"
+        }
+      },
+      {
+        "name": "accepted: a malformed revision note is refused with the build's own rules",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "yesterday: fixed it"
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "invalidRevisionNote"
+        }
+      },
+      {
+        "name": "accepted: a revision note dated after the decision",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-26",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "revisionNoteAfterDecision"
+        }
+      },
+      {
+        "name": "accepted: a decision dated more than a day before the item arrived",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-24",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-20: Changed it."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "invalidDay"
+        }
+      },
+      {
+        "name": "day boundary: a correction dated the author's local day, one day before the UTC receipt day, is recorded",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-25",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-25 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "a1111111-1111-4111-8111-11111111111a",
+            "sequence": 1,
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-25 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-25",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "standing": {
+          "before": "possible-error",
+          "after": "accepted-as-correction"
+        }
+      },
+      {
+        "name": "day boundary: a note two days before the UTC receipt day still cannot make it accepted",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-26",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-24 tide-height: Corrected the tide height."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "revisionNoteBeforeSubmission"
+        }
+      },
+      {
+        "name": "day boundary: an item whose received day is not a day is not compared at either site",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-20",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-20 tide-height: Corrected the tide height."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "a1111111-1111-4111-8111-11111111111a",
+            "sequence": 1,
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-20 tide-height: Corrected the tide height."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-20",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "standing": {
+          "before": "possible-error",
+          "after": "accepted-as-correction"
+        },
+        "itemOverrides": {
+          "received": "not-a-day"
+        }
+      },
+      {
+        "name": "partially applied: accepted as a correction in part, with the author's rationale",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "partial",
+            "rationale": " Corrected the height; the timing the reader also questioned is as the tables give it. ",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "a1111111-1111-4111-8111-11111111111a",
+            "sequence": 1,
+            "outcome": "accepted-as-correction",
+            "extent": "partial",
+            "rationale": "Corrected the height; the timing the reader also questioned is as the tables give it.",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "standing": {
+          "before": "possible-error",
+          "after": "accepted-as-correction"
+        }
+      },
+      {
+        "name": "partially applied: accepting in part needs a rationale",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "partial",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "rationaleRequired"
+        }
+      },
+      {
+        "name": "partially applied: an accepted outcome needs its extent",
+        "item": "accepted",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-clarification",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "extentRequired"
+        }
+      },
+      {
+        "name": "declined: the author keeps the passage as written, with a reason and a rationale",
+        "item": "conflicting-lower",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "maintains-reading",
+            "rationale": "The tables for this harbour give 3 m."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "55555555-5555-4555-8555-555555555555",
+            "sequence": 1,
+            "outcome": "declined",
+            "declineReason": "maintains-reading",
+            "rationale": "The tables for this harbour give 3 m.",
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "standing": {
+          "before": "possible-error",
+          "after": "declined"
+        },
+        "public": {
+          "itemPublic": true,
+          "decision": {
+            "outcome": "declined",
+            "label": "Declined by the author",
+            "declineReason": "maintains-reading",
+            "rationale": "The tables for this harbour give 3 m.",
+            "decided": "2026-10-27",
+            "superseded": 0
+          }
+        }
+      },
+      {
+        "name": "declined: a decline needs a reason",
+        "item": "conflicting-lower",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "rationale": "No."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "reasonRequired"
+        }
+      },
+      {
+        "name": "declined: a decline needs the author's rationale",
+        "item": "conflicting-lower",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "outside-scope"
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "rationaleRequired"
+        }
+      },
+      {
+        "name": "declined: a decline changes nothing, so it names no revision note",
+        "item": "conflicting-lower",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "other",
+            "rationale": "No change.",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "revisionNoteNotAllowed"
+        }
+      },
+      {
+        "name": "declined: a decline has no extent",
+        "item": "conflicting-lower",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "extent": "full",
+            "declineReason": "other",
+            "rationale": "No."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "extentNotAllowed"
+        }
+      },
+      {
+        "name": "declined: a decline's public form is shown only while the reader's note is",
+        "item": "conflicting-lower",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "source-unavailable",
+            "rationale": "I could not find this edition."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "55555555-5555-4555-8555-555555555555",
+            "sequence": 1,
+            "outcome": "declined",
+            "declineReason": "source-unavailable",
+            "rationale": "I could not find this edition.",
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "public": {
+          "itemPublic": false,
+          "decision": null
+        }
+      },
+      {
+        "name": "duplicate: a second reader's same suggestion is already addressed by the accepted item, on a stale passage the author confirmed",
+        "item": "duplicate",
+        "addressed": {
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "decisions": [
+            {
+              "version": 1,
+              "item": "a1111111-1111-4111-8111-11111111111a",
+              "sequence": 1,
+              "outcome": "accepted-as-correction",
+              "extent": "full",
+              "revisionNote": {
+                "post": "posts/tides.md",
+                "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+              },
+              "itemRevision": 1,
+              "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+              "passageCheck": "current",
+              "decided": "2026-10-27",
+              "decidedBy": {
+                "role": "site-admin",
+                "account": "mikey"
+              }
+            }
+          ]
+        },
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "already-addressed",
+            "addressedBy": "A1111111-1111-4111-8111-11111111111A"
+          },
+          "account": "mikey",
+          "confirmedCheck": "stale:quoteNotFound"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "22222222-2222-4222-8222-222222222222",
+            "sequence": 1,
+            "outcome": "already-addressed",
+            "addressedBy": "a1111111-1111-4111-8111-11111111111a",
+            "itemRevision": 1,
+            "passageRevision": "p1:9b0c1d2e3f405162738495a6b7c8d9e0",
+            "passageCheck": "stale:quoteNotFound",
+            "decided": "2026-10-28",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "standing": {
+          "before": "possible-error",
+          "after": "already-addressed"
+        }
+      },
+      {
+        "name": "duplicate: an item not yet decided cannot have addressed another",
+        "item": "duplicate",
+        "addressed": {
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "decisions": []
+        },
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "already-addressed",
+            "addressedBy": "a1111111-1111-4111-8111-11111111111a"
+          },
+          "account": "mikey",
+          "confirmedCheck": "stale:quoteNotFound"
+        },
+        "expect": {
+          "error": "notAddressed"
+        }
+      },
+      {
+        "name": "duplicate: an item whose acceptance is no longer in force cannot have addressed another",
+        "item": "duplicate",
+        "addressed": {
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "decisions": [
+            {
+              "version": 1,
+              "item": "a1111111-1111-4111-8111-11111111111a",
+              "sequence": 1,
+              "outcome": "accepted-as-correction",
+              "extent": "full",
+              "revisionNote": {
+                "post": "posts/tides.md",
+                "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+              },
+              "itemRevision": 1,
+              "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+              "passageCheck": "current",
+              "decided": "2026-10-27",
+              "decidedBy": {
+                "role": "site-admin",
+                "account": "mikey"
+              }
+            }
+          ],
+          "revision": 2
+        },
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "already-addressed",
+            "addressedBy": "a1111111-1111-4111-8111-11111111111a"
+          },
+          "account": "mikey",
+          "confirmedCheck": "stale:quoteNotFound"
+        },
+        "expect": {
+          "error": "notAddressed"
+        }
+      },
+      {
+        "name": "duplicate: an item cannot be addressed by itself",
+        "item": "duplicate",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "already-addressed",
+            "addressedBy": "22222222-2222-4222-8222-222222222222"
+          },
+          "account": "mikey",
+          "confirmedCheck": "stale:quoteNotFound"
+        },
+        "expect": {
+          "error": "selfReference"
+        }
+      },
+      {
+        "name": "duplicate: already addressed needs the revision note or the item that addressed it",
+        "item": "duplicate",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "already-addressed"
+          },
+          "account": "mikey",
+          "confirmedCheck": "stale:quoteNotFound"
+        },
+        "expect": {
+          "error": "addressingRequired"
+        }
+      },
+      {
+        "name": "stale target: deciding a changed passage needs the author to confirm the check they read",
+        "item": "duplicate",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "already-addressed",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "checkNotConfirmed"
+        }
+      },
+      {
+        "name": "stale target: confirming another check than the one now true is not confirming",
+        "item": "duplicate",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "already-addressed",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey",
+          "confirmedCheck": "stale:contextChanged"
+        },
+        "expect": {
+          "error": "checkNotConfirmed"
+        }
+      },
+      {
+        "name": "stale target: the passage changed before the reader wrote, so it was already addressed by the earlier note",
+        "item": "duplicate",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "already-addressed",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey",
+          "confirmedCheck": "stale:quoteNotFound"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "22222222-2222-4222-8222-222222222222",
+            "sequence": 1,
+            "outcome": "already-addressed",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:9b0c1d2e3f405162738495a6b7c8d9e0",
+            "passageCheck": "stale:quoteNotFound",
+            "decided": "2026-10-28",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "standing": {
+          "before": "possible-error",
+          "after": "already-addressed"
+        }
+      },
+      {
+        "name": "stale target: a note more than a day older than the submission cannot make it accepted",
+        "item": "duplicate",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-26 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey",
+          "confirmedCheck": "stale:quoteNotFound"
+        },
+        "expect": {
+          "error": "revisionNoteBeforeSubmission"
+        }
+      },
+      {
+        "name": "withdrawn: a withdrawn item takes no new decision",
+        "item": "withdrawn",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "other",
+            "rationale": "No."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "itemClosed"
+        }
+      },
+      {
+        "name": "withdrawn: a decision made before withdrawal is kept but no longer shown with the item",
+        "item": "withdrawn",
+        "log": [
+          {
+            "version": 1,
+            "item": "33333333-3333-4333-8333-333333333333",
+            "sequence": 1,
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        ],
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 1,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "other",
+            "rationale": "No."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "itemClosed"
+        },
+        "standing": {
+          "before": "accepted-as-correction"
+        },
+        "public": {
+          "itemPublic": false,
+          "decision": null
+        }
+      },
+      {
+        "name": "conflicting: two submissions about the same passage are decided apart; accepting one declines nothing",
+        "item": "conflicting-higher",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            }
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "44444444-4444-4444-8444-444444444444",
+            "sequence": 1,
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "standing": {
+          "before": "possible-error",
+          "after": "accepted-as-correction"
+        }
+      },
+      {
+        "name": "conflicting: a second author deciding on what they loaded before the first decision is stale",
+        "item": "accepted",
+        "log": [
+          {
+            "version": 1,
+            "item": "a1111111-1111-4111-8111-11111111111a",
+            "sequence": 1,
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        ],
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "maintains-reading",
+            "rationale": "Keep it."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "stale"
+        }
+      },
+      {
+        "name": "conflicting: an author changing their mind supersedes the earlier decision and keeps it",
+        "item": "accepted",
+        "log": [
+          {
+            "version": 1,
+            "item": "a1111111-1111-4111-8111-11111111111a",
+            "sequence": 1,
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        ],
+        "request": {
+          "role": "coordinator",
+          "expectedDecisions": 1,
+          "decided": "2026-10-28",
+          "content": {
+            "outcome": "accepted-as-clarification",
+            "extent": "full",
+            "rationale": "On reflection the height was right; the note now says which gauge.",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-28: Said which tide gauge the height comes from."
+            }
+          },
+          "account": "grace"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "a1111111-1111-4111-8111-11111111111a",
+            "sequence": 2,
+            "outcome": "accepted-as-clarification",
+            "extent": "full",
+            "rationale": "On reflection the height was right; the note now says which gauge.",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-28: Said which tide gauge the height comes from."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-28",
+            "decidedBy": {
+              "role": "coordinator",
+              "account": "grace"
+            }
+          }
+        },
+        "standing": {
+          "before": "accepted-as-correction",
+          "after": "accepted-as-clarification"
+        },
+        "public": {
+          "itemPublic": true,
+          "decision": {
+            "outcome": "accepted-as-clarification",
+            "label": "Clarification",
+            "extent": "full",
+            "rationale": "On reflection the height was right; the note now says which gauge.",
+            "revisionNote": {
+              "date": "2026-10-28",
+              "note": "Said which tide gauge the height comes from."
+            },
+            "decided": "2026-10-28",
+            "superseded": 1
+          }
+        }
+      },
+      {
+        "name": "conflicting: a superseding decision cannot be dated before the one it supersedes",
+        "item": "accepted",
+        "log": [
+          {
+            "version": 1,
+            "item": "a1111111-1111-4111-8111-11111111111a",
+            "sequence": 1,
+            "outcome": "accepted-as-correction",
+            "extent": "full",
+            "revisionNote": {
+              "post": "posts/tides.md",
+              "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+            },
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        ],
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 1,
+          "decided": "2026-10-26",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "maintains-reading",
+            "rationale": "Keep it."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "invalidDay"
+        }
+      },
+      {
+        "name": "only an author decides: a contributing author may not",
+        "item": "accepted",
+        "request": {
+          "role": "contributing-author",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "other",
+            "rationale": "No."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "denied"
+        }
+      },
+      {
+        "name": "only an author decides: a coordinator of another publication may not",
+        "item": "accepted",
+        "request": {
+          "role": "coordinator",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "other",
+            "rationale": "No."
+          },
+          "account": "grace"
+        },
+        "expect": {
+          "error": "denied"
+        },
+        "itemOverrides": {
+          "work": "/posts/other/"
+        }
+      },
+      {
+        "name": "only an author decides: the reader who sent it may not",
+        "item": "withdrawn",
+        "request": {
+          "role": "submitter",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-correction"
+          }
+        },
+        "expect": {
+          "error": "denied"
+        }
+      },
+      {
+        "name": "only an author decides: nothing automatic may",
+        "item": "accepted",
+        "request": {
+          "role": "system",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "other",
+            "rationale": "No."
+          }
+        },
+        "expect": {
+          "error": "denied"
+        }
+      },
+      {
+        "name": "a question is answered, never decided",
+        "item": "question",
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "accepted-as-correction"
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "notDecidable"
+        },
+        "standing": {
+          "before": "question"
+        }
+      },
+      {
+        "name": "an item waiting for the reader's clarification is not decided",
+        "item": "accepted",
+        "itemOverrides": {
+          "state": "clarification"
+        },
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "other",
+            "rationale": "No."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "awaitingClarification"
+        }
+      },
+      {
+        "name": "a pending item can be decided; showing the reader's note is still moderation's decision",
+        "item": "accepted",
+        "itemOverrides": {
+          "state": "pending"
+        },
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "outside-scope",
+            "rationale": "The post is about spring tides."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "decision": {
+            "version": 1,
+            "item": "a1111111-1111-4111-8111-11111111111a",
+            "sequence": 1,
+            "outcome": "declined",
+            "declineReason": "outside-scope",
+            "rationale": "The post is about spring tides.",
+            "itemRevision": 1,
+            "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+            "passageCheck": "current",
+            "decided": "2026-10-27",
+            "decidedBy": {
+              "role": "site-admin",
+              "account": "mikey"
+            }
+          }
+        },
+        "public": {
+          "itemPublic": false,
+          "decision": null
+        }
+      },
+      {
+        "name": "a rejected item takes no decision",
+        "item": "accepted",
+        "itemOverrides": {
+          "state": "rejected"
+        },
+        "request": {
+          "role": "site-admin",
+          "expectedDecisions": 0,
+          "decided": "2026-10-27",
+          "content": {
+            "outcome": "declined",
+            "declineReason": "other",
+            "rationale": "No."
+          },
+          "account": "mikey"
+        },
+        "expect": {
+          "error": "itemClosed"
+        }
+      }
+    ],
+    "storedRefused": [
+      {
+        "name": "a vote rides along",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          },
+          "votes": 3
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a popularity score rides along",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          },
+          "score": 0.8
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "an accuracy verdict rides along",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          },
+          "verified": true
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "an outcome that judges the reader",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "incorrect",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          }
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a decision recorded by the public",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "public"
+          }
+        },
+        "code": "denied"
+      },
+      {
+        "name": "a decision recorded by a contributing author",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "contributing-author"
+          }
+        },
+        "code": "denied"
+      },
+      {
+        "name": "a reader's name rides along",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          },
+          "readerName": "Ada"
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a newer version",
+        "decision": {
+          "version": 2,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          }
+        },
+        "code": "unsupportedVersion"
+      },
+      {
+        "name": "an uppercase item id",
+        "decision": {
+          "version": 1,
+          "item": "AAAAAAAA-1111-4111-8111-111111111111",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          }
+        },
+        "code": "invalidItem"
+      },
+      {
+        "name": "untrimmed text",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note. "
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          }
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a note dated after the decision",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-26",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          }
+        },
+        "code": "revisionNoteAfterDecision"
+      },
+      {
+        "name": "a checked passage without its revision",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          }
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "an unknown passage check",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 1,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "moved",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          }
+        },
+        "code": "malformed"
+      },
+      {
+        "name": "a sequence of zero",
+        "decision": {
+          "version": 1,
+          "item": "a1111111-1111-4111-8111-11111111111a",
+          "sequence": 0,
+          "outcome": "accepted-as-correction",
+          "extent": "full",
+          "revisionNote": {
+            "post": "posts/tides.md",
+            "note": "2026-10-27 tide-height: Corrected the tide height from 3 m to 3.1 m after a reader's note."
+          },
+          "itemRevision": 1,
+          "passageRevision": "p1:4a264dbcfbe9d0a56591ff04cbf12ca4",
+          "passageCheck": "current",
+          "decided": "2026-10-27",
+          "decidedBy": {
+            "role": "site-admin",
+            "account": "mikey"
+          }
+        },
+        "code": "malformed"
+      }
+    ]
+  }
+}

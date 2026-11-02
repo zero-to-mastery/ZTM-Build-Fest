@@ -1,0 +1,19 @@
+# T
+
+> A blog built with open.blog
+
+## Posts
+
+- [Part l4](https://example.test/l4/): About l4.
+- [Part l3](https://example.test/l3/): About l3.
+- [Part l2](https://example.test/l2/): About l2.
+- [Part l1](https://example.test/l1/): About l1.
+- [Part loose](https://example.test/loose/): About loose.
+- [Part g2](https://example.test/g2/): About g2.
+- [Part g1](https://example.test/g1/): About g1.
+
+## Feeds
+
+- [RSS](https://example.test/rss.xml)
+- [JSON Feed](https://example.test/feed.json)
+- [Sitemap](https://example.test/sitemap.xml)

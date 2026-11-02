@@ -1,0 +1,175 @@
+{
+  "workKey": "https://example.com/posts/tea/",
+  "works": {
+    "https://example.com/posts/tea/": {
+      "v1": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "sections": [
+          {
+            "text": "Notes on tea.",
+            "digest": "11111111111111111111111111111111"
+          },
+          {
+            "anchor": "brewing",
+            "text": "Brewing Steep the tea for three minutes. Then taste the tea again. Café au lait is different.",
+            "digest": "22222222222222222222222222222222"
+          },
+          {
+            "anchor": "storage",
+            "text": "Storage Keep the tea dry.",
+            "digest": "33333333333333333333333333333333"
+          }
+        ]
+      },
+      "v2": {
+        "revision": "p1:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "sections": [
+          {
+            "text": "Notes on tea.",
+            "digest": "11111111111111111111111111111111"
+          },
+          {
+            "anchor": "brewing",
+            "text": "Brewing Steep the tea for four minutes. Then taste the tea again. Café au lait is different.",
+            "digest": "44444444444444444444444444444444"
+          },
+          {
+            "anchor": "storage",
+            "text": "Storage Keep the tea dry.",
+            "digest": "33333333333333333333333333333333"
+          }
+        ]
+      }
+    }
+  },
+  "base": {
+    "format": "openblog.reader-annotations",
+    "version": 1,
+    "privacy": {
+      "scope": "reader-private",
+      "notes": "included"
+    },
+    "annotations": [
+      {
+        "id": "steep",
+        "kind": "highlight",
+        "work": {
+          "site": "https://example.com",
+          "path": "/posts/tea/"
+        },
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "brewing",
+          "exact": "three minutes",
+          "prefix": "Brewing Steep the tea for ",
+          "suffix": ". Then taste the tea again. Café au lait is different.",
+          "start": 26
+        },
+        "createdAt": "2026-10-27T09:30:00Z",
+        "updatedAt": "2026-10-27T09:30:00Z"
+      },
+      {
+        "id": "second-tea",
+        "kind": "note",
+        "work": {
+          "site": "https://example.com",
+          "path": "/posts/tea/"
+        },
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "brewing",
+          "exact": "the tea",
+          "prefix": "Brewing Steep the tea for three minutes. Then taste ",
+          "suffix": " again. Café au lait is different.",
+          "start": 52
+        },
+        "text": "Taste test: éè ☃\nsecond line",
+        "createdAt": "2026-10-27T09:30:00Z",
+        "updatedAt": "2026-10-27T10:00:00Z"
+      },
+      {
+        "id": "cafe",
+        "kind": "highlight",
+        "work": {
+          "site": "https://example.com",
+          "path": "/posts/tea/"
+        },
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "quote",
+          "section": "brewing",
+          "exact": "Café",
+          "prefix": "wing Steep the tea for three minutes. Then taste the tea again. ",
+          "suffix": " au lait is different.",
+          "start": 67
+        },
+        "createdAt": "2026-10-27T09:30:00Z",
+        "updatedAt": "2026-10-27T09:30:00Z"
+      },
+      {
+        "id": "whole-post",
+        "kind": "note",
+        "work": {
+          "site": "https://example.com",
+          "path": "/posts/tea/"
+        },
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "work"
+        },
+        "text": "Return to this.",
+        "createdAt": "2026-10-27T09:30:00Z",
+        "updatedAt": "2026-10-27T09:30:00Z"
+      }
+    ],
+    "sources": [
+      {
+        "id": "kettle-guide",
+        "kind": "source",
+        "title": "Kettle guide",
+        "url": "https://example.org/kettles",
+        "text": "Check the boiling point.",
+        "createdAt": "2026-10-27T09:30:00Z",
+        "updatedAt": "2026-10-27T09:30:00Z"
+      },
+      {
+        "id": "storage-post",
+        "kind": "source",
+        "title": "Storage",
+        "work": {
+          "site": "https://example.com",
+          "path": "/posts/storage/"
+        },
+        "createdAt": "2026-10-27T09:30:00Z",
+        "updatedAt": "2026-10-27T09:30:00Z"
+      }
+    ],
+    "trails": [
+      {
+        "id": "tea-trail",
+        "kind": "trail",
+        "title": "Learning tea",
+        "text": "In order.",
+        "steps": [
+          {
+            "ref": "steep"
+          },
+          {
+            "ref": "kettle-guide"
+          },
+          {
+            "ref": "storage-post"
+          }
+        ],
+        "createdAt": "2026-10-27T09:30:00Z",
+        "updatedAt": "2026-10-27T10:00:00Z"
+      }
+    ]
+  }
+}

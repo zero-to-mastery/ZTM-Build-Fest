@@ -1,0 +1,11 @@
+{
+  "about": "Identity inputs for optional social publishing (ADR 0293). crates/openblog-core/src/social_publishing.rs and netlify/lib/social-scope.mjs must accept and refuse exactly these.",
+  "sites": {
+    "accepted": ["lantern-studios", "a", "Site_2.blog", "0abc", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"],
+    "refused": ["", " lantern", "lantern ", "-lantern", ".lantern", "_lantern", "lan/tern", "lan tern", "lan%2ftern", "lantern\n", "lantern*", "λ", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"]
+  },
+  "actors": {
+    "accepted": ["mikey", "a", "editor.two", "ops_1", "x-y", "abcdefghijklmnopqrstuvwxyz012345"],
+    "refused": ["", "Mikey", "@worker", "mikey nichols", "mikey\n", "abcdefghijklmnopqrstuvwxyz0123456", "../admin", "mikey@example.org"]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "modes": ["standard", "guided", "deep-dive"],
+  "levels": ["guided", "deep-dive"],
+  "storageKey": "ob-reading-mode",
+  "shows": {
+    "standard": { "guided": false, "deep-dive": false },
+    "guided": { "guided": true, "deep-dive": false },
+    "deep-dive": { "guided": true, "deep-dive": true }
+  },
+  "alwaysShown": ["standard", "guided", "deep-dive"],
+  "resolve": [
+    { "preference": null, "default": null, "mode": "standard" },
+    { "preference": null, "default": "guided", "mode": "guided" },
+    { "preference": "deep-dive", "default": "guided", "mode": "deep-dive" },
+    { "preference": "standard", "default": "deep-dive", "mode": "standard" },
+    { "preference": "expert", "default": "guided", "mode": "guided" },
+    { "preference": "Guided", "default": null, "mode": "standard" },
+    { "preference": null, "default": "loud", "mode": "standard" }
+  ]
+}

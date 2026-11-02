@@ -1,0 +1,63 @@
+# Builds this blog with open.blog and publishes it to GitHub Pages.
+# Written by `openblog init --github-pages`; edit freely.
+#
+# Runs on every push to main, and once an hour so posts with a future `date`
+# go live on time (a scheduled post is published by the first build after its
+# date). One-time setup: in the repository settings, under Pages, set Source to
+# "GitHub Actions". Set "url" in openblog.json to the site's address; for a
+# project site that is https://<user>.github.io/<repo>, and the build derives
+# the path from it. For a custom domain, put the domain in static/CNAME.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      # The binary is cached so the engine is compiled once, not on every push.
+      # Bump the key (or delete the cache) to pick up a newer open.blog.
+      - name: Cache the openblog build
+        uses: actions/cache@v4
+        with:
+          path: ~/.cargo/bin/openblog
+          key: openblog-${{ runner.os }}-OPENBLOG_VERSION
+      - name: Install openblog
+        run: command -v openblog || cargo install --git https://github.com/journey-to-code-org/open.blog openblog-cli
+      - name: Restore view counts from the analytics branch, if there is one
+        run: |
+          if git fetch -q origin analytics:analytics 2>/dev/null; then
+            mkdir -p .openblog && git show analytics:analytics.json > .openblog/analytics.json
+          fi
+      - name: Build the site
+        run: openblog build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

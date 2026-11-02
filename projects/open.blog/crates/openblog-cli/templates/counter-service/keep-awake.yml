@@ -1,0 +1,30 @@
+# Keeps a free Render service awake by requesting its health page every 14 minutes,
+# so views are recorded without a cold start. Written by `openblog analytics service`
+# into the blog's .github/workflows/; fill in COUNTER_URL (or set a repository variable
+# named COUNTER_URL) after the service is deployed.
+#
+# Minutes 7, 21, 35 and 49 avoid the top of the hour, when GitHub's scheduler runs late.
+# Each run takes a few seconds. On a public repository Actions minutes are free; on a
+# private one this uses roughly 100 minutes a month of the free allowance.
+
+name: Keep the view counter awake
+
+on:
+  schedule:
+    - cron: "7,21,35,49 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request the health page
+        env:
+          COUNTER_URL: ${{ vars.COUNTER_URL || 'COUNTER_URL_PLACEHOLDER' }}
+        run: |
+          if [ "$COUNTER_URL" = "COUNTER_URL_PLACEHOLDER" ]; then
+            echo "Set COUNTER_URL in this file or as a repository variable."; exit 0
+          fi
+          curl --silent --show-error --max-time 60 --retry 2 "$COUNTER_URL/health"

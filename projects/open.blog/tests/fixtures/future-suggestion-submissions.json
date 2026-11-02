@@ -1,0 +1,2691 @@
+{
+  "cases": [
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "the smallest suggestion: words only",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "What did the 1850 survey leave out?",
+          "type": "question",
+          "version": 1
+        },
+        "row": {
+          "body": "What did the 1850 survey leave out?",
+          "channel": "hosted",
+          "details": {
+            "type": "question"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "a question is words only",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "  What did the 1850 survey leave out?  ",
+        "type": "question",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "text",
+          "url": "https://example.org/c?utm_source=x",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "type": "text",
+            "url": "https://example.org/c?utm_source=x"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "a text with a link and tracking left out",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "HTTPS://Example.ORG:443/a/../c?utm_source=x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "video",
+          "url": "https://example.org/c?utm_source=x",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "type": "video",
+            "url": "https://example.org/c?utm_source=x"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "a video with a link and tracking left out",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "video",
+        "url": "HTTPS://Example.ORG:443/a/../c?utm_source=x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "audio",
+          "url": "https://example.org/c?utm_source=x",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "type": "audio",
+            "url": "https://example.org/c?utm_source=x"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "a audio with a link and tracking left out",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "audio",
+        "url": "HTTPS://Example.ORG:443/a/../c?utm_source=x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "source",
+          "url": "https://example.org/c?utm_source=x",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "type": "source",
+            "url": "https://example.org/c?utm_source=x"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "a source with a link and tracking left out",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "source",
+        "url": "HTTPS://Example.ORG:443/a/../c?utm_source=x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "about": {
+            "series": "tides"
+          },
+          "attribution": {
+            "name": "Ada Lovelace",
+            "publishName": true
+          },
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "creditRevision": 1,
+          "hints": {
+            "creators": [
+              "A. Surveyor",
+              "B. Cartographer"
+            ],
+            "identifiers": [
+              {
+                "scheme": "doi",
+                "value": "10.1234/example"
+              },
+              {
+                "scheme": "isbn",
+                "value": "978-0-306-40615-7"
+              },
+              {
+                "scheme": "issn",
+                "value": "0378-5955"
+              },
+              {
+                "scheme": "url",
+                "value": "https://example.org/b"
+              }
+            ],
+            "publisher": "Admiralty",
+            "title": "The 1850 survey",
+            "year": "c. 1850"
+          },
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "video",
+          "url": "https://example.org/watch?v=1",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "about": {
+              "series": "tides"
+            },
+            "contact": {
+              "address": "ada@example.org",
+              "followUp": true
+            },
+            "creditRevision": 1,
+            "hints": {
+              "creators": [
+                "A. Surveyor",
+                "B. Cartographer"
+              ],
+              "identifiers": [
+                {
+                  "scheme": "doi",
+                  "value": "10.1234/example"
+                },
+                {
+                  "scheme": "isbn",
+                  "value": "978-0-306-40615-7"
+                },
+                {
+                  "scheme": "issn",
+                  "value": "0378-5955"
+                },
+                {
+                  "scheme": "url",
+                  "value": "https://example.org/b"
+                }
+              ],
+              "publisher": "Admiralty",
+              "title": "The 1850 survey",
+              "year": "c. 1850"
+            },
+            "type": "video",
+            "url": "https://example.org/watch?v=1"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": true,
+          "reader_name": "Ada Lovelace",
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "everything at once",
+      "request": {
+        "about": {
+          "series": "tides"
+        },
+        "attribution": {
+          "name": "  Ada   Lovelace ",
+          "publishName": true
+        },
+        "contact": {
+          "address": "ada@example.org",
+          "followUp": true
+        },
+        "hints": {
+          "creators": [
+            "A. Surveyor",
+            " B. Cartographer "
+          ],
+          "identifiers": [
+            {
+              "scheme": "doi",
+              "value": "10.1234/example"
+            },
+            {
+              "scheme": "isbn",
+              "value": "978-0-306-40615-7"
+            },
+            {
+              "scheme": "issn",
+              "value": "0378-5955"
+            },
+            {
+              "scheme": "url",
+              "value": "https://Example.ORG/a/../b"
+            }
+          ],
+          "publisher": "Admiralty",
+          "title": "The 1850 survey",
+          "year": "c. 1850"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "video",
+        "url": "https://Example.org/watch?v=1",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "hints": {
+            "identifiers": [
+              {
+                "scheme": "pmid",
+                "value": "123456"
+              },
+              {
+                "scheme": "pmcid",
+                "value": "PMC123"
+              }
+            ]
+          },
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "hints": {
+              "identifiers": [
+                {
+                  "scheme": "pmid",
+                  "value": "123456"
+                },
+                {
+                  "scheme": "pmcid",
+                  "value": "PMC123"
+                }
+              ]
+            },
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "the numbered archives schemes",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "pmid",
+              "value": "123456"
+            },
+            {
+              "scheme": "pmcid",
+              "value": "PMC123"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "about": {
+            "article": "/posts/tides/"
+          },
+          "attribution": {
+            "name": "Ada",
+            "publishName": false
+          },
+          "contact": {
+            "address": "ada@example.org",
+            "followUp": true
+          },
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "about": {
+              "article": "/posts/tides/"
+            },
+            "contact": {
+              "address": "ada@example.org",
+              "followUp": true
+            },
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": "Ada",
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "an article it is about, a private name and a contact",
+      "request": {
+        "about": {
+          "article": "/posts/tides/"
+        },
+        "attribution": {
+          "name": "Ada"
+        },
+        "contact": {
+          "address": "ada@example.org",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "about": {
+            "series": "marées-水"
+          },
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "about": {
+              "series": "marées-水"
+            },
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "a series named in the site's own slugs",
+      "request": {
+        "about": {
+          "series": "marées-水"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "the type is required",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "channel": "hosted",
+          "details": {
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "text at its limit",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidText"
+      },
+      "name": "text over its limit",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水",
+          "channel": "hosted",
+          "details": {
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "text counts characters not bytes",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidText"
+      },
+      "name": "empty text",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidText"
+      },
+      "name": "blank text",
+      "request": {
+        "kind": "future-suggestion",
+        "text": " 　\n",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidText"
+      },
+      "name": "text with a control character",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "a\u0007b",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidText"
+      },
+      "name": "text with a direction override",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "a‮b",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "line one\r\nline\ttwo",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "line one\r\nline\ttwo",
+          "channel": "hosted",
+          "details": {
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "text keeps tabs and line breaks",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "line one\r\nline\ttwo",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "unknownType"
+      },
+      "name": "unknown type",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "poem",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "wrongKind"
+      },
+      "name": "wrong kind",
+      "request": {
+        "kind": "question",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "an unknown field",
+      "request": {
+        "kind": "future-suggestion",
+        "rank": 3,
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "a vote",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1,
+        "votes": 3
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "a wrongly typed text",
+      "request": {
+        "kind": "future-suggestion",
+        "text": 5,
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "a null url is none",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": null,
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "a wrongly typed url",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": 5,
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "notForQuestion"
+      },
+      "name": "a question with a link",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "question",
+        "url": "https://example.org/",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "notForQuestion"
+      },
+      "name": "a question with hints",
+      "request": {
+        "hints": {
+          "title": "t"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "question",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "question",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "type": "question"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "a question with empty hints",
+      "request": {
+        "hints": {},
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "question",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link with javascript",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "javascript:alert(1)",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link with credentials",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "https://user:pw@example.org/x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link to this machine",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "https://localhost/x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link to a private address",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "http://192.168.1.1/x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link to an embedded loopback",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "http://[::127.0.0.1]/",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link to a 6to4 loopback",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "http://[2002:7f00:1::]/",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link to a NAT64 loopback",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "http://[64:ff9b::7f00:1]/",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link to a site-local address",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "http://[fec0::1]/",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link to a benchmarking address",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "http://198.18.0.1/",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link to a private suffix",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "http://wiki.corp/x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link with a token",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "https://example.org/x?access_token=abc",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link with a space",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "https://exa mple.org/x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link with a direction override",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "https://example.org/‮x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link with leading space",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": " https://example.org/x",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "an empty link",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidUrl"
+      },
+      "name": "a link over its limit",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "https://example.org/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "hints are strict",
+      "request": {
+        "hints": {
+          "rating": 5,
+          "title": "t"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "too many creators",
+      "request": {
+        "hints": {
+          "creators": [
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a",
+            "a"
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a creator over its limit",
+      "request": {
+        "hints": {
+          "creators": [
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a blank creator",
+      "request": {
+        "hints": {
+          "creators": [
+            "  "
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a title over its limit",
+      "request": {
+        "hints": {
+          "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a year over its limit",
+      "request": {
+        "hints": {
+          "year": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a publisher with a control character",
+      "request": {
+        "hints": {
+          "publisher": "a\u0000b"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "too many identifiers",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "pmid",
+              "value": "1"
+            },
+            {
+              "scheme": "pmid",
+              "value": "1"
+            },
+            {
+              "scheme": "pmid",
+              "value": "1"
+            },
+            {
+              "scheme": "pmid",
+              "value": "1"
+            },
+            {
+              "scheme": "pmid",
+              "value": "1"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "an ISBN with a bad check digit",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "isbn",
+              "value": "9780306406158"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "an ISBN that is too short",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "isbn",
+              "value": "123"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a DOI that is not one",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "doi",
+              "value": "not-a-doi"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a DOI with a direction override",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "doi",
+              "value": "10.1234/a‮b"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a DOI with a control character",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "doi",
+              "value": "10.1234/a\nb"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "an empty identifier",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "doi",
+              "value": ""
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a blank identifier",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "doi",
+              "value": "   "
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a link identifier to a private address",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "url",
+              "value": "http://127.0.0.1/x"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a link identifier with a token",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "url",
+              "value": "https://example.org/x?token=1"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a link identifier that is not http",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "url",
+              "value": "javascript:alert(1)"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "an unknown scheme",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "oclc",
+              "value": "12345"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "an upper-case scheme",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "DOI",
+              "value": "10.1234/abc"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a PMID that is not digits",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "pmid",
+              "value": "12ab"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "a PMCID that is not PMC and digits",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "pmcid",
+              "value": "123"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidHint"
+      },
+      "name": "an ISSN with a bad check digit",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "issn",
+              "value": "0378-5956"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "an identifier with an unknown field",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "doi",
+              "value": "10.1234/a",
+              "x": 1
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about names nothing",
+      "request": {
+        "about": {},
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about names a series in capitals",
+      "request": {
+        "about": {
+          "series": "Tides"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about names both",
+      "request": {
+        "about": {
+          "article": "/posts/a/",
+          "series": "a"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about an article without a slash",
+      "request": {
+        "about": {
+          "article": "posts/a"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about an article that climbs",
+      "request": {
+        "about": {
+          "article": "/posts/../a/"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about an unknown topic",
+      "request": {
+        "about": {
+          "topic": "x"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about is a string",
+      "request": {
+        "about": "tides",
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about a series with two hyphens",
+      "request": {
+        "about": {
+          "series": "a--b"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about a series with a space",
+      "request": {
+        "about": {
+          "series": "a b"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about a series over its limit",
+      "request": {
+        "about": {
+          "series": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "about": {
+            "series": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "about": {
+              "series": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            },
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "about a series at its limit",
+      "request": {
+        "about": {
+          "series": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidAbout"
+      },
+      "name": "about a non-string series",
+      "request": {
+        "about": {
+          "series": 5
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "attribution": {
+            "name": "Ada Lovelace",
+            "publishName": false
+          },
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": "Ada Lovelace",
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "a name is collapsed and trimmed",
+      "request": {
+        "attribution": {
+          "name": "  Ada \t Lovelace\n"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidName"
+      },
+      "name": "a name over its limit",
+      "request": {
+        "attribution": {
+          "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidName"
+      },
+      "name": "a name with a control character",
+      "request": {
+        "attribution": {
+          "name": "A\u0007da"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "consentWithoutName"
+      },
+      "name": "publishing a name needs a name",
+      "request": {
+        "attribution": {
+          "publishName": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidName"
+      },
+      "name": "a blank name cannot be published",
+      "request": {
+        "attribution": {
+          "name": "   ",
+          "publishName": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "an anonymous attribution is dropped",
+      "request": {
+        "attribution": {
+          "publishName": false
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "attribution with an unknown field",
+      "request": {
+        "attribution": {
+          "email": "a@b.c",
+          "name": "Ada"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "contactWithoutConsent"
+      },
+      "name": "contact without agreement",
+      "request": {
+        "contact": {
+          "address": "ada@example.org",
+          "followUp": false
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "contact without the agreement field",
+      "request": {
+        "contact": {
+          "address": "ada@example.org"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidContact"
+      },
+      "name": "an address without a domain",
+      "request": {
+        "contact": {
+          "address": "ada@",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidContact"
+      },
+      "name": "an address with a display name",
+      "request": {
+        "contact": {
+          "address": "Ada <ada@example.org>",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidContact"
+      },
+      "name": "two addresses",
+      "request": {
+        "contact": {
+          "address": "ada@example.org, bob@example.org",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidContact"
+      },
+      "name": "an address with a space",
+      "request": {
+        "contact": {
+          "address": "ada @example.org",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidContact"
+      },
+      "name": "an address with doubled dots",
+      "request": {
+        "contact": {
+          "address": "ada..b@example.org",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidContact"
+      },
+      "name": "an address with a quoted name",
+      "request": {
+        "contact": {
+          "address": "\"ada\"@example.org",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidContact"
+      },
+      "name": "an address with a line break",
+      "request": {
+        "contact": {
+          "address": "ada@example.org\r\nBcc: x@y.z",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidContact"
+      },
+      "name": "an address with a non-ASCII domain",
+      "request": {
+        "contact": {
+          "address": "ada@exämple.org",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidContact"
+      },
+      "name": "an address with a single-label domain",
+      "request": {
+        "contact": {
+          "address": "ada@example",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "invalidContact"
+      },
+      "name": "an address that is too long",
+      "request": {
+        "contact": {
+          "address": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b.b@example.org",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "contact": {
+            "address": "a.b+tag@sub.example.org",
+            "followUp": true
+          },
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "Her letters from the 1850 survey would help with the tide tables.",
+          "type": "text",
+          "version": 1
+        },
+        "row": {
+          "body": "Her letters from the 1850 survey would help with the tide tables.",
+          "channel": "hosted",
+          "details": {
+            "contact": {
+              "address": "a.b+tag@sub.example.org",
+              "followUp": true
+            },
+            "type": "text"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "an address with plus and dots",
+      "request": {
+        "contact": {
+          "address": "a.b+tag@sub.example.org",
+          "followUp": true
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "unsupportedVersion"
+      },
+      "name": "a newer version",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 2
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "version zero",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": 0
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "a version written as a string",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "version": "1"
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "a version written as a float",
+      "text": "{\"kind\":\"future-suggestion\",\"text\":\"Her letters from the 1850 survey would help with the tide tables.\",\"type\":\"text\",\"version\":1.0}"
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "a version written with an exponent",
+      "text": "{\"kind\":\"future-suggestion\",\"text\":\"Her letters from the 1850 survey would help with the tide tables.\",\"type\":\"text\",\"version\":1e0}"
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "a version beyond 64 bits",
+      "text": "{\"kind\":\"future-suggestion\",\"text\":\"Her letters from the 1850 survey would help with the tide tables.\",\"type\":\"text\",\"version\":18446744073709551616}"
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "no version",
+      "request": {
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text"
+      }
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "not json",
+      "text": "not json"
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "an array",
+      "text": "[]"
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "a string",
+      "text": "\"hello\""
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "null",
+      "text": "null"
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "an empty object",
+      "text": "{}"
+    },
+    {
+      "expect": {
+        "record": {
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "A recording of the survey.",
+          "type": "audio",
+          "version": 1
+        },
+        "row": {
+          "body": "A recording of the survey.",
+          "channel": "hosted",
+          "details": {
+            "type": "audio"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "a repeated key keeps the last",
+      "text": "{\"version\":1,\"kind\":\"future-suggestion\",\"type\":\"video\",\"type\":\"audio\",\"text\":\"A recording of the survey.\"}"
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "a lone surrogate",
+      "text": "{\"version\":1,\"kind\":\"future-suggestion\",\"type\":\"text\",\"text\":\"a\\ud800b\"}"
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "a number too large to hold",
+      "text": "{\"version\":1,\"kind\":\"future-suggestion\",\"type\":\"text\",\"text\":\"x\",\"x\":1e999}"
+    },
+    {
+      "expect": {
+        "code": "malformed"
+      },
+      "name": "nesting too deep",
+      "text": "{\"version\":1,\"kind\":\"future-suggestion\",\"type\":\"text\",\"text\":\"x\",\"x\":[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]}"
+    },
+    {
+      "expect": {
+        "code": "tooLarge"
+      },
+      "name": "over the submission bound",
+      "text": "{\"kind\":\"future-suggestion\",\"text\":\"Her letters from the 1850 survey would help with the tide tables.\",\"type\":\"text\",\"version\":1}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                "
+    },
+    {
+      "expect": {
+        "record": {
+          "hints": {
+            "creators": [
+              "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+              "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+            ],
+            "publisher": "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp",
+            "title": "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt"
+          },
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "type": "text",
+          "url": "https://example.org/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "version": 1
+        },
+        "row": {
+          "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+          "channel": "hosted",
+          "details": {
+            "hints": {
+              "creators": [
+                "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+                "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+              ],
+              "publisher": "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp",
+              "title": "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt"
+            },
+            "type": "text",
+            "url": "https://example.org/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "text and link at their limits",
+      "request": {
+        "hints": {
+          "creators": [
+            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          ],
+          "publisher": "pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp",
+          "title": "tttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt"
+        },
+        "kind": "future-suggestion",
+        "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "type": "text",
+        "url": "https://example.org/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "tooLarge"
+      },
+      "name": "four-byte characters up to the submission bound",
+      "request": {
+        "hints": {
+          "creators": [
+            "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+            "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+            "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+            "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+            "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+            "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+            "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+            "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚"
+          ],
+          "publisher": "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+          "title": "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚"
+        },
+        "kind": "future-suggestion",
+        "text": "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+        "type": "text",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "code": "tooLarge"
+      },
+      "name": "links that percent-encoding makes too large for the stored row",
+      "request": {
+        "hints": {
+          "creators": [
+            "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+            "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+            "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+            "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+            "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+            "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+            "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+          ],
+          "identifiers": [
+            {
+              "scheme": "url",
+              "value": "https://example.org/漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢"
+            },
+            {
+              "scheme": "url",
+              "value": "https://example.org/漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢"
+            },
+            {
+              "scheme": "url",
+              "value": "https://example.org/漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢"
+            },
+            {
+              "scheme": "url",
+              "value": "https://example.org/漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢"
+            }
+          ],
+          "publisher": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀",
+          "title": "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀"
+        },
+        "kind": "future-suggestion",
+        "text": "Her letters from the 1850 survey would help with the tide tables.",
+        "type": "text",
+        "url": "https://example.org/漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢漢",
+        "version": 1
+      }
+    },
+    {
+      "expect": {
+        "record": {
+          "hints": {
+            "identifiers": [
+              {
+                "scheme": "url",
+                "value": "https://example.org/0%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4"
+              },
+              {
+                "scheme": "url",
+                "value": "https://example.org/1%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4"
+              },
+              {
+                "scheme": "url",
+                "value": "https://example.org/2%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4"
+              },
+              {
+                "scheme": "url",
+                "value": "https://example.org/3%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4"
+              }
+            ]
+          },
+          "kind": "future-suggestion",
+          "receipt": {
+            "channel": "hosted",
+            "receivedAt": "2026-10-26T10:00:00Z",
+            "work": "/posts/tides/"
+          },
+          "revision": 1,
+          "text": "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+          "type": "text",
+          "url": "https://example.org/%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4",
+          "version": 1
+        },
+        "row": {
+          "body": "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+          "channel": "hosted",
+          "details": {
+            "hints": {
+              "identifiers": [
+                {
+                  "scheme": "url",
+                  "value": "https://example.org/0%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4"
+                },
+                {
+                  "scheme": "url",
+                  "value": "https://example.org/1%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4"
+                },
+                {
+                  "scheme": "url",
+                  "value": "https://example.org/2%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4"
+                },
+                {
+                  "scheme": "url",
+                  "value": "https://example.org/3%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4"
+                }
+              ]
+            },
+            "type": "text",
+            "url": "https://example.org/%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4%E6%B0%B4"
+          },
+          "format_version": 1,
+          "kind": "future-suggestion",
+          "publish_name": false,
+          "reader_name": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "revision": null,
+          "seen_at": null,
+          "target": null,
+          "work": "/posts/tides/"
+        }
+      },
+      "name": "text and links that make a record larger than 16 KiB",
+      "request": {
+        "hints": {
+          "identifiers": [
+            {
+              "scheme": "url",
+              "value": "https://example.org/0水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水"
+            },
+            {
+              "scheme": "url",
+              "value": "https://example.org/1水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水"
+            },
+            {
+              "scheme": "url",
+              "value": "https://example.org/2水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水"
+            },
+            {
+              "scheme": "url",
+              "value": "https://example.org/3水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水"
+            }
+          ]
+        },
+        "kind": "future-suggestion",
+        "text": "📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚📚",
+        "type": "text",
+        "url": "https://example.org/水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水水",
+        "version": 1
+      }
+    }
+  ],
+  "description": "Suggestions for future work (RD13, ADRs 0152 to 0157), read and received by both crates/openblog-core/src/future_suggestion.rs and web/components/future-suggestion.js. A case's `request` (or its exact `text`) is received for the page `work` at `receivedAt`; `expect` is the canonical record and the openblog_feedback row it is stored as, or the code of the first problem. Regenerate with OPENBLOG_BLESS=1 cargo test -p openblog-core --test future_suggestion_contract.",
+  "receivedAt": "2026-10-26T10:00:00Z",
+  "work": "/posts/tides/"
+}

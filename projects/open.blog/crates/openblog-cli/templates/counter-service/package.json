@@ -1,0 +1,14 @@
+{
+  "name": "openblog-counter",
+  "private": true,
+  "version": "1.0.0",
+  "description": "View counter for an open.blog site: Node + MongoDB, no cookies, no addresses stored.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.10.0"
+  }
+}

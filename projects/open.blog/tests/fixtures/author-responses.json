@@ -1,0 +1,2042 @@
+{
+  "description": "Author responses (#223, ADRs 0131 to 0135), read and received by both crates/openblog-core/src/author_response.rs and netlify/lib/author-response.mjs. A `requests` case's `request` (or its exact `text`) is read, and received at `receivedAt` under `parent` (the parent row's passage revision and target): `expect` is the row the function stores, or the code of the first problem. A `parents` case says whether an answer by `contributor` on `work` belongs under a perspective with those `facts`: `ok` or the code. A `decisions` case says whether `decider` may take `action` on an answer `account` wrote.",
+  "receivedAt": "2026-10-26T10:00:00Z",
+  "requests": [
+    {
+      "name": "an answer about the section as the reader read it",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "row": {
+          "format_version": 1,
+          "kind": "author-response",
+          "work": "/posts/shared-tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "ob-by-mina-0",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "body": "Thank you: I meant the harbour, not the open sea.",
+          "details": {
+            "parent": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+            "responder": {
+              "contributor": "mina",
+              "author": "MINA",
+              "standing": {
+                "state": "current",
+                "moved": false
+              }
+            },
+            "binding": {
+              "participant": "p-mina",
+              "account": "mina-admin"
+            }
+          },
+          "seen_at": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "reader_name": null,
+          "publish_name": false,
+          "clarification_consent": false
+        }
+      }
+    },
+    {
+      "name": "an answer about a section that has since changed or gone",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "stale",
+            "reason": "section-changed-or-removed"
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "row": {
+          "format_version": 1,
+          "kind": "author-response",
+          "work": "/posts/shared-tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "ob-by-mina-0",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "body": "Thank you: I meant the harbour, not the open sea.",
+          "details": {
+            "parent": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+            "responder": {
+              "contributor": "mina",
+              "author": "MINA",
+              "standing": {
+                "state": "stale",
+                "reason": "section-changed-or-removed"
+              }
+            },
+            "binding": {
+              "participant": "p-mina",
+              "account": "mina-admin"
+            }
+          },
+          "seen_at": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "reader_name": null,
+          "publish_name": false,
+          "clarification_consent": false
+        }
+      }
+    },
+    {
+      "name": "an answer about a section that moved",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": true
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "row": {
+          "format_version": 1,
+          "kind": "author-response",
+          "work": "/posts/shared-tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "ob-by-mina-0",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "body": "Thank you: I meant the harbour, not the open sea.",
+          "details": {
+            "parent": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+            "responder": {
+              "contributor": "mina",
+              "author": "MINA",
+              "standing": {
+                "state": "current",
+                "moved": true
+              }
+            },
+            "binding": {
+              "participant": "p-mina",
+              "account": "mina-admin"
+            }
+          },
+          "seen_at": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "reader_name": null,
+          "publish_name": false,
+          "clarification_consent": false
+        }
+      }
+    },
+    {
+      "name": "an answer whose section cannot be told apart from an identical one",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "stale",
+            "reason": "ambiguous"
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "row": {
+          "format_version": 1,
+          "kind": "author-response",
+          "work": "/posts/shared-tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "ob-by-mina-0",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "body": "Thank you: I meant the harbour, not the open sea.",
+          "details": {
+            "parent": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+            "responder": {
+              "contributor": "mina",
+              "author": "MINA",
+              "standing": {
+                "state": "stale",
+                "reason": "ambiguous"
+              }
+            },
+            "binding": {
+              "participant": "p-mina",
+              "account": "mina-admin"
+            }
+          },
+          "seen_at": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "reader_name": null,
+          "publish_name": false,
+          "clarification_consent": false
+        }
+      }
+    },
+    {
+      "name": "the text trimmed with its line breaks kept",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "  First thought.\r\n\r\nSecond thought.\r  ",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "row": {
+          "format_version": 1,
+          "kind": "author-response",
+          "work": "/posts/shared-tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "ob-by-mina-0",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "body": "First thought.\n\nSecond thought.",
+          "details": {
+            "parent": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+            "responder": {
+              "contributor": "mina",
+              "author": "MINA",
+              "standing": {
+                "state": "current",
+                "moved": false
+              }
+            },
+            "binding": {
+              "participant": "p-mina",
+              "account": "mina-admin"
+            }
+          },
+          "seen_at": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "reader_name": null,
+          "publish_name": false,
+          "clarification_consent": false
+        }
+      }
+    },
+    {
+      "name": "hostile markup stays plain text and is never read as HTML or Markdown",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "<script>alert(1)</script> & [a](javascript:alert(1))",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "row": {
+          "format_version": 1,
+          "kind": "author-response",
+          "work": "/posts/shared-tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "ob-by-mina-0",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "body": "<script>alert(1)</script> & [a](javascript:alert(1))",
+          "details": {
+            "parent": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+            "responder": {
+              "contributor": "mina",
+              "author": "MINA",
+              "standing": {
+                "state": "current",
+                "moved": false
+              }
+            },
+            "binding": {
+              "participant": "p-mina",
+              "account": "mina-admin"
+            }
+          },
+          "seen_at": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "reader_name": null,
+          "publish_name": false,
+          "clarification_consent": false
+        }
+      }
+    },
+    {
+      "name": "the parent id in capitals is stored lowercase",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0B0A2C0E-3C8D-4D8E-9D54-2F5F4A1B7C11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "row": {
+          "format_version": 1,
+          "kind": "author-response",
+          "work": "/posts/shared-tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "ob-by-mina-0",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "body": "Thank you: I meant the harbour, not the open sea.",
+          "details": {
+            "parent": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+            "responder": {
+              "contributor": "mina",
+              "author": "MINA",
+              "standing": {
+                "state": "current",
+                "moved": false
+              }
+            },
+            "binding": {
+              "participant": "p-mina",
+              "account": "mina-admin"
+            }
+          },
+          "seen_at": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "reader_name": null,
+          "publish_name": false,
+          "clarification_consent": false
+        }
+      }
+    },
+    {
+      "name": "a published name with a space",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "Mina Ng",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "row": {
+          "format_version": 1,
+          "kind": "author-response",
+          "work": "/posts/shared-tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "ob-by-mina-0",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "body": "Thank you: I meant the harbour, not the open sea.",
+          "details": {
+            "parent": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+            "responder": {
+              "contributor": "mina",
+              "author": "Mina Ng",
+              "standing": {
+                "state": "current",
+                "moved": false
+              }
+            },
+            "binding": {
+              "participant": "p-mina",
+              "account": "mina-admin"
+            }
+          },
+          "seen_at": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "reader_name": null,
+          "publish_name": false,
+          "clarification_consent": false
+        }
+      }
+    },
+    {
+      "name": "empty text",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "   ",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidBody"
+      }
+    },
+    {
+      "name": "text with a control character",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "a\u0000b",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidBody"
+      }
+    },
+    {
+      "name": "text with a text-direction override",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Tides \u202e reversed",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidBody"
+      }
+    },
+    {
+      "name": "text longer than 4000 characters",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidBody"
+      }
+    },
+    {
+      "name": "text of exactly 4000 characters",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "row": {
+          "format_version": 1,
+          "kind": "author-response",
+          "work": "/posts/shared-tides/",
+          "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "target": {
+            "version": 1,
+            "kind": "section",
+            "section": "ob-by-mina-0",
+            "digest": "0123456789abcdef0123456789abcdef"
+          },
+          "body": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "details": {
+            "parent": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+            "responder": {
+              "contributor": "mina",
+              "author": "MINA",
+              "standing": {
+                "state": "current",
+                "moved": false
+              }
+            },
+            "binding": {
+              "participant": "p-mina",
+              "account": "mina-admin"
+            }
+          },
+          "seen_at": null,
+          "received_at": "2026-10-26T10:00:00Z",
+          "channel": "hosted",
+          "reader_name": null,
+          "publish_name": false,
+          "clarification_consent": false
+        }
+      }
+    },
+    {
+      "name": "a version newer than this reads",
+      "request": {
+        "version": 2,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "unsupportedVersion"
+      }
+    },
+    {
+      "name": "no version",
+      "request": {
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "a field this version does not define",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin",
+        "extra": 1
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "a field of the wrong type",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": 7
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "a nested field this version does not define",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3,
+          "extra": 1
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "the wrong kind",
+      "request": {
+        "version": 1,
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "wrongKind"
+      }
+    },
+    {
+      "name": "a work that is not a page path",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "posts/tides",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidWork"
+      }
+    },
+    {
+      "name": "a parent id that is not a UUID",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "not-a-uuid",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidParent"
+      }
+    },
+    {
+      "name": "a parent version of zero",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 0
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidParent"
+      }
+    },
+    {
+      "name": "a parent version beyond the database range",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 2147483648
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidParent"
+      }
+    },
+    {
+      "name": "a standing nobody defines",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "gone"
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidResponder"
+      }
+    },
+    {
+      "name": "a stale standing without a known reason",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "stale",
+            "reason": "hidden"
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidResponder"
+      }
+    },
+    {
+      "name": "a contributor that is not a registry key",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "Mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidResponder"
+      }
+    },
+    {
+      "name": "a contributor with a doubled hyphen",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mi--na",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidResponder"
+      }
+    },
+    {
+      "name": "a published name with a line break",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MI\nNA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidResponder"
+      }
+    },
+    {
+      "name": "a published name with a text-direction override",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MI\u202eNA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidResponder"
+      }
+    },
+    {
+      "name": "a published name longer than 80 characters",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidResponder"
+      }
+    },
+    {
+      "name": "a published name with uncollapsed spaces",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "Mina  Ng",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidResponder"
+      }
+    },
+    {
+      "name": "a participant id that is a dot segment",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": ".."
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidResponder"
+      }
+    },
+    {
+      "name": "a participant id with a slash",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p/mina"
+        },
+        "actor": "mina-admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidResponder"
+      }
+    },
+    {
+      "name": "an actor that is not an Admin account name",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "Mina Admin"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidActor"
+      }
+    },
+    {
+      "name": "the moderation token as the actor",
+      "request": {
+        "version": 1,
+        "kind": "author-response",
+        "work": "/posts/shared-tides/",
+        "parent": {
+          "id": "0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11",
+          "version": 3
+        },
+        "body": "Thank you: I meant the harbour, not the open sea.",
+        "responder": {
+          "contributor": "mina",
+          "author": "MINA",
+          "standing": {
+            "state": "current",
+            "moved": false
+          }
+        },
+        "binding": {
+          "participant": "p-mina"
+        },
+        "actor": "@moderation-token"
+      },
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "invalidActor"
+      }
+    },
+    {
+      "name": "text that is not JSON",
+      "text": "{",
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "malformed"
+      }
+    },
+    {
+      "name": "a request larger than 16 KiB",
+      "text": "{\"version\": 1, \"kind\": \"author-response\", \"work\": \"/posts/shared-tides/\", \"parent\": {\"id\": \"0b0a2c0e-3c8d-4d8e-9d54-2f5f4a1b7c11\", \"version\": 3}, \"body\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"responder\": {\"contributor\": \"mina\", \"author\": \"MINA\", \"standing\": {\"state\": \"current\", \"moved\": false}}, \"binding\": {\"participant\": \"p-mina\"}, \"actor\": \"mina-admin\"}",
+      "parent": {
+        "revision": "p1:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "expect": {
+        "code": "tooLarge"
+      }
+    }
+  ],
+  "parents": [
+    {
+      "name": "a shown perspective about the contributor's own section",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "ok"
+    },
+    {
+      "name": "a pending perspective is not shown",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "pending",
+        "revision": 1,
+        "approvedRevision": null,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "parentUnavailable"
+    },
+    {
+      "name": "a rejected perspective",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "rejected",
+        "revision": 1,
+        "approvedRevision": null,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "parentUnavailable"
+    },
+    {
+      "name": "a removed perspective",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "removed",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "parentUnavailable"
+    },
+    {
+      "name": "a withdrawn perspective",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "withdrawn",
+        "revision": 1,
+        "approvedRevision": null,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "parentUnavailable"
+    },
+    {
+      "name": "approved at an earlier text than the current one",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 2,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "parentUnavailable"
+    },
+    {
+      "name": "the current text is under a request to clarify",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": 1,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "parentUnavailable"
+    },
+    {
+      "name": "the approved consent did not agree to publish",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": false,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "parentUnavailable"
+    },
+    {
+      "name": "the reader's consent now does not agree to publish",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": false,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "parentUnavailable"
+    },
+    {
+      "name": "the text was purged",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": false,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "parentUnavailable"
+    },
+    {
+      "name": "an item that is not a Third Perspective",
+      "facts": {
+        "kind": "comment",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "parentUnavailable"
+    },
+    {
+      "name": "a perspective of another work",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/other/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "wrongWork"
+    },
+    {
+      "name": "a perspective about the whole work",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "work"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "notAttributed"
+    },
+    {
+      "name": "a perspective about an ordinary heading",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "methods",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "notAttributed"
+    },
+    {
+      "name": "a perspective about another contributor's section",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-joe-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "mina",
+      "expect": "responderMismatch"
+    },
+    {
+      "name": "the contributor in capitals is not the same author",
+      "facts": {
+        "kind": "third-perspective",
+        "work": "/posts/shared-tides/",
+        "state": "approved",
+        "revision": 1,
+        "approvedRevision": 1,
+        "clarificationAsked": null,
+        "approvedConsentPublishes": true,
+        "currentConsentPublishes": true,
+        "retained": true,
+        "target": {
+          "version": 1,
+          "kind": "section",
+          "section": "ob-by-mina-0",
+          "digest": "0123456789abcdef0123456789abcdef"
+        }
+      },
+      "work": "/posts/shared-tides/",
+      "contributor": "MINA",
+      "expect": "responderMismatch"
+    }
+  ],
+  "decisions": [
+    {
+      "name": "a coordinator approves another's answer",
+      "account": "mina-admin",
+      "decider": "coord-admin",
+      "action": "approve",
+      "expect": "allowed"
+    },
+    {
+      "name": "nobody approves their own answer",
+      "account": "mina-admin",
+      "decider": "mina-admin",
+      "action": "approve",
+      "expect": "denied"
+    },
+    {
+      "name": "the author may take their own answer down",
+      "account": "mina-admin",
+      "decider": "mina-admin",
+      "action": "remove",
+      "expect": "allowed"
+    },
+    {
+      "name": "the author may reject their own answer",
+      "account": "mina-admin",
+      "decider": "mina-admin",
+      "action": "reject",
+      "expect": "allowed"
+    },
+    {
+      "name": "the author may reopen their own answer",
+      "account": "mina-admin",
+      "decider": "mina-admin",
+      "action": "reopen",
+      "expect": "allowed"
+    },
+    {
+      "name": "the moderation token approves any answer",
+      "account": "mina-admin",
+      "decider": "@moderation-token",
+      "action": "approve",
+      "expect": "allowed"
+    }
+  ]
+}
