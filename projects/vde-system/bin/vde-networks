@@ -1,0 +1,78 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-networks - List/Create VDE Docker networks
+# Usage: vde-networks [options]
+#
+# Options:
+#   -c, --create    Create vde-net network if it doesn't exist
+#   -q, --quiet     Only show network names
+#   -a, --all       Show all VDE networks (vde-*)
+#===============================================================================
+
+set -e
+
+# Determine VDE root directory
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+# Source core libraries
+[[ -f "${VDE_ROOT_DIR}/lib/vde-shell-compat" ]] && source "${VDE_ROOT_DIR}/lib/vde-shell-compat" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-constants" ]] && source "${VDE_ROOT_DIR}/lib/vde-constants" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-errors" ]] && source "${VDE_ROOT_DIR}/lib/vde-errors" &>/dev/null
+
+# Parse options
+QUIET=0
+CREATE=0
+SHOW_ALL=0
+
+while [[ ${#} -gt 0 ]] ; do
+    case "${1}" in
+        -c|--create)
+            CREATE=1
+            shift
+            ;;
+        -q|--quiet)
+            QUIET=1
+            shift
+            ;;
+        -a|--all)
+            SHOW_ALL=1
+            shift
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+# Variables are sourced from vde-constants
+# Use VDE_DOCKER_NETWORK from constants for production network
+VDE_NETWORK="${VDE_DOCKER_NETWORK}"
+
+# Create network if requested
+if [[ ${CREATE} -eq 1 ]] ; then
+    source "${VDE_ROOT_DIR}/lib/vde-security"
+    vde_security_ensure_network "${VDE_NETWORK}"
+fi
+
+# Show all VDE networks (vde-*) or just the main network
+if [[ ${SHOW_ALL} -eq 1 ]] ; then
+    # Show all VDE networks (vde-*)
+    VDE_NETWORK_FILTER="vde-"
+else
+    # Show only the main VDE network
+    VDE_NETWORK_FILTER="${VDE_NETWORK}"
+fi
+
+if [[ ${QUIET} -eq 1 ]] ; then
+    docker network ls --format '{{.Name}}' | grep "^${VDE_NETWORK_FILTER}" || true
+else
+    docker network ls --format 'table {{.Name}}\t{{.Driver}}\t{{.Scope}}' | grep "^${VDE_NETWORK_FILTER}" || true
+fi
+
+exit ${VDE_SUCCESS}

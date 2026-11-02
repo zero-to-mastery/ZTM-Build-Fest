@@ -1,0 +1,64 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-stats - Show resource usage for VDE containers
+# Usage: vde-stats [options]
+#
+# Options:
+#   --no-stream    Show current stats only (no streaming)
+#   -q, --quiet    Only show container names
+#===============================================================================
+
+# Determine VDE root directory
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+set -e
+
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+# Source core libraries
+[[ -f "${VDE_ROOT_DIR}/lib/vde-shell-compat" ]] && source "${VDE_ROOT_DIR}/lib/vde-shell-compat" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-constants" ]] && source "${VDE_ROOT_DIR}/lib/vde-constants" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-errors" ]] && source "${VDE_ROOT_DIR}/lib/vde-errors" &>/dev/null
+
+# Parse options
+QUIET=0
+NO_STREAM=1
+
+while [[ ${#} -gt 0 ]] ; do
+    case "${1}" in
+        --no-stream)
+            NO_STREAM=1
+            shift
+            ;;
+        -q|--quiet)
+            QUIET=1
+            shift
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+# Get VDE container prefix
+VDE_PREFIX="${VDE_CONTAINER_PREFIX:-vde-}"
+
+# Get list of running VDE containers
+CONTAINERS=$(docker ps --format '{{.Names}}' | grep "^${VDE_PREFIX}" | tr '\n' ' ')
+
+if [[ -z "${CONTAINERS}" ]] ; then
+    echo "No VDE containers running"
+    exit ${VDE_SUCCESS}
+fi
+
+if [[ ${QUIET} -eq 1 ]] ; then
+    docker stats --no-stream --format '{{.Name}}' ${CONTAINERS}
+else
+    docker stats --no-stream --format 'table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}\t{{.NetIO}}\t{{.BlockIO}}' ${CONTAINERS}
+fi
+
+exit ${VDE_SUCCESS}

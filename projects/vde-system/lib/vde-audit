@@ -1,0 +1,328 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-audit - Audit Logging Library for VDE
+# Records all state-changing operations for security and compliance
+#===============================================================================
+
+# Source dependencies
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+if [[ -z "${VDE_ROOT_DIR:-}" ]]; then
+    VDE_ROOT_DIR="${(%):-%x}"
+    VDE_ROOT_DIR="${VDE_ROOT_DIR:h:h}"
+fi
+[[ -f "${VDE_ROOT_DIR}/lib/vde-constants" ]] && source "${VDE_ROOT_DIR}/lib/vde-constants"
+[[ -f "${VDE_ROOT_DIR}/lib/vde-shell-compat" ]] && source "${VDE_ROOT_DIR}/lib/vde-shell-compat"
+[[ -f "${VDE_ROOT_DIR}/lib/vde-log" ]] && source "${VDE_ROOT_DIR}/lib/vde-log"
+
+#===============================================================================
+# Audit Configuration
+#===============================================================================
+
+# Audit log file path
+VDE_AUDIT_LOG="${VDE_ROOT_DIR}/logs/vde-audit.log"
+VDE_AUDIT_ENABLED="${VDE_AUDIT_ENABLED:-1}"
+
+# Audit operations that should be logged
+declare -a VDE_AUDIT_OPERATIONS=(
+    "create_vm"
+    "start_vm"
+    "stop_vm"
+    "restart_vm"
+    "delete_vm"
+    "update_vm"
+    "configure_vm"
+    "ssh_key_add"
+    "ssh_key_remove"
+    "container_create"
+    "container_remove"
+    "container_start"
+    "container_stop"
+)
+
+# Current runtime state
+_VDE_AUDIT_INITIALIZED=0
+
+#===============================================================================
+# Initialization
+#===============================================================================
+
+# Initialize audit logging
+vde_audit_init() {
+    # Create logs directory if it doesn't exist
+    if [[ ! -d "${VDE_ROOT_DIR}/logs" ]] ; then
+        command mkdir -p "${VDE_ROOT_DIR}/logs" 2>/dev/null || return ${VDE_ERR_GENERAL}
+    fi
+    
+    # Create audit log file if it doesn't exist
+    if [[ ! -f "${VDE_AUDIT_LOG}" ]] ; then
+        command touch "${VDE_AUDIT_LOG}" 2>/dev/null || return ${VDE_ERR_GENERAL}
+        command chmod 600 "${VDE_AUDIT_LOG}" 2>/dev/null || true
+    fi
+    
+    # Ensure log file is writable
+    if [[ ! -w "${VDE_AUDIT_LOG}" ]] ; then
+        return ${VDE_ERR_GENERAL}
+    fi
+    
+    _VDE_AUDIT_INITIALIZED=1
+    
+    # Initialize main logging if not already done
+    [[ "${_VDE_LOG_INITIALIZED}" -eq 0 ]] && vde_log_init
+    
+    vde_log_info "Audit logging initialized" "audit"
+    return 0
+}
+
+#===============================================================================
+# Core Audit Logging
+#===============================================================================
+
+# Log an audit entry
+# Args: operation, result, [details...]
+vde_audit_log() {
+    local operation="${1}"
+    local result="${2}"
+    shift 2
+    local details="${@}"
+    
+    # Check if audit is enabled
+    if [[ "${VDE_AUDIT_ENABLED}" != "1" ]] ; then
+        return 0
+    fi
+    
+    # Ensure initialized
+    if [[ "${_VDE_AUDIT_INITIALIZED}" -eq 0 ]] ; then
+        vde_audit_init || return ${VDE_ERR_GENERAL}
+    fi
+    
+    # Get current user
+    local user
+    user=$(whoami 2>/dev/null || echo "unknown")
+    
+    # Get hostname
+    local hostname
+    hostname=$(hostname 2>/dev/null || echo "unknown")
+    
+    # Generate timestamp (ISO 8601)
+    local timestamp
+    timestamp=$(vde_shell_date_iso8601)
+    
+    # Escape special characters for CSV safety
+    details=$(echo "${details}" | command sed 's/"/""/g; s/\t/ /g; s/\r/ /g; s/\n/ /g')
+    operation=$(echo "${operation}" | command sed 's/"/""/g')
+    result=$(echo "${result}" | command sed 's/"/""/g')
+    
+    # Format: timestamp|user|hostname|operation|result|details
+    local entry="${timestamp}|${user}|${hostname}|${operation}|${result}|${details}"
+    
+    # Write to audit log
+    echo "${entry}" >> "${VDE_AUDIT_LOG}"
+    
+    return 0
+}
+
+# Log audit entry with JSON details
+vde_audit_log_json() {
+    local operation="${1}"
+    local result="${2}"
+    local json_details="${3}"
+    
+    vde_audit_log "${operation}" "${result}" "${json_details}"
+}
+
+#===============================================================================
+# Convenience Audit Functions
+#===============================================================================
+
+# Audit VM creation
+vde_audit_create_vm() {
+    local vm_name="${1}"
+    local vm_type="${2}"
+    vde_audit_log "create_vm" "${?}" "vm_name=${vm_name} vm_type=${vm_type}"
+}
+
+# Audit VM start
+vde_audit_start_vm() {
+    local vm_name="${1}"
+    vde_audit_log "start_vm" "${?}" "vm_name=${vm_name}"
+}
+
+# Audit VM stop
+vde_audit_stop_vm() {
+    local vm_name="${1}"
+    vde_audit_log "stop_vm" "${?}" "vm_name=${vm_name}"
+}
+
+# Audit VM restart
+vde_audit_restart_vm() {
+    local vm_name="${1}"
+    vde_audit_log "restart_vm" "${?}" "vm_name=${vm_name}"
+}
+
+# Audit VM deletion
+vde_audit_delete_vm() {
+    local vm_name="${1}"
+    vde_audit_log "delete_vm" "${?}" "vm_name=${vm_name}"
+}
+
+#===============================================================================
+# Audit Query Functions
+#===============================================================================
+
+# Query audit log
+# Args: [pattern] [options]
+vde_audit_query() {
+    local pattern="${1:-.*}"
+    shift
+    local options="${@}"
+    
+    if [[ -f "${VDE_AUDIT_LOG}" ]] ; then
+        command grep -E "${pattern}" "${VDE_AUDIT_LOG}" ${options}
+    fi
+}
+
+# Get audit entries by user
+vde_audit_by_user() {
+    local user="${1}"
+    local count="${2:-100}"
+    
+    vde_audit_query "^[^|]*\|${user}\|" | command tail -n "${count}"
+}
+
+# Get audit entries by operation
+vde_audit_by_operation() {
+    local operation="${1}"
+    local count="${2:-100}"
+    
+    vde_audit_query ".*\|.*\|.*\|${operation}\|" | command tail -n "${count}"
+}
+
+# Get audit entries by date range
+vde_audit_by_date() {
+    local start_date="${1}"
+    local end_date="${2}"
+    
+    vde_audit_query "^${start_date}.*|^${end_date}.*"
+}
+
+# Get recent audit entries
+vde_audit_recent() {
+    local count="${1:-50}"
+    
+    if [[ -f "${VDE_AUDIT_LOG}" ]] ; then
+        command tail -n "${count}" "${VDE_AUDIT_LOG}"
+    fi
+}
+
+# Get failed operations from audit
+vde_audit_failures() {
+    local count="${2:-100}"
+    
+    vde_audit_query ".*\|.*\|.*\|.*\|failure\|" | command tail -n "${count}"
+}
+
+#===============================================================================
+# Audit Export Functions
+#===============================================================================
+
+# Export audit log to CSV format
+vde_audit_export_csv() {
+    local output_file="${1:-${VDE_ROOT_DIR}/logs/vde-audit-export.csv}"
+    
+    if [[ -f "${VDE_AUDIT_LOG}" ]] ; then
+        # Add CSV header
+        {
+            echo "timestamp,user,hostname,operation,result,details"
+            command cat "${VDE_AUDIT_LOG}"
+        } > "${output_file}"
+        return 0
+    fi
+    return ${VDE_ERR_GENERAL}
+}
+
+# Export audit log to JSON format
+vde_audit_export_json() {
+    local output_file="${1:-${VDE_ROOT_DIR}/logs/vde-audit-export.json}"
+    
+    if [[ -f "${VDE_AUDIT_LOG}" ]] ; then
+        # Build JSON array
+        echo "{" > "${output_file}"
+        echo '  "audit_entries": [' >> "${output_file}"
+        
+        local first=1
+        while IFS='|' read -r timestamp user hostname operation result details; do
+            if [[ -n "${timestamp}" ]] ; then
+                [[ "${first}" -eq 0 ]] && echo "," >> "${output_file}"
+                first=0
+                
+                # Escape JSON special characters
+                details=$(echo "${details}" | command sed 's/\\/\\\\/g; s/"/\\"/g')
+                user=$(echo "${user}" | command sed 's/\\/\\\\/g; s/"/\\"/g')
+                hostname=$(echo "${hostname}" | command sed 's/\\/\\\\/g; s/"/\\"/g')
+                operation=$(echo "${operation}" | command sed 's/\\/\\\\/g; s/"/\\"/g')
+                result=$(echo "${result}" | command sed 's/\\/\\\\/g; s/"/\\"/g')
+                
+                cat <<EOF >> "${output_file}"
+    {
+      "timestamp": "${timestamp}",
+      "user": "${user}",
+      "hostname": "${hostname}",
+      "operation": "${operation}",
+      "result": "${result}",
+      "details": "${details}"
+    }
+EOF
+            fi
+        done < "${VDE_AUDIT_LOG}"
+        
+        echo "  ]" >> "${output_file}"
+        echo "}" >> "${output_file}"
+        return 0
+    fi
+    return ${VDE_ERR_GENERAL}
+}
+
+#===============================================================================
+# Audit Statistics
+#===============================================================================
+
+# Get audit statistics
+vde_audit_stats() {
+    local total=0
+    local by_operation
+    local by_user
+    local failures=0
+    
+    if [[ -f "${VDE_AUDIT_LOG}" ]] ; then
+        total=$(command wc -l < "${VDE_AUDIT_LOG}")
+        failures=$(vde_audit_query ".*\|.*\|.*\|.*\|failure\|" | command wc -l)
+        by_operation=$(command cut -d'|' -f4 "${VDE_AUDIT_LOG}" | command sort | command uniq -c | command sort -rn)
+        by_user=$(command cut -d'|' -f2 "${VDE_AUDIT_LOG}" | command sort | command uniq -c | command sort -rn)
+    fi
+    
+    cat <<EOF
+Audit Statistics
+================
+Total entries: ${total}
+Failed operations: ${failures}
+Success rate: $(( (total - failures) * 100 / (total > 0 ? total : 1) ))%
+
+Operations by type:
+${by_operation}
+
+Operations by user:
+${by_user}
+EOF
+}
+
+#===============================================================================
+# Backward Compatibility
+#===============================================================================
+
+# Export functions
+# Note: ZSH does not support 'export -f'. Functions are available to subshells
+# if they are defined in a sourced script or autoloaded.

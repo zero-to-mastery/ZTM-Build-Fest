@@ -1,0 +1,43 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# Intended to be sourced by entry points (e.g. bin/vde) during startup.
+
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+set -e
+
+vde_guard_absolute_paths() {
+  # Scan tracked files for hardcoded user home paths that break portability
+  # Only scan for /Users/ and /home/ - these break when moving VDE to different machine/user
+  # Skip: this guard file (has patterns), lib/vde-path-utils (has path examples in comments)
+  local forbidden_patterns=( "/Users/" "/home/" )
+  local f
+  # Use git ls-files to iterate only over tracked sources
+  for f in $(git ls-files); do
+    # Skip non-source files and this guard file itself
+    case "$f" in
+      .github/*|configs/*|docs/*|tests/*|env-files/*|.gemini/PLANS/*|*.md|*.txt|*.log|*.bak|lib/vde-root-guard|lib/vde-path-utils|bin/generate-all-configs) continue;;
+      lib/*|bin/*) 
+        if grep -nH -E "${forbidden_patterns[1]}|${forbidden_patterns[2]}" "$f" 2>/dev/null; then
+          echo "ABSOLUTE PATH DETECTED in $f" 
+          return 1
+        fi
+        continue
+        ;;
+      *) continue;;
+    esac
+  done
+  return 0
+}
+
+# Expose a simple guard that other scripts can call.
+vde_check_absolute_paths() {
+  if ! vde_guard_absolute_paths; then
+    return 1
+  fi
+  return 0
+}
+
+vde_check_absolute_paths

@@ -1,0 +1,137 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-path-of-the-foundling - Interactive Onboarding for VDE
+set -e
+# Guide a new student through the first rituals of the Forge.
+#===============================================================================
+
+# Determine VDE root directory
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+if [[ -z "${VDE_ROOT_DIR}" ]] ; then
+    VDE_ROOT_DIR="${0:h:h}"
+fi
+export VDE_ROOT_DIR
+
+# Source core libraries
+source "${VDE_ROOT_DIR}/lib/vde-log" &>/dev/null
+source "${VDE_ROOT_DIR}/lib/vde-core" &>/dev/null
+
+# Parse arguments
+typeset AUTO_APPROVE=0
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -y|--yes) AUTO_APPROVE=1; shift ;;
+        *) shift ;;
+    esac
+done
+
+# Colors
+BOLD='\033[1m'
+CYAN='\033[0;36m'
+GREEN='\033[0;32m'
+RESET='\033[0m'
+
+clear
+echo -e "${BOLD}${CYAN}╔════════════════════════════════════════════════════════════╗"
+echo -e "║          THE PATH OF THE FOUNDLING                         ║"
+echo -e "╚════════════════════════════════════════════════════════════╝${RESET}"
+echo ""
+echo "Welcome, Foundling. You have taken your first step into the Forge."
+echo "I will guide you through the initial rituals to certify you as battle-ready."
+echo ""
+
+# Step 1: Ignition (init)
+echo -e "${BOLD}1. The Ignition Ritual (Initialization)${RESET}"
+echo "Every Forge must be ignited before it can strike Beskar."
+echo "This ritual sets up your SSH keys and networks."
+echo ""
+echo "Command: vde init -f"
+echo ""
+
+typeset reply="n"
+if [[ "${AUTO_APPROVE}" == "1" ]]; then
+    reply="y"
+    echo "Shall we ignite the Forge? (y/n): y (auto-approved)"
+else
+    read -q "REPLY?Shall we ignite the Forge? (y/n): "
+    reply="${REPLY}"
+    echo ""
+fi
+
+if [[ "${reply}" == [Yy] ]]; then
+    "${VDE_ROOT_DIR}/bin/vde-init" -f
+    echo -e "${GREEN}✓ The Forge is ignited.${RESET}"
+else
+    echo "The Forge remains cold. Return when you are ready."
+    exit ${VDE_SUCCESS}
+fi
+
+echo ""
+
+# Step 2: Pillar Check
+echo -e "${BOLD}2. The Spine Check (Pillar Verification)${RESET}"
+echo "We must ensure the four pillars (Zsh, Git, Docker, SSH) are strong."
+echo ""
+
+if [[ "${AUTO_APPROVE}" == "1" ]]; then
+    reply="y"
+    echo "Shall we check the Spine? (y/n): y (auto-approved)"
+else
+    read -q "REPLY?Shall we check the Spine? (y/n): "
+    reply="${REPLY}"
+    echo ""
+fi
+
+if [[ "${reply}" == [Yy] ]]; then
+    if "${VDE_ROOT_DIR}/bin/vde-spine-check.zsh"; then
+        echo -e "${GREEN}✓ The Spine is strong.${RESET}"
+    else
+        echo "A pillar has fractured. Fix your environment and return."
+        exit ${VDE_ERR_GENERAL}
+    fi
+else
+    echo "A warrior without a spine cannot fight."
+    exit ${VDE_SUCCESS}
+fi
+
+echo ""
+
+# Step 3: First Spoke (python)
+echo -e "${BOLD}3. The First Spoke (Creation)${RESET}"
+echo "Now we create your first workspace: the Python Spoke."
+echo ""
+echo "Command: vde create python"
+echo ""
+
+if [[ "${AUTO_APPROVE}" == "1" ]]; then
+    reply="y"
+    echo "Shall we forge the Python Spoke? (y/n): y (auto-approved)"
+else
+    read -q "REPLY?Shall we forge the Python Spoke? (y/n): "
+    reply="${REPLY}"
+    echo ""
+fi
+
+if [[ "${reply}" == [Yy] ]]; then
+    "${VDE_ROOT_DIR}/bin/vde" create python
+    echo -e "${GREEN}✓ The Python Spoke is forged.${RESET}"
+else
+    echo "Creation postponed."
+    exit ${VDE_SUCCESS}
+fi
+
+echo ""
+echo -e "${BOLD}${GREEN}CONGRATULATIONS, FOUNDLING.${RESET}"
+echo "You have completed the first rituals. You are now authorized to step into your Spokes."
+echo ""
+echo "Next Commands to try:"
+echo "  vde start python  - Ignite the Spoke"
+echo "  vde enter python  - Step inside and code"
+echo "  vde stop python   - Quench the fires"
+echo ""
+echo "Read the 'docs/FOUNDLING_GUIDE.md' for more."
+echo "This is the Way."

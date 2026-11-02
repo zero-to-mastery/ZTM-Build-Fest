@@ -1,0 +1,219 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE Atomic File Locking Library (v2.0.8 Hardened)
+# Codified under THE ARCHIVIST’S INTEL (Section 11)
+# Forged in Beskar
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+if [[ "${_VM_LOCK_LOADED:-}" = "1" ]]; then
+    return 0 2>/dev/null || exit 0
+fi
+_VM_LOCK_LOADED=1
+
+# Global state for recursive locking
+typeset -gA VDE_LOCK_DEPTH
+typeset -gA VDE_LOCK_TICKETS
+
+# is_process_alive - Check if a process is running
+is_process_alive() {
+    local pid="$1"
+    # Check if PID is empty or not a number
+    if [[ -z "$pid" || ! "$pid" =~ ^[0-9]+$ ]]; then
+        return 1
+    fi
+    # Try kill -0 first (most efficient, doesn't actually signal)
+    if kill -0 "$pid" 2>/dev/null; then
+        return 0
+    fi
+    # Fall back to ps -p
+    if ps -p "$pid" >/dev/null 2>&1; then
+        return 0
+    fi
+    return 1
+}
+
+# claim_lock - Atomic locking with "Lock-Queue Model" (Phase 25 FIFO)
+# Args: <lock_file>
+claim_lock() {
+    if [[ "${VDE_NO_LOCK:-0}" == "1" ]]; then return 0; fi
+
+    local lock_file="${1}"
+    local max_attempts=30 # Increased for high-concurrency queuing
+    local attempt=1
+    local pid_file="${lock_file}/pid"
+    local queue_dir="${lock_file}.queue"
+
+    # RE-ENTRANCY CHECK
+    if [[ "${VDE_LOCK_DEPTH[${lock_file}]}" -gt 0 ]]; then
+        (( VDE_LOCK_DEPTH[${lock_file}]++ ))
+        return 0
+    fi
+
+    # 1. THE TICKET REGISTRATION (Phase 25 Arrival Sequencing)
+    mkdir -p "${queue_dir}" 2>/dev/null
+    
+    # Use ZSH native precise timing for ticket sequencing
+    zmodload zsh/datetime 2>/dev/null
+    local ticket_id="${EPOCHREALTIME:-$(date +%s).$RANDOM}-$$"
+    local ticket_file="${queue_dir}/${ticket_id}"
+    touch "${ticket_file}"
+    VDE_LOCK_TICKETS[${lock_file}]="${ticket_id}"
+
+    # Ensure parent directory exists
+    mkdir -p "$(dirname "${lock_file}")" 2>/dev/null
+
+    # Cleanup closure for failures
+    _vde_lock_cleanup_retreat() {
+        rm -f "${ticket_file}" 2>/dev/null
+        unset "VDE_LOCK_TICKETS[${lock_file}]"
+    }
+
+    while [[ ${attempt} -le ${max_attempts} ]]; do
+        # STALE LOCK BUSTER (Restore the Heartbeat)
+        if [[ -f "${pid_file}" ]]; then
+            local pid_data=$(cat "${pid_file}" 2>/dev/null)
+            local owner_pid="${pid_data%%:*}"
+            local lock_timestamp="${pid_data##*:}"
+            local now=$(date +%s)
+            
+            if [[ -n "${owner_pid}" ]] && ! is_process_alive "${owner_pid}"; then
+                # Grace period: Only bust if lock is at least 10 seconds old
+                if [[ $(( now - lock_timestamp )) -gt 10 ]]; then
+                    vde_log_warn "Busting stale lock ${lock_file} (Owner PID ${owner_pid} is dead)" "lock"
+                    rm -rf "${lock_file}" 2>/dev/null
+                    continue
+                fi
+            fi
+        fi
+        
+        # 2. THE LINE CHECK (FIFO Enforcement)
+        # Find the oldest ticket (numerically sorted by timestamp)
+        local oldest_ticket
+        oldest_ticket=$(ls -1 "${queue_dir}" 2>/dev/null | sort -n | head -n 1)
+        
+        # STALE TICKET BUSTER: If the oldest ticket belongs to a dead process, purge it
+        if [[ -n "${oldest_ticket}" && "${oldest_ticket}" != "${ticket_id}" ]]; then
+            local ticket_pid="${oldest_ticket##*-}"
+            if [[ -n "${ticket_pid}" ]] && ! is_process_alive "${ticket_pid}"; then
+                vde_log_warn "Busting stale ticket ${oldest_ticket} (Owner PID ${ticket_pid} is dead)" "lock"
+                rm -f "${queue_dir}/${oldest_ticket}" 2>/dev/null
+                # Continue loop to re-evaluate 'oldest_ticket'
+                continue
+            fi
+        fi
+        
+        if [[ "${oldest_ticket}" == "${ticket_id}" ]]; then
+            # At the front of the line! THE ATOMIC GATE: mkdir is atomic at the kernel level
+            if mkdir "${lock_file}" 2>/dev/null; then
+                # Record ownership ATOMICALLY
+                local now=$(date +%s)
+                local pgid=$(ps -o pgid= -p $$ 2>/dev/null | tr -d ' ')
+                local tmp_pid_file="${pid_file}.tmp.$RANDOM"
+                
+                # Write PID info: PID:PGID:TIMESTAMP
+                echo "$$:${pgid}:${now}" > "${tmp_pid_file}" 2>/dev/null
+                mv "${tmp_pid_file}" "${pid_file}" 2>/dev/null
+                
+                VDE_LOCK_DEPTH[${lock_file}]=1
+                return 0
+            fi
+        fi
+        
+        # LOCK CONTENTION TRANSPARENCY (Phase 26)
+        local owner_info=""
+        if [[ -f "${pid_file}" ]]; then
+            local pid_data=$(cat "${pid_file}" 2>/dev/null)
+            local owner_pid="${pid_data%%:*}"
+            owner_info="PID ${owner_pid}"
+        elif [[ "${oldest_ticket}" != "${ticket_id}" ]]; then
+            owner_info="Queue position: waiting for ${oldest_ticket#*-}"
+        fi
+        
+        # THE ARCHIVIST'S JITTER (ZSH-Native floating point)
+        # Goal: 0.1s to 0.5s delay
+        # Formula: 0.1 + (RANDOM / 32768.0 * 0.4)
+        local jitter_sec=$(( 0.1 + (RANDOM / 32768.0 * 0.4) ))
+        
+        # MANDATE: vde-poll is the SOLE permitted wait primitive
+        if command -v vde_progress_wait_for_lock >/dev/null 2>&1; then
+            vde_progress_wait_for_lock "$(basename "${lock_file}")" "${attempt}" "${owner_info}"
+        fi
+        
+        # SAFETY: Set VDE_NO_LOCK=1 to prevent recursive storms if vde-poll loads vm-common
+        VDE_NO_LOCK=1 "${VDE_ROOT_DIR}/bin/vde-poll" --wait "${jitter_sec}" "all" >/dev/null 2>&1
+        
+        (( attempt++ ))
+    done
+    
+    # If we reach here, the forge has failed to secure the resource
+    _vde_lock_cleanup_retreat
+    vde_log_error "Registry Lock Contention: Failed to claim ${lock_file} after ${max_attempts} cycles." "lock"
+    return ${VDE_ERR_LOCK:-9}
+}
+
+# Compatibility Aliases
+acquire_lock() { claim_lock "$@" }
+
+# release_lock - Release atomic lock
+# Args: <lock_file>
+release_lock() {
+    if [[ "${VDE_NO_LOCK:-0}" == "1" ]]; then return 0; fi
+
+    local lock_file="${1}"
+    local queue_dir="${lock_file}.queue"
+    local ticket_id="${VDE_LOCK_TICKETS[${lock_file}]}"
+    
+    if [[ -n "${VDE_LOCK_DEPTH[${lock_file}]}" ]]; then
+        (( VDE_LOCK_DEPTH[${lock_file}]-- ))
+        if [[ "${VDE_LOCK_DEPTH[${lock_file}]}" -le 0 ]]; then
+            # Atomic cleanup
+            [[ -d "${lock_file}" ]] && rm -rf "${lock_file}" 2>/dev/null
+            [[ -n "${ticket_id}" ]] && rm -f "${queue_dir}/${ticket_id}" 2>/dev/null
+            unset "VDE_LOCK_DEPTH[${lock_file}]"
+            unset "VDE_LOCK_TICKETS[${lock_file}]"
+            
+            # Clean up queue dir if empty
+            if [[ -d "${queue_dir}" ]] && [[ -z "$(ls -A "${queue_dir}")" ]]; then
+                rm -rf "${queue_dir}" 2>/dev/null
+            fi
+        fi
+    else
+        # Fallback for unexpected calls
+        [[ -d "${lock_file}" ]] && rm -rf "${lock_file}" 2>/dev/null
+        [[ -n "${ticket_id}" ]] && rm -f "${queue_dir}/${ticket_id}" 2>/dev/null
+        unset "VDE_LOCK_TICKETS[${lock_file}]"
+    fi
+    return 0
+}
+
+# ZSH 5.8.x on WSL2/Ubuntu does not reliably fire {always} blocks on function return,
+# leaving global-config.lock and queue tickets on disk after every vde invocation.
+# This hook fires unconditionally on shell exit, bypassing the always path entirely.
+_vde_lock_cleanup_on_exit() {
+    local locks_dir="${VDE_LOCKS_DIR:-${VDE_ROOT_DIR}/.locks}"
+    local vms_dir="${VDE_VM_LOCKS_DIR:-${locks_dir}/vms}"
+    [[ -d "${locks_dir}" ]] || return 0
+
+    local q ticket ld pf pd
+    for q in "${locks_dir}"/*.queue(N/) "${vms_dir}"/*.queue(N/); do
+        for ticket in "${q}"/*-$$(N); do
+            rm -f "${ticket}" 2>/dev/null
+        done
+    done
+
+    for ld in "${locks_dir}"/*.lock(N/) "${vms_dir}"/*.lock(N/); do
+        pf="${ld}/pid"
+        [[ -f "${pf}" ]] || continue
+        pd=$(< "${pf}" 2>/dev/null)
+        [[ "${pd%%:*}" == "$$" ]] && rm -rf "${ld}" 2>/dev/null
+    done
+}
+
+# add-zsh-hook is idempotent; register zshexit hook for lock cleanup in all shells
+# to handle WSL2/ZSH 5.8.x where {always} blocks don't reliably fire.
+# The cleanup function is safe to run in any shell context as it only removes
+# locks owned by the current shell's PID.
+autoload -U add-zsh-hook 2>/dev/null
+add-zsh-hook zshexit _vde_lock_cleanup_on_exit 2>/dev/null

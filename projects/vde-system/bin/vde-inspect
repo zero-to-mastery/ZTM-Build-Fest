@@ -1,0 +1,103 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-inspect - Inspect a VDE container
+set -e
+# Usage: vde-inspect <vm_name> [options]
+#
+# Options:
+#   --format FORMAT   Output format (go-template, json)
+#   --mounts          Show mounts only
+#   --network         Show network info only
+#   --state           Show state info only
+#   --health          Show health info only
+#   --json            Output as JSON
+#===============================================================================
+
+# Determine VDE root directory
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+# Source core libraries
+[[ -f "${VDE_ROOT_DIR}/lib/vde-shell-compat" ]] && source "${VDE_ROOT_DIR}/lib/vde-shell-compat" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-constants" ]] && source "${VDE_ROOT_DIR}/lib/vde-constants" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-errors" ]] && source "${VDE_ROOT_DIR}/lib/vde-errors" &>/dev/null
+
+# Check arguments
+if [[ -z "${1}" ]] ; then
+    vde_error_simple "VM name is required"
+    echo "Usage: vde-inspect <vm_name> [options]"
+    exit ${VDE_ERR_INVALID_INPUT}
+fi
+
+VM_NAME="${1}"
+shift
+
+# Ensure vde- prefix for container name (unless it already has it or is a full container name)
+CONTAINER_NAME="${VM_NAME}"
+if [[ "${VM_NAME}" != vde-* ]] && [[ "${VM_NAME}" != *-dev ]] ; then
+    CONTAINER_NAME="vde-${VM_NAME}"
+fi
+
+# Parse options
+FORMAT=""
+MOUNTS=0
+NETWORK=0
+STATE=0
+HEALTH=0
+JSON_OUTPUT=0
+
+while [[ ${#} -gt 0 ]] ; do
+    case "${1}" in
+        --format)
+            FORMAT="${2}"
+            shift 2
+            ;;
+        --mounts)
+            MOUNTS=1
+            shift
+            ;;
+        --network)
+            NETWORK=1
+            shift
+            ;;
+        --state)
+            STATE=1
+            shift
+            ;;
+        --health)
+            HEALTH=1
+            shift
+            ;;
+        --json)
+            JSON_OUTPUT=1
+            shift
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+# Build inspect command
+if [[ ${MOUNTS} -eq 1 ]] ; then
+    docker inspect --format '{{json .Mounts}}' "${CONTAINER_NAME}"
+elif [[ ${NETWORK} -eq 1 ]] ; then
+    docker inspect --format '{{json .NetworkSettings}}' "${CONTAINER_NAME}"
+elif [[ ${STATE} -eq 1 ]] ; then
+    docker inspect --format '{{json .State}}' "${CONTAINER_NAME}"
+elif [[ ${HEALTH} -eq 1 ]] ; then
+    docker inspect --format '{{json .State.Health}}' "${CONTAINER_NAME}"
+elif [[ ${JSON_OUTPUT} -eq 1 ]] ; then
+    docker inspect --format '{{json .}}' "${CONTAINER_NAME}"
+elif [[ -n "${FORMAT}" ]] ; then
+    docker inspect --format "${FORMAT}" "${CONTAINER_NAME}"
+else
+    docker inspect "${CONTAINER_NAME}"
+fi
+
+exit ${?}

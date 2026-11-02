@@ -1,0 +1,82 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE Cluster Utilities
+# Helper functions for managing VM clusters
+# Source this library with: source ./lib/vde-cluster-utils
+#
+# These utilities provide higher-level management for groups of related VMs.
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+# Cluster state directory
+VDE_CLUSTER_STATE_DIR="${VDE_DOCKER_STATE_DIR}/clusters"
+
+# vde_cluster_init - Ensure cluster state directory exists
+vde_cluster_init() {
+    mkdir -p "${VDE_CLUSTER_STATE_DIR}"
+}
+
+# vde_cluster_save - Save a cluster definition
+# Args: <name> <vms...>
+vde_cluster_save() {
+    local name=$(vde_normalize_name "${1}")
+    shift
+    local vms=("$@")
+    
+    vde_cluster_init
+    
+    # Simple JSON-like storage for now
+    local cluster_file="${VDE_CLUSTER_STATE_DIR}/${name}.json"
+    echo "{\"name\": \"${name}\", \"vms\": [$(printf '"%s",' "${vms[@]}" | sed 's/,$//')]}" > "${cluster_file}"
+}
+
+# vde_cluster_list - List all defined clusters
+vde_cluster_list() {
+    vde_cluster_init
+    local f
+    for f in "${VDE_CLUSTER_STATE_DIR}"/*.json(N); do
+        if [[ -f "${f}" ]] ; then
+            local name=$(basename "${f}" .json)
+            local vms=$(vde_query_json -r '.vms | join(", ")' "${f}")
+            echo "${name}: ${vms}"
+        fi
+    done
+}
+
+# vde_cluster_get_vms - Get VMs in a cluster
+# Args: <name>
+vde_cluster_get_vms() {
+    local name=$(vde_normalize_name "${1}")
+    local cluster_file="${VDE_CLUSTER_STATE_DIR}/${name}.json"
+    
+    if [[ ! -f "${cluster_file}" ]] ; then
+        return ${VDE_ERR_NOT_FOUND}
+    fi
+    
+    vde_query_json -r '.vms[]' "${cluster_file}"
+}
+
+# vde_cluster_delete - Delete a cluster definition
+# Args: <name>
+vde_cluster_delete() {
+    local name=$(vde_normalize_name "${1}")
+    local cluster_file="${VDE_CLUSTER_STATE_DIR}/${name}.json"
+    
+    if [[ ! -f "${cluster_file}" ]] ; then
+        return ${VDE_ERR_NOT_FOUND}
+    fi
+    
+    rm -f "${cluster_file}"
+    return ${VDE_SUCCESS}
+}
+
+# vde_cluster_exists - Check if a cluster definition exists
+# Args: <name>
+vde_cluster_exists() {
+    local name=$(vde_normalize_name "${1}")
+    if [[ -f "${VDE_CLUSTER_STATE_DIR}/${name}.json" ]] ; then
+        return ${VDE_SUCCESS}
+    fi
+    return ${VDE_ERR_NOT_FOUND}
+}

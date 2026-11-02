@@ -1,0 +1,422 @@
+#!/usr/bin/env zsh
+# @shared-law (Sovereign Law)
+# VDE Error Messages Library
+# Provides contextual error messages with remediation steps
+# Source this library with: source ./lib/vde-errors
+#
+# Features:
+# - Error message catalog with common errors and solutions
+# - Enhanced error functions with remediation steps
+# - Documentation link integration
+# - Verbose mode support for detailed error output
+#
+# Shell Compatibility: ZSH ONLY (Language of the Tribe)
+#
+# Usage:
+#   source ./lib/vde-errors
+#   
+#   # Basic error with solution:
+#   vde_error_docker_not_running
+#   
+#   # Custom error with remediation:
+#   vde_error_show "Something went wrong" "Because of X" "Do Y to fix"
+#   
+#   # Check verbose mode:
+#   if vde_error_is_verbose; then
+#       echo "Detailed debug info"
+#   fi
+
+# =============================================================================
+# SOURCE GUARD
+# =============================================================================
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+if [[ "${_VDE_ERRORS_LOADED:-}" == "1" ]] ; then
+    return 0 2>/dev/null || exit 0
+fi
+_VDE_ERRORS_LOADED=1
+
+# =============================================================================
+# CONFIGURATION
+# =============================================================================
+
+# Verbose mode - set to 1 for detailed error output
+VDE_ERRORS_VERBOSE="${VDE_ERRORS_VERBOSE:-0}"
+export VDE_ERRORS_VERBOSE
+
+# Documentation base URL
+VDE_ERRORS_DOC_URL="${VDE_ERRORS_DOC_URL:-https://github.com/dderyldowney/vde-system/blob/${VDE_PRODUCTION_BRANCH:-main}/docs}"
+
+# Show remediation steps by default
+VDE_ERRORS_SHOW_SOLUTION="${VDE_ERRORS_SHOW_SOLUTION:-1}"
+
+# =============================================================================
+# COLOR SUPPORT
+# =============================================================================
+
+_vde_errors_has_colors() {
+    if [[ -t 2 ]] ; then
+        return 0
+    fi
+    if [[ -n "${TERM:-}" ]] && [[ "${TERM:-}" != "dumb" ]] ; then
+        return 0
+    fi
+    return ${VDE_ERR_GENERAL:-1}
+}
+
+if _vde_errors_has_colors; then
+    VDE_ERRORS_COLOR_RESET='\033[0m'
+    VDE_ERRORS_COLOR_ERROR='\033[1;31m'    # Red
+    VDE_ERRORS_COLOR_WARNING='\033[1;33m'   # Yellow
+    VDE_ERRORS_COLOR_INFO='\033[1;34m'      # Blue
+    VDE_ERRORS_COLOR_SUCCESS='\033[1;32m'   # Green
+    VDE_ERRORS_COLOR_DIM='\033[2m'          # Dim
+    VDE_ERRORS_COLOR_LINK='\033[4;36m'      # Underline cyan
+else
+    VDE_ERRORS_COLOR_RESET=''
+    VDE_ERRORS_COLOR_ERROR=''
+    VDE_ERRORS_COLOR_WARNING=''
+    VDE_ERRORS_COLOR_INFO=''
+    VDE_ERRORS_COLOR_SUCCESS=''
+    VDE_ERRORS_COLOR_DIM=''
+    VDE_ERRORS_COLOR_LINK=''
+fi
+
+# =============================================================================
+# VERBOSE MODE UTILITIES
+# =============================================================================
+
+# vde_error_set_verbose - Enable/disable verbose mode
+vde_error_set_verbose() {
+    VDE_ERRORS_VERBOSE="${1:-1}"
+}
+
+# vde_error_is_verbose - Check if verbose mode is enabled
+vde_error_is_verbose() {
+    [[ "${VDE_ERRORS_VERBOSE}" == "1" ]]
+}
+
+# =============================================================================
+# FORMATTING FUNCTIONS
+# =============================================================================
+
+_vde_error_format_block() {
+    local text="${1}"
+    local indent="${2:-4}"
+    echo "${text}" | while IFS= read -r line; do
+        printf "%${indent}s%s\n" "" "${line}"
+    done
+}
+
+# =============================================================================
+# CORE ERROR FUNCTIONS
+# =============================================================================
+
+# vde_error_show - Show a full error message with what, why, and how
+# Args: <what> <why> <how> [doc_link]
+vde_error_show() {
+    local what="${1}"
+    local why="${2}"
+    local how="${3}"
+    local doc_link="${4:-}"
+    
+    printf "%s%s\n" "${VDE_ERRORS_COLOR_ERROR}Error:${VDE_ERRORS_COLOR_RESET} " "${what}"
+    
+    if [[ -n "${why}" ]] ; then
+        printf "%s%s\n" "${VDE_ERRORS_COLOR_DIM}Reason:${VDE_ERRORS_COLOR_RESET} " "${why}"
+    fi
+    
+    if [[ "${VDE_ERRORS_SHOW_SOLUTION}" == "1" ]] && [[ -n "${how}" ]] ; then
+        printf "%s\n" "${VDE_ERRORS_COLOR_WARNING}Solution:${VDE_ERRORS_COLOR_RESET}"
+        _vde_error_format_block "${how}" | sed "s/^/${VDE_ERRORS_COLOR_INFO}/;s/$/${VDE_ERRORS_COLOR_RESET}/"
+    fi
+    
+    if [[ -n "${doc_link}" ]] ; then
+        local full_url="${VDE_ERRORS_DOC_URL}/${doc_link}"
+        printf "%s%s\n" "${VDE_ERRORS_COLOR_LINK}Docs:${VDE_ERRORS_COLOR_RESET} " "${full_url}"
+    fi
+    
+    printf '\n'
+}
+
+# vde_error_simple - Show a simple error message
+vde_error_simple() {
+    local message="${1}"
+    printf "%s%s\n" "${VDE_ERRORS_COLOR_ERROR}Error:${VDE_ERRORS_COLOR_RESET} " "${message}"
+}
+
+# vde_error_with_code - Show error with exit code
+vde_error_with_code() {
+    local message="${1}"
+    local exit_code="${2}"
+    printf "%s%s (exit code: %d)\n" "${VDE_ERRORS_COLOR_ERROR}Error:${VDE_ERRORS_COLOR_RESET} " "${message}" "${exit_code}"
+}
+
+# =============================================================================
+# COMMON ERROR SCENARIOS
+# =============================================================================
+
+vde_error_docker_not_running() {
+    vde_error_show \
+        "Cannot connect to Docker daemon" \
+        "Docker daemon is not running or you don't have permission to access it" \
+        "1. Start Docker: sudo systemctl start docker (Linux) or start Docker Desktop (macOS/Windows)
+2. Add your user to the docker group: sudo usermod -aG docker \$USER
+3. Log out and back in for group changes to take effect" \
+        "troubleshooting.md#docker-daemon-not-running"
+}
+
+vde_error_insufficient_disk() {
+    local usage="${1}"
+    vde_error_show \
+        "Insufficient disk space" \
+        "System disk usage is at ${usage}%" \
+        "1. Clean up Docker images: docker image prune -a
+2. Remove unused volumes: docker volume prune
+3. Clean up VDE logs: vde nuke --logs-only
+4. Free up space on your host machine" \
+        "troubleshooting.md#disk-space"
+}
+
+vde_error_port_in_use() {
+    local port="${1}"
+    vde_error_show \
+        "Port ${port} is already in use" \
+        "Another process or container is using the required SSH port" \
+        "1. Check what's using the port: lsof -i :${port} or netstat -tlnp | grep ${port}
+2. Stop the conflicting process, or
+3. Choose a different VM name to get an automatic port assignment" \
+        "troubleshooting.md#port-conflicts"
+}
+
+vde_error_ssh_key_missing() {
+    vde_error_show \
+        "No SSH key found" \
+        "VDE requires SSH keys for container authentication" \
+        "1. Generate a new SSH key: ssh-keygen -t ed25519 -C \"your@email.com\"
+2. Or specify an existing key path when prompted" \
+        "ssh-configuration.md#generating-ssh-keys"
+}
+
+vde_error_container_exists() {
+    local name="${1}"
+    vde_error_show \
+        "VM '${name}' already exists" \
+        "A VM with this name has already been created" \
+        "1. List existing VMs: vde list
+2. Start the existing VM: vde start ${name}
+3. Or delete the existing VM: vde remove ${name}" \
+        "command-reference.md#list"
+}
+
+vde_error_permission_denied() {
+    local path="${1}"
+    vde_error_show \
+        "Permission denied: ${path}" \
+        "You don't have the required permissions to access this resource" \
+        "1. Check file permissions: ls -la ${path}
+2. Fix ownership: sudo chown -R \$(whoami):\$(whoami) ${path}
+3. Or run with appropriate permissions" \
+        "troubleshooting.md#permission-issues"
+}
+
+vde_error_vm_not_found() {
+    local name="${1}"
+    vde_error_show \
+        "Unknown VM: '${name}'" \
+        "No VM with this name exists in your configuration" \
+        "1. List available VMs: vde list
+2. See available types: vde list --types
+3. Create a new VM: vde create <type>" \
+        "command-reference.md#create"
+}
+
+vde_error_vm_not_running() {
+    local name="${1}"
+    vde_error_show \
+        "VM '${name}' is not running" \
+        "The VM exists but is currently stopped" \
+        "1. Start the VM: vde start ${name}
+2. Check VM status: vde status" \
+        "command-reference.md#start"
+}
+
+vde_error_vm_not_created() {
+    local name="${1}"
+    vde_error_show \
+        "VM '${name}' has not been created" \
+        "The VM configuration does not exist yet" \
+        "1. Create the VM: vde create ${name}
+2. List available VM types: vde list
+3. Or create a VM with custom configuration: vde create <type>" \
+        "command-reference.md#create"
+}
+
+vde_error_docker_build_failed() {
+    local vm="${1}"
+    vde_error_show \
+        "Docker build failed for '${vm}'" \
+        "The container image could not be built" \
+        "1. Check Docker logs: docker logs <container>
+2. Verify Docker is running: docker ps
+3. Try rebuilding with: vde start ${vm} --rebuild" \
+        "troubleshooting.md#docker-build-issues"
+}
+
+vde_error_ssh_connection_failed() {
+    local host="${1}"
+    local port="${2}"
+    vde_error_show \
+        "SSH connection failed to '${host}'" \
+        "Could not connect to SSH on port ${port}" \
+        "1. Verify the container is running: vde status
+2. Check if SSH service is active in container: vde exec ${host} 'ps aux | grep sshd'
+3. Verify port mapping: vde port ${host}
+4. Ensure your SSH agent is running and keys are loaded: vde ssh-setup status" \
+        "troubleshooting.md#ssh-connection-issues"
+}
+
+vde_error_network_not_found() {
+    local network="${1}"
+    vde_error_show \
+        "Docker network '${network}' not found" \
+        "The required Docker network doesn't exist" \
+        "1. Create the network: docker network create ${network}
+2. Or run VDE setup: vde setup" \
+        "troubleshooting.md#docker-network"
+}
+
+vde_error_template_not_found() {
+    local template="${1}"
+    vde_error_show \
+        "Template not found: ${template}" \
+        "The required template file is missing or has been moved" \
+        "1. Check template directory: ls \$VDE_ROOT_DIR/templates/
+2. Verify installation: vde doctor
+3. Reinstall VDE if templates are missing" \
+        "extending-vde.md#templates"
+}
+
+vde_error_invalid_vm_name() {
+    local name="${1}"
+    vde_error_show \
+        "Invalid VM name: '${name}'" \
+        "VM names must follow the naming convention" \
+        "1. All VMs should use format: vde-<name> (e.g., vde-python, vde-postgres)
+2. Only lowercase alphanumeric characters are allowed" \
+        "predefined-vm-types.md#naming-convention"
+}
+
+vde_error_alias_not_found() {
+    local alias="${1}"
+    vde_error_show \
+        "Unknown VM type or alias: '${alias}'" \
+        "This VM type or alias is not configured" \
+        "1. List known types: vde show-vm-types
+2. Add custom types in: \$VDE_ROOT_DIR/data/vm-types.conf
+3. Use the full VM name instead of alias" \
+        "predefined-vm-types.md"
+}
+
+vde_error_lock_contention() {
+    local lock_name="${1}"
+    vde_error_show \
+        "Resource lock contention: ${lock_name}" \
+        "The resource is currently being modified by another VDE process" \
+        "1. Wait for the other process to complete
+2. If you are sure no other process is running, manually remove: \$VDE_ROOT_DIR/.locks/${lock_name}
+3. Check for hung processes: ps aux | grep vde" \
+        "concurrency.md#lock-contention"
+}
+
+vde_error_sync_drift() {
+    local source="${1:-vm-types.conf}"
+    vde_error_show \
+        "Synchronization Drift Detected" \
+        "The Pure Beskar (.json) or Cache is out of sync with ${source}" \
+        "1. Force reconciliation: vde rebuild-cache
+2. Check file timestamps: ls -l \$VDE_ROOT_DIR/data/
+3. Ensure no manual edits to .json bypass the .conf authority" \
+        "architecture.md#ignition-sync"
+}
+
+# vde_handle_error - Centralized Error Handler (Phase 26)
+# Maps exit codes to contextual UX responses and exits
+vde_handle_error() {
+    local rc=$?
+    local cmd="$1"
+    local info="$2"
+    
+    if [[ $rc -ne 0 ]]; then
+        if command -v vde_error_map >/dev/null 2>&1; then
+            vde_error_map $rc "${info}"
+        else
+            printf "[ERROR] Command '%s' failed with code %d\n" "${cmd}" "$rc" >&2
+        fi
+        exit $rc
+    fi
+}
+
+# vde_error_map - Tiered Error Map
+# Maps kernel signals and VDE error codes to contextual UX responses
+# Args: <exit_code> [context_info]
+vde_error_map() {
+    local code="${1}"
+    local info="${2:-}"
+    
+    case "${code}" in
+        ${VDE_ERR_INVALID_INPUT:-2}) vde_error_show "Invalid Input" "Required arguments missing or malformed" "Check command syntax: vde <cmd> --help" ;;
+        ${VDE_ERR_NOT_FOUND:-3}) vde_error_vm_not_found "${info}" ;;
+        ${VDE_ERR_PERMISSION:-4}) vde_error_permission_denied "${info}" ;;
+        ${VDE_ERR_TIMEOUT:-5}) vde_error_ssh_connection_failed "${info}" ;;
+        ${VDE_ERR_EXISTS:-6}) vde_error_container_exists "${info}" ;;
+        ${VDE_ERR_DEPENDENCY:-7}) vde_error_show "Dependency Error" "A required tool or service is missing" "Ensure Docker and SSH are active: vde health" ;;
+        ${VDE_ERR_DOCKER:-8}) vde_error_docker_build_failed "${info}" ;;
+        ${VDE_ERR_LOCK:-9}) vde_error_show "Failed to acquire lock" "System timeout or kernel EEXIST" "Retry the command or check for deadlocks." ;;
+        ${VDE_ERR_INVALID_DATA:-10}) vde_error_show "Invalid Data Structure" "JSON Schema validation failed" "Run 'vde validate' to fix the registry." ;;
+        ${VDE_ERR_CACHE_INVALID:-11}) vde_error_show "Cache Stale or Invalid" "The VM cache must be regenerated" "Run 'vde rebuild-cache' to synchronize." ;;
+        ${VDE_ERR_LOCK_CONTENTION:-12}) vde_error_lock_contention "${info}" ;;
+        ${VDE_ERR_SYNC_DRIFT:-13}) vde_error_sync_drift "${info}" ;;
+        
+        # --- HEALTH CHECK CODES (Rule 16) ---
+        ${VDE_HEALTH_MINOR:-30}) vde_log_warn "Health Check: Minor issues detected." "health" ;;
+        ${VDE_HEALTH_MAJOR:-31}) vde_log_error "Health Check: Major issues detected." "health" ;;
+        ${VDE_HEALTH_CRITICAL:-32}) vde_log_error "Health Check: Critical failure detected." "health" ;;
+        
+        # --- POSIX SIGNAL TRANSLATION (Rule 26 Hardening) ---
+        130) vde_error_show "Operation Interrupted" "Received SIGINT (Ctrl+C)" "The operation was cancelled by the user. Some partial state may remain. Clean up with 'vde stop' if necessary." ;;
+        137) vde_error_show "Process Terminated" "Received SIGKILL (Forceful)" "The process was killed by the system. This often indicates an Out-Of-Memory (OOM) condition or Docker daemon failure. Check system resources." ;;
+        143) vde_error_show "Termination Requested" "Received SIGTERM (Graceful)" "A termination request was received from the system or a supervisor process." ;;
+        
+        # --- KERNEL EXIT CODES ---
+        126) vde_error_show "Execution Error" "Permission denied or command not executable" "Check file permissions and ensure the command is a valid binary/script." ;;
+        127) vde_error_show "Command Not Found" "The requested binary was not found in PATH" "Ensure all dependencies are installed and properly configured." ;;
+        
+        *) vde_error_simple "Unexpected error occurred (Code: ${code}) ${info}" ;;
+    esac
+}
+
+# =============================================================================
+# SUCCESS MESSAGES
+# =============================================================================
+
+vde_success() {
+    local message="${1}"
+    printf "%s%s\n" "${VDE_ERRORS_COLOR_SUCCESS}✓${VDE_ERRORS_COLOR_RESET} " "${message}"
+}
+
+# Note: log_error and log_success are provided by vm-common
+# These wrappers are for backward compatibility if vm-common is not sourced
+if ! command -v log_error >/dev/null 2>&1; then
+    log_error() {
+        vde_error_simple "${@}"
+    }
+fi
+
+if ! command -v log_success >/dev/null 2>&1; then
+    log_success() {
+        vde_success "${@}"
+    }
+fi

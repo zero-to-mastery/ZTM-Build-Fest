@@ -1,0 +1,6 @@
+# VDE ARCHITECTURAL RECORD
+# @shared-law (Forge Component)
+# Environment files
+.env
+.env.*
+*.local

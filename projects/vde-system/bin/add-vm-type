@@ -1,0 +1,303 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+set -e
+
+# Source shared library
+# Use zsh-native absolute path detection (Rule 1)
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+source "${VDE_ROOT_DIR}/lib/vde-core"
+source "${VDE_ROOT_DIR}/lib/vm-common"
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+# -----------------------
+# Usage
+# -----------------------
+show_usage() {
+    cat <<EOF
+Usage: add-vm-type [OPTIONS] <name> "<install_cmd>" [aliases]
+
+Add a new language or service to the predefined VM types list.
+
+Arguments:
+  name          Name of the VM (e.g., dart, couchdb)
+  install_cmd   Installation command (must be quoted)
+  aliases       Optional comma-separated aliases (e.g., "js,node,nodejs")
+
+Options:
+  --type TYPE       Type of VM: lang or service (default: auto-detect)
+  --svc-port PORT   Service port (required for services, e.g., 5432)
+  --ssh-port PORT   SSH host port for this VM (required; must be unique in range)
+  --display NAME    Display name (default: auto-generated from name)
+  --help, -h        Show this help message
+
+Examples:
+  # Add a language (auto-detects type as 'lang')
+  add-vm-type dart "apt-get update -y && apt-get install -y dart"
+
+  # Add a language with aliases
+  add-vm-type dart "apt-get update -y && apt-get install -y dart" "dartlang,flutter"
+
+  # Add a service (requires --type and --svc-port)
+  add-vm-type --type service --svc-port 5672 rabbitmq \\
+      "apt-get update -y && apt-get install -y rabbitmq-server" "rabbit"
+
+  # Add with custom display name
+  add-vm-type --display "Dart Language" dart \\
+      "apt-get update -y && apt-get install -y dart"
+
+The script will:
+  1. Validate the VM type and parameters
+  2. Check if the VM name already exists
+  3. Backup the vm-types.conf file
+  4. Append the new entry to vm-types.conf
+  5. Show the diff
+
+After adding a VM type, you can create it with:
+  ./bin/create-virtual-for <name>
+
+EOF
+}
+
+# -----------------------
+# Parse Arguments
+# -----------------------
+VM_TYPE_STR=""
+SVC_PORT=""
+SSH_PORT=""
+DISPLAY=""
+INSTALL_CMD=""
+ALIASES=""
+PKGS=""
+QUIET=false
+
+while [[ ${#} -gt 0 ]]; do
+    case ${1} in
+        --type)
+            VM_TYPE_STR="${2}"
+            shift 2
+            ;;
+        --svc-port)
+            SVC_PORT="${2}"
+            shift 2
+            ;;
+        --ssh-port|--port)
+            SSH_PORT="${2}"
+            shift 2
+            ;;
+        --display)
+            DISPLAY="${2}"
+            shift 2
+            ;;
+        --pkgs)
+            PKGS="${2}"
+            shift 2
+            ;;
+        --custom)
+            CUSTOM_CMD="${2}"
+            shift 2
+            ;;
+        --quiet)
+            QUIET=true
+            shift
+            ;;
+        --help|-h)
+            show_usage
+            exit ${VDE_SUCCESS}
+            ;;
+        *)
+            # First positional argument is the name
+            if [[ -z "${VM_NAME}" ]]; then
+                VM_NAME="${1}"
+            # Second positional argument is the install command
+            elif [[ -z "${INSTALL_CMD}" ]]; then
+                INSTALL_CMD="${1}"
+            # Third positional argument is aliases
+            elif [[ -z "${ALIASES}" ]]; then
+                ALIASES="${1}"
+            else
+                log_error "Too many arguments"
+                echo ""
+                show_usage
+                exit ${VDE_ERR_GENERAL}
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Validate required arguments
+if [[ -z "${VM_NAME}" ]]; then
+    log_error "Missing required arguments: name"
+    echo ""
+    show_usage
+    exit ${VDE_ERR_GENERAL}
+fi
+
+# Default install command if not specified
+if [[ -z "${INSTALL_CMD}" ]]; then
+    if [[ -n "${PKGS}" ]]; then
+        INSTALL_CMD="apt-get update -y && apt-get install -y ${PKGS} && apt-get clean && rm -rf /var/lib/apt/lists/*"
+    else
+        INSTALL_CMD="echo 'Hydration complete'"
+    fi
+fi
+
+# -----------------------
+# Auto-detect type if not specified
+# -----------------------
+if [[ -z "${VM_TYPE_STR}" ]]; then
+    # If service port is specified, it's a service
+    if [[ -n "${SVC_PORT}" ]]; then
+        VM_TYPE_STR="service"
+    else
+        VM_TYPE_STR="lang"
+    fi
+    log_info "Auto-detected VM type as: ${VM_TYPE_STR}"
+fi
+
+# Ensure display name satisfies schema (minLength: 1)
+if [[ -z "${DISPLAY}" ]]; then
+    DISPLAY="${VM_NAME:c}"
+fi
+
+# -----------------------
+# Atomic Registry Update
+# -----------------------
+typeset backup_file="${VM_TYPES_CONF}.bak"
+cp "${VM_TYPES_CONF}" "${backup_file}"
+
+log_info "Updating Pure Beskar registry..."
+typeset global_lock="${VDE_LOCKS_DIR}/global-config.lock"
+
+# The Seeker's Staggered Entry (Rule 10 Enhancement)
+claim_lock "${global_lock}" || vde_handle_error "lock-acquisition" "${global_lock}"
+
+{
+    # AUTO-ALLOCATE PORT (Inside Lock)
+    if [[ -z "${SSH_PORT}" ]]; then
+        log_info "No SSH port specified, auto-allocating inside lock..."
+        SSH_PORT=$(find_available_ssh_port 2200 2299 "${QUIET}")
+        vde_handle_error "port-allocation" "${VM_NAME}"
+        log_success "Allocated port: ${SSH_PORT}"
+    fi
+
+    # TRIPLE-GATE VALIDATION (Inside Lock)
+    # ----------------------------------
+    # 1. Re-check VM existence
+    if grep -q "|vde-${VM_NAME}|" "${VM_TYPES_CONF}"; then
+        log_error "VM '${VM_NAME}' was already added by another process"
+        exit ${VDE_ERR_EXISTS}
+    fi
+
+    # 2. Re-check Port availability
+    if grep -q "|${SSH_PORT}$" "${VM_TYPES_CONF}" 2>/dev/null; then
+        log_error "SSH port ${SSH_PORT} was claimed by another process"
+        exit ${VDE_ERR_EXISTS}
+    fi
+
+    # 1. Atomic Update to Raw Beskar (.conf)
+    # 8-FIELD STANDARD: type|name|aliases|display|pkgs|custom_cmd|service_ports|ssh_port
+    local _entry="${VM_TYPE_STR}|vde-${VM_NAME}|${ALIASES}|${DISPLAY}|${PKGS}|zsh /vde/scripts/setup/${VM_NAME}-init.zsh|${SVC_PORT}|${SSH_PORT}"
+    local _conf_tmp="${VM_TYPES_CONF}.tmp.${$}"
+    cp "${VM_TYPES_CONF}" "${_conf_tmp}"
+    echo "${_entry}" >> "${_conf_tmp}"
+    mv "${_conf_tmp}" "${VM_TYPES_CONF}"
+    
+    # 2. Re-smelt JSON from CONF (vde_translate_conf_to_json handles its own lock)
+    vde_translate_conf_to_json "${VM_TYPES_CONF}" "${VM_TYPES_JSON}"
+    vde_handle_error "re-smelt" "${VM_TYPES_JSON}"
+    
+    # 3. Commit Port to Registry (Numeric lock file)
+    # Already done by find_available_ssh_port via mkdir, but we ensure persistence
+    allocate_ssh_port "vde-${VM_NAME}" "${SSH_PORT}"
+    
+    # 4. Invalidate cache to force Ignition on next load
+    rm -f "${VDE_ROOT_DIR}/.cache/vm-types.cache" 2>/dev/null
+} always {
+    release_lock "${global_lock}"
+}
+
+log_success "Registry updated and port committed."
+
+# Create the hydration script if it doesn't exist
+typeset _init_script="${VDE_ROOT_DIR}/scripts/setup/${VM_NAME}-init.zsh"
+if [[ ! -f "${_init_script}" ]]; then
+    log_info "Forging USP hydration script: ${_init_script}"
+    mkdir -p "$(dirname "${_init_script}")"
+    cat <<EOF > "${_init_script}"
+#!/usr/bin/env zsh
+# VDE USP Hydration Script: ${VM_NAME}
+# Part of the Universal Script Parity (USP) mandate.
+# Forged in Beskar
+set -e
+
+# 1. THE PACKAGE ALLOY
+export DEBIAN_FRONTEND=noninteractive
+typeset vde_${VM_NAME}_pkgs=""
+
+# 2. THE FORGE WORK
+${INSTALL_CMD}
+
+# 3. PURGING THE GHOSTS
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+EOF
+    chmod +x "${_init_script}"
+    log_success "Hydration script forged."
+fi
+
+# Update configs/ssh/config with the new entry
+typeset project_ssh_config="${VDE_ROOT_DIR}/configs/ssh/config"
+if [[ -f "${project_ssh_config}" ]]; then
+    cat >> "${project_ssh_config}" <<SSHEOF
+
+
+Host vde-${VM_NAME}
+    HostName localhost
+    Port ${SSH_PORT}
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    StrictHostKeyChecking no
+    UserKnownHostsFile ~/.ssh/vde/known_hosts
+    ForwardAgent yes
+    LogLevel ERROR
+SSHEOF
+    log_success "Entry added to configs/ssh/config"
+fi
+
+# Sync to live SSH config
+if [[ -f "${VDE_SSH_CONFIG}" ]]; then
+    cp "${project_ssh_config}" "${VDE_SSH_CONFIG}"
+    log_success "Synced to ${VDE_SSH_CONFIG}"
+fi
+
+# -----------------------
+# Show diff
+# -----------------------
+if [[ "${QUIET}" == "false" ]]; then
+    log_info "Showing diff..."
+    echo ""
+    diff "${backup_file}" "${VM_TYPES_CONF}" || true
+    echo ""
+
+    # -----------------------
+    # THE IGNITION RITUAL (Rule H)
+    # -----------------------
+    log_info "Triggering the Ignition Ritual..."
+    "${VDE_ROOT_DIR}/bin/vde" rebuild-cache
+
+    # -----------------------
+    # Summary
+    # -----------------------
+    # -----------------------
+    # Regenerate Configs
+    # -----------------------
+    log_info "Regenerating VDE configurations..."
+    "${VDE_ROOT_DIR}/bin/generate-all-configs" >/dev/null 2>&1
+fi
+
+log_success "VM type '${VM_NAME}' added successfully!"
+vde_print_next_steps "add" "${VM_NAME}"

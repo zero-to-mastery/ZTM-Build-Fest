@@ -1,0 +1,31 @@
+# VDE ARCHITECTURAL RECORD
+{
+  "@forge": "(Governance Sentinel)",
+  "failures": [
+    {
+      "id": "do-000",
+      "phase": "docker-required",
+      "feature_file": "docker-required/ssh-agent-external-git-operations.feature",
+      "scenario": "Git operations in automated workflows",
+      "scenario_line": "91",
+      "step": "all Git operations should succeed",
+      "step_line": "95",
+      "error_type": "Unknown",
+      "error_message": "ASSERT FAILED: SSH agent should be running for automated Git operations",
+      "category": "SSH_AGENT",
+      "severity": "LOW"
+    }
+  ],
+  "summary": {
+    "total_failures": 1,
+    "by_phase": {
+      "docker-required": 1
+    },
+    "by_category": {
+      "SSH_AGENT": 1
+    },
+    "by_severity": {
+      "LOW": 1
+    }
+  }
+}

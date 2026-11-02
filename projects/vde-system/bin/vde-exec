@@ -1,0 +1,89 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+set -e
+#===============================================================================
+# vde-exec - Execute a command in a VDE container
+# Usage: vde-exec <vm_name> <command> [args...]
+#===============================================================================
+
+# Determine VDE root directory
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+# Source core libraries
+[[ -f "${VDE_ROOT_DIR}/lib/vde-shell-compat" ]] && source "${VDE_ROOT_DIR}/lib/vde-shell-compat" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-constants" ]] && source "${VDE_ROOT_DIR}/lib/vde-constants" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-errors" ]] && source "${VDE_ROOT_DIR}/lib/vde-errors" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-naming" ]] && source "${VDE_ROOT_DIR}/lib/vde-naming" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-pulse.zsh" ]] && source "${VDE_ROOT_DIR}/lib/vde-pulse.zsh" &>/dev/null
+
+# Check arguments
+USER_OVERRIDE=""
+SHOW_COMMAND=false
+while [[ ${#} -gt 0 ]] ; do
+    case "${1}" in
+        -u|--user)
+            USER_OVERRIDE="${2}"
+            shift 2
+            ;;
+        --show-command)
+            SHOW_COMMAND=true
+            shift
+            ;;
+        -q|--quiet)
+            export VDE_QUIET=1
+            shift
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+if [[ -z "${1}" ]] ; then
+    echo "Usage: vde-exec [-u user] [-q|--quiet] [--show-command] <vm_name> <command> [args...]"
+    exit ${VDE_ERR_INVALID_INPUT:-2}
+fi
+
+VM_NAME="${1}"
+shift
+
+# Identity Pulse check: Ensure the SSH agent bridge is active
+if [[ "${SHOW_COMMAND}" != "true" ]]; then
+    if ! vde_identity_pulse "${VM_NAME}"; then
+        exit ${VDE_ERR_GENERAL:-1}
+    fi
+fi
+
+# Get container name
+CONTAINER_NAME=$(vde_get_container_name "${VM_NAME}")
+
+# Use -i always, -t only if attached to a terminal
+DOCKER_OPTS="-i"
+[[ -t 0 ]] && DOCKER_OPTS="${DOCKER_OPTS} -t"
+
+# Use specified user or default to devuser
+if [[ -n "${USER_OVERRIDE}" ]] ; then
+    DOCKER_OPTS="${DOCKER_OPTS} -u ${USER_OVERRIDE}"
+else
+    # Default to devuser for VDE containers
+    DOCKER_OPTS="${DOCKER_OPTS} -u devuser"
+fi
+
+# Assemble Command
+typeset -a DOCKER_CMD=(
+    docker exec ${=DOCKER_OPTS} "${CONTAINER_NAME}"
+    zsh -c "source ~devuser/.zshenv 2>/dev/null; eval \"\$*\"" "${CONTAINER_NAME}" "${@}"
+)
+
+if [[ "${SHOW_COMMAND}" == "true" ]]; then
+    echo "${DOCKER_CMD[@]}"
+    exit ${VDE_SUCCESS:-0}
+fi
+
+# Execute the command
+exec "${DOCKER_CMD[@]}"

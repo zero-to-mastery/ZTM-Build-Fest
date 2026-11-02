@@ -1,0 +1,384 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE Health Check Library
+# Comprehensive health checks for VDE containers
+# Source this library with: source ./lib/vde-health
+#
+# This library provides functions to check:
+# - Docker container running state
+# - SSH port accessibility
+# - SSH login successful
+# - Language tool availability
+#
+# Shell Compatibility: Uses zsh-specific features
+
+# =============================================================================
+# SOURCE GUARD
+# =============================================================================
+# Prevent multiple sourcing which causes readonly variable errors
+
+if [[ "${_VDE_HEALTH_LOADED:-}" = "1" ]] ; then
+    return 0 2>/dev/null || exit 0
+fi
+_VDE_HEALTH_LOADED=1
+
+# =============================================================================
+# DEPENDENCIES
+# =============================================================================
+# Source vm-common for timeout values, constants, and get_vm_info function
+
+SCRIPT_DIR="$(cd "$(dirname "${(%):-%x}")" && pwd)"
+source "${VDE_ROOT_DIR}/lib/vm-common" 2>/dev/null || {
+    echo "Error: Failed to source vm-common" >&2
+    return ${VDE_ERR_GENERAL}
+}
+
+# =============================================================================
+# HEALTH CHECK FUNCTIONS
+# =============================================================================
+
+# vde_check_container_running - Check if container is running
+# Args:
+#   vm_name - Name of the VM (without vde- prefix for language VMs)
+# Returns:
+#   0 (VDE_SUCCESS) if container is running
+#   VDE_ERR_NOT_FOUND if container not found
+#   VDE_ERR_GENERAL if docker command fails
+vde_check_container_running() {
+    local vm_name="${1}"
+    local container_name
+    container_name=$(_get_container_name "${vm_name}")
+
+    # Check if container is running
+    local running_containers
+    running_containers=$(docker ps --format "{{.Names}}" 2>/dev/null)
+
+    if [[ ${?} -ne 0 ]] ; then
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    if echo "${running_containers}" | grep -q "^${container_name}$"; then
+        return ${VDE_SUCCESS}
+    fi
+
+    return ${VDE_ERR_NOT_FOUND}
+}
+
+# vde_check_ssh_port - Check if SSH port is accessible
+# Args:
+#   vm_name - Name of the VM
+#   timeout - Timeout in seconds (default: VDE_SSH_TIMEOUT)
+# Returns:
+#   0 (VDE_SUCCESS) if port is accessible
+#   VDE_ERR_TIMEOUT if port not accessible within timeout
+#   VDE_ERR_GENERAL if check fails
+vde_check_ssh_port() {
+    local vm_name="${1}"
+    local timeout="${2:-${VDE_SSH_TIMEOUT}}"
+    local container_name
+    container_name=$(_get_container_name "${vm_name}")
+
+    # Get SSH port mapping
+    local ssh_port
+    ssh_port=$(docker port "${container_name}" 22 2>/dev/null | grep -oE '0.0.0.0:[0-9]+' | cut -d: -f2)
+
+    if [[ -z "${ssh_port}" ]] ; then
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Check if port is accessible using ZSH built-ins or system tools
+    typeset -F elapsed=0
+    while (( elapsed < timeout )); do
+        # Try ZSH built-in TCP check first (faster)
+        # Using a subshell with redirection is more portable than 'timeout' which might not be installed
+        if ( (zsh -c "exec 3<>/dev/tcp/localhost/${ssh_port}" >/dev/null 2>&1) ) 2>/dev/null; then
+            return ${VDE_SUCCESS}
+        fi
+
+        # Fallback to nc if available
+        if command -v nc >/dev/null 2>&1; then
+            if nc -z localhost "${ssh_port}" 2>/dev/null; then
+                return ${VDE_SUCCESS}
+            fi
+        fi
+
+        # Only wait if we haven't exceeded timeout
+        typeset -F next_elapsed=$((elapsed + 0.2))
+        if (( next_elapsed <= timeout )); then
+            # High-precision sub-second wait via zselect (Rule 23)
+            zmodload zsh/zselect 2>/dev/null && zselect -t 20
+            elapsed=${next_elapsed}
+        else
+            # Don't wait beyond timeout
+            elapsed=${timeout}
+        fi
+    done
+
+    return ${VDE_ERR_TIMEOUT}
+}
+
+# vde_check_ssh_login - Check if SSH login works
+# Args:
+#   vm_name - Name of the VM
+#   timeout - Timeout in seconds (default: VDE_SSH_TIMEOUT)
+# Returns:
+#   0 (VDE_SUCCESS) if SSH login works
+#   VDE_ERR_TIMEOUT if SSH login times out
+#   VDE_ERR_GENERAL if SSH login fails
+vde_check_ssh_login() {
+    local vm_name="${1}"
+    local timeout="${2:-${VDE_SSH_TIMEOUT}}"
+    local container_name
+    container_name=$(_get_container_name "${vm_name}")
+
+    # Get SSH port
+    local ssh_port
+    ssh_port=$(docker port "${container_name}" 22 2>/dev/null | grep -oE '0.0.0.0:[0-9]+' | cut -d: -f2)
+
+    if [[ -z "${ssh_port}" ]] ; then
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Check SSH login
+    typeset -F elapsed=0
+    while (( elapsed < timeout )); do
+        # Try SSH connection with a simple echo command
+        # BatchMode=yes prevents it from asking for passwords/passphrases
+        if ssh -o ConnectTimeout=2 \
+               -o BatchMode=yes \
+               -o StrictHostKeyChecking=no \
+               -o UserKnownHostsFile=/dev/null \
+               -p "${ssh_port}" \
+               "${VDE_SSH_USER}@localhost" \
+               "echo 'ssh_ok'" 2>/dev/null | grep -q "ssh_ok"; then
+            return ${VDE_SUCCESS}
+        fi
+
+        # Only wait if we haven't exceeded timeout
+        typeset -F next_elapsed=$((elapsed + 0.2))
+        if (( next_elapsed <= timeout )); then
+            # High-precision sub-second wait via zselect (Rule 23)
+            zmodload zsh/zselect 2>/dev/null && zselect -t 20
+            elapsed=${next_elapsed}
+        else
+            # Don't wait beyond timeout
+            elapsed=${timeout}
+        fi
+    done
+
+    return ${VDE_ERR_TIMEOUT}
+}
+
+# vde_check_language_tool - Check if language tool is available
+# Args:
+#   vm_name - Name of the VM
+#   timeout - Timeout in seconds (default: VDE_SSH_TIMEOUT)
+# Returns:
+#   0 (VDE_SUCCESS) if language tool is available
+#   VDE_ERR_TIMEOUT if check times out
+#   VDE_ERR_GENERAL if tool not available
+vde_check_language_tool() {
+    local vm_name="${1}"
+    local timeout="${2:-${VDE_SSH_TIMEOUT}}"
+    local container_name
+    container_name=$(_get_container_name "${vm_name}")
+
+    # Get SSH port
+    local ssh_port
+    ssh_port=$(docker port "${container_name}" 22 2>/dev/null | grep -oE '0.0.0.0:[0-9]+' | cut -d: -f2)
+
+    if [[ -z "${ssh_port}" ]] ; then
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Map VM names to their language tools
+    local -A tool_map
+    tool_map=(
+        "python" "python3 --version"
+        "ruby" "ruby --version"
+        "go" "go version"
+        "rust" "rustc --version"
+        "js" "node --version"
+        "java" "java -version"
+        "kotlin" "kotlin -version"
+        "scala" "scala -version"
+        "csharp" "dotnet --version"
+        "php" "php --version"
+        "cpp" "g++ --version"
+        "c" "gcc --version"
+        "lua" "lua -v"
+        "r" "R --version"
+        "elixir" "elixir --version"
+        "swift" "swift --version"
+        "flutter" "flutter --version"
+        "haskell" "ghc --version"
+        "asm" "nasm -v"
+    )
+
+    # Get the command for this VM
+    local check_cmd="${tool_map[${vm_name}]}"
+
+    # If no specific command, just check that SSH works
+    if [[ -z "${check_cmd}" ]] ; then
+        return ${VDE_SUCCESS}
+    fi
+
+    # Check if tool is available via SSH
+    typeset -F elapsed=0
+    while (( elapsed < timeout )); do
+        if ssh -o ConnectTimeout=2 \
+               -o BatchMode=yes \
+               -o StrictHostKeyChecking=no \
+               -o UserKnownHostsFile=/dev/null \
+               -p "${ssh_port}" \
+               "${VDE_SSH_USER}@localhost" \
+               "${check_cmd}" >/dev/null 2>&1; then
+            return ${VDE_SUCCESS}
+        fi
+
+        # Only wait if we haven't exceeded timeout
+        typeset -F next_elapsed=$((elapsed + 0.2))
+        if (( next_elapsed <= timeout )); then
+            # High-precision sub-second wait via zselect (Rule 23)
+            zmodload zsh/zselect 2>/dev/null && zselect -t 20
+            elapsed=${next_elapsed}
+        else
+            # Don't wait beyond timeout
+            elapsed=${timeout}
+        fi
+    done
+
+    return ${VDE_ERR_TIMEOUT}
+}
+
+# vde_wait_for_container_healthy - Wait for container to be healthy with deterministic polling
+# Args:
+#   vm_name - Name of the VM
+#   max_wait - Maximum wait time in seconds (default: VDE_DOCKER_TIMEOUT)
+# Returns:
+#   0 (VDE_SUCCESS) if container becomes healthy
+#   VDE_ERR_TIMEOUT if container doesn't become healthy
+vde_wait_for_container_healthy() {
+    local vm_name="${1}"
+    local max_wait="${2:-${VDE_DOCKER_TIMEOUT}}"
+    local container_name
+    container_name=$(_get_container_name "${vm_name}")
+
+    local vm_type=$(get_vm_info type "${vm_name}" 2>/dev/null)
+
+    # Use floating point for sub-second precision in zsh
+    typeset -F elapsed=0
+    typeset -F check_interval=0.2
+    local max_interval=2
+
+    echo "Waiting for ${container_name} to be healthy (max ${max_wait}s)..."
+
+    while (( elapsed < max_wait )); do
+        # Check for Docker Health status first (deterministic)
+        local health_status
+        health_status=$(docker inspect --format '{{.State.Health.Status}}' "${container_name}" 2>/dev/null)
+        
+        if [[ "${health_status}" = "healthy" ]] ; then
+             echo "✓ ${container_name} is healthy (via Docker)"
+             return ${VDE_SUCCESS}
+        elif [[ -z "${health_status}" ]] || [[ "${health_status}" == "<nil>" ]] ; then
+            # No healthcheck defined in compose, fall back to running check + SSH for lang VMs
+            if vde_check_container_running "${vm_name}" >/dev/null 2>&1; then
+                if [[ "${vm_type}" = "lang" ]] ; then
+                    if vde_check_ssh_login "${vm_name}" 2 >/dev/null 2>&1; then
+                        echo "✓ ${container_name} is running and SSH is ready"
+                        return ${VDE_SUCCESS}
+                    fi
+                else
+                    echo "✓ ${container_name} is running"
+                    return ${VDE_SUCCESS}
+                fi
+            fi
+        fi
+
+        # High-precision sub-second wait via zselect (Rule 23)
+        zmodload zsh/zselect 2>/dev/null && zselect -t $((check_interval * 100))
+        (( elapsed += check_interval ))
+        
+        # Exponential backoff but smaller increments for responsiveness
+        (( check_interval *= 1.5 ))
+        if (( check_interval > max_interval )); then
+            check_interval=${max_interval}
+        fi
+
+        # Progress update every 30 seconds
+        local elapsed_int=${elapsed%.*}
+        if [[ $((elapsed_int % 30)) -eq 0 ]] && [[ ${elapsed_int} -gt 0 ]] && [[ "${last_progress:-0}" != "${elapsed_int}" ]] ; then
+            echo "  [${elapsed_int}/${max_wait}s] Still waiting for ${container_name}..."
+            last_progress=${elapsed_int}
+        fi
+    done
+
+    echo "✗ ${container_name} did not become healthy within ${max_wait}s" >&2
+    return ${VDE_ERR_TIMEOUT}
+}
+
+# vde_health_check - Comprehensive health check
+# Args:
+#   vm_name - Name of the VM
+#   verbose - Set to 1 for verbose output
+# Returns:
+#   0 (VDE_SUCCESS) if all checks pass
+#   Non-zero if any check fails
+vde_health_check() {
+    local vm_name="${1}"
+    local verbose="${2:-0}"
+    local container_name
+    container_name=$(_get_container_name "${vm_name}")
+    local all_passed=true
+
+    local vm_type=$(get_vm_info type "${vm_name}" 2>/dev/null)
+
+    [[ "${verbose}" -eq 1 ]] && echo "Health check for ${container_name}:"
+
+    # Check 1: Container running
+    if vde_check_container_running "${vm_name}"; then
+        [[ "${verbose}" -eq 1 ]] && echo "  ✓ Container is running"
+    else
+        [[ "${verbose}" -eq 1 ]] && echo "  ✗ Container is not running"
+        all_passed=false
+    fi
+
+    # Check 2: SSH port (language VMs only)
+    if [[ "${vm_type}" = "lang" ]] ; then
+        if vde_check_ssh_port "${vm_name}" 10; then
+            [[ "${verbose}" -eq 1 ]] && echo "  ✓ SSH port is accessible"
+        else
+            [[ "${verbose}" -eq 1 ]] && echo "  ✗ SSH port is not accessible"
+            all_passed=false
+        fi
+
+        # Check 3: SSH login
+        if vde_check_ssh_login "${vm_name}" 10; then
+            [[ "${verbose}" -eq 1 ]] && echo "  ✓ SSH login works"
+        else
+            [[ "${verbose}" -eq 1 ]] && echo "  ✗ SSH login failed"
+            all_passed=false
+        fi
+
+        # Check 4: Language tool
+        if vde_check_language_tool "${vm_name}" 10; then
+            [[ "${verbose}" -eq 1 ]] && echo "  ✓ Language tool is available"
+        else
+            [[ "${verbose}" -eq 1 ]] && echo "  ✗ Language tool check failed"
+            all_passed=false
+        fi
+    fi
+
+    if [[ "${all_passed}" = "true" ]] ; then
+        [[ "${verbose}" -eq 1 ]] && echo "✓ ${container_name} health check: PASSED"
+        return ${VDE_SUCCESS}
+    else
+        [[ "${verbose}" -eq 1 ]] && echo "✗ ${container_name} health check: FAILED"
+        return ${VDE_ERR_GENERAL}
+    fi
+}
+
+# Export functions for use in other scripts
+# Note: ZSH does not support 'export -f'. Functions are available to subshells
+# if they are defined in a sourced script or autoloaded.

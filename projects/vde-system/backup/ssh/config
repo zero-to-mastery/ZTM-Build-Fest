@@ -1,0 +1,305 @@
+# VDE ARCHITECTURAL RECORD
+# @shared-law (Forge Component)
+# ============================================================================
+# VDE (Virtual Development Environment) SSH Configuration
+# ============================================================================
+#
+# Port allocations:
+# - Language VMs: 2200-2229
+# - Service VMs: 2400-2429
+#
+# Each VM has a unique SSH port to allow simultaneous operation.
+
+# Global settings
+Host *
+    AddKeysToAgent yes
+    ForwardAgent yes
+    StrictHostKeyChecking no
+
+# ============================================================================
+# Language VMs (ports 2200-2229)
+# ============================================================================
+
+Host c-dev
+    HostName localhost
+    Port 2200
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host cpp-dev
+    HostName localhost
+    Port 2201
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host gcc-dev
+    HostName localhost
+    Port 2201
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host rust-dev
+    HostName localhost
+    Port 2202
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host asm-dev
+    HostName localhost
+    Port 2203
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host assembler-dev
+    HostName localhost
+    Port 2203
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host nasm-dev
+    HostName localhost
+    Port 2203
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host js-dev
+    HostName localhost
+    Port 2204
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host node-dev
+    HostName localhost
+    Port 2204
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host nodejs-dev
+    HostName localhost
+    Port 2204
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host csharp-dev
+    HostName localhost
+    Port 2205
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host dotnet-dev
+    HostName localhost
+    Port 2205
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host go-dev
+    HostName localhost
+    Port 2206
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host golang-dev
+    HostName localhost
+    Port 2206
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host ruby-dev
+    HostName localhost
+    Port 2207
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host zig-dev
+    HostName localhost
+    Port 2208
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host python-dev
+    HostName localhost
+    Port 2209
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host java-dev
+    HostName localhost
+    Port 2210
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host jdk-dev
+    HostName localhost
+    Port 2210
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host kotlin-dev
+    HostName localhost
+    Port 2211
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host php-dev
+    HostName localhost
+    Port 2212
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host scala-dev
+    HostName localhost
+    Port 2213
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host swift-dev
+    HostName localhost
+    Port 2214
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host elixir-dev
+    HostName localhost
+    Port 2215
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host haskell-dev
+    HostName localhost
+    Port 2216
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host ghc-dev
+    HostName localhost
+    Port 2216
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host flutter-dev
+    HostName localhost
+    Port 2217
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host dart-dev
+    HostName localhost
+    Port 2217
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host lua-dev
+    HostName localhost
+    Port 2218
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host r-dev
+    HostName localhost
+    Port 2219
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host rlang-dev
+    HostName localhost
+    Port 2219
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+# ============================================================================
+# Service VMs (ports 2400-2429)
+# ============================================================================
+
+Host postgres
+    HostName localhost
+    Port 2400
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host postgresql
+    HostName localhost
+    Port 2400
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host redis
+    HostName localhost
+    Port 2401
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host mongodb
+    HostName localhost
+    Port 2402
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host mongo
+    HostName localhost
+    Port 2402
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host nginx
+    HostName localhost
+    Port 2403
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host couchdb
+    HostName localhost
+    Port 2404
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host mysql
+    HostName localhost
+    Port 2405
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes
+
+Host rabbitmq
+    HostName localhost
+    Port 2406
+    User devuser
+    IdentityFile ~/.ssh/vde/vde_student
+    IdentitiesOnly yes

@@ -1,0 +1,137 @@
+{
+  "@armor": "(Engine Core)",
+  "$id": "https://vde.local/schemas/vm-types.schema.json",
+  "title": "VDE VM Type Configuration",
+  "description": "Schema for VDE VM type static configuration. Defines VM types with SSH ports for Docker host access and service ports for infrastructure VMs.",
+  "type": "object",
+  "required": ["version", "vms"],
+  "properties": {
+    "@armor": {
+      "type": "string",
+      "description": "Architectural lineage tag"
+    },
+    "version": {
+      "type": "string",
+      "description": "Configuration schema version",
+      "pattern": "^[0-9]+\\.[0-9]+(\\.[0-9]+(-sp[0-9]+)?)?$"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description of this configuration file"
+    },
+    "vms": {
+      "type": "object",
+      "description": "VM type definitions organized by category",
+      "required": ["language", "service"],
+      "properties": {
+        "language": {
+          "type": "array",
+          "description": "Development language VMs (SSH ports 2200-2399)",
+          "items": {
+            "$ref": "#/definitions/languageVM"
+          }
+        },
+        "service": {
+          "type": "array",
+          "description": "Infrastructure service VMs (SSH ports 2400-2499)",
+          "items": {
+            "$ref": "#/definitions/serviceVM"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "languageVM": {
+      "type": "object",
+      "description": "Development language VM configuration. Container name: {name}-dev, SSH port: static assignment 2200-2399.",
+      "required": ["name", "display", "ssh_port"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "VM identifier (lowercase alphanumeric). Used for container naming, SSH config, directories.",
+          "pattern": "^vde-[a-z0-9-]+$"
+        },
+        "aliases": {
+          "type": "array",
+          "description": "Alternative names for user convenience",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "display": {
+          "type": "string",
+          "description": "Human-readable name for UI/logging",
+          "minLength": 1
+        },
+        "pkgs": {
+          "type": ["string", "null"],
+          "description": "Shell command for container provisioning (runs as root)"
+        },
+        "custom_cmd": {
+          "type": ["string", "null"],
+          "description": "Custom shell command for non-apt installations (curl, git, etc.)"
+        },
+        "service_ports": {
+          "type": ["string", "null"],
+          "description": "Must be null for language VMs (no service ports)"
+        },
+        "ssh_port": {
+          "type": "integer",
+          "description": "SSH port on Docker host (2200-2399 for language VMs)",
+          "minimum": 2200,
+          "maximum": 2399
+        }
+      },
+      "additionalProperties": false
+    },
+    "serviceVM": {
+      "type": "object",
+      "description": "Infrastructure service VM configuration. Container name: {name}, SSH port: static assignment 2400-2499, service ports: defined here.",
+      "required": ["name", "display", "ssh_port"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "VM identifier (lowercase alphanumeric). Used for container naming, SSH config, directories.",
+          "pattern": "^vde-[a-z0-9-]+$"
+        },
+        "aliases": {
+          "type": "array",
+          "description": "Alternative names for user convenience",
+          "items": {
+            "type": "string"
+          },
+          "default": []
+        },
+        "display": {
+          "type": "string",
+          "description": "Human-readable name for UI/logging",
+          "minLength": 1
+        },
+        "pkgs": {
+          "type": ["string", "null"],
+          "description": "Shell command for container provisioning (runs as root)"
+        },
+        "custom_cmd": {
+          "type": ["string", "null"],
+          "description": "Custom shell command for non-apt installations (curl, git, etc.)"
+        },
+        "service_ports": {
+          "type": ["string", "null"],
+          "description": "Service port(s) to expose (comma-separated integers: '80' or '80,443')",
+          "pattern": "^[0-9]+(,[0-9]+)*$"
+        },
+        "ssh_port": {
+          "type": "integer",
+          "description": "SSH port on Docker host (2400-2499 for service VMs)",
+          "minimum": 2400,
+          "maximum": 2499
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

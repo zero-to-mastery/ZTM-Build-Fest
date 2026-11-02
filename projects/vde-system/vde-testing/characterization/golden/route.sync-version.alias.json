@@ -1,0 +1,46 @@
+{
+ "args": [
+  "sync-version",
+  "python"
+ ],
+ "docker_calls": [
+  "docker network inspect vde-net",
+  "docker ps --format \\{\\{.Names\\}\\}"
+ ],
+ "env": {},
+ "exit_code": 0,
+ "final_fake_state": {
+  "containers": [],
+  "images": [
+   "vde-base:latest",
+   "vde-python:latest",
+   "vde-go:latest",
+   "vde-postgres:latest",
+   "vde-jupyterlab:latest"
+  ],
+  "running": []
+ },
+ "home_changes": {
+  "added": [],
+  "modified": [],
+  "removed": []
+ },
+ "id": "route.sync-version.alias",
+ "mode": "stub",
+ "repo_changes": {
+  "added": [],
+  "modified": [],
+  "removed": []
+ },
+ "scenario": "cluster",
+ "stderr": [
+  "<TS> [INFO ] [vde       ] VM types loaded from cache",
+  "<TS> [INFO ] [vde       ] Initializing VDE security environment...",
+  "<TS> [INFO ] [vde       ] Enforcing strict directory permissions...",
+  "<TS> [INFO ] [vde       ] Directory permissions enforced",
+  "<TS> [INFO ] [vde       ] Enforcing container network isolation..."
+ ],
+ "stdout": [
+  "[delegate:vde-sync-version] argc=1 python"
+ ]
+}

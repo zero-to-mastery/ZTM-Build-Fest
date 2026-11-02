@@ -1,0 +1,172 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-poll - Deterministic Readiness Polling Utility
+set -e
+# Anchored in ZSH for Tier 3: Spoke Environment Verification
+# Part of the VDE v2.0.6 Hardened Rule Spine
+#===============================================================================
+
+# --- 1. BOOTSTRAP & ROOT DISCOVERY ---
+_VDE_POLL_SCRIPT_PATH="${(%):-%x}"
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+# --- 3. USAGE ---
+show_usage() {
+    cat <<EOF
+Usage: vde-poll [options] <vm-name>
+
+Options:
+  --health              Poll for Docker health status 'healthy'
+  --port <port>         Poll for TCP port readiness (host-side)
+  --exec <cmd>          Poll for command success inside container
+  --network <name>      Poll for Docker network existence
+  --state <state>       Poll for container state (running, stopped, exited)
+  --count <n>           Poll for exact number of running VDE containers
+  --wait <seconds>      Wait for a fixed duration (jitter/stagger support)
+  --timeout <seconds>   Maximum wait time (default: 30)
+  --interval <seconds>  Polling interval (default: 0.2)
+
+Examples:
+  vde-poll --health vde-python
+  vde-poll --port 5432 vde-postgres
+  vde-poll --exec "ls /tmp/ready" vde-go
+  vde-poll --network vde-net vde-any
+  vde-poll --state stopped vde-python
+  vde-poll --count 0 all
+  vde-poll --wait 1.5 all
+EOF
+}
+
+# --- 4. ARGUMENT PARSING ---
+zmodload zsh/zutil
+typeset -A opts
+zparseopts -D -A opts -health -port: -exec: -network: -state: -count: -timeout: -interval: -wait:
+
+VM_NAME="$1"
+[[ -z "${VM_NAME}" && -z "${opts[--network]}" && -z "${opts[--count]}" && -z "${opts[--wait]}" ]] && show_usage && exit ${VDE_ERR_INVALID_INPUT:-2}
+
+TIMEOUT=${opts[--timeout]:-30}
+INTERVAL=${opts[--interval]:-0.2}
+
+# --- 4.5 FIXED WAIT STRIKE ---
+if [[ -n "${opts[--wait]}" ]]; then
+    # Note: We use echo here because vde-log is not yet sourced to break recursion
+    [[ "${VDE_QUIET:-0}" != "1" ]] && echo "[INFO] [poll] Executing fixed wait: ${opts[--wait]}s (Jitter/Stagger Mandate)..."
+    # Convert seconds to deciseconds for zselect -t (integer required)
+    # Use floating point math then round to integer
+    local wait_val="${opts[--wait]}"
+    # Remove whitespace
+    wait_val="${wait_val// /}"
+    # Use Zsh arithmetic to convert to deciseconds and truncate to integer
+    local wait_ticks=$(( wait_val * 100 ))
+    # Strip trailing decimal point if it exists (Zsh arithmetic might return 10.)
+    wait_ticks="${wait_ticks%.*}"
+    if command -v perl >/dev/null 2>&1; then
+        perl -e "select(undef, undef, undef, ${opts[--wait]});"
+    elif zmodload zsh/zselect 2>/dev/null; then
+        # Try zselect but don't fail if it returns 1 (common on macOS)
+        zselect -t ${wait_ticks} || true
+    else
+        # Fallback to integer sleep (at least 1s)
+        local sleep_int=$(( ${opts[--wait]} > 0 ? ( ${opts[--wait]} + 0.9 ) : 1 ))
+        sleep ${sleep_int%.*}
+    fi
+    exit ${VDE_SUCCESS:-0}
+fi
+
+# --- 2. SOURCE CORE ECOSYSTEM ---
+if [[ -f "${VDE_ROOT_DIR}/lib/vm-common" ]]; then
+    source "${VDE_ROOT_DIR}/lib/vm-common"
+else
+    echo "CRITICAL: lib/vm-common not found."
+    exit ${VDE_ERR_GENERAL:-1}
+fi
+
+CONTAINER_NAME=$(resolve_vm_name "${VM_NAME}" 2>/dev/null) || CONTAINER_NAME="${VM_NAME}"
+
+# --- 5. THE DETERMINISTIC STRIKE ---
+if [[ -n "${opts[--network]}" ]]; then
+    vde_log_info "Polling for network '${opts[--network]}' existence (Timeout: ${TIMEOUT}s)..." "poll"
+elif [[ -n "${opts[--count]}" ]]; then
+    vde_log_info "Polling for exactly ${opts[--count]} running VDE containers (Timeout: ${TIMEOUT}s)..." "poll"
+elif [[ -n "${opts[--state]}" ]]; then
+    vde_log_info "Polling ${CONTAINER_NAME} for state '${opts[--state]}' (Timeout: ${TIMEOUT}s)..." "poll"
+else
+    vde_log_info "Polling ${CONTAINER_NAME} for readiness (Timeout: ${TIMEOUT}s)..." "poll"
+fi
+
+typeset -F start_time=$(date +%s)
+typeset -F current_time
+typeset -F elapsed=0
+
+while (( elapsed < TIMEOUT )); do
+    local success=0
+
+    if [[ -n "${opts[--network]}" ]]; then
+        if docker network inspect "${opts[--network]}" >/dev/null 2>&1; then
+            success=1
+        fi
+    elif [[ -n "${opts[--count]}" ]]; then
+        local actual_count
+        actual_count=$(docker ps -q --filter "name=vde-" 2>/dev/null | command wc -l | tr -d ' ')
+        [[ "${actual_count}" == "${opts[--count]}" ]] && success=1
+    elif [[ -n "${opts[--state]}" ]]; then
+        local actual_state
+        actual_state=$(docker inspect -f '{{.State.Status}}' "${CONTAINER_NAME}" 2>/dev/null)
+        if [[ "${opts[--state]}" == "stopped" ]]; then
+            # 'exited' or container missing counts as stopped for our purposes
+            [[ "${actual_state}" == "exited" || -z "${actual_state}" ]] && success=1
+        else
+            [[ "${actual_state}" == "${opts[--state]}" ]] && success=1
+        fi
+    elif [[ -n "${opts[--health]}" ]]; then
+        local status
+        status=$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "${CONTAINER_NAME}" 2>/dev/null)
+        [[ "${status}" == "healthy" || "${status}" == "none" ]] && success=1
+    elif [[ -n "${opts[--port]}" ]]; then
+        if nc -z localhost "${opts[--port]}" 2>/dev/null; then
+            success=1
+        fi
+    elif [[ -n "${opts[--exec]}" ]]; then
+        if docker exec "${CONTAINER_NAME}" zsh -c "${opts[--exec]}" >/dev/null 2>&1; then
+            success=1
+        fi
+    else
+        # Default: just check if running
+        if [[ "$(docker inspect -f '{{.State.Status}}' "${CONTAINER_NAME}" 2>/dev/null)" == "running" ]]; then
+            success=1
+        fi
+    fi
+
+    if [[ ${success} -eq 1 ]]; then
+        if [[ -n "${opts[--network]}" ]]; then
+            vde_log_success "Network '${opts[--network]}' is ready." "poll"
+        elif [[ -n "${opts[--count]}" ]]; then
+            vde_log_success "VDE container count reached ${opts[--count]}." "poll"
+        else
+            vde_log_success "${CONTAINER_NAME} reached ready state." "poll"
+        fi
+        exit ${VDE_SUCCESS}
+    fi
+
+    # High-precision sub-second wait (Rule 23)
+    # zselect -t takes deciseconds (1/100th of a second)
+    local wait_ticks=$(( INTERVAL * 100 ))
+    wait_ticks="${wait_ticks%.*}"
+
+    if command -v perl >/dev/null 2>&1; then
+        perl -e "select(undef, undef, undef, ${INTERVAL});"
+    elif zmodload zsh/zselect 2>/dev/null; then
+        zselect -t ${wait_ticks} || true
+    else
+        sleep 1
+    fi
+    
+    current_time=$(date +%s)
+    elapsed=$(( current_time - start_time ))
+done
+
+vde_log_error "Timeout waiting for condition after ${TIMEOUT}s" "poll"
+exit ${VDE_ERR_TIMEOUT}

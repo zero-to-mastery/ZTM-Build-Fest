@@ -1,0 +1,212 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE Path Utilities
+# Path conversion functions for HOME-relative and absolute path handling
+# Source this library with: source ./lib/vde-path-utils
+#
+# These utilities help with cross-platform path handling, making VDE scripts
+# portable across Linux native, WSL2, and macOS.
+
+# =============================================================================
+# SOURCE GUARD
+# =============================================================================
+
+if [[ "${_VDE_PATH_UTILS_LOADED:-}" = "1" ]]; then
+    return 0 2>/dev/null || exit 0
+fi
+_VDE_PATH_UTILS_LOADED=1
+
+# =============================================================================
+# ZSH-ONLY PATH DETECTION
+# =============================================================================
+# shellcheck disable=SC2296
+_VDE_PATH_UTILS_SCRIPT_PATH="${(%):-%x}"
+
+if [[ -z "${VDE_ROOT_DIR:-}" ]]; then
+    if [[ -z "${VDE_ROOT_DIR:-}" ]]; then
+    VDE_ROOT_DIR="${(%):-%x}"
+    VDE_ROOT_DIR="${VDE_ROOT_DIR:h:h}"
+fi
+fi
+
+# =============================================================================
+# DEPENDENCIES
+# =============================================================================
+
+# Ensure HOME is set
+if [[ -z "${HOME}" ]]; then
+    export HOME="$(eval echo ~$(whoami))"
+fi
+
+# =============================================================================
+# PATH CONVERSION FUNCTIONS
+# =============================================================================
+
+# Convert absolute path to HOME-relative path
+# Usage: vde_path_to_home_rel "/home/user/.ssh/vde_student"
+# Output: ~/.ssh/vde/vde_student
+vde_path_to_home_rel() {
+    local abs_path="${1}"
+
+    if [[ -z "${abs_path}" ]]; then
+        echo ""
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Check if path is exactly HOME
+    if [[ "${abs_path}" == "${HOME}" ]]; then
+        echo "~"
+        return 0
+    fi
+
+    # Check if path starts with HOME
+    if [[ "${abs_path}" == "${HOME}"* ]]; then
+        local rel_path="${abs_path#${HOME}}"
+        if [[ -n "${rel_path}" && "${rel_path}" == /* ]]; then
+            echo "~${rel_path}"
+        else
+            echo "~/${rel_path}"
+        fi
+    else
+        # Path is not under HOME, return as-is
+        echo "${abs_path}"
+    fi
+}
+
+# Convert HOME-relative path to absolute path
+# Usage: vde_path_from_home_rel "~/.ssh/vde/vde_student"
+# Output: /home/user/.ssh/vde_student
+vde_path_from_home_rel() {
+    local rel_path="${1}"
+
+    if [[ -z "${rel_path}" ]]; then
+        echo ""
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Check if path is exactly tilde
+    if [[ "${rel_path}" == "~" ]]; then
+        echo "${HOME}"
+        return 0
+    fi
+
+    # Check if path starts with tilde
+    if [[ "${rel_path}" == \~* ]]; then
+        local without_tilde="${rel_path#\~}"
+        if [[ -n "${without_tilde}" && "${without_tilde}" == /* ]]; then
+            echo "${HOME}${without_tilde}"
+        else
+            echo "${HOME}/${without_tilde}"
+        fi
+    else
+        # Path is already absolute, return as-is
+        echo "${rel_path}"
+    fi
+}
+
+# Get VM configuration directory path
+# Usage: get_vm_conf_dir "python"
+# Output: /path/to/vde/configs/docker/languages/python
+get_vm_conf_dir() {
+    local vm_name="${1}"
+    local raw_name
+    raw_name=$(vde_normalize_name "${vm_name}" 2>/dev/null) || raw_name="${vm_name#vde-}"
+    
+    local category
+    # Attempt to use get_vm_category if available (from vm-common)
+    if command -v get_vm_category >/dev/null 2>&1; then
+        category=$(get_vm_category "${vm_name}")
+    else
+        category="unknown"
+    fi
+
+    if [[ "${category}" != "unknown" ]]; then
+        echo "${VDE_ROOT_DIR}/configs/docker/${category}/${raw_name}"
+    else
+        # Fallback to direct path
+        echo "${VDE_ROOT_DIR}/configs/docker/${raw_name}"
+    fi
+}
+
+# Normalize path (remove double slashes, resolve . and ..)
+# Usage: vde_path_normalize "/home//user/../user/./file"
+# Output: /home/user/file
+vde_path_normalize() {
+    local path="${1}"
+
+    if [[ -z "${path}" ]]; then
+        echo ""
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Use cd to resolve . and ..
+    if [[ -d "${path}" ]] || [[ -f "${path}" ]]; then
+        cd "${path}" 2>/dev/null && pwd
+    else
+        # For non-existent paths, do string-based normalization
+        # Remove double slashes using while loop
+        while [[ ${path} == *//* ]]; do
+            path=${path//\/\//\/}
+        done
+        # Remove /. references
+        path="${path//\/./}"  # Remove /./
+        echo "${path}"
+    fi
+}
+
+# Get project name from VDE_ROOT_DIR
+# Usage: vde_get_project_name
+# Output: vde (extracted from /path/to/vde)
+vde_get_project_name() {
+    echo "${VDE_ROOT_DIR:t}"
+}
+
+# Check if a path is under HOME directory
+# Usage: vde_is_home_path "/home/user/.ssh"
+# Output: 0 (true) or 1 (false)
+vde_is_home_path() {
+    local path="${1}"
+
+    if [[ -z "${path}" ]]; then
+        return 1
+    fi
+
+    if [[ "${path}" == "${HOME}"* ]]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Make path portable by converting HOME-relative to absolute
+# Usage: vde_make_portable "~/.ssh/vde/vde_student"
+# Output: /home/user/.ssh/vde_student (if HOME=/home/user)
+vde_make_portable() {
+    local path="${1}"
+
+    if [[ -z "${path}" ]]; then
+        echo ""
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Convert to absolute if needed
+    local abs_path
+    abs_path=$(vde_path_from_home_rel "${path}")
+
+    # Normalize the path
+    vde_path_normalize "${abs_path}"
+}
+
+# Make path home-relative for display/storage
+# Usage: vde_make_home_relative "/home/user/.ssh/vde_student"
+# Output: ~/.ssh/vde/vde_student
+vde_make_home_relative() {
+    local path="${1}"
+
+    if [[ -z "${path}" ]]; then
+        echo ""
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    vde_path_to_home_rel "${path}"
+}

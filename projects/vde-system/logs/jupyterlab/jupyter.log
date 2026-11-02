@@ -1,0 +1,28 @@
+[VDE-JUPYTER] Forged in Beskar: Starting JupyterLab...
+[WARN  tini (39)] Tini is not running as PID 1 and isn't registered as a child subreaper.
+Zombie processes will not be re-parented to Tini, so zombie reaping won't work.
+To fix the problem, use the -s option or set the environment variable TINI_SUBREAPER to register Tini as a child subreaper, or run Tini as PID 1.
+[I 2026-10-01 01:46:24.669 ServerApp] jupysql_plugin | extension was successfully linked.
+[I 2026-10-01 01:46:24.669 ServerApp] jupyter_lsp | extension was successfully linked.
+[I 2026-10-01 01:46:24.672 ServerApp] jupyter_server_terminals | extension was successfully linked.
+[I 2026-10-01 01:46:24.675 ServerApp] jupyterlab | extension was successfully linked.
+[I 2026-10-01 01:46:24.676 ServerApp] Writing Jupyter server cookie secret to /home/devuser/.local/share/jupyter/runtime/jupyter_cookie_secret
+[I 2026-10-01 01:46:24.725 ServerApp] notebook_shim | extension was successfully linked.
+[W 2026-10-01 01:46:24.727 ServerApp] Config option `password` not recognized by `PasswordIdentityProvider`.  Did you mean one of: `hashed_password, password_required`?
+[W 2026-10-01 01:46:24.744 ServerApp] All authentication is disabled.  Anyone who can connect to this server will be able to run code.
+[I 2026-10-01 01:46:24.745 ServerApp] notebook_shim | extension was successfully loaded.
+[I 2026-10-01 01:46:24.745 ServerApp] Registered jupysql-plugin server extension
+[I 2026-10-01 01:46:24.745 ServerApp] jupysql_plugin | extension was successfully loaded.
+[I 2026-10-01 01:46:24.746 ServerApp] jupyter_lsp | extension was successfully loaded.
+[I 2026-10-01 01:46:24.747 ServerApp] jupyter_server_terminals | extension was successfully loaded.
+[I 2026-10-01 01:46:24.750 LabApp] JupyterLab extension loaded from /home/devuser/.vde-venv/lib/python3.11/site-packages/jupyterlab
+[I 2026-10-01 01:46:24.750 LabApp] JupyterLab application directory is /home/devuser/.vde-venv/share/jupyter/lab
+[I 2026-10-01 01:46:24.751 LabApp] Extension Manager is 'pypi'.
+[I 2026-10-01 01:46:24.806 ServerApp] jupyterlab | extension was successfully loaded.
+[I 2026-10-01 01:46:24.806 ServerApp] Serving notebooks from local directory: /home/devuser/workspace
+[I 2026-10-01 01:46:24.806 ServerApp] Jupyter Server 2.21.1 is running at:
+[I 2026-10-01 01:46:24.806 ServerApp] http://0.0.0.0:8888/lab
+[I 2026-10-01 01:46:24.806 ServerApp]     http://127.0.0.1:8888/lab
+[I 2026-10-01 01:46:24.806 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[I 2026-10-01 01:46:24.821 ServerApp] Skipped non-installed server(s): basedpyright, bash-language-server, dockerfile-language-server-nodejs, javascript-typescript-langserver, jedi-language-server, julia-language-server, pyrefly, pyright, python-language-server, python-lsp-server, r-languageserver, sql-language-server, texlab, typescript-language-server, unified-language-server, vscode-css-languageserver-bin, vscode-html-languageserver-bin, vscode-json-languageserver-bin, yaml-language-server
+[W 2026-10-01 01:46:24.982 ServerApp] 405 HEAD / (@172.18.0.1) 0.32ms referer=None

@@ -1,0 +1,289 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-rebuild - Rebuild all VDE Docker images
+# Usage: vde-rebuild [options] [vm_name...]
+#
+# Options:
+#   --no-cache   Rebuild without using cache
+#   --vm <name>  Rebuild only specific VM (or "base" for base image)
+#   -h, --help   Show this help
+#
+# This script:
+#   1. Builds vde-base:latest first
+#   2. Then builds all VM images (using cached layers from vde-base)
+#===============================================================================
+
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+set -e
+
+# Use zsh-native absolute path detection (Rule 1)
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+source "${VDE_ROOT_DIR}/lib/vm-common"
+export VDE_IN_REBUILD=1
+
+# Function trace support (activates only when VDE_TRACE_MODE is set)
+[[ -f "${VDE_ROOT_DIR}/lib/vde-trace-bootstrap" ]] && source "${VDE_ROOT_DIR}/lib/vde-trace-bootstrap"
+
+# Configuration
+NOCACHE=false
+REGENERATE_KEYS=false
+PULL=false
+SPECIFIC_VM=""
+REBUILD_TARGETS=()
+
+#===============================================================================
+# SSH Environment
+#===============================================================================
+
+# Ensure SSH keys are synced to build context before building
+sync_keys() {
+    if [[ -f "${VDE_ROOT_DIR}/lib/vde-ssh" ]] ; then
+        source "${VDE_ROOT_DIR}/lib/vde-ssh"
+        
+        if [[ "${REGENERATE_KEYS}" == "true" ]] ; then
+            vde_ssh_regenerate_keys
+        fi
+        
+        log_info "Syncing SSH keys to build context..."
+        if ensure_ssh_environment; then
+            sync_ssh_keys_to_vde
+            return 0
+        fi
+    fi
+    return 1
+}
+
+#===============================================================================
+# Help
+#===============================================================================
+
+show_usage() {
+    cat <<EOF
+Usage: vde-rebuild [options] [vm_name...]
+
+Rebuild all VDE Docker images.
+
+Options:
+  --no-cache        Rebuild without using cache
+  --vm base         Rebuild only vde-base image
+  --regenerate-keys Force regeneration of VDE SSH keys before build
+  -h, --help        Show this help
+
+Examples:
+  vde-rebuild              # Rebuild vde-base using cache
+  vde-rebuild --no-cache   # Rebuild vde-base from scratch
+  vde-rebuild --vm base    # Rebuild only vde-base
+  vde-rebuild python       # Rebuild vde-python
+
+EOF
+}
+
+#===============================================================================
+# Parse Arguments
+#===============================================================================
+
+while [[ ${#} -gt 0 ]] ; do
+    case "${1}" in
+        -h|--help)
+            show_usage
+            exit ${VDE_SUCCESS}
+            ;;
+        --no-cache)
+            NOCACHE=true
+            shift
+            ;;
+        --pull)
+            PULL=true
+            shift
+            ;;
+        --regenerate-keys)
+            REGENERATE_KEYS=true
+            shift
+            ;;
+        --vm)
+            SPECIFIC_VM="${2}"
+            shift 2
+            ;;
+        *)
+            REBUILD_TARGETS+=("${1}")
+            shift
+            ;;
+    esac
+done
+
+# If --vm was used, add it to rebuild targets
+[[ -n "${SPECIFIC_VM}" ]] && REBUILD_TARGETS+=("${SPECIFIC_VM}")
+
+#===============================================================================
+# Build Functions
+#===============================================================================
+
+build_base_image() {
+    local base_lock="${VDE_LOCKS_DIR}/vms/vde-base.lock"
+    if [[ "${VDE_NO_LOCK:-0}" != "1" ]]; then
+        claim_lock "${base_lock}" || return ${VDE_ERR_LOCK}
+        trap "release_lock '${base_lock}'" INT TERM HUP
+    fi
+
+    local -a build_cmd=(docker build)
+    [[ "${PULL}" == "true" ]] && build_cmd+=(--pull)
+    build_cmd+=(-t vde-base:latest -f "${CONFIGS_DIR}/vde-base.Dockerfile" "${VDE_ROOT_DIR}")
+    
+    if [[ "${NOCACHE}" == "true" ]] ; then
+        build_cmd+=(--no-cache)
+    fi
+    
+    # Debug: show assembled command in trace mode
+    [[ -n "${VDE_TRACE_MODE}" ]] && vde_trace_debug "build_cmd=${build_cmd[*]}"
+    
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "Building vde-base:latest..."
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    
+    if "${build_cmd[@]}"; then
+        echo "✓ vde-base:latest built successfully"
+        if [[ "${VDE_NO_LOCK:-0}" != "1" ]]; then
+            trap - INT TERM HUP
+            release_lock "${base_lock}"
+        fi
+        return 0
+    else
+        echo "✗ Failed to build vde-base:latest"
+        if [[ "${VDE_NO_LOCK:-0}" != "1" ]]; then
+            trap - INT TERM HUP
+            release_lock "${base_lock}"
+        fi
+        return ${VDE_ERR_GENERAL}
+    fi
+}
+
+build_vm_image() {
+    local vm_alias="${1}"
+    local canonical_name
+    canonical_name=$(resolve_vm_name "${vm_alias}" 2>/dev/null)
+    
+    if [[ -z "${canonical_name}" ]]; then
+        vde_log_error "Unknown VM alias: ${vm_alias}"
+        return 1
+    fi
+    
+    local compose_file
+    compose_file=$(get_vm_compose_file "${canonical_name}")
+    
+    if [[ ! -f "${compose_file}" ]]; then
+        vde_log_error "Compose file not found for ${canonical_name}: ${compose_file}"
+        return 1
+    fi
+    
+    # MANDATE: Secure Atomic Lock before rebuilding Spoke (Phase 25)
+    local vm_lock="${VDE_LOCKS_DIR}/vms/${canonical_name}.lock"
+    if [[ "${VDE_NO_LOCK:-0}" != "1" ]]; then
+        claim_lock "${vm_lock}" || return ${VDE_ERR_LOCK}
+        trap "release_lock '${vm_lock}'" INT TERM HUP
+    fi
+    
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "Rebuilding ${canonical_name}..."
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    
+    # Resolve Spoke-specific env file (Rule 4.1)
+    local vm_env_file
+    vm_env_file=$(get_vm_env_file "${canonical_name}")
+
+    local -a build_cmd=(docker compose)
+    [[ -n "${VDE_TRACE_MODE}" ]] && vde_trace_debug "build_cmd=${build_cmd[*]}"
+    
+    build_cmd+=(-f "${compose_file}")
+    [[ -n "${VDE_TRACE_MODE}" ]] && vde_trace_debug "build_cmd=${build_cmd[*]}"
+    
+    [[ -f "${VDE_ROOT_DIR}/.env" ]] && build_cmd+=(--env-file "${VDE_ROOT_DIR}/.env")
+    [[ -n "${VDE_TRACE_MODE}" ]] && vde_trace_debug "build_cmd=${build_cmd[*]}"
+    
+    [[ -f "${VDE_ROOT_DIR}/${vm_env_file}" ]] && build_cmd+=(--env-file "${VDE_ROOT_DIR}/${vm_env_file}")
+    [[ -n "${VDE_TRACE_MODE}" ]] && vde_trace_debug "build_cmd=${build_cmd[*]}"
+    
+    build_cmd+=(build)
+    [[ -n "${VDE_TRACE_MODE}" ]] && vde_trace_debug "build_cmd=${build_cmd[*]}"
+    
+    [[ "${NOCACHE}" == "true" ]] && build_cmd+=(--no-cache)
+    [[ -n "${VDE_TRACE_MODE}" ]] && vde_trace_debug "build_cmd=${build_cmd[*]}"
+    
+    if vde_run "${canonical_name}" "${build_cmd[@]}"; then
+        echo "✓ ${canonical_name} rebuilt successfully"
+        if [[ "${VDE_NO_LOCK:-0}" != "1" ]]; then
+            trap - INT TERM HUP
+            release_lock "${vm_lock}"
+        fi
+        return 0
+    else
+        echo "✗ Failed to rebuild ${canonical_name}"
+        if [[ "${VDE_NO_LOCK:-0}" != "1" ]]; then
+            trap - INT TERM HUP
+            release_lock "${vm_lock}"
+        fi
+        return 1
+    fi
+}
+
+#===============================================================================
+# Main
+#===============================================================================
+
+# Check Docker
+if ! command -v docker &>/dev/null; then
+    echo "[ERROR] Docker is not installed"
+    exit ${VDE_ERR_DOCKER:-1}
+fi
+
+if ! docker info &>/dev/null; then
+    echo "[ERROR] Docker daemon is not running"
+    exit ${VDE_ERR_DOCKER:-1}
+fi
+
+# Ensure keys are ready for build context
+sync_keys
+
+# Logic:
+# 1. If NO targets specified, build base only (default legacy behavior of this script)
+# 2. If 'base' in targets, build base.
+# 3. If other targets, build them.
+
+typeset build_base=false
+[[ ${#REBUILD_TARGETS} -eq 0 ]] && build_base=true
+
+typeset -a spokes
+spokes=()
+
+for target in "${REBUILD_TARGETS[@]}"; do
+    if [[ "${target}" == "base" ]]; then
+        build_base=true
+    else
+        spokes+=("${target}")
+    fi
+done
+
+if [[ "${build_base}" == "true" ]]; then
+    build_base_image
+fi
+
+for spoke in "${spokes[@]}"; do
+    build_vm_image "${spoke}"
+done
+
+echo ""
+echo "Done!"
+
+# Show Next Steps for the last rebuilt spoke (or base if no spokes)
+if [[ ${#spokes[@]} -gt 0 ]]; then
+    vde_print_next_steps "rebuild" "${spokes[-1]}"
+else
+    vde_print_next_steps "create"
+fi

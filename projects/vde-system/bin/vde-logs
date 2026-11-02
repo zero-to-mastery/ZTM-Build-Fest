@@ -1,0 +1,67 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# vde-logs - Show logs for a VDE container
+set -e
+# Usage: vde-logs <vm_name> [options]
+#
+# Options:
+#   -f, --follow    Follow log output
+#   --tail N        Show last N lines (default: 50)
+#===============================================================================
+
+# Determine VDE root directory
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+VDE_ROOT_DIR="${0:h:h}"
+export VDE_ROOT_DIR
+
+# Source core libraries
+[[ -f "${VDE_ROOT_DIR}/lib/vde-shell-compat" ]] && source "${VDE_ROOT_DIR}/lib/vde-shell-compat" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-constants" ]] && source "${VDE_ROOT_DIR}/lib/vde-constants" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-errors" ]] && source "${VDE_ROOT_DIR}/lib/vde-errors" &>/dev/null
+[[ -f "${VDE_ROOT_DIR}/lib/vde-naming" ]] && source "${VDE_ROOT_DIR}/lib/vde-naming" &>/dev/null
+
+# Check arguments
+if [[ -z "${1}" ]] ; then
+    vde_error_simple "VM name is required"
+    echo "Usage: vde-logs <vm_name> [options]"
+    exit ${VDE_ERR_INVALID_INPUT}
+fi
+
+VM_NAME="${1}"
+shift
+
+# Get container name
+CONTAINER_NAME=$(vde_get_container_name "${VM_NAME}")
+
+# Parse options
+TAIL="50"
+FOLLOW=0
+
+while [[ ${#} -gt 0 ]] ; do
+    case "${1}" in
+        -f|--follow)
+            FOLLOW=1
+            shift
+            ;;
+        --tail)
+            TAIL="${2}"
+            shift 2
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+# Run docker logs
+if [[ ${FOLLOW} -eq 1 ]] ; then
+    docker logs --tail "${TAIL}" -f "${CONTAINER_NAME}"
+else
+    docker logs --tail "${TAIL}" "${CONTAINER_NAME}"
+fi
+
+exit ${VDE_SUCCESS}

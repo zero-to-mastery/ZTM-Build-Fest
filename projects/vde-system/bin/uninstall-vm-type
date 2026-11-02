@@ -1,0 +1,564 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+#===============================================================================
+# uninstall-vm-type - Remove a language or service type from VDE
+set -e
+#
+# This removes the following associated with a VM type:
+# - Entry from vm-types.conf
+# - VM instance (container) if it exists
+# - Docker images for this VM type
+# - Logs
+#
+# The following are INVIOLATE and PRESERVED:
+# - configs/docker/<type>/ directory (docker-compose.yml)
+# - env-files/<type>.env (environment configuration)
+# - projects/<type>/ directory (your code)
+#
+# NOTE: SSH config entries for dynamically-added VMs are removed on uninstall.
+# Statically-configured entries (managed by generate-all-configs) are unaffected.
+#
+# Usage: uninstall-vm-type <vm_type> [--dry-run] [--skip-confirm]
+#===============================================================================
+
+# Determine VDE root directory
+VDE_SCRIPTS_DIR="$(cd "$(dirname "${0}")" && pwd)"
+VDE_ROOT_DIR="${0:h:h}"
+
+# Source shared library
+source "${VDE_ROOT_DIR}/lib/vde-shell-compat"
+source "${VDE_ROOT_DIR}/lib/vde-constants"
+source "${VDE_ROOT_DIR}/lib/vde-errors"
+source "${VDE_ROOT_DIR}/lib/vde-log"
+source "${VDE_ROOT_DIR}/lib/vde-core"
+source "${VDE_ROOT_DIR}/lib/vm-common"
+
+# Initialize logging
+vde_log_init 2>/dev/null || true
+
+#===============================================================================
+# Variables
+#===============================================================================
+
+DRY_RUN=false
+SKIP_CONFIRM=false
+VM_TYPES_FILE="${VDE_ROOT_DIR}/data/vm-types.conf"
+
+# Colors
+if [[ -t 1 ]]; then
+    RED='\033[0;31m'
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    NC='\033[0m'
+else
+    RED=''
+    GREEN=''
+    YELLOW=''
+    BLUE=''
+    NC=''
+fi
+
+#===============================================================================
+# Helper Functions
+#===============================================================================
+
+print_warning() {
+    echo "${YELLOW}WARNING: ${1}${NC}"
+}
+
+print_error() {
+    echo "${RED}ERROR: ${1}${NC}"
+}
+
+print_success() {
+    echo "${GREEN}SUCCESS: ${1}${NC}"
+}
+
+print_info() {
+    echo "${BLUE}INFO: ${1}${NC}"
+}
+
+print_dry_run() {
+    echo ""
+    echo "============================================================================="
+    echo "${YELLOW}DRY RUN MODE${NC} - No changes will be made"
+    echo "============================================================================="
+    echo ""
+}
+
+ask_yes_no() {
+    local prompt="${1}"
+    local default="${2:-n}"
+
+    if [[ "${SKIP_CONFIRM}" = "true" ]]; then
+        return 0
+    fi
+
+    local yn
+    if [[ "${default}" = "y" ]]; then
+        prompt="${prompt} [Y/n]"
+    else
+        prompt="${prompt} [y/N]"
+    fi
+
+    while true; do
+        echo -n "${prompt} "
+        read -r yn
+        yn=${yn:-${default}}
+
+        case "${yn}" in
+            [Yy]|[Yy][Ee][Ss]) return 0 ;;
+            [Nn]|[Nn][Oo]) return ${VDE_ERR_GENERAL} ;;
+            *) echo "Please answer yes or no." ;;
+        esac
+    done
+}
+
+#===============================================================================
+# VM Type Removal Functions
+#===============================================================================
+
+# Remove entry from vm-types.yml
+remove_vm_type_entry() {
+    local _vm_target_type="${1}"
+    local global_lock="${VDE_ROOT_DIR}/.locks/global-config.lock"
+
+    if [[ ! -f "${VM_TYPES_FILE}" ]]; then
+        print_info "No vm-types.conf file found"
+    else
+        claim_lock "${global_lock}" || { print_error "Failed to acquire registry lock"; return 1; }
+        {
+            local temp_file="${VM_TYPES_FILE}.tmp"
+
+            if [[ "${DRY_RUN}" = "true" ]]; then
+                print_info "[DRY RUN] Would remove entry for '${_vm_target_type}' from vm-types.conf"
+                grep -E "^(lang|service)\|vde-${_vm_target_type}\|" "${VM_TYPES_FILE}" 2>/dev/null || print_info "[DRY RUN]   (no entry found)"
+            else
+                # Remove lines matching the VM type (canonical name is in field 2)
+                grep -v -E "^(lang|service)\|${_vm_target_type}\|" "${VM_TYPES_FILE}" > "${temp_file}" 2>/dev/null || true
+
+                if ! cmp -s "${VM_TYPES_FILE}" "${temp_file}" 2>/dev/null; then
+                    mv "${temp_file}" "${VM_TYPES_FILE}"
+                    print_success "Removed '${_vm_target_type}' from vm-types.conf"
+                    
+                    # Re-smelt JSON from CONF (vde_translate_conf_to_json handles its own lock depth)
+                    vde_translate_conf_to_json "${VM_TYPES_FILE}" "${VDE_ROOT_DIR}/data/vm-types.json"
+                    
+                    # Invalidate the cache
+                    rm -f "${VDE_CACHE_DIR}/vm-types.cache" 2>/dev/null || true
+                else
+                    rm -f "${temp_file}"
+                    print_info "No entry found for '${_vm_target_type}' in vm-types.conf"
+                fi
+            fi
+        } always {
+            release_lock "${global_lock}"
+        }
+    fi
+}
+
+# Remove docker config directory
+remove_docker_config() {
+    local _vm_target_type="${1}"
+    local config_dir="${VDE_ROOT_DIR}/configs/docker/${_vm_target_type}"
+
+    if [[ ! -d "${config_dir}" ]]; then
+        print_info "No config directory found: ${config_dir}"
+        return 0
+    fi
+
+    # Config directories (docker-compose.yml) are preserved — must be deleted manually.
+    print_info "Config directory preserved (manual deletion required): ${config_dir}"
+}
+
+# Stop and remove VM if running
+remove_vm() {
+    local _vm_target_type="${1}"
+
+    if vm_exists "${_vm_target_type}" 2>/dev/null; then
+        if is_vm_running "${_vm_target_type}" 2>/dev/null; then
+            if [[ "${DRY_RUN}" = "true" ]]; then
+                print_info "[DRY RUN] Would stop VM: ${_vm_target_type}"
+            else
+                print_info "Stopping VM: ${_vm_target_type}"
+                stop_vm "${_vm_target_type}" 2>/dev/null || true
+            fi
+        fi
+
+        local compose_file="${VDE_ROOT_DIR}/configs/docker/${_vm_target_type}/docker-compose.yml"
+        if [[ -f "${compose_file}" ]]; then
+            # docker-compose.yml is preserved — must be deleted manually by the user.
+            print_info "Compose file preserved (manual deletion required): ${compose_file}"
+        fi
+    else
+        print_info "VM '${_vm_target_type}' not built, skipping VM removal"
+    fi
+}
+
+# Remove Docker images for the VM type
+remove_docker_images() {
+    local _vm_target_type="${1}"
+    local image_prefix="vde-${_vm_target_type}"
+
+    local images
+    images=$(docker images --format "{{.Repository}}:{{.Tag}}" 2>/dev/null | grep "^${image_prefix}" || echo "")
+
+    if [[ -z "${images}" ]]; then
+        print_info "No Docker images found for '${_vm_target_type}'"
+        return 0
+    fi
+
+    local image_count=$(echo "${images}" | wc -l | tr -d ' ')
+
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_info "[DRY RUN] Would remove ${image_count} Docker image(s) for '${_vm_target_type}':"
+        echo "${images}" | while read -r image; do
+            [[ -n "${image}" ]] && print_info "[DRY RUN]   - ${image}"
+        done
+        return 0
+    fi
+
+    print_info "Removing ${image_count} Docker image(s) for '${_vm_target_type}'..."
+    echo "${images}" | while read -r image; do
+        [[ -n "${image}" ]] && docker rmi -f "${image}" >/dev/null 2>&1 || true
+    done
+    print_success "Removed Docker images for '${_vm_target_type}'"
+}
+
+# Remove SSH config entries
+remove_ssh_entries() {
+    local _vm_target_type="${1}"
+    local _host_alias="${_vm_target_type}"
+    local project_ssh_config="${VDE_ROOT_DIR}/configs/ssh/config"
+
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_info "[DRY RUN] Would remove SSH config entry for: ${_host_alias}"
+        return 0
+    fi
+
+    if [[ ! -f "${project_ssh_config}" ]]; then
+        print_info "No project SSH config found — nothing to remove"
+        return 0
+    fi
+
+    if ! grep -q "^Host ${_host_alias}$" "${project_ssh_config}" 2>/dev/null; then
+        print_info "No SSH config entry found for '${_host_alias}' — nothing to remove"
+        return 0
+    fi
+
+    local temp_file
+    temp_file=$(mktemp "${project_ssh_config}.tmp.XXXXXX")
+
+    # Remove the Host block for this alias, including its preceding comment header.
+    #
+    # Expected SSH config structure (template-generated by bin/generate-all-configs
+    # via templates/ssh-config.tmpl — dynamically-added VMs from bin/add-vm-type
+    # also produce this structure after generate-all-configs rewrites the file):
+    #
+    #   # VDE VM: <name>            ← comment header line (starts with '#')
+    #   # @shared-law (...)         ← comment header line (starts with '#')
+    #   Host <name>                 ← Host directive (exact match on field 2)
+    #       HostName localhost      ← block body lines (all indented with spaces)
+    #       Port ...
+    #       ...
+    #       RequestTTY yes
+    #
+    # Assumptions this parser relies on (tied to the template above):
+    #   • All header lines immediately before a Host directive start with '#'.
+    #     Non-'#' unindented lines between blocks (e.g., blank lines from the
+    #     file header section) terminate the backward header scan.
+    #   • All block body lines are indented (leading whitespace) or blank.
+    #     Unindented directives inside a Host block are not generated by the
+    #     template and are therefore unsupported by this parser.
+    #
+    # Why buffer instead of stream: a single-pass streaming awk cannot look
+    # behind — comment lines are already printed before the following Host line
+    # reveals whether they belong to the target block. configs/ssh/config is
+    # ~400 lines (one entry per registered VM), so buffering the full file into
+    # lines[] is negligible in memory and avoids a two-pass approach.
+    awk -v host="${_host_alias}" '
+        { lines[NR] = $0 }
+        END {
+            dstart = 0; dend = 0
+            for (i = 1; i <= NR; i++) {
+                n = split(lines[i], a)
+                if (n >= 2 && a[1] == "Host" && a[2] == host) {
+                    # Scan backward: consume consecutive "#"-prefixed header lines
+                    s = i - 1
+                    while (s >= 1 && substr(lines[s], 1, 1) == "#") s--
+                    dstart = s + 1
+                    # Scan forward: consume indented/blank block body lines
+                    e = i + 1
+                    while (e <= NR && (lines[e] ~ /^[[:space:]]/ || lines[e] == "")) e++
+                    dend = e - 1
+                    break
+                }
+            }
+            for (i = 1; i <= NR; i++) {
+                if (dstart > 0 && i >= dstart && i <= dend) continue
+                print lines[i]
+            }
+        }
+    ' "${project_ssh_config}" > "${temp_file}"
+
+    if ! mv "${temp_file}" "${project_ssh_config}"; then
+        print_error "Failed to update ${project_ssh_config}"
+        rm -f "${temp_file}" 2>/dev/null
+        return 1
+    fi
+    print_success "Removed SSH config entry for '${_host_alias}' from configs/ssh/config"
+
+    # Sync to live SSH config — mirrors the add-vm-type add path
+    if [[ -f "${VDE_SSH_CONFIG}" ]]; then
+        cp "${project_ssh_config}" "${VDE_SSH_CONFIG}"
+        print_success "Synced removal to ${VDE_SSH_CONFIG}"
+    fi
+}
+
+# Remove env files
+remove_env_files() {
+    local _vm_target_type="${1}"
+    local env_file="${VDE_ROOT_DIR}/env-files/${_vm_target_type}.env"
+
+    if [[ ! -f "${env_file}" ]]; then
+        print_info "No env file found: ${env_file}"
+        return 0
+    fi
+
+    # env files are preserved — must be deleted manually by the user.
+    print_info "Env file preserved (manual deletion required): ${env_file}"
+}
+
+# Remove logs
+remove_logs() {
+    local _vm_target_type="${1}"
+    local log_dir="${VDE_ROOT_DIR}/logs/${_vm_target_type}"
+
+    if [[ ! -d "${log_dir}" ]]; then
+        return 0
+    fi
+
+    # Logs are preserved along with other configuration files
+    print_info "Logs directory preserved: ${log_dir}"
+}
+
+# Remove hydration script
+remove_hydration_script() {
+    local _vm_target_type="${1}"
+    local _init_script
+    _init_script=$(vde_get_hydration_script "${_vm_target_type}" 2>/dev/null)
+
+    if [[ -n "${_init_script}" && -f "${_init_script}" ]]; then
+        if [[ "${DRY_RUN}" = "true" ]]; then
+            print_info "[DRY RUN] Would remove hydration script: ${_init_script}"
+        else
+            rm -f "${_init_script}"
+            print_success "Removed hydration script: ${_init_script}"
+        fi
+    fi
+}
+
+#===============================================================================
+# Main
+#===============================================================================
+
+main() {
+    # Handle --help first
+    if [[ "${1}" == "--help" ]] || [[ "${1}" == "-h" ]]; then
+        echo "Usage: ${0} <vm_type> [options]"
+        echo ""
+        echo "Remove a language or service type from VDE."
+        echo ""
+        echo "This will remove:"
+        echo "  - Entry from vm-types.conf"
+        echo "  - VM instance (container) if it exists"
+        echo "  - Docker images for this VM type"
+        echo "  - Logs"
+        echo ""
+        echo "The following are INVIOLATE and PRESERVED:"
+        echo "  - configs/docker/<vm_type>/ directory"
+        echo "  - env-files/<vm_type>.env file"
+        echo "  - projects/<vm_type>/ directory"
+        echo ""
+        echo "NOTE: SSH config entries for dynamically-added VMs are removed on uninstall."
+        echo "      Statically-configured entries (generate-all-configs) are unaffected."
+        echo ""
+        echo "Options:"
+        echo "  --dry-run         Show what would be done without making changes"
+        echo "  --skip-confirm    Skip confirmation prompts (dangerous!)"
+        echo "  -h, --help        Show this help message"
+        echo ""
+        exit ${VDE_SUCCESS}
+    fi
+
+    # Parse arguments
+    if [[ ${#} -eq 0 ]]; then
+        echo "Usage: ${0} <vm_type> [--dry-run] [--skip-confirm]"
+        echo ""
+        echo "Remove a language or service type from VDE."
+        echo ""
+        echo "This will remove:"
+        echo "  - Entry from vm-types.conf"
+        echo "  - VM instance (container) if it exists"
+        echo "  - Docker images for this VM type"
+        echo "  - Logs"
+        echo ""
+        echo "The following are INVIOLATE and PRESERVED:"
+        echo "  - configs/docker/<vm_type>/ directory"
+        echo "  - env-files/<vm_type>.env file"
+        echo "  - projects/<vm_type>/ directory"
+        echo ""
+        echo "NOTE: SSH config entries for dynamically-added VMs are removed on uninstall."
+        echo "      Statically-configured entries (generate-all-configs) are unaffected."
+        echo ""
+        echo "Options:"
+        echo "  --dry-run         Show what would be done without making changes"
+        echo "  --skip-confirm    Skip confirmation prompts (dangerous!)"
+        echo ""
+        exit ${VDE_ERR_GENERAL}
+    fi
+
+    local UNINSTALL_VM_NAME="${1}"
+    shift
+
+    while [[ ${#} -gt 0 ]]; do
+        case "${1}" in
+            --dry-run)
+                DRY_RUN=true
+                shift
+                ;;
+            --skip-confirm)
+                SKIP_CONFIRM=true
+                shift
+                ;;
+            *)
+                echo "Unknown option: ${1}"
+                exit ${VDE_ERR_GENERAL}
+                ;;
+        esac
+    done
+
+    #===========================================================================
+    # Validation
+    #===========================================================================
+
+    # Ensure VM types are loaded
+    load_vm_types 2>/dev/null || true
+
+    # Check if VM type exists using the associative array
+    if [[ -z "${VM_TYPE[${UNINSTALL_VM_NAME}]:-}" ]] && [[ -z "${VM_TYPE[vde-${UNINSTALL_VM_NAME}]:-}" ]]; then
+        print_error "VM type '${UNINSTALL_VM_NAME}' not found"
+        echo ""
+        echo "Available VM types:"
+        # Get all VM types from the associative array keys
+        for k in "${(@k)VM_TYPE}"; do
+            echo "  ${k}"
+        done | sort
+        exit ${VDE_ERR_GENERAL}
+    fi
+
+    # Determine canonical name
+    local CANONICAL_NAME="${UNINSTALL_VM_NAME}"
+    if [[ -z "${VM_TYPE[${UNINSTALL_VM_NAME}]:-}" ]]; then
+        CANONICAL_NAME="vde-${UNINSTALL_VM_NAME}"
+    fi
+
+    #===========================================================================
+    # Warning and Confirmation
+    #===========================================================================
+
+    echo ""
+    echo "============================================================================="
+    echo "                COMPLETE REMOVAL OF VM TYPE: ${CANONICAL_NAME}"
+    echo "============================================================================="
+    echo ""
+    print_warning "This will COMPLETELY remove '${CANONICAL_NAME}' from VDE!"
+    echo ""
+    print_warning "This action is NOT reversible (unless you re-add it with add-vm-type)"
+    echo ""
+    echo "The following will be removed:"
+    echo "  - Entry from vm-types.conf"
+    echo "  - VM instance (container) if it exists"
+    echo "  - Docker images for this VM type"
+    echo "  - Logs"
+    echo ""
+    echo "The following are INVIOLATE and PRESERVED:"
+    echo "  - configs/docker/${CANONICAL_NAME}/ directory"
+    echo "  - env-files/${CANONICAL_NAME}.env file"
+    echo "  - projects/${CANONICAL_NAME}/ directory"
+    echo ""
+    echo "NOTE: SSH config entries for dynamically-added VMs are removed on uninstall."
+    echo "      Statically-configured entries (generate-all-configs) are unaffected."
+    echo ""
+
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_dry_run
+    fi
+
+    # Mandatory confirmation
+    if ! ask_yes_no "Are you sure you want to completely remove '${CANONICAL_NAME}' from VDE?" "n"; then
+        print_info "Uninstall cancelled"
+        exit ${VDE_SUCCESS}
+    fi
+
+    # Second confirmation for safety
+    if [[ "${SKIP_CONFIRM}" != "true" ]]; then
+        if ! ask_yes_no "This is your last chance - are you REALLY sure?" "n"; then
+            print_info "Uninstall cancelled"
+            exit ${VDE_SUCCESS}
+        fi
+    fi
+
+    #===========================================================================
+    # Execute Removal
+    #===========================================================================
+
+    echo ""
+    echo "============================================================================="
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_info "DRY RUN - Showing what would be done..."
+    else
+        print_info "Removing '${CANONICAL_NAME}' from VDE..."
+    fi
+    echo "============================================================================="
+    echo ""
+
+    # Remove in safe order
+    remove_vm "${CANONICAL_NAME}"
+    remove_docker_images "${CANONICAL_NAME}"
+    remove_ssh_entries "${CANONICAL_NAME}"
+    remove_env_files "${CANONICAL_NAME}"
+    remove_logs "${CANONICAL_NAME}"
+    remove_hydration_script "${CANONICAL_NAME}"
+    remove_docker_config "${CANONICAL_NAME}"
+    remove_vm_type_entry "${CANONICAL_NAME}"
+
+    #===========================================================================
+    # Final Message
+    #===========================================================================
+
+    echo ""
+    echo "============================================================================="
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_success "DRY RUN COMPLETE - No changes were made"
+    else
+        print_success "VM type '${CANONICAL_NAME}' has been completely removed from VDE"
+    fi
+    echo "============================================================================="
+    echo ""
+
+    if [[ "${DRY_RUN}" = "true" ]]; then
+        print_info "To run the actual uninstall, run:"
+        echo "  vde uninstall ${CANONICAL_NAME}"
+        echo "  or"
+        echo "  ./bin/uninstall-vm-type ${CANONICAL_NAME}"
+        echo ""
+    else
+        print_info "To re-add this VM type, use:"
+        echo "  ./bin/add-vm-type ${CANONICAL_NAME#vde-}"
+        echo ""
+    fi
+}
+
+main "${@}"

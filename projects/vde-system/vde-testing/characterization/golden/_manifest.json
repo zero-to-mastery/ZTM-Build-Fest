@@ -1,0 +1,6 @@
+{
+ "repo_commit": "ff77e7998dec12c3832b44e113ac55b41620530e",
+ "zsh": "zsh 5.9 (x86_64-ubuntu-linux-gnu)",
+ "jq": "jq-1.7",
+ "note": "load average, disk usage and docker are faked; see DOCKER_STUB etc."
+}

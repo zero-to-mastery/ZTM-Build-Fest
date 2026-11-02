@@ -1,0 +1,162 @@
+# VDE ARCHITECTURAL RECORD
+{
+  "@forge": "(Governance Sentinel)",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vde.local/schemas/pytest-config.schema.json",
+  "title": "VDE Pytest Configuration",
+  "description": "Configuration schema for Pytest unit testing framework",
+  "type": "object",
+  "required": ["version", "pytest", "paths"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Configuration schema version",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional description of this configuration"
+    },
+    "pytest": {
+      "type": "object",
+      "description": "Pytest settings",
+      "required": ["testpaths"],
+      "properties": {
+        "testpaths": {
+          "type": "array",
+          "description": "Directories to search for tests",
+          "items": {
+            "type": "string",
+            "pattern": "^tests/"
+          },
+          "minItems": 1
+        },
+        "python_files": {
+          "type": "array",
+          "description": "Test file patterns",
+          "items": {"type": "string"}
+        },
+        "python_classes": {
+          "type": "array",
+          "description": "Test class patterns",
+          "items": {"type": "string"}
+        },
+        "python_functions": {
+          "type": "array",
+          "description": "Test function patterns",
+          "items": {"type": "string"}
+        },
+        "addopts": {
+          "type": "array",
+          "description": "Additional command line options",
+          "items": {"type": "string"}
+        },
+        "markers": {
+          "type": "object",
+          "description": "Custom test markers",
+          "patternProperties": {
+            "^[a-z_]+$": {
+              "type": "string"
+            }
+          }
+        },
+        "console_output_style": {
+          "type": "string",
+          "description": "Console output style",
+          "enum": ["classic", "progress", "count"]
+        },
+        "log_cli": {
+          "type": "boolean",
+          "description": "Enable CLI logging",
+          "default": false
+        },
+        "log_cli_level": {
+          "type": "string",
+          "description": "CLI log level",
+          "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+        }
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "description": "Code coverage settings",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable coverage reporting",
+          "default": false
+        },
+        "source": {
+          "type": "array",
+          "description": "Source paths for coverage",
+          "items": {"type": "string"}
+        },
+        "omit": {
+          "type": "array",
+          "description": "Paths to omit from coverage",
+          "items": {"type": "string"}
+        },
+        "report": {
+          "type": "object",
+          "properties": {
+            "show_missing": {
+              "type": "boolean",
+              "description": "Show missing lines in report"
+            },
+            "skip_covered": {
+              "type": "boolean",
+              "description": "Skip fully covered files"
+            },
+            "precision": {
+              "type": "integer",
+              "description": "Decimal precision for percentages",
+              "minimum": 0,
+              "maximum": 4
+            }
+          }
+        }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "description": "Test directory paths",
+      "required": ["test_dir"],
+      "properties": {
+        "test_dir": {
+          "type": "string",
+          "description": "Main test directory",
+          "pattern": "^tests/"
+        },
+        "fixtures": {
+          "type": "string",
+          "description": "Test fixtures directory"
+        },
+        "output": {
+          "type": "string",
+          "description": "Test results output directory"
+        }
+      }
+    },
+    "timeout": {
+      "type": "object",
+      "description": "Test timeout settings",
+      "properties": {
+        "default": {
+          "type": "integer",
+          "description": "Default timeout in seconds",
+          "minimum": 1
+        },
+        "method": {
+          "type": "integer",
+          "description": "Method-level timeout in seconds",
+          "minimum": 1
+        },
+        "function": {
+          "type": "integer",
+          "description": "Function-level timeout in seconds",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}

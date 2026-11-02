@@ -1,0 +1,367 @@
+#!/usr/bin/env zsh
+# @forge (Function Trace: Support Diagnostic Tool)
+# Provides vde_trace_install() and vde_trace_display() for the function-trace command.
+
+typeset -ga _VDE_TRACE_RECORDS=()
+typeset -gi _VDE_TRACE_CALL_DEPTH=0
+
+# Functions to suppress when called with SAME params repeatedly (first occurrence shown)
+typeset -ga _VDE_TRACE_SUPPRESS_REPEATS=(
+    "resolve_vm_name"
+    "vde_normalize_name"
+    "get_vm_type"
+    "get_vm_category"
+    "load_vm_types"
+    "vde_get_container_name"
+    "get_vm_image"
+)
+
+# Functions to hide completely (pure infrastructure, never adds debugging value)
+typeset -ga _VDE_TRACE_HIDE=(
+    "_date_iso8601"
+    "vde_shell_date_iso8601"
+    "vde_log_format_text"
+    "vde_log_check_rotation"
+    "vde_log"
+    "vde_log_info"
+    "vde_log_warn"
+    "vde_log_error"
+    "vde_log_success"
+    "log_info"
+    "log_warn"
+    "log_error"
+    "log_success"
+    "vde_security_init"
+    "vde_security_ensure_network"
+    "vde_security_enforce_permissions"
+    "vde_security_enforce_network_isolation"
+    "ensure_ssh_environment"
+    "ensure_vde_ssh_environment"
+    "validate_or_create_ssh_key"
+    "validate_public_key_file"
+    "check_for_private_keys_in_public_dir"
+    "sync_ssh_keys_to_vde"
+    "_vde_progress_get_epoch"
+    "vde_progress_spinner_start"
+    "vde_progress_spinner_stop"
+    "_enable_nullglob"
+    "_disable_nullglob"
+    "docker_get_running"
+)
+
+vde_trace_install() {
+    zmodload zsh/parameter 2>/dev/null || {
+        print "ERROR: zsh/parameter module not available" >&2
+        return 1
+    }
+
+    local _vt_root="${VDE_ROOT_DIR:a}"
+    local fname src_file abs_src
+
+    for fname in ${(k)functions_source}; do
+        src_file="${functions_source[$fname]}"
+        if [[ "${src_file}" == /* ]]; then
+            abs_src="${src_file}"
+        else
+            abs_src="${_vt_root}/${src_file##./}"
+        fi
+        [[ "${abs_src}" == "${_vt_root}"/* ]] || continue
+        [[ "${fname}" =~ "^(_vde_trace|vde_trace)" ]] && continue
+        _vde_trace_wrap_function "${fname}" "${abs_src}"
+    done
+
+    _vde_trace_shim_executors
+}
+
+_vde_trace_wrap_function() {
+    local _vt_fname="$1"
+    local _vt_src_file="$2"
+    local _vt_safe="${_vt_fname//[^a-zA-Z0-9_]/_}"
+    local _vt_orig_name="_vde_trace_orig_${_vt_safe}"
+    local _vt_orig_body="${functions[$_vt_fname]}"
+    
+    [[ -z "${_vt_orig_body}" ]] && return 0
+
+    eval "${_vt_orig_name}() {
+${_vt_orig_body}
+}"
+
+    eval "
+${_vt_fname}() {
+    if [[ -n \"\${VDE_TRACE_MODE}\" ]]; then
+        _vde_trace_record_entry '${_vt_fname}' '${_vt_src_file}' \"\$@\"
+        local _tr_rc=0
+        ${_vt_orig_name} \"\$@\" || _tr_rc=\$?
+        _vde_trace_record_exit
+        return \${_tr_rc}
+    fi
+    ${_vt_orig_name} \"\$@\"
+}
+"
+}
+
+_vde_trace_record_entry() {
+    local _vt_fname="$1" _vt_src_file="$2"
+    shift 2
+    local _vt_is_int=0
+    [[ "${_vt_fname}" == _* ]] && _vt_is_int=1
+    
+    local _vt_record="CALL	${_VDE_TRACE_CALL_DEPTH}	${_vt_fname}	${_vt_src_file}	${_vt_is_int}	$*"
+    _VDE_TRACE_RECORDS+=("${_vt_record}")
+    
+    if [[ -n "${VDE_TRACE_FILE:-}" ]]; then
+        print -r -- "${_vt_record}" >> "${VDE_TRACE_FILE}"
+    fi
+    (( ++_VDE_TRACE_CALL_DEPTH ))
+}
+
+_vde_trace_record_exit() {
+    (( _VDE_TRACE_CALL_DEPTH > 0 )) && (( _VDE_TRACE_CALL_DEPTH-- )) || true
+}
+
+vde_trace_debug() {
+    local _vt_msg="$*"
+    local _vt_record="DEBUG	${_VDE_TRACE_CALL_DEPTH}	${_vt_msg}		"
+    _VDE_TRACE_RECORDS+=("${_vt_record}")
+    if [[ -n "${VDE_TRACE_FILE:-}" ]]; then
+        print -r -- "${_vt_record}" >> "${VDE_TRACE_FILE}"
+    fi
+}
+
+_vde_trace_shim_executors() {
+    docker() {
+        if [[ -n "${VDE_TRACE_MODE}" ]]; then
+            local _vt_subcmd="${1:-}"
+            
+            local -a _vt_read_only=(
+                "image" "images" "ps" "inspect" "logs" "exec"
+                "top" "stats" "port" "network" "volume" "info" "version" "cp"
+            )
+            
+            if (( ${_vt_read_only[(Ie)${_vt_subcmd}]} )); then
+                command docker "$@"
+                return $?
+            fi
+            
+            if [[ "${_vt_subcmd}" == "compose" ]]; then
+                local _vt_action="${2:-}"
+                case "${_vt_action}" in
+                    config|ps|logs|top|port|ls|images)
+                        command docker "$@"
+                        return $?
+                        ;;
+                esac
+            fi
+            
+            local _vt_record="EXEC	${_VDE_TRACE_CALL_DEPTH}	docker $*		"
+            _VDE_TRACE_RECORDS+=("${_vt_record}")
+            [[ -n "${VDE_TRACE_FILE:-}" ]] && print -r -- "${_vt_record}" >> "${VDE_TRACE_FILE}"
+            return 0
+        fi
+        command docker "$@"
+    }
+
+    ssh() {
+        if [[ -n "${VDE_TRACE_MODE}" ]]; then
+            local _vt_record="EXEC	${_VDE_TRACE_CALL_DEPTH}	ssh $*		"
+            _VDE_TRACE_RECORDS+=("${_vt_record}")
+            [[ -n "${VDE_TRACE_FILE:-}" ]] && print -r -- "${_vt_record}" >> "${VDE_TRACE_FILE}"
+            return 0
+        fi
+        command ssh "$@"
+    }
+}
+
+vde_trace_display() {
+    unset VDE_TRACE_MODE
+    [[ -z "${VDE_TRACE_FILE:-}" ]] && return 0
+
+    local _vt_use_color=0
+    [[ -t 1 ]] && _vt_use_color=1
+
+    local _vt_bold="" _vt_dim="" _vt_cyan="" _vt_yellow="" _vt_green="" _vt_reset=""
+    if [[ "${_vt_use_color}" == "1" ]]; then
+        _vt_bold=$'\033[1m'
+        _vt_dim=$'\033[2m'
+        _vt_cyan=$'\033[36m'
+        _vt_yellow=$'\033[33m'
+        _vt_green=$'\033[32m'
+        _vt_reset=$'\033[0m'
+    fi
+
+    local -a _vt_all_records=()
+    if [[ -f "${VDE_TRACE_FILE}" ]]; then
+        _vt_all_records=(${(f)"$(<${VDE_TRACE_FILE})"})
+        rm -f "${VDE_TRACE_FILE}"
+    fi
+    unset VDE_TRACE_FILE
+
+    print ""
+    print "${_vt_bold}══════════════════════════════════════════════${_vt_reset}"
+    print "${_vt_bold}  VDE FUNCTION TRACE${_vt_reset}"
+    print "${_vt_bold}══════════════════════════════════════════════${_vt_reset}"
+    print ""
+
+    local _vt_root="${VDE_ROOT_DIR:a}"
+    local _vt_found_exec=0
+    local _vt_record _vt_type _vt_depth _vt_fname _vt_src_file _vt_is_int _vt_params
+    local _vt_relative_src _vt_indent _vt_i _vt_parts
+    
+    # Track seen function+params for deduplication
+    local -A _vt_seen=()
+    local _vt_seen_key
+    local _vt_suppressed_count=0
+    local _vt_hidden_count=0
+    
+    # Track key events for summary
+    local _vt_dispatch_cmd=""
+    local _vt_dispatch_params=""
+    local -a _vt_key_events=()
+    local _vt_final_cmd=""
+    
+    # Pass 1: Display trace with deduplication
+    for _vt_record in "${_vt_all_records[@]}"; do
+        [[ -z "${_vt_record}" ]] && continue
+        
+        _vt_parts=("${(@s:	:)_vt_record}")
+        _vt_type="${_vt_parts[1]}"
+        _vt_depth="${_vt_parts[2]}"
+        _vt_fname="${_vt_parts[3]}"
+        _vt_src_file="${_vt_parts[4]}"
+        _vt_is_int="${_vt_parts[5]}"
+        _vt_params="${_vt_parts[6]}"
+
+        _vt_relative_src="${${_vt_src_file:a}/${_vt_root}/\$VDE_ROOT_DIR}"
+
+        if [[ "${_vt_type}" == "EXEC" ]]; then
+            _vt_found_exec=1
+            _vt_final_cmd="${_vt_fname}"
+            print "${_vt_yellow}▶ [EXECUTOR] ${_vt_fname}${_vt_reset}"
+            print ""
+            break
+        fi
+
+        if [[ "${_vt_type}" == "DISPATCH" ]]; then
+            _vt_dispatch_cmd="${_vt_fname}"
+            _vt_dispatch_params="${_vt_params}"
+            print "${_vt_bold}[dispatch: vde ${_vt_fname}]${_vt_reset}"
+            print "Params: ${_vt_params}"
+            print "File: ${_vt_relative_src}"
+            print ""
+            _vt_seen=()
+            continue
+        fi
+
+        if [[ "${_vt_type}" == "DEBUG" ]]; then
+            _vt_indent=""
+            for (( _vt_i=0; _vt_i<_vt_depth; _vt_i++ )); do
+                _vt_indent+="  "
+            done
+            print "${_vt_indent}${_vt_dim}[debug] ${_vt_fname}${_vt_reset}"
+            continue
+        fi
+
+        # Hide infrastructure noise completely
+        if (( ${_VDE_TRACE_HIDE[(Ie)${_vt_fname}]} )); then
+            (( ++_vt_hidden_count ))
+            continue
+        fi
+
+        # Check if this is a repetitive call we should suppress
+        _vt_seen_key="${_vt_fname}|${_vt_params}"
+        if (( ${_VDE_TRACE_SUPPRESS_REPEATS[(Ie)${_vt_fname}]} )); then
+            if [[ -n "${_vt_seen[$_vt_seen_key]:-}" ]]; then
+                (( ++_vt_suppressed_count ))
+                continue
+            fi
+            _vt_seen[$_vt_seen_key]=1
+        fi
+
+        # Track key events for summary
+        case "${_vt_fname}" in
+            resolve_vm_name)
+                [[ -n "${_vt_params}" ]] && _vt_key_events+=("Resolved '${_vt_params}' → $(resolve_vm_name "${_vt_params}" 2>/dev/null || echo "${_vt_params}")")
+                ;;
+            is_vm_running)
+                _vt_key_events+=("VM running check: ${_vt_params}")
+                ;;
+            image_exists)
+                _vt_key_events+=("Image check: ${_vt_params}")
+                ;;
+            claim_lock)
+                _vt_key_events+=("Lock acquired: ${_vt_params}")
+                ;;
+            vde_ensure_disk_space)
+                _vt_key_events+=("Disk space check (threshold: ${_vt_params}%)")
+                ;;
+            vde_check_system_breath)
+                _vt_key_events+=("System breath check")
+                ;;
+            get_vm_compose_file)
+                _vt_key_events+=("Compose file resolved for ${_vt_params}")
+                ;;
+        esac
+
+        # Build indent
+        _vt_indent=""
+        for (( _vt_i=0; _vt_i<_vt_depth; _vt_i++ )); do
+            _vt_indent+="  "
+        done
+
+        if [[ "${_vt_is_int}" == "1" ]]; then
+            print "${_vt_indent}${_vt_dim}[internal] Function: ${_vt_fname}()${_vt_reset}"
+        else
+            print "${_vt_indent}${_vt_cyan}Function: ${_vt_fname}()${_vt_reset}"
+        fi
+
+        if [[ -n "${_vt_params}" ]]; then
+            print "${_vt_indent}Params: ${_vt_params}"
+        else
+            print "${_vt_indent}Params: (none)"
+        fi
+        print "${_vt_indent}File: ${_vt_relative_src}"
+        print ""
+    done
+
+    # Summary section
+    print ""
+    print "${_vt_bold}────────────────────────────────────────────────${_vt_reset}"
+    print "${_vt_bold}  SUMMARY${_vt_reset}"
+    print "${_vt_bold}────────────────────────────────────────────────${_vt_reset}"
+    print ""
+    
+    if [[ -n "${_vt_dispatch_cmd}" ]]; then
+        print "  ${_vt_bold}Command:${_vt_reset} vde ${_vt_dispatch_cmd}"
+    fi
+    
+    if [[ -n "${_vt_dispatch_params}" ]]; then
+        print "  ${_vt_bold}Targets:${_vt_reset} ${_vt_dispatch_params}"
+    fi
+    
+    if [[ ${#_vt_key_events[@]} -gt 0 ]]; then
+        print ""
+        print "  ${_vt_bold}Key Events:${_vt_reset}"
+        for _vt_event in "${_vt_key_events[@]}"; do
+            print "    ${_vt_green}•${_vt_reset} ${_vt_event}"
+        done
+    fi
+    
+    if [[ -n "${_vt_final_cmd}" ]]; then
+        print ""
+        print "  ${_vt_bold}Final Command:${_vt_reset}"
+        print "    ${_vt_yellow}${_vt_final_cmd}${_vt_reset}"
+    fi
+    
+    if [[ ${_vt_suppressed_count} -gt 0 || ${_vt_hidden_count} -gt 0 ]]; then
+        print ""
+        print -n "  ${_vt_dim}"
+        [[ ${_vt_hidden_count} -gt 0 ]] && print -n "${_vt_hidden_count} infrastructure hidden"
+        [[ ${_vt_hidden_count} -gt 0 && ${_vt_suppressed_count} -gt 0 ]] && print -n ", "
+        [[ ${_vt_suppressed_count} -gt 0 ]] && print -n "${_vt_suppressed_count} repeats suppressed"
+        print "${_vt_reset}"
+    fi
+
+    print ""
+    print "${_vt_bold}══════════════════════════════════════════════${_vt_reset}"
+    print ""
+}

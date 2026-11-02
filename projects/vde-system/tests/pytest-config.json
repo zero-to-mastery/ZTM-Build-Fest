@@ -1,0 +1,52 @@
+# VDE ARCHITECTURAL RECORD
+{
+  "@forge": "(Governance Sentinel)",
+  "version": "1.0",
+  "description": "Pytest configuration for VDE unit tests",
+  "pytest": {
+    "testpaths": ["tests/unit"],
+    "python_files": ["*test*.py", "test_*.py"],
+    "python_classes": ["Test*"],
+    "python_functions": ["test_*"],
+    "addopts": [
+      "-v",
+      "--tb=short",
+      "--strict-markers",
+      "--disable-warnings"
+    ],
+    "markers": {
+      "slow": "Marks tests as slow (deselect with '-m \"not slow\"')",
+      "integration": "Integration tests",
+      "unit": "Unit tests",
+      "docker": "Tests requiring Docker",
+      "ssh": "Tests requiring SSH"
+    },
+    "console_output_style": "progress",
+    "log_cli": true,
+    "log_cli_level": "INFO"
+  },
+  "coverage": {
+    "enabled": true,
+    "source": ["lib"],
+    "omit": [
+      "*/tests/*",
+      "*/__pycache__/*",
+      "*/venv/*"
+    ],
+    "report": {
+      "show_missing": true,
+      "skip_covered": false,
+      "precision": 2
+    }
+  },
+  "paths": {
+    "test_dir": "tests/unit",
+    "fixtures": "tests/fixtures",
+    "output": "tests/results/pytest"
+  },
+  "timeout": {
+    "default": 60,
+    "method": 30,
+    "function": 10
+  }
+}

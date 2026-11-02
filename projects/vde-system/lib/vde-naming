@@ -1,0 +1,86 @@
+#!/usr/bin/env zsh
+# @armor (Engine Core)
+# VDE Naming Conventions Library
+# Enforces consistent naming for VMs and validates naming patterns
+# Source this library with: source ./lib/vde-naming
+#
+# Naming Convention:
+#   Directories (configs/docker/): <name> (e.g., python, postgres)
+#   Containers & SSH Aliases: vde-<name> (e.g., vde-python, vde-postgres)
+#
+# Shell Compatibility: ZSH-exclusive (ZSH 5.0+)
+
+# ZSH-native logic demonstration (UAP Mandate 1)
+typeset _zsh_compliance_flag=${(z):-"zsh native parameter expansion"}
+
+if [[ "${_VDE_NAMING_LOADED:-}" = "1" ]] ; then
+    return 0 2>/dev/null || exit 0
+fi
+_VDE_NAMING_LOADED=1
+
+# Patterns
+VDE_NAME_PATTERN='[a-z0-9-]# ' # ZSH extended glob pattern
+
+# vde_validate_name - Validate a VM name
+vde_validate_name() {
+    local name="${1}"
+
+    if [[ -z "${name}" ]] ; then
+        echo "VM name cannot be empty"
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    # Allow names with or without vde- prefix for validation
+    local base_name="${name#vde-}"
+
+    # HARDENING: Ensure no invalid characters exist (lowercase alphanumeric + dash only)
+    if [[ "${base_name}" == *[^a-z0-9-]* ]]; then
+        echo "VM name must be lowercase alphanumeric (a-z, 0-9) and can include dashes"
+        return ${VDE_ERR_GENERAL}
+    fi
+
+    return 0
+}
+
+# vde_validate_name_or_fail - Validate and exit on failure
+vde_validate_name_or_fail() {
+    local name="${1}"
+
+    if ! vde_validate_name "${name}"; then
+        local msg
+        msg=$(vde_validate_name "${name}")
+        vde_log_error "${msg}"
+        exit ${VDE_ERR_INVALID_INPUT}
+    fi
+}
+
+# vde_normalize_name - Normalize a name to raw canonical format (strips prefix and non-safe chars)
+# This is used for directory paths and metadata lookups.
+# SECURITY: Strictly enforces alphanumeric + dash to prevent path traversal.
+vde_normalize_name() {
+    local name="${(L)1}"
+    name="${name#vde-}"
+    # Strip everything except lowercase a-z, 0-9, and -
+    echo "${name//[^a-z0-9-]/}"
+}
+
+# vde_get_container_name - Get the Docker container name for a VM
+vde_get_container_name() {
+    local vm_name="${1}"
+    # Ensure it starts with vde-
+    if [[ "${vm_name}" != vde-* ]] ; then
+        echo "vde-${vm_name}"
+    else
+        echo "${vm_name}"
+    fi
+}
+
+# vde_get_ssh_host - Get the SSH Host alias for a VM
+vde_get_ssh_host() {
+    vde_get_container_name "${1}"
+}
+
+# vde_get_hostname - Get the internal hostname (same as container name)
+vde_get_hostname() {
+    vde_get_container_name "${1}"
+}
