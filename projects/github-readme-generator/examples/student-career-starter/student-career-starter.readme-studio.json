@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "type": "readme-studio-project",
+  "appVersion": "0.9.3",
+  "name": "Student / Career Starter",
+  "createdAt": "2026-09-27T00:00:00.000Z",
+  "updatedAt": "2026-09-27T00:00:00.000Z",
+  "document": {
+    "markdown": "# Sam Example\n\nLearning by building and explaining.\n\n## Learning\n\nAlgorithms, testing and accessible web development.\n\n## Study project\n\nA small course planner with a documented test suite.\n\n## Contact\n\n[Portfolio](https://example.com) · [Email](mailto:hello@example.com)\n\n<!-- Fictional example. Replace links before publishing. -->\n",
+    "blocks": [
+      {
+        "id": "student-career-starter",
+        "type": "custom",
+        "settings": {
+          "markdown": "# Sam Example\n\nLearning by building and explaining.\n\n## Learning\n\nAlgorithms, testing and accessible web development.\n\n## Study project\n\nA small course planner with a documented test suite.\n\n## Contact\n\n[Portfolio](https://example.com) · [Email](mailto:hello@example.com)\n\n<!-- Fictional example. Replace links before publishing. -->\n"
+        }
+      }
+    ],
+    "metadata": {}
+  },
+  "settings": {},
+  "assets": []
+}

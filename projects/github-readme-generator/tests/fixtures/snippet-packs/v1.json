@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "type": "readme-studio-snippet-pack",
+  "name": "Legacy kit",
+  "description": "Version 1 migration fixture",
+  "author": "Fixture author",
+  "homepage": "https://example.com/legacy",
+  "license": "MIT",
+  "snippets": [
+    {
+      "version": 1,
+      "id": "legacy",
+      "name": "Legacy",
+      "category": "Utilities",
+      "description": "Exact source fixture",
+      "kind": "custom",
+      "fields": [],
+      "tags": ["legacy"],
+      "template": "# Legacy\r\n\r\nExact source.\n"
+    }
+  ],
+  "badgeCollections": []
+}

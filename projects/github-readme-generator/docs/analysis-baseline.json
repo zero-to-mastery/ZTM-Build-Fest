@@ -1,0 +1,42 @@
+{
+  "node": "v22.12.0",
+  "platform": "win32",
+  "method": "Median of five warm runs; analysis reuses the preceding parse; no browser DOM",
+  "rows": [
+    {
+      "kb": 10,
+      "bytes": 10292,
+      "parseMs": 2.462,
+      "analysisMs": 1.425,
+      "statsMs": 0.103
+    },
+    {
+      "kb": 100,
+      "bytes": 102424,
+      "parseMs": 13.359,
+      "analysisMs": 10.843,
+      "statsMs": 1.027
+    },
+    {
+      "kb": 250,
+      "bytes": 256060,
+      "parseMs": 29.73,
+      "analysisMs": 18.214,
+      "statsMs": 2.177
+    },
+    {
+      "kb": 500,
+      "bytes": 512120,
+      "parseMs": 61.674,
+      "analysisMs": 35.054,
+      "statsMs": 4.555
+    },
+    {
+      "kb": 1024,
+      "bytes": 1048668,
+      "parseMs": 135.628,
+      "analysisMs": 75.294,
+      "statsMs": 8.77
+    }
+  ]
+}

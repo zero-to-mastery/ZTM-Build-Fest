@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "type": "readme-studio-project",
+  "appVersion": "0.9.3",
+  "name": "Technical Writer",
+  "createdAt": "2026-09-27T00:00:00.000Z",
+  "updatedAt": "2026-09-27T00:00:00.000Z",
+  "document": {
+    "markdown": "# Taylor Example\n\nHelping developers find their next step.\n\n## Writing\n\n- [A first contribution guide](https://example.com/contribute)\n- [Designing useful error messages](https://example.com/errors)\n\n<details>\n<summary>Documentation approach</summary>\n\nStart with a task, test every example, and explain the tradeoffs.\n\n</details>\n\n## Contact\n\n[Portfolio](https://example.com) · [Email](mailto:hello@example.com)\n\n<!-- Fictional example. Replace links before publishing. -->\n",
+    "blocks": [
+      {
+        "id": "technical-writer",
+        "type": "custom",
+        "settings": {
+          "markdown": "# Taylor Example\n\nHelping developers find their next step.\n\n## Writing\n\n- [A first contribution guide](https://example.com/contribute)\n- [Designing useful error messages](https://example.com/errors)\n\n<details>\n<summary>Documentation approach</summary>\n\nStart with a task, test every example, and explain the tradeoffs.\n\n</details>\n\n## Contact\n\n[Portfolio](https://example.com) · [Email](mailto:hello@example.com)\n\n<!-- Fictional example. Replace links before publishing. -->\n"
+        }
+      }
+    ],
+    "metadata": {}
+  },
+  "settings": {},
+  "assets": []
+}

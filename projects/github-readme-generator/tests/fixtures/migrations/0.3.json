@@ -1,0 +1,18 @@
+{
+  "id": "legacy-3",
+  "name": "Representative 0.3",
+  "markdown": "﻿# Example 3\r\n\r\n<!-- project showcase -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n",
+  "blocks": [
+    {
+      "id": "block-3",
+      "type": "custom",
+      "settings": {
+        "markdown": "﻿# Example 3\r\n\r\n<!-- project showcase -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n"
+      }
+    }
+  ],
+  "metadata": {
+    "fixtureEra": "project showcase"
+  },
+  "updated": 0
+}

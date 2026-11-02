@@ -1,0 +1,18 @@
+{
+  "id": "legacy-5",
+  "name": "Representative 0.5",
+  "markdown": "﻿# Example 5\r\n\r\n<!-- component ownership -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n",
+  "blocks": [
+    {
+      "id": "block-5",
+      "type": "custom",
+      "settings": {
+        "markdown": "﻿# Example 5\r\n\r\n<!-- component ownership -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n"
+      }
+    }
+  ],
+  "metadata": {
+    "fixtureEra": "component ownership"
+  },
+  "updated": 0
+}

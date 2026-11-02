@@ -1,0 +1,136 @@
+name: CI
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container:
+      # Browsers and their system packages are preinstalled; keep in step with @playwright/test.
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --user 1001
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Production dependency audit
+        run: npm audit --omit=dev --audit-level=high
+      - name: Round-trip gate
+        run: npm run test:round-trip
+      - run: npm test
+      - run: npm run build
+      - run: npm run report:bundle
+      - run: npm run test:static
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    container:
+      # Browsers and their system packages are preinstalled; keep in step with @playwright/test.
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --user 1001
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, firefox, webkit]
+        shard: [1, 2]
+    env:
+      # Release branches and tags run every engine; other changes run Chromium only.
+      ALL_ENGINES: ${{ startsWith(github.head_ref || github.ref_name, 'release/') || github.ref_type == 'tag' }}
+    steps:
+      - uses: actions/checkout@v4
+        if: matrix.engine == 'chromium' || env.ALL_ENGINES == 'true'
+      - uses: actions/setup-node@v4
+        if: matrix.engine == 'chromium' || env.ALL_ENGINES == 'true'
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        if: matrix.engine == 'chromium' || env.ALL_ENGINES == 'true'
+      - name: Browser tests
+        if: matrix.engine == 'chromium' || env.ALL_ENGINES == 'true'
+        run: npx playwright test --project=${{ matrix.engine }} --shard=${{ matrix.shard }}/2
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-results-${{ matrix.engine }}-${{ matrix.shard }}
+          path: test-results/
+  chrome:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
+    env:
+      INCLUDE_CHROME: "true"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Chrome browser tests
+        run: npx playwright test --project=chrome --shard=${{ matrix.shard }}/2
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: chrome-test-results-${{ matrix.shard }}
+          path: test-results/
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: rustup toolchain install 1.93.0 --profile minimal --component rustfmt --target wasm32-unknown-unknown
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.cargo/bin/wasm-pack
+            rust/readme-core/target
+          key: rust-${{ runner.os }}-1.93-wasm-pack-0.15-${{ hashFiles('rust/readme-core/Cargo.lock') }}
+      - run: cargo fmt --manifest-path rust/readme-core/Cargo.toml --check
+      - run: npm run test:rust
+      - run: command -v wasm-pack || cargo install wasm-pack --version 0.15.0 --locked
+      - run: npm ci
+      - run: npm run build:wasm
+      - run: npm run test:wasm
+      - run: npm run build
+  evidence:
+    if: always()
+    needs: [verify, browser, chrome, rust]
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_VERIFY_RESULT: ${{ needs.verify.result }}
+      RELEASE_BROWSER_RESULT: ${{ needs.browser.result }}
+      RELEASE_CHROME_RESULT: ${{ needs.chrome.result }}
+      RELEASE_RUST_RESULT: ${{ needs.rust.result }}
+      RELEASE_FULL_BROWSER_MATRIX: ${{ startsWith(github.head_ref || github.ref_name, 'release/') || github.ref_type == 'tag' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Create final release evidence
+        run: npm run release:evidence
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-evidence-${{ github.sha }}
+          path: release-evidence/
+          retention-days: 30

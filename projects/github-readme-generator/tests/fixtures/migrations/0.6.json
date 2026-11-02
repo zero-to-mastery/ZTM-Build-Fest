@@ -1,0 +1,18 @@
+{
+  "id": "legacy-6",
+  "name": "Representative 0.6",
+  "markdown": "﻿# Example 6\r\n\r\n<!-- GitHub provenance -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n",
+  "blocks": [
+    {
+      "id": "block-6",
+      "type": "custom",
+      "settings": {
+        "markdown": "﻿# Example 6\r\n\r\n<!-- GitHub provenance -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n"
+      }
+    }
+  ],
+  "metadata": {
+    "fixtureEra": "GitHub provenance"
+  },
+  "updated": 0
+}

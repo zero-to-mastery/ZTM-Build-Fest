@@ -1,0 +1,18 @@
+{
+  "id": "legacy-7",
+  "name": "Representative 0.7",
+  "markdown": "﻿# Example 7\r\n\r\n<!-- analyzer metadata -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n",
+  "blocks": [
+    {
+      "id": "block-7",
+      "type": "custom",
+      "settings": {
+        "markdown": "﻿# Example 7\r\n\r\n<!-- analyzer metadata -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n"
+      }
+    }
+  ],
+  "metadata": {
+    "fixtureEra": "analyzer metadata"
+  },
+  "updated": 0
+}

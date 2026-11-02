@@ -1,0 +1,18 @@
+{
+  "id": "legacy-2",
+  "name": "Representative 0.2",
+  "markdown": "﻿# Example 2\r\n\r\n<!-- badge collection -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n",
+  "blocks": [
+    {
+      "id": "block-2",
+      "type": "custom",
+      "settings": {
+        "markdown": "﻿# Example 2\r\n\r\n<!-- badge collection -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n"
+      }
+    }
+  ],
+  "metadata": {
+    "fixtureEra": "badge collection"
+  },
+  "updated": 0
+}

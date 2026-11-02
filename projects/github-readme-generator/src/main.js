@@ -1,0 +1,10 @@
+import "@fontsource/dm-sans/latin-400.css";
+import "@fontsource/dm-sans/latin-500.css";
+import "@fontsource/dm-sans/latin-600.css";
+import "@fontsource/dm-sans/latin-700.css";
+import "@fontsource/ibm-plex-mono/latin-400.css";
+import "./styles.css";
+import "highlight.js/styles/github.css";
+import "./components/app-shell.js";
+import { installOfflineStatus } from "./workspace/offline.js";
+installOfflineStatus();

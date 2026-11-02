@@ -1,0 +1,44 @@
+{
+  "name": "readme-studio",
+  "version": "1.9.28",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:round-trip": "vitest run tests/round-trip.test.js tests/source-patch.test.js -t \"round-trip gate|golden fixtures|seeded single-range edits\"",
+    "test:browser": "playwright test --project=chromium",
+    "format": "prettier --write src scripts tests/*.test.js tests/browser docs/*.md README.md CHANGELOG.md package.json *.js .github/workflows/*.yml",
+    "format:check": "prettier --check src scripts tests/*.test.js tests/browser docs/*.md README.md CHANGELOG.md package.json *.js .github/workflows/*.yml",
+    "test:browser:all": "playwright test",
+    "test:static": "node scripts/static-smoke.mjs",
+    "benchmark:analysis": "node scripts/benchmark-analysis.mjs",
+    "benchmark:core": "node scripts/benchmark-core.mjs",
+    "build:wasm": "node scripts/build-wasm.mjs",
+    "test:rust": "cargo test --manifest-path rust/readme-core/Cargo.toml --locked",
+    "test:wasm": "vitest run tests/wasm-core.test.js",
+    "serve:publishing": "node server/start.js",
+    "report:bundle": "node scripts/bundle-report.mjs",
+    "test:performance": "vitest run tests/performance-smoke.test.js",
+    "release:evidence": "node scripts/release-evidence.mjs"
+  },
+  "dependencies": {
+    "@fontsource/dm-sans": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "dompurify": "^3.2.7",
+    "highlight.js": "^11.11.1",
+    "marked": "^16.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.1",
+    "jsdom": "^27.0.0",
+    "prettier": "^3.9.9",
+    "vite": "^7.1.7",
+    "vitest": "^4.1.11"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

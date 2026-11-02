@@ -1,0 +1,7 @@
+# Brand kits are portable visual tokens
+
+The established visual library already provides the safe reusable unit needed by Story 7.1: a complete theme combined with deterministic banner-visual settings. Version 1.9.18 names that unit a **brand kit** and gives new single-entry exports the version-2 `readme-studio-brand-kit` type.
+
+Brand kits contain palette, badge, heading/divider, picture-preference, dimension, alignment, pattern, light/dark, border, accent and deterministic-seed tokens. They may also contain an inert light/dark logo URL or relative-path pair and required alt text. Each reference is limited to 2,048 characters and passes the shared safe-image URL boundary; credentials, data URLs, executable schemes and embedded asset content are rejected. README Source, banner text, filenames, asset directories, SVG, CSS, HTML, scripts and handlers remain excluded.
+
+The change reads old data safely: version-1 visual packs and `readme-studio-visual-preset` files migrate into the version-2 internal `bundles` model without logos. New brand-kit and visual-pack exports use version 2, causing older apps to reject them instead of silently dropping logo fields. Token edits show a complete before/after review and become invalid if an input changes afterward. Applying a kit preserves Custom Markdown and prose; reviewing it offers explicit copyable logo markup without changing Source. Resetting builder-owned overrides still requires separate confirmation. Library changes are local and never publish.

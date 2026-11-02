@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "release": "1.9.28",
+  "gates": [
+    {
+      "id": "round-trip",
+      "kind": "automated",
+      "status": "required",
+      "evidence": "npm run test:round-trip",
+      "jobs": ["verify"]
+    },
+    {
+      "id": "unit",
+      "kind": "automated",
+      "status": "required",
+      "evidence": "npm test",
+      "jobs": ["verify"]
+    },
+    {
+      "id": "production-build",
+      "kind": "automated",
+      "status": "required",
+      "evidence": "npm run build && npm run report:bundle",
+      "jobs": ["verify"]
+    },
+    {
+      "id": "dependency-security",
+      "kind": "automated",
+      "status": "required",
+      "evidence": "npm audit --omit=dev --audit-level=high",
+      "jobs": ["verify"]
+    },
+    {
+      "id": "offline-recovery",
+      "kind": "automated",
+      "status": "required",
+      "evidence": "npm run test:static plus hardening, offline-status and feedback-diagnostics tests",
+      "jobs": ["verify", "browser"]
+    },
+    {
+      "id": "browser-matrix",
+      "kind": "automated",
+      "status": "required",
+      "evidence": "CI browser and chrome jobs",
+      "jobs": ["browser", "chrome"],
+      "requiresFullBrowserMatrix": true
+    },
+    {
+      "id": "rust-wasm",
+      "kind": "automated",
+      "status": "required",
+      "evidence": "cargo fmt, cargo test, wasm build/tests and production build",
+      "jobs": ["rust"]
+    },
+    {
+      "id": "screen-reader",
+      "kind": "manual",
+      "status": "pending",
+      "instructions": "Run docs/accessibility-acceptance.md with a named browser, operating system, assistive technology and version. Record the operator, UTC date, candidate commit, completed steps and exceptions.",
+      "evidence": null,
+      "signedOffBy": null,
+      "signedOffAt": null
+    },
+    {
+      "id": "live-publishing",
+      "kind": "manual",
+      "status": "pending",
+      "instructions": "Use an operator-configured GitHub App and disposable authorized repository. Complete the manual checks in docs/github-publishing.md, record the candidate commit and confirm the remote file/blob results. Mocked tests are not accepted.",
+      "evidence": null,
+      "signedOffBy": null,
+      "signedOffAt": null
+    }
+  ]
+}

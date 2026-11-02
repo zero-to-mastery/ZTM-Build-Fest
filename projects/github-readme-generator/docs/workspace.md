@@ -1,0 +1,15 @@
+# Workspace
+
+Tools are grouped into Create, Design, Review, GitHub and Save. **Create → Guided start** reopens the [first-run goal chooser](guided-start.md) with your current goal marked. After an import, an audit, a template or a blank start, the [Next steps](next-steps.md) panel above the panes suggests up to three of these tools for the document you just opened; **All tools** opens workspace search and **Hide** removes the panel. Each group can be collapsed with its keyboard-operable disclosure; that choice stays in this browser. The builder's existing section controls retain edit, copy, duplicate, move and remove actions. Project and generated-content tools keep their explicit refresh/review flows.
+
+Use **Search workspace** or **Ctrl/Cmd+K** to search commands, current sections/projects, saved badge collections, saved snippets and widgets. Results are limited to 50; add search terms to narrow them. Enter opens the first result, Arrow Down enters the results and Tab explores them. Search opens the relevant editor/library; it never inserts, applies a refactor or publishes automatically. Escape returns focus and respects unsaved editor changes.
+
+Shortcuts: Ctrl/Cmd+S saves locally; Alt+1–4 selects Build, Markdown, Preview or Health; Ctrl/Cmd+Shift+P opens publishing review; Ctrl/Cmd+Shift+E downloads README. Shortcuts are handled only while focus is inside the app, and operating-system/browser shortcuts may take precedence. Shift+Tab leaves the Markdown editor.
+
+**Save → Settings** groups editor text size, preview width, reduced motion, guidance (**Show next steps after imports, audits and templates**), GitHub and storage controls. The guidance choice is a workspace preference stored with your goal, not a setting copied into Studio projects. System reduced motion also remains active. Selected mobile pane, builder collapse, tool disclosures, preview width, app/preview colors and editor preferences persist. Draft selection is already persistent. Pending publishing approvals and authentication credentials are never workspace preferences.
+
+Dialogs show the active draft context. **Save → Local activity** lists at most 50 recent tool openings using fixed command identifiers and timestamps. It contains no README source, search terms, account details or telemetry. Clear it at any time. Opening a tool does not mean its operation succeeded; publishing reports success separately.
+
+Source review uses read-only current/generated panes and a textual unified diff. Plus/minus markers explain additions/removals without relying on color. Full source remains authoritative; review does not alter Markdown. Every tool retains its own stale-state and explicit-apply protections.
+
+**Review → Audience review** reads the active source locally. It reports heading evidence for a selected reader and project type without a score. A section-order proposal appears only for an unambiguous H2 structure and remains inert until its exact source diff is approved. Applying creates one Undo checkpoint and does not publish.
