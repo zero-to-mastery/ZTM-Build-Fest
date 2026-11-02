@@ -17,7 +17,7 @@ use axum::{
 use tokio::net::TcpListener;
 use tower::ServiceBuilder;
 use tower_http::{
-    cors::{Any, CorsLayer},
+    cors::{AllowOrigin, CorsLayer},
     request_id::{PropagateRequestIdLayer, SetRequestIdLayer},
     services::ServeDir,
     trace::TraceLayer,
@@ -70,11 +70,15 @@ pub fn build_router(state: AppState) -> Router {
     //
     // Restricting `allow_methods` to GET and HEAD is therefore what actually keeps the
     // write endpoint out of reach cross-origin — a browser may not issue the POST. That
-    // is a convenience, NOT authentication: `curl -X POST` bypasses CORS entirely, so
-    // `POST /rotation` still needs an API key before this is deployed publicly.
+    // is a convenience, NOT authentication: `curl -X POST` bypasses CORS entirely,
+    // which is why `POST /rotation` sits behind `basic_auth`.
+    //
+    // Origins come from `[cors] allowed_origins`. Only those browsers get an
+    // `Access-Control-Allow-Origin` back; any other site's script is refused the
+    // response. Non-browser clients can still read the (public) rotation.
     let cors = CorsLayer::new()
         .allow_methods([Method::GET, Method::HEAD])
-        .allow_origin(Any)
+        .allow_origin(AllowOrigin::list(state.cors_origins.clone()))
         .allow_headers([CONTENT_TYPE, ACCEPT, DATASTAR_REQUEST]);
 
     Router::new()

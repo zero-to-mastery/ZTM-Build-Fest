@@ -1,2 +1,8 @@
 [application]
 host = "0.0.0.0"
+
+[database]
+# On the Railway volume, so entries survive restarts, deploys, and sleeps.
+# Provisioning the mount at /data is what makes this path real — flipping it
+# before the volume exists would crash SQLite against a missing directory.
+path = "/data/musicfeed.db"

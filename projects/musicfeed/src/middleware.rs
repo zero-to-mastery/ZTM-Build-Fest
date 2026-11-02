@@ -51,7 +51,7 @@ pub async fn basic_auth(
         return unauthorized();
     }
 
-    let (Some(username), Some(password)) = (parts.get(0), parts.get(1)) else {
+    let (Some(username), Some(password)) = (parts.first(), parts.get(1)) else {
         return unauthorized();
     };
 
