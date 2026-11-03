@@ -1,62 +1,28 @@
 # ZTM Build Fest 2026
-## MusicFeed - Publish your Favourites
+## MusicFeed — Publish your favourites
 
-### User Story
-A place where I record what I'm listening to, and it publishes to my music blog [Crusty Metallian](https://crusty-metallian.net) without me manually having to touch the site. This satisfies my want to share what I'm listening to so that others can see, enjoy, and discover new music that might have been unknown to them.
+MusicFeed is a personal music log that sends what I'm listening to to my blog, [Crusty Metallian](https://crusty-metallian.net). I can record an album once, and it appears in the music widget on the blog's front page—no manual site edits needed. The goal is to help visitors discover music they might not otherwise encounter.
 
-### Guiding Principles
+### Try it
 
-*Use of AI*
-I'm using AI in two ways:
-1. To guide the overall development of the project, including big brainstorming.
-2. I'll be using my own harness [Rho Code](https://rho-code.dev) as a research assistant and pair programmer. It will provide me a sounding board and act as a pair programmer and reviewer.
+- **Listen:** Visit [Crusty Metallian](https://crusty-metallian.net) to see the MusicFeed widget on the front page.
+- **MusicFeed service:** [musicfeed.crusty-metallian.net](https://musicfeed.crusty-metallian.net) (hosted on Railway).
 
-*Starter Template*
-My API will be founded in a starter I built myself: [Axum-Tera-Datastar](https://github.com/crustyrustacean/axum-tera-datastar.git)
+The service provides the form for adding entries and the API used by the blog widget. Form submissions are protected by HTTP Basic Authentication; I'm currently the only user authorized to add entries. Visitors can see the music on the blog; they don't need to download or run MusicFeed.
 
-### How to Download and Run
+### How it works
 
-MusicFeed lives inside the ZTM Build Fest monorepo, so clone the whole repo and then step into this folder:
+I add an artist, album, and optional note through MusicFeed. The service looks up release-year and cover-art metadata when available, saves the entry, and makes it available to the blog widget. A lookup miss doesn't prevent an entry from being saved; a background task can retry missing metadata later.
 
-```bash
-git clone https://github.com/crustyrustacean/ZTM-Build-Fest.git
-cd ZTM-Build-Fest/projects/musicfeed
-```
+### Built with
 
-**Prerequisite:** a stable Rust toolchain. `rust-toolchain.toml` pins `stable`, and the crate is on the 2024 edition (needs Rust 1.85 or newer). If you have `rustup` it will fetch the pinned toolchain for you on the first build.
+- Rust and [Axum](https://github.com/tokio-rs/axum) for the web service
+- [Tera](https://github.com/Keats/tera) templates and [Datastar](https://data-star.dev/) for the interactive form and live updates
+- SQLite for persistent storage
+- MusicBrainz and the Cover Art Archive for album metadata
 
-Start the server:
+The project builds on my [Axum-Tera-Datastar starter](https://github.com/crustyrustacean/axum-tera-datastar).
 
-```bash
-cargo run
-```
+### About the project
 
-Then open <http://127.0.0.1:8000>.
-
-> **Run it from inside `projects/musicfeed`.** Tera loads `templates/**/*.html` and the config loader reads `configuration/`, both relative to the current working directory, so starting the binary from the repo root will panic on startup.
-
-**Configuration** is layered: `configuration/base.toml` first, then `configuration/local.toml` (the default) or `configuration/production.toml`, then environment variables take final precedence.
-
-| Variable | Effect | Default |
-| --- | --- | --- |
-| `APP_ENVIRONMENT` | Selects `local` or `production` | `local` |
-| `APP_APPLICATION__HOST` | Bind address | `127.0.0.1` |
-| `APP_APPLICATION__PORT` | Bind port | `8000` |
-
-The `__` separator is how nested keys are addressed, so `APP_APPLICATION__PORT=8080` sets `application.port`:
-
-```bash
-APP_APPLICATION__PORT=8080 cargo run
-```
-
-### Running the Tests
-
-```bash
-cargo test
-```
-
-The integration tests boot the app on an ephemeral port and exercise the Datastar/SSE round trip, including the HTML-escaping guarantees. Set `TEST_LOG=1` to see application logs during the run.
-
-### What's Next
-
-The API will live in the web, deployed to `fly.io` — **nothing is provisioned there yet, so the app is local-only for now.** From there there will be a form for entering new albums/songs I've chosen to listen to at any given time. End users can then simply view my blog site and be presented with a real time update of what I'm listening to; they won't have to install or do anything other than that.
+This is my [ZTM Build Fest 2026](https://github.com/zero-to-mastery/ZTM-Build-Fest) project. I use AI to help brainstorm and guide development, and my own harness, [Rho Code](https://rho-code.dev), as a research assistant, pair programmer, and reviewer.
