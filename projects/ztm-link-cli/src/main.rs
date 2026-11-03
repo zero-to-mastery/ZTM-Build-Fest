@@ -13,7 +13,8 @@ use crossterm::terminal::{Clear, ClearType};
 use picker::{Outcome, Picker};
 
 const DATA_DIR: &str = "data";
-const REPO_RAW_URL: &str = "https://raw.githubusercontent.com/markodowd/zero-to-mastery-links/main";
+const REPO_RAW_URL: &str =
+    "https://raw.githubusercontent.com/ztm-desktop-application/zero-to-mastery-links/main";
 const CSV_FILES: [&str; 2] = ["course.csv", "path.csv"];
 
 /// A single row from one of the CSV files.
@@ -60,7 +61,10 @@ fn clear_screen() -> io::Result<()> {
 fn print_header(courses: usize, paths: usize) -> io::Result<()> {
     clear_screen()?;
     println!("{}", "Zero To Mastery Links".cyan().bold());
-    println!("{}\n", format!("{courses} courses · {paths} career paths").dim());
+    println!(
+        "{}\n",
+        format!("{courses} courses · {paths} career paths").dim()
+    );
     Ok(())
 }
 
@@ -85,10 +89,13 @@ fn run() -> Result<(), Box<dyn Error>> {
     loop {
         print_header(courses.len(), paths.len())?;
 
-        let choice = Picker::new("What would you like to browse?", vec!["Courses", "Career Paths", "Quit"])
-            .help("↑↓ to move, Enter to select, Esc to quit")
-            .gap_after(1)
-            .run()?;
+        let choice = Picker::new(
+            "What would you like to browse?",
+            vec!["Courses", "Career Paths", "Quit"],
+        )
+        .help("↑↓ to move, Enter to select, Esc to quit")
+        .gap_after(1)
+        .run()?;
 
         let (title, links) = match choice {
             Outcome::Selected(0) => ("Courses:", &courses),
@@ -101,7 +108,11 @@ fn run() -> Result<(), Box<dyn Error>> {
         match select_link(title, links)? {
             Outcome::Selected(index) => {
                 let link = &links[index];
-                println!("{} {}", "Opening".green().bold(), link.url.as_str().underlined());
+                println!(
+                    "{} {}",
+                    "Opening".green().bold(),
+                    link.url.as_str().underlined()
+                );
                 open::that(&link.url)?;
                 return Ok(());
             }

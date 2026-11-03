@@ -138,7 +138,9 @@ impl<'a> Picker<'a> {
                 }
                 KeyCode::Char(c)
                     if self.filterable
-                        && !key.modifiers.intersects(KeyModifiers::CONTROL | KeyModifiers::ALT) =>
+                        && !key
+                            .modifiers
+                            .intersects(KeyModifiers::CONTROL | KeyModifiers::ALT) =>
                 {
                     state.filter.push(c);
                     self.apply_filter(&mut state);
@@ -147,7 +149,11 @@ impl<'a> Picker<'a> {
             }
         };
 
-        execute!(io::stdout(), MoveTo(0, top), Clear(ClearType::FromCursorDown))?;
+        execute!(
+            io::stdout(),
+            MoveTo(0, top),
+            Clear(ClearType::FromCursorDown)
+        )?;
         Ok(outcome)
     }
 
