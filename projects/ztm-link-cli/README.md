@@ -2,7 +2,7 @@
 
 A small terminal app for jumping straight to any [Zero To Mastery](https://zerotomastery.io) course or career path page. Pick one from a menu and it opens in your default browser.
 
-![ZTM Link CLI demo: filtering courses and opening one in the browser](assets/demo.gif)
+![ZTM Link CLI demo: filtering courses and opening one in the browser](https://raw.githubusercontent.com/markodowd/ztm-link-cli/main/assets/demo.gif)
 
 ## The problem
 
@@ -10,7 +10,7 @@ ZTM has well over a hundred courses and dozens of career paths. Finding one spec
 
 ## Features
 
-- **Always up to date:** the course and career-path lists are downloaded from [markodowd/zero-to-mastery-links](https://github.com/markodowd/zero-to-mastery-links) every time the app starts.
+- **Always up to date:** the course and career-path lists are downloaded from [ztm-desktop-application/zero-to-mastery-links](https://github.com/ztm-desktop-application/zero-to-mastery-links) every time the app starts.
 - **Type to filter:** the list shrinks as you type. Matching ignores case and looks for your text anywhere in the name.
 - **Keyboard only:** arrow keys to move, Enter to choose, Esc to go back.
 - **Opens your browser:** the selected page opens in your default browser on Linux, macOS and Windows.
@@ -22,7 +22,14 @@ ZTM has well over a hundred courses and dozens of career paths. Finding one spec
 - [Rust](https://www.rust-lang.org/tools/install) 1.85 or newer, because the project uses the 2024 edition
 - An internet connection, to download the link lists
 
-### Run
+### Install from crates.io
+
+```bash
+cargo install ztm-link-cli
+ztm-link-cli
+```
+
+### Run from source
 
 From this folder:
 
@@ -30,14 +37,14 @@ From this folder:
 cargo run --release
 ```
 
-To install it as a command you can run from anywhere:
+To install your local checkout as a command:
 
 ```bash
 cargo install --path .
 ztm-link-cli
 ```
 
-The app saves the downloaded lists to a `data/` folder inside the directory you run it from.
+The app saves the downloaded lists to your user cache directory: `~/.cache/ztm-link-cli` on Linux, `~/Library/Caches/ztm-link-cli` on macOS, and `%LOCALAPPDATA%\ztm-link-cli` on Windows.
 
 ## Controls
 
@@ -52,7 +59,7 @@ The app saves the downloaded lists to a `data/` folder inside the directory you 
 
 ## How it works
 
-1. On start, the app downloads `course.csv` and `path.csv` from the links repo into `data/`. Each file has a header row and two columns: the name and the URL.
+1. On start, the app downloads `course.csv` and `path.csv` from the links repo into the cache directory (found with the [`dirs`](https://crates.io/crates/dirs) crate). Each file has a header row and two columns: the name and the URL.
 2. It reads both files with the [`csv`](https://crates.io/crates/csv) crate. Some course names contain commas, so splitting lines by hand isn't enough.
 3. The menus are drawn with [`crossterm`](https://crates.io/crates/crossterm), which also handles colours and clearing the screen.
 4. The chosen URL is opened with the [`open`](https://crates.io/crates/open) crate.
@@ -67,7 +74,6 @@ ztm-link-cli/
 ├── src/
 │   ├── main.rs     # download, CSV loading, main menu loop
 │   └── picker.rs   # arrow-key picker with type-to-filter
-└── data/           # created at runtime (git-ignored)
 ```
 
 ## How AI was used
