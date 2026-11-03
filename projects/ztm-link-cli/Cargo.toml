@@ -2,10 +2,20 @@
 name = "ztm-link-cli"
 version = "0.1.0"
 edition = "2024"
+rust-version = "1.85"
+authors = ["Mark O'Dowd <contact@markodowd.dev>"]
 license = "MIT"
+description = "Terminal picker for quickly opening Zero To Mastery course and career path pages in your browser"
+repository = "https://github.com/markodowd/ztm-link-cli"
+homepage = "https://github.com/markodowd/ztm-link-cli"
+readme = "README.md"
+keywords = ["cli", "zero-to-mastery", "ztm", "tui", "launcher"]
+categories = ["command-line-utilities"]
+exclude = ["assets/", ".gitignore"]
 
 [dependencies]
 crossterm = "0.29"
 csv = "1.4.0"
+dirs = "7.0.0"
 open = "5.4.4"
 ureq = "3.4.2"
