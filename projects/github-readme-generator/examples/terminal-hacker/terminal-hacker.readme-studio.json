@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "type": "readme-studio-project",
+  "appVersion": "0.9.3",
+  "name": "Terminal / Hacker",
+  "createdAt": "2026-09-27T00:00:00.000Z",
+  "updatedAt": "2026-09-27T00:00:00.000Z",
+  "document": {
+    "markdown": "# Alex Example\n\nSmall scripts, clear interfaces.\n\n```text\n$ whoami\nA curious developer who documents the journey.\n$ cat interests\nCLI tools · Unix · reproducible builds\n```\n\n## Contact\n\n[Portfolio](https://example.com) · [Email](mailto:hello@example.com)\n\n<!-- Fictional example. Replace links before publishing. -->\n",
+    "blocks": [
+      {
+        "id": "terminal-hacker",
+        "type": "custom",
+        "settings": {
+          "markdown": "# Alex Example\n\nSmall scripts, clear interfaces.\n\n```text\n$ whoami\nA curious developer who documents the journey.\n$ cat interests\nCLI tools · Unix · reproducible builds\n```\n\n## Contact\n\n[Portfolio](https://example.com) · [Email](mailto:hello@example.com)\n\n<!-- Fictional example. Replace links before publishing. -->\n"
+        }
+      }
+    ],
+    "metadata": {}
+  },
+  "settings": {},
+  "assets": []
+}

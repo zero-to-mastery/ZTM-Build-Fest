@@ -1,0 +1,5 @@
+# Drift checks read bounded file content but persist nothing
+
+Evidence Snapshots (ADR 0001) store revisions only. Detecting stale commands and links needs file content too: `package.json` script names, a `.env` example's keys and the headings of linked Markdown files. A Drift check reads at most that small, fixed set of files by blob revision from the tree it just listed, parses them as data (never executing anything), keeps only names and anchors in memory for the comparison and discards everything when the result is shown. Neither the content nor the results are saved, so snapshot schema version 1 and the workspace format are unchanged.
+
+We accepted that a result disappears when the dialog closes and must be re-run, in exchange for no third-party file content in browser storage, backups or recovery downloads, and results that always describe the repository now rather than an aging copy. Results carry claim IDs (stable for the same Source), source line numbers and the Evidence file that decided them, so a later reviewed-remediation workflow can turn a fresh result into a proposal without storing it.

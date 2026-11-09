@@ -1,0 +1,21 @@
+# Dynamic Widget Hub
+
+Open **Widget Hub** to browse or search seven upstream projects and a generic image embed helper. Each entry identifies setup complexity, GitHub Actions/hosting requirements, upstream project and documentation. Favorites use the same IDs as Component Library widget favorites. No API integrations, credentials, provider proxy or widget configuration backend are included.
+
+| Widget                                                                          | Setup guidance                                                                                                                   |
+| ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| [GitHub Constellation](https://github.com/mnichols08/constellation)             | Configure in its upstream studio or workflow, publish its SVG, paste the output URL. Automatic updates use its Actions workflow. |
+| [lowlighter/metrics](https://github.com/lowlighter/metrics)                     | Configure plugins upstream, commonly with Actions; paste generated SVG output. The Hub does not reproduce Metrics configuration. |
+| [Contribution Snake](https://github.com/Platane/snk)                            | Configure the scheduled workflow upstream and paste published light/dark SVG URLs. Animated SVG.                                 |
+| [Typing SVG](https://github.com/DenverCoder1/readme-typing-svg)                 | Generate a URL locally from lines, font, size, duration, color and centering; no Actions required. Animated remote SVG.          |
+| [Streak Stats](https://github.com/DenverCoder1/github-readme-streak-stats)      | Use its upstream generator or self-hosted endpoint; paste its image URL.                                                         |
+| [GitHub Readme Stats](https://github.com/anuraghazra/github-readme-stats)       | Upstream recommends Actions or self-hosting for reliability; public endpoint is best-effort. Paste your chosen image URL.        |
+| [Activity Graph](https://github.com/Ashutosh00710/github-readme-activity-graph) | Configure upstream or self-host; paste the resulting graph URL.                                                                  |
+
+Generic fields accept image/light/dark URLs, optional click-through, alt text, left/center alignment and optional dimensions (1–2000 pixels). Output is ordinary Markdown, linked Markdown, HTML or picture markup. Safe relative asset paths work after you commit assets; local previews cannot access sibling repository files. Missing alt text is advisory; meaningful alt text explains the image's purpose.
+
+Typing helper uses the upstream documented query syntax. Enter up to ten lines, one per line; semicolons are reserved separators. Generate URL does not fetch anything. The configured typing text becomes part of its public image URL. Other widgets accept output URLs without reproducing their APIs or configuration. Exported attribution is optional; the upstream attribution remains visible in Studio. Check the upstream project's current licensing and hosting requirements before redistribution.
+
+**Load remote preview** explicitly contacts the image host directly. No draft content is uploaded; only the selected image request and its parameters are sent. Remote previews may be animated or unavailable offline; errors show a placeholder and do not block insertion. Studio does not retry repeatedly, proxy requests, guarantee uptime or verify upstream configuration. Preview sanitization never rewrites source. Copy failures select the source for manual copying. Health advice detects repeated known widgets, large runs, missing alt text and mixed fixed widths; it is heuristic and ignores fenced code examples.
+
+Since v0.5.3, section insertion retains the configured widget as a Studio component. Edit visually reopens the original provider helper; Save configured component preset makes it reusable across drafts and snippet packs. Configuration metadata never appears in README export. At-cursor insertion remains raw Markdown. Manual raw document edits detach ownership safely, with Undo available. The component browser can open the guided helper directly from a widget detail view.

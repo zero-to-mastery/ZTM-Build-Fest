@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "type": "readme-studio-project",
+  "appVersion": "1.9.7",
+  "name": "Mixed ownership",
+  "createdAt": "2026-10-23T00:00:00.000Z",
+  "updatedAt": "2026-10-23T00:00:00.000Z",
+  "document": {
+    "markdown": "# Ada\n\nLocal-first docs\r\n\r\n<!-- exact -->\r\nLine with two spaces  \r\n\n## $ Work\n\n```js\nconsole.log(\"exact\");\n```",
+    "blocks": [
+      {
+        "id": "fixture-hero",
+        "type": "hero",
+        "settings": {
+          "name": "Ada",
+          "subtitle": "Local-first docs"
+        }
+      },
+      {
+        "id": "fixture-custom",
+        "type": "custom",
+        "settings": {
+          "markdown": "<!-- exact -->\r\nLine with two spaces  \r\n"
+        },
+        "separator": "\r\n\r\n"
+      },
+      {
+        "id": "fixture-component",
+        "type": "component",
+        "settings": {
+          "name": "Terminal heading",
+          "markdown": "## $ Work\n\n```js\nconsole.log(\"exact\");\n```",
+          "instance": {
+            "version": 1,
+            "component": {
+              "version": 1,
+              "id": "fixture:terminal-heading",
+              "name": "Terminal heading",
+              "category": "Terminal",
+              "description": "Pinned mixed-ownership fixture",
+              "kind": "structured",
+              "template": "## $ Work\n\n```js\nconsole.log(\"exact\");\n```",
+              "fields": [],
+              "tags": ["fixture"],
+              "attribution": null,
+              "external": false
+            },
+            "values": {}
+          }
+        },
+        "separator": "\n"
+      }
+    ],
+    "metadata": {
+      "studioProject": {
+        "createdAt": "2026-10-23T00:00:00.000Z"
+      }
+    }
+  },
+  "settings": {
+    "pane": "build",
+    "collapsed": false,
+    "editorFont": "13",
+    "reduceMotion": false,
+    "closedGroups": [],
+    "theme": "light",
+    "preview": "1012"
+  },
+  "assets": []
+}

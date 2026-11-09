@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "type": "readme-studio-project",
+  "appVersion": "1.9.7",
+  "name": "Portable source",
+  "createdAt": "2026-10-23T00:00:00.000Z",
+  "updatedAt": "2026-10-23T00:00:00.000Z",
+  "document": {
+    "markdown": "﻿# Portable\r\n\r\nRaw <span data-x=\"1\">HTML</span>\n",
+    "blocks": [
+      {
+        "id": "fixture-custom",
+        "type": "custom",
+        "settings": {
+          "markdown": "﻿# Portable\r\n\r\nRaw <span data-x=\"1\">HTML</span>\n"
+        }
+      }
+    ],
+    "metadata": {
+      "studioProject": {
+        "createdAt": "2026-10-23T00:00:00.000Z"
+      }
+    }
+  },
+  "settings": {
+    "pane": "markdown",
+    "collapsed": false,
+    "editorFont": "15",
+    "reduceMotion": false,
+    "closedGroups": [],
+    "theme": "dark",
+    "preview": "760"
+  },
+  "assets": []
+}

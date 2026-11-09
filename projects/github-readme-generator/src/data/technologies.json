@@ -1,0 +1,178 @@
+[
+  {
+    "id": "js",
+    "name": "JavaScript",
+    "logo": "javascript",
+    "brandColor": "F7DF1E",
+    "category": "Languages",
+    "aliases": ["js", "ecmascript"]
+  },
+  {
+    "id": "ts",
+    "name": "TypeScript",
+    "logo": "typescript",
+    "brandColor": "3178C6",
+    "category": "Languages",
+    "aliases": ["ts"]
+  },
+  {
+    "id": "react",
+    "name": "React",
+    "logo": "react",
+    "brandColor": "149ECA",
+    "category": "Frontend",
+    "aliases": ["jsx"]
+  },
+  {
+    "id": "next",
+    "name": "Next.js",
+    "logo": "nextdotjs",
+    "brandColor": "000000",
+    "category": "Frontend",
+    "aliases": ["nextjs"]
+  },
+  {
+    "id": "vue",
+    "name": "Vue",
+    "logo": "vuedotjs",
+    "brandColor": "4FC08D",
+    "category": "Frontend",
+    "aliases": []
+  },
+  {
+    "id": "wc",
+    "name": "Web Components",
+    "logo": "webcomponentsdotorg",
+    "brandColor": "29ABE2",
+    "category": "Frontend",
+    "aliases": ["custom elements", "shadow dom"]
+  },
+  {
+    "id": "node",
+    "name": "Node.js",
+    "logo": "nodedotjs",
+    "brandColor": "5FA04E",
+    "category": "Backend",
+    "aliases": ["nodejs"]
+  },
+  {
+    "id": "express",
+    "name": "Express",
+    "logo": "express",
+    "brandColor": "333333",
+    "category": "Backend",
+    "aliases": []
+  },
+  {
+    "id": "rust",
+    "name": "Rust",
+    "logo": "rust",
+    "brandColor": "CE422B",
+    "category": "Languages",
+    "aliases": ["cargo"]
+  },
+  {
+    "id": "wasm",
+    "name": "WebAssembly",
+    "logo": "webassembly",
+    "brandColor": "654FF0",
+    "category": "Languages",
+    "aliases": ["wasm"]
+  },
+  {
+    "id": "python",
+    "name": "Python",
+    "logo": "python",
+    "brandColor": "3776AB",
+    "category": "Languages",
+    "aliases": ["py"]
+  },
+  {
+    "id": "mongo",
+    "name": "MongoDB",
+    "logo": "mongodb",
+    "brandColor": "47A248",
+    "category": "Databases",
+    "aliases": ["mongo"]
+  },
+  {
+    "id": "postgres",
+    "name": "PostgreSQL",
+    "logo": "postgresql",
+    "brandColor": "4169E1",
+    "category": "Databases",
+    "aliases": ["postgres", "sql"]
+  },
+  {
+    "id": "vitest",
+    "name": "Vitest",
+    "logo": "vitest",
+    "brandColor": "729B1B",
+    "category": "Testing",
+    "aliases": []
+  },
+  {
+    "id": "jest",
+    "name": "Jest",
+    "logo": "jest",
+    "brandColor": "C21325",
+    "category": "Testing",
+    "aliases": []
+  },
+  {
+    "id": "playwright",
+    "name": "Playwright",
+    "logo": "playwright",
+    "brandColor": "2EAD33",
+    "category": "Testing",
+    "aliases": ["e2e"]
+  },
+  {
+    "id": "actions",
+    "name": "GitHub Actions",
+    "logo": "githubactions",
+    "brandColor": "2088FF",
+    "category": "DevOps",
+    "aliases": ["ci", "cd"]
+  },
+  {
+    "id": "vite",
+    "name": "Vite",
+    "logo": "vite",
+    "brandColor": "646CFF",
+    "category": "Tooling",
+    "aliases": ["bundler"]
+  },
+  {
+    "id": "docker",
+    "name": "Docker",
+    "logo": "docker",
+    "brandColor": "2496ED",
+    "category": "DevOps",
+    "aliases": ["containers"]
+  },
+  {
+    "id": "aws",
+    "name": "AWS",
+    "logo": "amazonwebservices",
+    "brandColor": "232F3E",
+    "category": "Cloud",
+    "aliases": ["amazon"]
+  },
+  {
+    "id": "netlify",
+    "name": "Netlify",
+    "logo": "netlify",
+    "brandColor": "008C99",
+    "category": "Cloud",
+    "aliases": []
+  },
+  {
+    "id": "git",
+    "name": "Git",
+    "logo": "git",
+    "brandColor": "F05032",
+    "category": "Tooling",
+    "aliases": ["version control"]
+  }
+]

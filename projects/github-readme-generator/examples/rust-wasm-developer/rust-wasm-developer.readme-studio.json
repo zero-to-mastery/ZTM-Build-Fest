@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "type": "readme-studio-project",
+  "appVersion": "0.9.3",
+  "name": "Rust/WASM Developer",
+  "createdAt": "2026-09-27T00:00:00.000Z",
+  "updatedAt": "2026-09-27T00:00:00.000Z",
+  "document": {
+    "markdown": "# Casey Example\n\nPortable tools with predictable performance.\n\n## Workbench\n\nRust libraries with a browser-friendly WebAssembly boundary.\n\n```rust\nfn main() {\n    println!(\"Hello, readable software!\");\n}\n```\n\n> Benchmarks describe a workload, not a universal promise.\n\n## Contact\n\n[Portfolio](https://example.com) · [Email](mailto:hello@example.com)\n\n<!-- Fictional example. Replace links before publishing. -->\n",
+    "blocks": [
+      {
+        "id": "rust-wasm-developer",
+        "type": "custom",
+        "settings": {
+          "markdown": "# Casey Example\n\nPortable tools with predictable performance.\n\n## Workbench\n\nRust libraries with a browser-friendly WebAssembly boundary.\n\n```rust\nfn main() {\n    println!(\"Hello, readable software!\");\n}\n```\n\n> Benchmarks describe a workload, not a universal promise.\n\n## Contact\n\n[Portfolio](https://example.com) · [Email](mailto:hello@example.com)\n\n<!-- Fictional example. Replace links before publishing. -->\n"
+        }
+      }
+    ],
+    "metadata": {}
+  },
+  "settings": {},
+  "assets": []
+}

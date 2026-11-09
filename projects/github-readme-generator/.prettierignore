@@ -1,0 +1,8 @@
+node_modules
+dist
+.npm-cache
+test-results
+playwright-report
+package-lock.json
+
+src/analysis/wasm/

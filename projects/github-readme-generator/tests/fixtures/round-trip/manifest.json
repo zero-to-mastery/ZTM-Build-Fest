@@ -1,0 +1,61 @@
+{
+  "version": 2,
+  "fixtures": [
+    {
+      "name": "bom.md",
+      "kind": "markdown",
+      "covers": "UTF-8 byte-order mark",
+      "sha256": "0c1291c3112bb22bace5a7ab75cba8e96c4d4c999dc96a5066e4f2a37f8b575f"
+    },
+    {
+      "name": "crlf.md",
+      "kind": "markdown",
+      "covers": "CRLF line endings",
+      "sha256": "85b3db11892fbd73fd4a0919b4016faccca34c6383f4dfd469a267ed325d2527"
+    },
+    {
+      "name": "fences.md",
+      "kind": "markdown",
+      "covers": "fenced code and delimiter-like content",
+      "sha256": "147c45b9b238098854331fdab3ff5065f6d492c5fa7cf6ff04cf168a21c3e326"
+    },
+    {
+      "name": "html.md",
+      "kind": "markdown",
+      "covers": "raw HTML blocks and attributes",
+      "sha256": "ea8fec1f13bddcac7b3217a915d7600086e0b178fab0ce752083c071d68e325c"
+    },
+    {
+      "name": "mixed-eol.md",
+      "kind": "markdown",
+      "covers": "mixed LF and CRLF line endings",
+      "sha256": "5548f6cddb8b646a37b18127f92ac24cbdb5cb939c6ef3bee4c153d7af82a657"
+    },
+    {
+      "name": "no-final-newline.md",
+      "kind": "markdown",
+      "covers": "missing final newline",
+      "sha256": "775c6f94b5d2bab4cf8929f44b868770a5699377f348fbfd10c45c4865bc6bc6"
+    },
+    {
+      "name": "trailing-whitespace.md",
+      "kind": "markdown",
+      "covers": "tabs, hard breaks, and trailing whitespace",
+      "sha256": "4dcaa6a4217cbf78dd6fc67055e5daff8150b496f2572002eefee28d65066ee4"
+    },
+    {
+      "name": "studio-project.readme-studio.json",
+      "kind": "studio-project",
+      "covers": "Studio JSON with BOM, CRLF, raw HTML, and workspace preferences",
+      "blockTypes": ["custom"],
+      "sha256": "55310d14dfd2917c67a073f24a9472cad006223d18fef68e98333495f55a4fe9"
+    },
+    {
+      "name": "mixed-ownership.readme-studio.json",
+      "kind": "studio-project",
+      "covers": "builder, exact custom Markdown, component ownership, seams, and mixed line endings",
+      "blockTypes": ["hero", "custom", "component"],
+      "sha256": "f240986b7de047caef6e90397e60a427d46ccf11f5a34da067bd661a66ce3dfe"
+    }
+  ]
+}

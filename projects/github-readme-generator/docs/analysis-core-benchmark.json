@@ -1,0 +1,34 @@
+{
+  "node": "v22.12.0",
+  "platform": "win32",
+  "method": "Shared core only, includes JSON/string transfer; median of five warm runs",
+  "wasmBytes": 140743,
+  "wasmGzipBytes": 56368,
+  "rows": [
+    {
+      "kb": 10,
+      "jsMs": 0.193,
+      "wasmMs": 0.128
+    },
+    {
+      "kb": 100,
+      "jsMs": 1.675,
+      "wasmMs": 0.538
+    },
+    {
+      "kb": 250,
+      "jsMs": 3.229,
+      "wasmMs": 1.162
+    },
+    {
+      "kb": 500,
+      "jsMs": 6.485,
+      "wasmMs": 1.871
+    },
+    {
+      "kb": 1024,
+      "jsMs": 21.6,
+      "wasmMs": 9.557
+    }
+  ]
+}

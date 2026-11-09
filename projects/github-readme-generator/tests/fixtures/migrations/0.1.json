@@ -1,0 +1,18 @@
+{
+  "id": "legacy-1",
+  "name": "Representative 0.1",
+  "markdown": "﻿# Example 1\r\n\r\n<!-- raw import -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n",
+  "blocks": [
+    {
+      "id": "block-1",
+      "type": "custom",
+      "settings": {
+        "markdown": "﻿# Example 1\r\n\r\n<!-- raw import -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n"
+      }
+    }
+  ],
+  "metadata": {
+    "fixtureEra": "raw import"
+  },
+  "updated": 0
+}

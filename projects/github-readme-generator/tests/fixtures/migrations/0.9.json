@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "type": "readme-studio-project",
+  "appVersion": "0.9.1",
+  "name": "Representative 0.9",
+  "createdAt": "2026-01-01T00:00:00.000Z",
+  "updatedAt": "2026-01-01T00:00:00.000Z",
+  "document": {
+    "markdown": "﻿# Example 9\r\n\r\n<!-- portable project -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n",
+    "blocks": [
+      {
+        "id": "block-9",
+        "type": "custom",
+        "settings": {
+          "markdown": "﻿# Example 9\r\n\r\n<!-- portable project -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n"
+        }
+      }
+    ],
+    "metadata": {
+      "fixtureEra": "portable project"
+    }
+  },
+  "settings": {},
+  "assets": []
+}

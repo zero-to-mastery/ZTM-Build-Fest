@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "type": "readme-studio-project",
+  "appVersion": "0.9.3",
+  "name": "Full-Stack Showcase",
+  "createdAt": "2026-09-27T00:00:00.000Z",
+  "updatedAt": "2026-09-27T00:00:00.000Z",
+  "document": {
+    "markdown": "# Rowan Example\n\nInterfaces, APIs and useful documentation.\n\n## Selected projects\n\n### Field Notes\n\nAn offline journal with keyboard navigation.\n\n- JavaScript frontend\n- Node.js API\n- PostgreSQL storage\n\n## Contact\n\n[Portfolio](https://example.com) · [Email](mailto:hello@example.com)\n\n<!-- Fictional example. Replace links before publishing. -->\n",
+    "blocks": [
+      {
+        "id": "full-stack-showcase",
+        "type": "custom",
+        "settings": {
+          "markdown": "# Rowan Example\n\nInterfaces, APIs and useful documentation.\n\n## Selected projects\n\n### Field Notes\n\nAn offline journal with keyboard navigation.\n\n- JavaScript frontend\n- Node.js API\n- PostgreSQL storage\n\n## Contact\n\n[Portfolio](https://example.com) · [Email](mailto:hello@example.com)\n\n<!-- Fictional example. Replace links before publishing. -->\n"
+        }
+      }
+    ],
+    "metadata": {}
+  },
+  "settings": {},
+  "assets": []
+}

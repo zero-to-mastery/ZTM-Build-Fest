@@ -1,0 +1,18 @@
+{
+  "id": "legacy-8",
+  "name": "Representative 0.8",
+  "markdown": "﻿# Example 8\r\n\r\n<!-- publishing references -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n",
+  "blocks": [
+    {
+      "id": "block-8",
+      "type": "custom",
+      "settings": {
+        "markdown": "﻿# Example 8\r\n\r\n<!-- publishing references -->\n\n```html\n<script>example only</script>\n```\r\n\nCafé 🌍\n"
+      }
+    }
+  ],
+  "metadata": {
+    "fixtureEra": "publishing references"
+  },
+  "updated": 0
+}

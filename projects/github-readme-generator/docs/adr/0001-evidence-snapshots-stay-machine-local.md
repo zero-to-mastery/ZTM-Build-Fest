@@ -1,0 +1,3 @@
+# Evidence Snapshots stay machine-local and are not part of portable projects
+
+Evidence Snapshots are stored in browser storage and included in workspace backup/recovery, but not in the `.readme-studio.json` project, so project schema version 1 is unchanged. A snapshot describes a third party's repository at one moment, not the document, and a portable project is an interchange format that others may open. We accepted that snapshots do not travel between machines or with a shared project in exchange for no schema bump, no unreviewed third-party content in shared files, and independent evolution of the snapshot format. Sharing snapshots later would need a new, explicitly versioned export.
